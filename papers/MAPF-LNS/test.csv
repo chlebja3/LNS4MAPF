@@ -1,3 +1,0 @@
-runtime,solution cost,initial solution cost,min f value,root g value,iterations,group size,runtime of initial solution,area under curve,preprocessing runtime,solver name,instance name
-60.0081,1148,1176,1125,1082,107327,4.65958,0.114289,3981.35,0.0107925,LNS(EECBS;PP),random-32-32-20-random-1.scen
-60,1148,1176,1125,1082,108008,4.65943,0.103349,3981.49,0.00758496,LNS(EECBS;PP),random-32-32-20-random-1.scen
