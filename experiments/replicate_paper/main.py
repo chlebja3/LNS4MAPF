@@ -30,8 +30,7 @@ def extract_solution_costs(res):
 # parameters
 map_name = "den520d"
 agent_num = 700 # number of agents
-scen_num = 2 # number of scenes
-#scen_num = 25 # number of scenes
+scen_num = 25 # number of scenes
 results_file = "results"
 mapf_benchmark_dir = "../../MAPF-benchmark/"
 scen_dir = mapf_benchmark_dir + "mapf-scen-random/scen-random/"
@@ -41,46 +40,19 @@ address_path = "../../papers/ADDRESS/address"
 
 print("Number of agents:", agent_num)
 print("Map:", map_name)
-# print("Map path:", map_path)
-# print("Scen dir:", scen_dir)
-
-# test subprocess
-# res = subprocess.check_output(['echo', 'Test program output'])
-# print(res[:-1].decode('UTF-8'))
-
-# test construct scen path
-# scen_path = construct_scen_path(scen_dir, map_name, 1)
-# print("Scen path:", scen_path)
-
-# test experiment lns
-# print(construct_experiment(lns_path, map_path, scen_path, "a.out", agent_num, 10))
-
-# check that lns solver works  
-#./lns -m random-32-32-20.map -a random-32-32-20-random-1.scen -o test.csv -k 50 -t 60
-# exp = construct_experiment(lns_path, mapf_benchmark_dir + "mapf-map/random-32-32-20.map", "random-32-32-20-random-1.scen", "test.csv", 50, 10)
-# res = subprocess.check_output(exp)
-# print(res[:-1].decode('UTF-8'))
-
-# check that address solver works
-# ./address -m Paris_1_256.map -a Paris_1_256-random-1.scen -o test -k 600 -t 60"
-# exp = construct_experiment(address_path, mapf_benchmark_dir + "mapf-map/Paris_1_256.map", "Paris_1_256-random-1.scen", "test.csv", 600, 10)
-# res = subprocess.check_output(exp)
-# print(res[:-1].decode('UTF-8'))
-
-
 
 res_lns = [] # (initial solution, final solution) or None if no solution found
 res_add = []
+
 # try various time limits
-#for t in [15, 30, 60, 120]:
-for t in [15, 30]:
+for t in [15, 30, 60, 120]:
     res_lns_t = []
     res_add_t = []
     print("Experiments for time limit:", t, "s")
     for s in range(1, scen_num+1):
         # construct scene path
         scen_path = construct_scen_path(scen_dir, map_name, s)
-        print("Scene:", scen_path)
+        # print("Scene:", scen_path)
 
         # construct lns experiment
         exp = construct_experiment(lns_path, map_path, scen_path, results_file, agent_num, t)
@@ -98,9 +70,6 @@ for t in [15, 30]:
         print("Result ADDRESS: ", res)
     res_lns.append(res_lns_t)
     res_add.append(res_add_t)
-
-print("Results LNS:", res_lns)
-print("Results ADDRESS:", res_add)
 
 avg_lns = np.mean(np.asarray(res_lns), axis=1)
 avg_add = np.mean(np.asarray(res_add), axis=1)
