@@ -215,7 +215,9 @@ bool LNS::run()
                 succ = true;
                 break;
             case DESTROY_COUNT:
+                high_resolution_clock::time_point ADDRESS_start = Time::now();
                 succ = generateNeighborByRandomWalk(1);
+                avg_ADDRESS_time = avg_ADDRESS_time + ((fsec)(Time::now() - ADDRESS_start)).count();
                 break;
             default:
                 cerr << "Wrong neighbor generation strategy" << endl;
@@ -310,6 +312,7 @@ bool LNS::run()
         average_group_size += data.num_of_agents;
     if (average_group_size > 0)
         average_group_size /= (double)(iteration_stats.size() - 1);
+    avg_ADDRESS_time /= (double)(iteration_stats.size() - 1);
 
     cout << getSolverName() << ": "
          << "runtime = " << runtime << ", "
@@ -317,6 +320,7 @@ bool LNS::run()
          << "solution cost = " << sum_of_costs << ", "
          << "initial solution cost = " << initial_sum_of_costs << ", "
          << "failed iterations = " << num_of_failures << endl;
+    cout << "Average address time = " << avg_ADDRESS_time << endl;
     return true;
 }
 

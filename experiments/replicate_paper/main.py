@@ -3,6 +3,7 @@
 import subprocess
 import re
 import numpy as np
+import tqdm
 
 def construct_experiment(solver_path, map_path, scen_path, output_file_name, agent_num, t):
     """ Construct the input of subprocess.check_output to perform the experiment"""
@@ -30,7 +31,7 @@ def extract_solution_costs(res):
 # parameters
 map_name = "den520d"
 agent_num = 700 # number of agents
-scen_num = 25 # number of scenes
+scen_num = 20 # number of scenes
 results_file = "results"
 mapf_benchmark_dir = "../../MAPF-benchmark/"
 scen_dir = mapf_benchmark_dir + "mapf-scen-random/scen-random/"
@@ -45,11 +46,13 @@ res_lns = [] # (initial solution, final solution) or None if no solution found
 res_add = []
 
 # try various time limits
-for t in [15, 30, 60, 120]:
+# for t in tqdm.tqdm([15, 30, 60], desc=" outer", position=0):
+for t in tqdm.tqdm([30, 60], desc=" outer", position=0):
     res_lns_t = []
     res_add_t = []
-    print("Experiments for time limit:", t, "s")
-    for s in range(1, scen_num+1):
+    # print("Experiments for time limit:", t, "s")
+    for s in tqdm.tqdm(range(1, scen_num+1), desc=" inner loop", position=1, leave=False):
+        if t == 30 and (s == 1 or s == 2): continue # these experiments were already performed
         # construct scene path
         scen_path = construct_scen_path(scen_dir, map_name, s)
         # print("Scene:", scen_path)
@@ -59,7 +62,7 @@ for t in [15, 30, 60, 120]:
         res = subprocess.check_output(exp)[:-1].decode('UTF-8')
         res = extract_solution_costs(res)
         res_lns_t.append(res)
-        print("Result LNS: ", res)
+        # print("Result LNS: ", res)
 
 
         # construct address experiment
@@ -67,7 +70,7 @@ for t in [15, 30, 60, 120]:
         res = subprocess.check_output(exp)[:-1].decode('UTF-8')
         res = extract_solution_costs(res)
         res_add_t.append(res)
-        print("Result ADDRESS: ", res)
+        # print("Result ADDRESS: ", res)
     res_lns.append(res_lns_t)
     res_add.append(res_add_t)
 
@@ -76,7 +79,7 @@ avg_add = np.mean(np.asarray(res_add), axis=1)
 print("Average lns:", avg_lns)
 print("Average add:", avg_add)
 
-np.savetxt(results_file + "_LNS.txt", avg_lns)
-np.savetxt(results_file + "_ADDRESS.txt", avg_add)
+# np.savetxt(results_file + "_LNS.txt", avg_lns)
+# np.savetxt(results_file + "_ADDRESS.txt", avg_add)
 
 

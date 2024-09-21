@@ -75,17 +75,26 @@ bool LNS::run()
         if(screen >= 1)
             validateSolution();
         if (ALNS)
+        {
+            high_resolution_clock::time_point ALNS_start = Time::now();
             chooseDestroyHeuristicbyALNS();
+            avg_ALNS_time = avg_ALNS_time + ((fsec)(Time::now() - ALNS_start)).count();
+        }
 
         switch (destroy_strategy)
         {
             case RANDOMWALK:
+                high_resolution_clock::time_point RWA_start = Time::now();
                 succ = generateNeighborByRandomWalk();
+                avg_destroy_time_RWA = avg_destroy_time_RWA + ((fsec)(Time::now() - RWA_start)).count();
                 break;
             case INTERSECTION:
+                high_resolution_clock::time_point INT_start = Time::now();
                 succ = generateNeighborByIntersection();
+                avg_destroy_time_INT = avg_destroy_time_INT + ((fsec)(Time::now() - INT_start)).count();
                 break;
             case RANDOMAGENTS:
+                high_resolution_clock::time_point RND_start = Time::now();
                 neighbor.agents.resize(agents.size());
                 for (int i = 0; i < (int)agents.size(); i++)
                     neighbor.agents[i] = i;
@@ -95,6 +104,7 @@ bool LNS::run()
                     neighbor.agents.resize(neighbor_size);
                 }
                 succ = true;
+                avg_destroy_time_RND = avg_destroy_time_RND + ((fsec)(Time::now() - RND_start)).count();
                 break;
             default:
                 cerr << "Wrong neighbor generation strategy" << endl;
@@ -113,7 +123,9 @@ bool LNS::run()
             path_table.deletePath(neighbor.agents[i], agents[neighbor.agents[i]].path);
             neighbor.old_sum_of_costs += agents[neighbor.agents[i]].path.size() - 1;
         }
+        
 
+        high_resolution_clock::time_point REPLAN_start = Time::now();
         if (replan_algo_name == "EECBS")
             succ = runEECBS();
         else if (replan_algo_name == "CBS")
@@ -125,9 +137,11 @@ bool LNS::run()
             cerr << "Wrong replanning strategy" << endl;
             exit(-1);
         }
+        avg_replan_time = avg_replan_time + ((fsec)(Time::now() - REPLAN_start)).count();
 
         if (ALNS) // update destroy heuristics
         {
+            high_resolution_clock::time_point ALNS_update_start = Time::now();
             if (neighbor.old_sum_of_costs > neighbor.sum_of_costs )
                 destroy_weights[selected_neighbor] =
                         reaction_factor * (neighbor.old_sum_of_costs - neighbor.sum_of_costs) / neighbor.agents.size()
@@ -135,6 +149,7 @@ bool LNS::run()
             else
                 destroy_weights[selected_neighbor] =
                         (1 - decay_factor) * destroy_weights[selected_neighbor];
+            avg_ALNS_update_time = avg_ALNS_update_time + ((fsec)(Time::now() - ALNS_update_start)).count();
         }
         runtime = ((fsec)(Time::now() - start_time)).count();
         sum_of_costs += neighbor.sum_of_costs - neighbor.old_sum_of_costs;
@@ -146,18 +161,33 @@ bool LNS::run()
         iteration_stats.emplace_back(neighbor.agents.size(), sum_of_costs, runtime, replan_algo_name);
     }
 
-
     average_group_size = - iteration_stats.front().num_of_agents;
     for (const auto& data : iteration_stats)
         average_group_size += data.num_of_agents;
     if (average_group_size > 0)
         average_group_size /= (double)(iteration_stats.size() - 1);
+
+    avg_ALNS_time /= (double)(iteration_stats.size() - 1);
+    avg_destroy_time_RWA /= (double)(iteration_stats.size() - 1);
+    avg_destroy_time_INT /= (double)(iteration_stats.size() - 1);
+    avg_destroy_time_RND /= (double)(iteration_stats.size() - 1);
+    avg_replan_time /= (double)(iteration_stats.size() - 1);
+    avg_iteration_time /= (double)(iteration_stats.size() - 1);
+    avg_ALNS_update_time /= (double)(iteration_stats.size() - 1);
+
     cout << getSolverName() << ": Iterations = " << iteration_stats.size() << ", "
          << "solution cost = " << sum_of_costs << ", "
          << "initial solution cost = " << initial_sum_of_costs << ", "
          << "runtime = " << runtime << ", "
          << "group size = " << average_group_size << ", "
          << "failed iterations = " << num_of_failures << endl;
+    cout << "Average ALNS time = " << avg_ALNS_time << ", "
+         << "average RANDOMWALK time = " << avg_destroy_time_RWA << ", "
+         << "average INTERSECTION time = " << avg_destro_time_INT << ", "
+         << "average RANDOMAGENTS time = " << avg_destroy_time_RND << ", "
+         << "average replan time = " << avg_replan_time << ", "
+         << "average iteration time = " << avg_iteration_time << ", "
+         << "average ALNS update time = " << avg_ALNS_update_time << endl;
     return true;
 }
 

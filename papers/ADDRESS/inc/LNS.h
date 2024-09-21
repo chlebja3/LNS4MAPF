@@ -30,6 +30,8 @@ public:
     int sum_of_distances = -1;
     int restart_times = 0;
 
+    double avg_ADDRESS_time = 0;
+
     LNS(const Instance& instance, double time_limit,
         const string & init_algo_name, const string & replan_algo_name, const string & destroy_name,
         int neighbor_size, int num_of_iterations, bool init_lns, const string & init_destroy_name, bool use_sipp,

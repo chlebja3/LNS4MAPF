@@ -67,6 +67,16 @@ public:
     void writeResultToFile(string file_name) const;
     void writePathsToFile(string file_name) const;
     string getSolverName() const { return "LNS(" + init_algo_name + ";" + replan_algo_name + ")"; }
+
+    // timing variables
+    double avg_ALNS_time = 0;
+    double avg_destroy_time_RWA = 0;
+    double avg_destroy_time_INT = 0;
+    double avg_destroy_time_RND = 0;
+    double avg_replan_time = 0;
+    double avg_iteration_time = 0;
+    double avg_ALNS_update_time = 0;
+
 private:
     int num_neighbor_sizes = 1; //4; // so the neighbor size could be 2, 4, 8, 16
 
@@ -82,7 +92,6 @@ private:
     int num_of_iterations;
 
     high_resolution_clock::time_point start_time;
-
 
     PathTable path_table; // 1. stores the paths of all agents in a time-space table;
     // 2. avoid making copies of this variable as much as possible.
