@@ -46,13 +46,12 @@ res_lns = [] # (initial solution, final solution) or None if no solution found
 res_add = []
 
 # try various time limits
-# for t in tqdm.tqdm([15, 30, 60], desc=" outer", position=0):
-for t in tqdm.tqdm([30, 60], desc=" outer", position=0):
+for t in tqdm.tqdm([15, 30, 60, 120], desc=" outer", position=0):
+#for t in tqdm.tqdm([120], desc=" outer", position=0):
     res_lns_t = []
     res_add_t = []
     # print("Experiments for time limit:", t, "s")
     for s in tqdm.tqdm(range(1, scen_num+1), desc=" inner loop", position=1, leave=False):
-        if t == 30 and (s == 1 or s == 2): continue # these experiments were already performed
         # construct scene path
         scen_path = construct_scen_path(scen_dir, map_name, s)
         # print("Scene:", scen_path)
