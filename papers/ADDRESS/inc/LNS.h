@@ -31,6 +31,7 @@ public:
     int restart_times = 0;
 
     double avg_ADDRESS_time = 0;
+    double avg_iteration_time = 0;
 
     LNS(const Instance& instance, double time_limit,
         const string & init_algo_name, const string & replan_algo_name, const string & destroy_name,

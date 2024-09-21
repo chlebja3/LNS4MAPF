@@ -187,6 +187,7 @@ bool LNS::run()
 
     while (runtime < time_limit && iteration_stats.size() <= num_of_iterations)
     {
+        high_resolution_clock::time_point it_start_time = Time::now(); // start time of the iteration
         runtime =((fsec)(Time::now() - start_time)).count();
         if(screen >= 1)
             validateSolution();
@@ -275,6 +276,8 @@ bool LNS::run()
                 weightSum += neighborhoodBanditStats[i]->destroy_weights[j];
             }
         }
+        // output the weights to cout (not necessarry)
+        /*
         std::ostringstream oss;
         oss << "\"";
         for (size_t i = 0; i < neighborhoodBanditStats.size(); ++i) {
@@ -304,7 +307,9 @@ bool LNS::run()
         oss << "\"";
         std::string weights = oss.str();
         cout << weights<<endl;
+        */
         iteration_stats.emplace_back(neighbor.agents.size(), sum_of_costs, runtime, replan_algo_name, weights, 0, 0, searchSuccess);
+        avg_iteration_time = avg_iteration_time + ((fsec)(Time::now() - it_start_time)).count();
     }
 
 
@@ -314,6 +319,7 @@ bool LNS::run()
     if (average_group_size > 0)
         average_group_size /= (double)(iteration_stats.size() - 1);
     avg_ADDRESS_time /= (double)(iteration_stats.size() - 1);
+    avg_iteration_time /= (double)(iteration_stats.size() - 1);
 
     cout << getSolverName() << ": "
          << "runtime = " << runtime << ", "
@@ -727,9 +733,18 @@ void LNS::chooseDestroyHeuristicbyALNS()
     if (alns_bernoulie == BCANONICAL ){
         switch (selected_neighbor)
         {
-            case 0 : destroy_strategy = RANDOMWALK;cout << "randomwalk" << endl;break;
-            case 1 : destroy_strategy = INTERSECTION; cout << "intersection" << endl;break;
-            case 2 : destroy_strategy = RANDOMAGENTS; cout << "random" << endl;break;
+            case 0 : 
+              destroy_strategy = RANDOMWALK;
+              // cout << "randomwalk" << endl;
+              break;
+            case 1 : 
+              destroy_strategy = INTERSECTION; 
+              // cout << "intersection" << endl;
+              break;
+            case 2 : 
+              destroy_strategy = RANDOMAGENTS; 
+              // cout << "random" << endl;
+              break;
             default : cerr << "ERROR" << endl; exit(-1);
         }
     }
@@ -737,20 +752,38 @@ void LNS::chooseDestroyHeuristicbyALNS()
         switch (selected_neighbor)
         {
             // Replace random walk with bernoulie
-            case 0 : destroy_strategy = DESTROY_COUNT;cout << "bernoulie" << endl;break;
-            case 1 : destroy_strategy = INTERSECTION; cout << "intersection" << endl;break;
-            case 2 : destroy_strategy = RANDOMAGENTS; cout << "random" << endl;break;
-            default : cerr << "ERROR" << endl; exit(-1);
+            case 0 : 
+              destroy_strategy = DESTROY_COUNT;
+              cout << "bernoulie" << endl;
+              break;
+            case 1 : 
+              destroy_strategy = INTERSECTION; 
+              cout << "intersection" << endl;
+              break;
+            case 2 : 
+              destroy_strategy = RANDOMAGENTS; 
+              cout << "random" << endl;break;
+            default : 
+              cerr << "ERROR" << endl; 
+              exit(-1);
         }
     }
     else {
         switch (selected_neighbor)
         {
             // Add bernoulie as the 4th option
-            case 0 : destroy_strategy = RANDOMWALK;cout << "randomwalk" << endl;break;
-            case 1 : destroy_strategy = INTERSECTION; cout << "intersection" << endl;break;
-            case 2 : destroy_strategy = RANDOMAGENTS; cout << "random" << endl;break;
-            case 3 : destroy_strategy = DESTROY_COUNT; cout << "bernoulie" << endl;break;
+            case 0 : 
+              destroy_strategy = RANDOMWALK;cout << "randomwalk" << endl;
+              break;
+            case 1 : 
+              destroy_strategy = INTERSECTION; cout << "intersection" << endl;
+              break;
+            case 2 : 
+              destroy_strategy = RANDOMAGENTS; cout << "random" << endl;
+              break;
+            case 3 : 
+              destroy_strategy = DESTROY_COUNT; cout << "bernoulie" << endl;
+              break;
             default : cerr << "ERROR" << endl; exit(-1);
         }
     }

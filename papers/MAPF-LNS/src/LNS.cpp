@@ -71,6 +71,7 @@ bool LNS::run()
 
     while (runtime < time_limit && iteration_stats.size() <= num_of_iterations)
     {
+        high_resolution_clock::time_point it_start_time = Time::now(); // start time of the iteration
         runtime =((fsec)(Time::now() - start_time)).count();
         if(screen >= 1)
             validateSolution();
@@ -158,6 +159,7 @@ bool LNS::run()
                  << "solution cost = " << sum_of_costs << ", "
                  << "remaining time = " << time_limit - runtime << endl;
         iteration_stats.emplace_back(neighbor.agents.size(), sum_of_costs, runtime, replan_algo_name);
+        avg_iteration_time = avg_iteration_time + ((fsec)(Time::now() - it_start_time)).count();
     }
 
     average_group_size = - iteration_stats.front().num_of_agents;
