@@ -80,21 +80,20 @@ bool LNS::run()
             chooseDestroyHeuristicbyALNS();
             avg_ALNS_time = avg_ALNS_time + ((fsec)(Time::now() - ALNS_start)).count();
         }
-
+        
+        // initializations cant be in switch
+        high_resolution_clock::time_point destroy_start = Time::now();
         switch (destroy_strategy)
         {
             case RANDOMWALK:
-                high_resolution_clock::time_point RWA_start = Time::now();
                 succ = generateNeighborByRandomWalk();
-                avg_destroy_time_RWA = avg_destroy_time_RWA + ((fsec)(Time::now() - RWA_start)).count();
+                avg_destroy_time_RWA = avg_destroy_time_RWA + ((fsec)(Time::now() - destroy_start)).count();
                 break;
             case INTERSECTION:
-                high_resolution_clock::time_point INT_start = Time::now();
                 succ = generateNeighborByIntersection();
-                avg_destroy_time_INT = avg_destroy_time_INT + ((fsec)(Time::now() - INT_start)).count();
+                avg_destroy_time_INT = avg_destroy_time_INT + ((fsec)(Time::now() - destroy_start)).count();
                 break;
             case RANDOMAGENTS:
-                high_resolution_clock::time_point RND_start = Time::now();
                 neighbor.agents.resize(agents.size());
                 for (int i = 0; i < (int)agents.size(); i++)
                     neighbor.agents[i] = i;
@@ -104,7 +103,7 @@ bool LNS::run()
                     neighbor.agents.resize(neighbor_size);
                 }
                 succ = true;
-                avg_destroy_time_RND = avg_destroy_time_RND + ((fsec)(Time::now() - RND_start)).count();
+                avg_destroy_time_RND = avg_destroy_time_RND + ((fsec)(Time::now() - destroy_start)).count();
                 break;
             default:
                 cerr << "Wrong neighbor generation strategy" << endl;
@@ -183,7 +182,7 @@ bool LNS::run()
          << "failed iterations = " << num_of_failures << endl;
     cout << "Average ALNS time = " << avg_ALNS_time << ", "
          << "average RANDOMWALK time = " << avg_destroy_time_RWA << ", "
-         << "average INTERSECTION time = " << avg_destro_time_INT << ", "
+         << "average INTERSECTION time = " << avg_destroy_time_INT << ", "
          << "average RANDOMAGENTS time = " << avg_destroy_time_RND << ", "
          << "average replan time = " << avg_replan_time << ", "
          << "average iteration time = " << avg_iteration_time << ", "

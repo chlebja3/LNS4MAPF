@@ -194,6 +194,8 @@ bool LNS::run()
         {
             chooseDestroyHeuristicbyALNS();
         }
+
+        high_resolution_clock::time_point ADDRESS_start = Time::now(); // initializatio cant be inside switch
         switch (destroy_strategy)
         {
             case RANDOMWALK:
@@ -215,7 +217,6 @@ bool LNS::run()
                 succ = true;
                 break;
             case DESTROY_COUNT:
-                high_resolution_clock::time_point ADDRESS_start = Time::now();
                 succ = generateNeighborByRandomWalk(1);
                 avg_ADDRESS_time = avg_ADDRESS_time + ((fsec)(Time::now() - ADDRESS_start)).count();
                 break;
