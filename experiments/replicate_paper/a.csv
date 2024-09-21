@@ -1,4 +1,0 @@
-runtime,solution cost,initial solution cost,min f value,root g value,iterations,group size,runtime of initial solution,area under curve,preprocessing runtime,solver name,instance name
-30.0295,124106,139498,117262,117262,3468,4.98327,1.01184,336573,2.74511,LNS(PP;PP),../../MAPF-benchmark/mapf-scen-random/scen-random/den520d-random-1.scen
-30.0076,124106,139498,117262,117262,3468,4.98327,1.01547,337492,2.74847,LNS(PP;PP),../../MAPF-benchmark/mapf-scen-random/scen-random/den520d-random-1.scen
-30.0018,124106,139498,117262,117262,3470,4.98328,1.01825,337311,2.84789,LNS(PP;PP),../../MAPF-benchmark/mapf-scen-random/scen-random/den520d-random-1.scen
