@@ -194,6 +194,7 @@ bool LNS::run()
         if (ALNS)
         {
             chooseDestroyHeuristicbyALNS();
+            avg_ALNS_time = avg_ALNS_time + ((fsec)(Time::now() - it_start_time)).count();
         }
 
         high_resolution_clock::time_point ADDRESS_start = Time::now(); // initializatio cant be inside switch
@@ -318,6 +319,7 @@ bool LNS::run()
         average_group_size += data.num_of_agents;
     if (average_group_size > 0)
         average_group_size /= (double)(iteration_stats.size() - 1);
+    avg_ALNS_time /= (double)(iteration_stats.size() - 1);
     avg_ADDRESS_time /= (double)(iteration_stats.size() - 1);
     avg_iteration_time /= (double)(iteration_stats.size() - 1);
 
@@ -327,7 +329,9 @@ bool LNS::run()
          << "solution cost = " << sum_of_costs << ", "
          << "initial solution cost = " << initial_sum_of_costs << ", "
          << "failed iterations = " << num_of_failures << endl;
-    cout << "Average address time = " << avg_ADDRESS_time << endl;
+    cout << "Average address time = " << avg_ADDRESS_time << ", "
+         << "Average ALNS time = " << avg_ALNS_time << ", "
+         << "Average iteration time: = " << avg_iteration_time << endl;
     return true;
 }
 

@@ -7,4 +7,8 @@ Average ALNS time = 1.0862e-07, average RANDOMWALK time = 3.68371e-05, average I
 
 ADDRESS:
 command:
-
+../../papers/ADDRESS/address -m ../../MAPF-benchmark/mapf-map/den520d.map -
+a ../../MAPF-benchmark/mapf-scen-random/scen-random/den520d-random-1.scen -o a.csv -k 700 -t 30 --k 32 --maxIterations 1000000 --banditAlgo Thompson --algorithm topk-epsilon --epsilon 0.5
+results:
+LNS(PP;PP): runtime = 30.0012, iterations = 1390, solution cost = 122733, initial solution cost = 139542, failed iterations = 797
+Average address time = 0, Average ALNS time = 2.29764e-06, Average iteration time: = 0.0199727

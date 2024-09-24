@@ -30,6 +30,7 @@ public:
     int sum_of_distances = -1;
     int restart_times = 0;
 
+    double avg_ALNS_time = 0;
     double avg_ADDRESS_time = 0;
     double avg_iteration_time = 0;
 
