@@ -869,7 +869,7 @@ void LNS::writeResultToFile(string file_name) const
                  "iterations," <<
                  "group size," <<
                  "runtime of initial solution,area under curve," <<
-                 "preprocessing runtime,solver name,instance name" << endl;
+                 "preprocessing runtime,solver name,instance name"  << endl;
         addHeads.close();
     }
     ofstream stats(file_name, std::ios::app);

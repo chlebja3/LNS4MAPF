@@ -1,0 +1,8 @@
+## ideas for improvement
+zmerit eecbs pro replan, casem vyzkouset eecbs kdyz pp nenajde reseni -> snaha zmensit pocet failed iterations, co znamena failed iteration?
+zkusit vymyslet rychlejsi replan -> vic iteraci
+prevest v experimentu solution cost na sum of delays
+
+# Faster replanning
+Zkusit upravit D* Lite algoritmus (algoritmus pro rychlejsi replanning) na time-space D*
+

@@ -12,3 +12,5 @@ a ../../MAPF-benchmark/mapf-scen-random/scen-random/den520d-random-1.scen -o a.c
 results:
 LNS(PP;PP): runtime = 30.0012, iterations = 1390, solution cost = 122733, initial solution cost = 139542, failed iterations = 797
 Average address time = 0, Average ALNS time = 2.29764e-06, Average iteration time: = 0.0199727
+
+
