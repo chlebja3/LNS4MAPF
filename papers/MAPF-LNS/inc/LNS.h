@@ -56,6 +56,7 @@ public:
     int sum_of_distances = -1;
     double average_group_size = -1;
     int num_of_failures = 0; // #replanning that fails to find any solutions
+    int num_of_worse = 0; // #replanning that finds worse solution 
     LNS(const Instance& instance, double time_limit,
         string init_algo_name, string replan_algo_name, string destory_name,
         int neighbor_size, int num_of_iterations, int screen, PIBTPPS_option pipp_option);

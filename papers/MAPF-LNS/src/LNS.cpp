@@ -181,7 +181,7 @@ bool LNS::run()
          << "initial solution cost = " << initial_sum_of_costs << ", "
          << "runtime = " << runtime << ", "
          << "group size = " << average_group_size << ", "
-         << "failed iterations = " << num_of_failures << endl;
+         << "failed iterations = " << num_of_failures << ", " <<  "worse iterations = " << num_of_worse << endl;
     cout << "Average ALNS time = " << avg_ALNS_time << ", "
          << "average RANDOMWALK time = " << avg_destroy_time_RWA << ", "
          << "average INTERSECTION time = " << avg_destroy_time_INT << ", "
@@ -288,6 +288,7 @@ bool LNS::runEECBS()
         }
         if (!succ)
             num_of_failures++;
+        else num_of_worse++;
     }
     return succ;
 }
@@ -347,6 +348,7 @@ bool LNS::runCBS()
         }
         if (!succ)
             num_of_failures++;
+        else num_of_worse++;
     }
     return succ;
 }
@@ -396,6 +398,7 @@ bool LNS::runPP()
     {
         if (p != shuffled_agents.end())
             num_of_failures++;
+        else num_of_worse++;
         auto p2 = shuffled_agents.begin();
         while (p2 != p)
         {

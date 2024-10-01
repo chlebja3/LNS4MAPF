@@ -1,5 +1,5 @@
 ## ideas for improvement
-zmerit eecbs pro replan, casem vyzkouset eecbs kdyz pp nenajde reseni -> snaha zmensit pocet failed iterations, co znamena failed iteration?
+zmerit eecbs pro replan, casem vyzkouset eecbs kdyz pp nenajde reseni -> snaha zmensit pocet failed iterations, co znamena failed iteration? V komentari lns.h pisou, ze to je kdyz failne replanning, podle kodu take
 zkusit vymyslet rychlejsi replan -> vic iteraci
 done: prevest v experimentu solution cost na sum of delays
 
@@ -8,5 +8,4 @@ Zkusit upravit D* Lite algoritmus (algoritmus pro rychlejsi replanning) na time-
 nasel jsem dva clanky, ktere pouzivaji D*lite pro MAPF, mají spatnou performance, ale pisou, ze jsou rychlejsi nez A*. Také důkaz nalezení řešení pro I-MAPF, což je silnější problém, než MAPF, pokud chápu správně.
 
 # failed iteration
-bud nenalezla lepsi reseni nebo nenalezla vubec reseni
-TODO - zmerit jak caste jsou jednotlive pripady
+zmerit jak caste jsou jednotlive pripady nenalezeni reseni a nalezeni horsiho -> vysledek: KAZDY replan prinese zlepseni, pokud se povede (z ~3000 iteraci na den520d)
