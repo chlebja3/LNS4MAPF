@@ -13,4 +13,8 @@ results:
 LNS(PP;PP): runtime = 30.0012, iterations = 1390, solution cost = 122733, initial solution cost = 139542, failed iterations = 797
 Average address time = 0, Average ALNS time = 2.29764e-06, Average iteration time: = 0.0199727
 
-
+LNS with EECBS for replan:
+../../papers/MAPF-LNS/lns -m ../../MAPF-benchmark/mapf-map/den520d.map -a ../../MAPF-benchmark/mapf-scen-random/scen-random/den520d-random-1.scen -o a.csv -k 700 -t 30 --initAlgo PP --replanAlgo EECBS
+results:
+LNS(PP;EECBS): Iterations = 307, solution cost = 132492, initial solution cost = 139498, runtime = 48.084, group size = 4.98693, failed iterations = 5, worse iterations = 135
+Average ALNS time = 1.45324e-07, average RANDOMWALK time = 5.52682e-05, average INTERSECTION time = 4.04576e-05, average RANDOMAGENTS time = 1.11264e-06, average replan time = 0.153752, average iteration time = 0.153872, average ALNS update time = 1.22216e-07

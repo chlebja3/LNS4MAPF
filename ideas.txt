@@ -7,5 +7,8 @@ done: prevest v experimentu solution cost na sum of delays
 Zkusit upravit D* Lite algoritmus (algoritmus pro rychlejsi replanning) na time-space D*
 nasel jsem dva clanky, ktere pouzivaji D*lite pro MAPF, mají spatnou performance, ale pisou, ze jsou rychlejsi nez A*. Také důkaz nalezení řešení pro I-MAPF, což je silnější problém, než MAPF, pokud chápu správně.
 
+# vysledky experimentu
 # failed iteration
 zmerit jak caste jsou jednotlive pripady nenalezeni reseni a nalezeni horsiho -> vysledek: KAZDY replan prinese zlepseni, pokud se povede (z ~3000 iteraci na den520d)
+# eecbs
+eecbs je skoro 10x pomalejsi nez pp, asi velky rozptyl casu, skoro zadne failed iterations, ale i par worse iterations
