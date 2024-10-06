@@ -12,3 +12,9 @@ nasel jsem dva clanky, ktere pouzivaji D*lite pro MAPF, mají spatnou performanc
 zmerit jak caste jsou jednotlive pripady nenalezeni reseni a nalezeni horsiho -> vysledek: KAZDY replan prinese zlepseni, pokud se povede (z ~3000 iteraci na den520d)
 # eecbs
 eecbs je skoro 10x pomalejsi nez pp, asi velky rozptyl casu, skoro zadne failed iterations, ale i par worse iterations
+
+# podivat se na M*
+# zhlednuot http://mapf.info/index.php/Tutorial/AAMAS-22
+# do priste zkusit d*lite, 
+
+# podivat se na anytime SIPP - vypada to, ze pouziva D*lite myslenky aplikovane na sipp
