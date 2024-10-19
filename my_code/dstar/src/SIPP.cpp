@@ -1,14 +1,15 @@
 #include "SIPP.h"
 
-
-void SIPP::updatePath(const LLNode* goal, vector<PathEntry> &path)
+std::unordered_set<LLNode> SIPP::updatePath(const LLNode* goal, vector<PathEntry> &path)
 {
+  std::unordered_set<LLNode> used_intervals;
 	path.resize(goal->timestep + 1);
 	// num_of_conflicts = goal->num_of_conflicts;
 
 	const auto* curr = goal;
 	while (curr->parent != nullptr) // non-root node
 	{
+    used_intervals.insert(curr);
 		const auto* prev = curr->parent;
 		int t = prev->timestep + 1;
 		while (t < curr->timestep)
@@ -21,22 +22,25 @@ void SIPP::updatePath(const LLNode* goal, vector<PathEntry> &path)
 	}
 	assert(curr->timestep == 0);
 	path[0].location = curr->location;
+  return used_intervals;
 }
 
-Path SIPP::findOptimalPath(const HLNode& node, const ConstraintTable& initial_constraints,
-	const vector<Path*>& paths, int agent, int lowerbound)
+pair<Path, unordered_set> SIPP::findOptimalPath(const HLNode& node, const ConstraintTable& initial_constraints,
+	const vector<Path*>& paths, int agent, int lowerbound, std::unordered_set<LLNode> &old_path)
 {
-	return findSuboptimalPath(node, initial_constraints, paths, agent, lowerbound, 1).first;
+  std::tuple<Path, int, unordered_set> sol = findSuboptimalPath(node, initial_constraints, paths, agent, lowerbound, 1, old_path);
+	return {std::get<0>(sol), std::get<2>(sol)};
 }
 // find path by SIPP
 // Returns a shortest path that satisfies the constraints of the give node  while
 // minimizing the number of internal conflicts (that is conflicts with known_paths for other agents found so far).
 // lowerbound is an underestimation of the length of the path in order to speed up the search.
-pair<Path, int> SIPP::findSuboptimalPath(const HLNode& node, const ConstraintTable& initial_constraints,
-	const vector<Path*>& paths, int agent, int lowerbound, double w)
+std::tuple<Path, int, unordered_set> SIPP::findSuboptimalPath(const HLNode& node, const ConstraintTable& initial_constraints,
+	const vector<Path*>& paths, int agent, int lowerbound, double w, std::unordered_set<LLNode> &old_path)
 {
 	this->w = w;
 	Path path;
+  std::unordered_set<LLNode> used_intervals;
 	auto t = clock();
 	ReservationTable reservation_table(initial_constraints);
 	reservation_table.build(node, agent);
@@ -50,7 +54,7 @@ pair<Path, int> SIPP::findSuboptimalPath(const HLNode& node, const ConstraintTab
 	num_generated = 0;
 	Interval interval = reservation_table.get_first_safe_interval(start_location);
 	if (get<0>(interval) > 0)
-		return {path, 0};
+		return {path, 0, used_intervals};
 
 	 // generate start and add it to the OPEN list
 	auto start = new SIPPNode(start_location, 0, my_heuristic[start_location], nullptr, 0, interval, 0, false);
@@ -76,7 +80,7 @@ pair<Path, int> SIPP::findSuboptimalPath(const HLNode& node, const ConstraintTab
 			!curr->wait_at_goal && // not wait at the goal location
 			curr->timestep >= holding_time) // the agent can hold the goal location afterward
         {
-            updatePath(curr, path);
+            used_intervals = updatePath(curr, path);
             break;
         }
 
@@ -99,7 +103,7 @@ pair<Path, int> SIPP::findSuboptimalPath(const HLNode& node, const ConstraintTab
 	  
 	  // no path found
 	releaseNodes();
-	return {path, min_f_val};
+	return {path, min_f_val, used_intervals};
 }
 
 void SIPP::updateFocalList()
