@@ -102,6 +102,7 @@ bool LNS::run()
 
     while (runtime < time_limit && iteration_stats.size() <= num_of_iterations)
     {
+        high_resolution_clock::time_point it_start_time = Time::now(); // start time of the iteration
         runtime =((fsec)(Time::now() - start_time)).count();
         if(screen >= 1)
             validateSolution();
@@ -145,6 +146,7 @@ bool LNS::run()
             neighbor.old_sum_of_costs += agents[neighbor.agents[i]].path.size() - 1;
         }
 
+        high_resolution_clock::time_point REPLAN_start = Time::now();
         if (replan_algo_name == "EECBS")
             succ = runEECBS();
         else if (replan_algo_name == "CBS")
@@ -156,6 +158,7 @@ bool LNS::run()
             cerr << "Wrong replanning strategy" << endl;
             exit(-1);
         }
+        avg_replan_time = avg_replan_time + ((fsec)(Time::now() - REPLAN_start)).count();
 
         if (ALNS) // update destroy heuristics
         {
@@ -184,12 +187,17 @@ bool LNS::run()
     if (average_group_size > 0)
         average_group_size /= (double)(iteration_stats.size() - 1);
 
+    avg_replan_time /= (double)(iteration_stats.size() - 1);
+    avg_iteration_time /= (double)(iteration_stats.size() - 1);
+
     cout << getSolverName() << ": "
          << "runtime = " << runtime << ", "
          << "iterations = " << iteration_stats.size() << ", "
          << "solution cost = " << sum_of_costs << ", "
          << "initial solution cost = " << initial_sum_of_costs << ", "
          << "failed iterations = " << num_of_failures << endl;
+    cout << "average replan time = " << avg_replan_time << ", "
+         << "average iteration time = " << avg_iteration_time << endl;
     return true;
 }
 

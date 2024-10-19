@@ -43,6 +43,11 @@ public:
     void writeResultToFile(const string & file_name) const;
     void writePathsToFile(const string & file_name) const;
     string getSolverName() const override { return "LNS(" + init_algo_name + ";" + replan_algo_name + ")"; }
+
+    // timing variables
+    double avg_replan_time = 0;
+    double avg_iteration_time = 0;
+
 private:
     InitLNS* init_lns = nullptr;
     string init_algo_name;
