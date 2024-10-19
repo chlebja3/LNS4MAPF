@@ -11,6 +11,13 @@ command:
 results:
 LNS(PP;PP): runtime = 30.004, iterations = 1581, solution cost = 123548, initial solution cost = 139542, failed iterations = 1031
 average replan time = 0.01742, average iteration time = 0.0175891
+with --sipp 0:
+LNS(PP;PP): runtime = 30.0046, iterations = 2557, solution cost = 121084, initial solution cost = 138619, failed iterations = 1848
+average replan time = 0.0111735, average iteration time = 0.0113771
+
+60 s, random-2:
+no sipp: iterations = 4611, solution cost = 126328, failed iterations = 3678, average replan time = 0.0125145, average iteration time = 0.0127679
+sipp: iterations = 2326, solution cost = 128387, failed iterations = 1608, average replan time = 0.0250032, average iteration time = 0.0251761
 
 ADDRESS:
 command:

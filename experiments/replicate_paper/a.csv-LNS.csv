@@ -6,3 +6,6 @@ runtime,solution cost,initial solution cost,lower bound,sum of distance,iteratio
 30.0002,123263,139542,117262,117262,1477,7.81572,2.25991,0,269889,10224375,20556108,2404169,12212,2.7294,LNS(PP;PP),../../MAPF-benchmark/mapf-scen-random/scen-random/den520d-random-1.scen
 30.0008,123213,139542,117262,117262,1477,7.80759,2.25804,0,278940,9597078,20493225,1856399,12211,2.7423,LNS(PP;PP),../../MAPF-benchmark/mapf-scen-random/scen-random/den520d-random-1.scen
 30.004,123548,139542,117262,117262,1581,7.81139,2.21297,0,286091,9978073,21616538,1807429,13027,2.70516,LNS(PP;PP),../../MAPF-benchmark/mapf-scen-random/scen-random/den520d-random-1.scen
+30.0046,121084,138619,117262,117262,2557,7.77621,0.924251,0,249038,28439037,61027409,0,20562,2.72874,LNS(PP;PP),../../MAPF-benchmark/mapf-scen-random/scen-random/den520d-random-1.scen
+60.0004,126328,145274,124324,124324,4611,7.74794,1.13946,0,331909,56048798,121713336,0,36386,2.98672,LNS(PP;PP),../../MAPF-benchmark/mapf-scen-random/scen-random/den520d-random-2.scen
+60.0003,128387,145594,124324,124324,2326,7.84215,1.46548,0,489843,21191235,37272211,6409729,18903,2.73723,LNS(PP;PP),../../MAPF-benchmark/mapf-scen-random/scen-random/den520d-random-2.scen
