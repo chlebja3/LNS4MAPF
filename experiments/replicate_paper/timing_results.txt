@@ -5,6 +5,13 @@ results:
 LNS(PP;PP): Iterations = 3470, solution cost = 124106, initial solution cost = 139498, runtime = 30.0018, group size = 4.98328, failed iterations = 2801
 Average ALNS time = 1.0862e-07, average RANDOMWALK time = 3.68371e-05, average INTERSECTION time = 5.32682e-05, average RANDOMAGENTS time = 2.20399e-06, average replan time = 0.00820083, average iteration time = 0.00835488, average ALNS update time = 7.91851e-08
 
+LNS2:
+command: 
+../../papers/MAPF-LNS2/lns -m ../../MAPF-benchmark/mapf-map/den520d.map -a ../../MAPF-benchmark/mapf-scen-random/scen-random/den520d-random-1.scen -o a.csv -k 700 -t 30 --initAlgo PP
+results:
+LNS(PP;PP): runtime = 30.004, iterations = 1581, solution cost = 123548, initial solution cost = 139542, failed iterations = 1031
+average replan time = 0.01742, average iteration time = 0.0175891
+
 ADDRESS:
 command:
 ../../papers/ADDRESS/address -m ../../MAPF-benchmark/mapf-map/den520d.map -

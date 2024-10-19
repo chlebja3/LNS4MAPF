@@ -178,6 +178,7 @@ bool LNS::run()
                  << "solution cost = " << sum_of_costs << ", "
                  << "remaining time = " << time_limit - runtime << endl;
         iteration_stats.emplace_back(neighbor.agents.size(), sum_of_costs, runtime, replan_algo_name);
+        avg_iteration_time = avg_iteration_time + ((fsec)(Time::now() - it_start_time)).count();
     }
 
 
