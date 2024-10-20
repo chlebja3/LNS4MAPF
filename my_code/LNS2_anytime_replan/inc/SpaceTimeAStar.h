@@ -2,27 +2,27 @@
 #include "SingleAgentSolver.h"
 
 
-class DStarNode: public LLNode
+class AStarNode: public LLNode
 {
 public:
 	// define a typedefs for handles to the heaps (allow up to quickly update a node in the heap)
-	typedef pairing_heap< DStarNode*, compare<LLNode::compare_node> >::handle_type open_handle_t;
-	typedef pairing_heap< DStarNode*, compare<LLNode::secondary_compare_node> >::handle_type focal_handle_t;
+	typedef pairing_heap< AStarNode*, compare<LLNode::compare_node> >::handle_type open_handle_t;
+	typedef pairing_heap< AStarNode*, compare<LLNode::secondary_compare_node> >::handle_type focal_handle_t;
 	open_handle_t open_handle;
 	focal_handle_t focal_handle;
 
-	DStarNode() : LLNode() {}
-    DStarNode(const DStarNode& other) : LLNode(other) {} // copy everything except for handles
-	DStarNode(int loc, int g_val, int h_val, LLNode* parent, int timestep, int num_of_conflicts) :
+	AStarNode() : LLNode() {}
+    AStarNode(const AStarNode& other) : LLNode(other) {} // copy everything except for handles
+	AStarNode(int loc, int g_val, int h_val, LLNode* parent, int timestep, int num_of_conflicts) :
 		LLNode(loc, g_val, h_val, parent, timestep, num_of_conflicts) {}
 
 
-	~DStarNode() {}
+	~AStarNode() {}
 
 	// The following is used by for generating the hash value of a nodes
 	struct NodeHasher
 	{
-		size_t operator()(const DStarNode* n) const
+		size_t operator()(const AStarNode* n) const
 		{
 			size_t loc_hash = std::hash<int>()(n->location);
 			size_t timestep_hash = std::hash<int>()(n->timestep);
@@ -35,7 +35,7 @@ public:
 	// both are non-NULL and agree on the id and timestep
 	struct eqnode
 	{
-		bool operator()(const DStarNode* s1, const DStarNode* s2) const
+		bool operator()(const AStarNode* s1, const AStarNode* s2) const
 		{
 			return (s1 == s2) || (s1 && s2 &&
                         s1->location == s2->location &&
@@ -47,7 +47,7 @@ public:
 };
 
 
-class SpaceTimeDStar: public SingleAgentSolver
+class SpaceTimeAStar: public SingleAgentSolver
 {
 public:
     // find path by time-space A* search
@@ -72,27 +72,27 @@ public:
 
     int getTravelTime(int start, int end, const ConstraintTable& constraint_table, int upper_bound);
 
-	string getName() const { return "DStar"; }
+	string getName() const { return "AStar"; }
 
-	SpaceTimeDStar(const Instance& instance, int agent):
+	SpaceTimeAStar(const Instance& instance, int agent):
 		SingleAgentSolver(instance, agent) {}
 
 private:
 	// define typedefs and handles for heap
-	typedef pairing_heap< DStarNode*, compare<DStarNode::compare_node> > heap_open_t;
-	typedef pairing_heap< DStarNode*, compare<DStarNode::secondary_compare_node> > heap_focal_t;
+	typedef pairing_heap< AStarNode*, compare<AStarNode::compare_node> > heap_open_t;
+	typedef pairing_heap< AStarNode*, compare<AStarNode::secondary_compare_node> > heap_focal_t;
 	heap_open_t open_list;
 	heap_focal_t focal_list;
 
 	// define typedef for hash_map
-	typedef unordered_set<DStarNode*, DStarNode::NodeHasher, DStarNode::eqnode> hashtable_t;
+	typedef unordered_set<AStarNode*, AStarNode::NodeHasher, AStarNode::eqnode> hashtable_t;
 	hashtable_t allNodes_table;
 
 	// Updates the path datamember
 	void updatePath(const LLNode* goal, vector<PathEntry> &path);
 	void updateFocalList();
-	inline DStarNode* popNode();
-	inline void pushNode(DStarNode* node);
+	inline AStarNode* popNode();
+	inline void pushNode(AStarNode* node);
 	void releaseNodes();
 
 };

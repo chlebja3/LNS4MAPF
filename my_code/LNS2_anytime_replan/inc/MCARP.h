@@ -2,6 +2,7 @@
 #include <boost/functional/hash.hpp>
 #include "SingleAgentSolver.h"
 #include "ReservationTable.h"
+#include <stdlib.h>
 
   class MCARPNode: public LLNode
   {

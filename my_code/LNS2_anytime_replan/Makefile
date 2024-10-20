@@ -57,10 +57,10 @@ RM = /home/chlebajz/.local/lib/python3.8/site-packages/cmake/data/bin/cmake -E r
 EQUALS = =
 
 # The top-level source directory on which CMake was run.
-CMAKE_SOURCE_DIR = /home/chlebajz/Programy/diplomka/LNS4MAPF/papers/MAPF-LNS2
+CMAKE_SOURCE_DIR = /home/chlebajz/Programy/diplomka/LNS4MAPF/my_code/LNS2_anytime_replan
 
 # The top-level build directory on which CMake was run.
-CMAKE_BINARY_DIR = /home/chlebajz/Programy/diplomka/LNS4MAPF/papers/MAPF-LNS2
+CMAKE_BINARY_DIR = /home/chlebajz/Programy/diplomka/LNS4MAPF/my_code/LNS2_anytime_replan
 
 #=============================================================================
 # Targets provided globally by CMake.
@@ -87,9 +87,9 @@ rebuild_cache/fast: rebuild_cache
 
 # The main all target
 all: cmake_check_build_system
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/chlebajz/Programy/diplomka/LNS4MAPF/papers/MAPF-LNS2/CMakeFiles /home/chlebajz/Programy/diplomka/LNS4MAPF/papers/MAPF-LNS2//CMakeFiles/progress.marks
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/chlebajz/Programy/diplomka/LNS4MAPF/my_code/LNS2_anytime_replan/CMakeFiles /home/chlebajz/Programy/diplomka/LNS4MAPF/my_code/LNS2_anytime_replan//CMakeFiles/progress.marks
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 all
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/chlebajz/Programy/diplomka/LNS4MAPF/papers/MAPF-LNS2/CMakeFiles 0
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/chlebajz/Programy/diplomka/LNS4MAPF/my_code/LNS2_anytime_replan/CMakeFiles 0
 .PHONY : all
 
 # The main clean target
@@ -609,6 +609,30 @@ src/LNS.cpp.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/lns.dir/build.make CMakeFiles/lns.dir/src/LNS.cpp.s
 .PHONY : src/LNS.cpp.s
 
+src/MCARP.o: src/MCARP.cpp.o
+.PHONY : src/MCARP.o
+
+# target to build an object file
+src/MCARP.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/lns.dir/build.make CMakeFiles/lns.dir/src/MCARP.cpp.o
+.PHONY : src/MCARP.cpp.o
+
+src/MCARP.i: src/MCARP.cpp.i
+.PHONY : src/MCARP.i
+
+# target to preprocess a source file
+src/MCARP.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/lns.dir/build.make CMakeFiles/lns.dir/src/MCARP.cpp.i
+.PHONY : src/MCARP.cpp.i
+
+src/MCARP.s: src/MCARP.cpp.s
+.PHONY : src/MCARP.s
+
+# target to generate assembly for a file
+src/MCARP.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/lns.dir/build.make CMakeFiles/lns.dir/src/MCARP.cpp.s
+.PHONY : src/MCARP.cpp.s
+
 src/PIBT/graph.o: src/PIBT/graph.cpp.o
 .PHONY : src/PIBT/graph.o
 
@@ -1017,6 +1041,30 @@ src/SpaceTimeAStar.cpp.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/lns.dir/build.make CMakeFiles/lns.dir/src/SpaceTimeAStar.cpp.s
 .PHONY : src/SpaceTimeAStar.cpp.s
 
+src/SpaceTimeDStar.o: src/SpaceTimeDStar.cpp.o
+.PHONY : src/SpaceTimeDStar.o
+
+# target to build an object file
+src/SpaceTimeDStar.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/lns.dir/build.make CMakeFiles/lns.dir/src/SpaceTimeDStar.cpp.o
+.PHONY : src/SpaceTimeDStar.cpp.o
+
+src/SpaceTimeDStar.i: src/SpaceTimeDStar.cpp.i
+.PHONY : src/SpaceTimeDStar.i
+
+# target to preprocess a source file
+src/SpaceTimeDStar.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/lns.dir/build.make CMakeFiles/lns.dir/src/SpaceTimeDStar.cpp.i
+.PHONY : src/SpaceTimeDStar.cpp.i
+
+src/SpaceTimeDStar.s: src/SpaceTimeDStar.cpp.s
+.PHONY : src/SpaceTimeDStar.s
+
+# target to generate assembly for a file
+src/SpaceTimeDStar.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/lns.dir/build.make CMakeFiles/lns.dir/src/SpaceTimeDStar.cpp.s
+.PHONY : src/SpaceTimeDStar.cpp.s
+
 src/common.o: src/common.cpp.o
 .PHONY : src/common.o
 
@@ -1134,6 +1182,9 @@ help:
 	@echo "... src/LNS.o"
 	@echo "... src/LNS.i"
 	@echo "... src/LNS.s"
+	@echo "... src/MCARP.o"
+	@echo "... src/MCARP.i"
+	@echo "... src/MCARP.s"
 	@echo "... src/PIBT/graph.o"
 	@echo "... src/PIBT/graph.i"
 	@echo "... src/PIBT/graph.s"
@@ -1185,6 +1236,9 @@ help:
 	@echo "... src/SpaceTimeAStar.o"
 	@echo "... src/SpaceTimeAStar.i"
 	@echo "... src/SpaceTimeAStar.s"
+	@echo "... src/SpaceTimeDStar.o"
+	@echo "... src/SpaceTimeDStar.i"
+	@echo "... src/SpaceTimeDStar.s"
 	@echo "... src/common.o"
 	@echo "... src/common.i"
 	@echo "... src/common.s"
