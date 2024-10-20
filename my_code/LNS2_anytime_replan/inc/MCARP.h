@@ -2,10 +2,9 @@
 #include <boost/functional/hash.hpp>
 #include "SingleAgentSolver.h"
 #include "ReservationTable.h"
-#include <stdlib.h>
 
-  class MCARPNode: public LLNode
-  {
+class MCARPNode: public LLNode
+{
   public:
     // define a typedefs for handles to the heaps (allow up to quickly update a node in the heap)
     typedef boost::heap::pairing_heap< MCARPNode*, compare<MCARPNode::compare_node> >::handle_type open_handle_t;
@@ -89,6 +88,8 @@
     typedef boost::heap::pairing_heap< MCARPNode*, boost::heap::compare<LLNode::secondary_compare_node> > heap_focal_t;
     heap_open_t open_list;
     heap_focal_t focal_list;
+    // remember the most recent path to be able to reuse it 
+    Path last_path;
 
     // define typedef for hash_map
     typedef boost::unordered_map<MCARPNode*, list<MCARPNode*>, MCARPNode::NodeHasher, MCARPNode::eqnode> hashtable_t;
