@@ -1,6 +1,6 @@
-#include "SIPP.h"
+#include "MCARP.h"
 
-void SIPP::updatePath(const LLNode* goal, vector<PathEntry> &path)
+void MCARP::updatePath(const LLNode* goal, vector<PathEntry> &path)
 {
     num_collisions = goal->num_of_conflicts;
 	path.resize(goal->timestep + 1);
@@ -26,7 +26,7 @@ void SIPP::updatePath(const LLNode* goal, vector<PathEntry> &path)
 
 // find path by A*
 // Returns a path that minimizes the collisions with the paths in the path table, breaking ties by the length
-Path SIPP::findPath(const ConstraintTable& constraint_table)
+Path MCARP::findPath(const ConstraintTable& constraint_table)
 {
     reset();
     //Path path = findNoCollisionPath(constraint_table);
@@ -41,7 +41,7 @@ Path SIPP::findPath(const ConstraintTable& constraint_table)
     auto last_target_collision_time = constraint_table.getLastCollisionTimestep(goal_location);
     // generate start and add it to the OPEN & FOCAL list
     auto h = max(max(my_heuristic[start_location], holding_time), last_target_collision_time + 1);
-    auto start = new SIPPNode(start_location, 0, h, nullptr, 0, get<1>(interval), get<1>(interval),
+    auto start = new MCARPNode(start_location, 0, h, nullptr, 0, get<1>(interval), get<1>(interval),
                                 get<2>(interval), get<2>(interval));
     pushNodeToFocal(start);
 
@@ -69,7 +69,7 @@ Path SIPP::findPath(const ConstraintTable& constraint_table)
                 break;
             }
             // generate a goal node
-            auto goal = new SIPPNode(*curr);
+            auto goal = new MCARPNode(*curr);
             goal->is_goal = true;
             goal->h_val = 0;
             goal->num_of_conflicts += future_collisions;
@@ -96,7 +96,7 @@ Path SIPP::findPath(const ConstraintTable& constraint_table)
                 auto next_h_val = max(my_heuristic[next_location], (next_collisions > 0?
                     holding_time : curr->getFVal()) - next_timestep); // path max
                 // generate (maybe temporary) node
-                auto next = new SIPPNode(next_location, next_timestep, next_h_val, curr, next_timestep,
+                auto next = new MCARPNode(next_location, next_timestep, next_h_val, curr, next_timestep,
                                          next_high_generation, next_high_expansion, next_v_collision, next_collisions);
                 // try to retrieve it from the hash table
                 if (dominanceCheck(next))
@@ -115,7 +115,7 @@ Path SIPP::findPath(const ConstraintTable& constraint_table)
             auto next_collisions = curr->num_of_conflicts +
                     // (int)curr->collision_v * max(next_timestep - curr->timestep - 1, 0) +
 		    (int)get<2>(interval);
-            auto next = new SIPPNode(curr->location, next_timestep, next_h_val, curr, next_timestep,
+            auto next = new MCARPNode(curr->location, next_timestep, next_h_val, curr, next_timestep,
                                      get<1>(interval), get<1>(interval), get<2>(interval),
                                      next_collisions);
             next->wait_at_goal = (curr->location == goal_location);
@@ -133,16 +133,16 @@ Path SIPP::findPath(const ConstraintTable& constraint_table)
     releaseNodes();
     return path;
 }
-Path SIPP::findOptimalPath(const HLNode& node, const ConstraintTable& initial_constraints,
+Path MCARP::findOptimalPath(const HLNode& node, const ConstraintTable& initial_constraints,
 	const vector<Path*>& paths, int agent, int lowerbound)
 {
 	return findSuboptimalPath(node, initial_constraints, paths, agent, lowerbound, 1).first;
 }
-// find path by SIPP
+// find path by MCARP
 // Returns a shortest path that satisfies the constraints of the give node  while
 // minimizing the number of internal conflicts (that is conflicts with known_paths for other agents found so far).
 // lowerbound is an underestimation of the length of the path in order to speed up the search.
-pair<Path, int> SIPP::findSuboptimalPath(const HLNode& node, const ConstraintTable& initial_constraints,
+pair<Path, int> MCARP::findSuboptimalPath(const HLNode& node, const ConstraintTable& initial_constraints,
 	const vector<Path*>& paths, int agent, int lowerbound, double w)
 {
     reset();
@@ -169,7 +169,7 @@ pair<Path, int> SIPP::findSuboptimalPath(const HLNode& node, const ConstraintTab
 		return {path, 0};
 
 	 // generate start and add it to the OPEN list
-	auto start = new SIPPNode(start_location, 0, max(my_heuristic[start_location], holding_time), nullptr, 0,
+	auto start = new MCARPNode(start_location, 0, max(my_heuristic[start_location], holding_time), nullptr, 0,
         get<1>(interval), get<1>(interval), get<2>(interval), get<2>(interval));
     min_f_val = max(holding_time, max((int)start->getFVal(), lowerbound));
     pushNodeToOpenAndFocal(start);
@@ -177,7 +177,7 @@ pair<Path, int> SIPP::findSuboptimalPath(const HLNode& node, const ConstraintTab
 	while (!open_list.empty()) 
 	{
 		updateFocalList(); // update FOCAL if min f-val increased
-		SIPPNode* curr = focal_list.top(); focal_list.pop();
+		MCARPNode* curr = focal_list.top(); focal_list.pop();
 		open_list.erase(curr->open_handle);
 		curr->in_openlist = false;
 		num_expanded++;
@@ -207,7 +207,7 @@ pair<Path, int> SIPP::findSuboptimalPath(const HLNode& node, const ConstraintTab
                 int next_conflicts = curr->num_of_conflicts +
                         //(int)curr->collision_v * max(next_timestep - curr->timestep - 1, 0) +
                         (int)next_v_collision + (int)next_e_collision;
-                auto next = new SIPPNode(next_location, next_g_val, next_h_val, curr, next_timestep,
+                auto next = new MCARPNode(next_location, next_g_val, next_h_val, curr, next_timestep,
                         next_high_generation, next_high_expansion, next_v_collision, next_conflicts);
                 if (dominanceCheck(next))
                     pushNodeToOpenAndFocal(next);
@@ -226,7 +226,7 @@ pair<Path, int> SIPP::findSuboptimalPath(const HLNode& node, const ConstraintTab
             auto next_collisions = curr->num_of_conflicts +
                                    //(int)curr->collision_v * max(next_timestep - curr->timestep - 1, 0) + // wait time
                                    (int)get<2>(interval);
-            auto next = new SIPPNode(curr->location, next_timestep, next_h_val, curr, next_timestep,
+            auto next = new MCARPNode(curr->location, next_timestep, next_h_val, curr, next_timestep,
                                      get<1>(interval), get<1>(interval), get<2>(interval), next_collisions);
             if (curr->location == goal_location)
                 next->wait_at_goal = true;
@@ -241,7 +241,7 @@ pair<Path, int> SIPP::findSuboptimalPath(const HLNode& node, const ConstraintTab
 	releaseNodes();
 	return {path, min_f_val};
 }
-/*Path SIPP::findNoCollisionPath(const ConstraintTable& constraint_table)
+/*Path MCARP::findNoCollisionPath(const ConstraintTable& constraint_table)
 {
     reset();
     ReservationTable reservation_table(constraint_table, goal_location);
@@ -253,7 +253,7 @@ pair<Path, int> SIPP::findSuboptimalPath(const HLNode& node, const ConstraintTab
                             constraint_table.getLastCollisionTimestep(goal_location) + 1);
     // generate start and add it to the OPEN & FOCAL list
 
-    auto start = new SIPPNode(start_location, 0, max(my_heuristic[start_location], holding_time),
+    auto start = new MCARPNode(start_location, 0, max(my_heuristic[start_location], holding_time),
                               nullptr, 0, interval, 0);
     pushNodeToFocal(start);
     while (!focal_list.empty())
@@ -298,13 +298,13 @@ pair<Path, int> SIPP::findSuboptimalPath(const HLNode& node, const ConstraintTab
     releaseNodes();
     return path;
 }*/
-// TODO:: currently this is implemented in SIPP inefficiently
-int SIPP::getTravelTime(int start, int end, const ConstraintTable& constraint_table, int upper_bound)
+// TODO:: currently this is implemented in MCARP inefficiently
+int MCARP::getTravelTime(int start, int end, const ConstraintTable& constraint_table, int upper_bound)
 {
     reset();
     min_f_val = -1; // this disables focal list
     int length = MAX_TIMESTEP;
-    auto root = new SIPPNode(start, 0, compute_heuristic(start, end), nullptr, 0, 1, 1, 0, 0);
+    auto root = new MCARPNode(start, 0, compute_heuristic(start, end), nullptr, 0, 1, 1, 0, 0);
     pushNodeToOpenAndFocal(root);
     auto static_timestep = constraint_table.getMaxTimestep(); // everything is static after this timestep
     while (!open_list.empty())
@@ -335,7 +335,7 @@ int SIPP::getTravelTime(int start, int end, const ConstraintTable& constraint_ta
                 int next_h_val = compute_heuristic(next_location, end);
                 if (next_g_val + next_h_val >= upper_bound) // the cost of the path is larger than the upper bound
                     continue;
-                auto next = new SIPPNode(next_location, next_g_val, next_h_val, nullptr, next_timestep,
+                auto next = new MCARPNode(next_location, next_g_val, next_h_val, nullptr, next_timestep,
                                          next_timestep + 1, next_timestep + 1, 0, 0);
                 if (dominanceCheck(next))
                     pushNodeToOpenAndFocal(next);
@@ -351,7 +351,7 @@ int SIPP::getTravelTime(int start, int end, const ConstraintTable& constraint_ta
     return length;
 }
 
-void SIPP::updateFocalList()
+void MCARP::updateFocalList()
 {
 	auto open_head = open_list.top();
 	if (open_head->getFVal() > min_f_val)
@@ -366,7 +366,7 @@ void SIPP::updateFocalList()
 	}
 }
 
-inline void SIPP::pushNodeToOpenAndFocal(SIPPNode* node)
+inline void MCARP::pushNodeToOpenAndFocal(MCARPNode* node)
 {
     num_generated++;
 	node->open_handle = open_list.push(node);
@@ -375,14 +375,14 @@ inline void SIPP::pushNodeToOpenAndFocal(SIPPNode* node)
 		node->focal_handle = focal_list.push(node);
     allNodes_table[node].push_back(node);
 }
-inline void SIPP::pushNodeToFocal(SIPPNode* node)
+inline void MCARP::pushNodeToFocal(MCARPNode* node)
 {
     num_generated++;
     allNodes_table[node].push_back(node);
     node->in_openlist = true;
     node->focal_handle = focal_list.push(node); // we only use focal list; no open list is used
 }
-inline void SIPP::eraseNodeFromLists(SIPPNode* node)
+inline void MCARP::eraseNodeFromLists(MCARPNode* node)
 {
     if (open_list.empty())
     { // we only have focal list
@@ -399,7 +399,7 @@ inline void SIPP::eraseNodeFromLists(SIPPNode* node)
             focal_list.erase(node->focal_handle);
     }
 }
-void SIPP::releaseNodes()
+void MCARP::releaseNodes()
 {
     open_list.clear();
     focal_list.clear();
@@ -412,9 +412,9 @@ void SIPP::releaseNodes()
     useless_nodes.clear();
 }
 
-void SIPP::printSearchTree() const
+void MCARP::printSearchTree() const
 {
-    vector<list<SIPPNode*>> nodes;
+    vector<list<MCARPNode*>> nodes;
     for (const auto & node_list : allNodes_table)
     {
         for (const auto & n : node_list.second)
@@ -435,7 +435,7 @@ void SIPP::printSearchTree() const
 }
 
 // return true iff we the new node is not dominated by any old node
-bool SIPP::dominanceCheck(SIPPNode* new_node)
+bool MCARP::dominanceCheck(MCARPNode* new_node)
 {
     auto ptr = allNodes_table.find(new_node);
     if (ptr == allNodes_table.end())

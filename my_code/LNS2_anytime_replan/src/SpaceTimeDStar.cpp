@@ -1,7 +1,7 @@
-#include "SpaceTimeAStar.h"
+#include "SpaceTimeDStar.h"
 
 
-void SpaceTimeAStar::updatePath(const LLNode* goal, vector<PathEntry> &path)
+void SpaceTimeDStar::updatePath(const LLNode* goal, vector<PathEntry> &path)
 {
     num_collisions = goal->num_of_conflicts;
     const LLNode* curr = goal;
@@ -17,7 +17,7 @@ void SpaceTimeAStar::updatePath(const LLNode* goal, vector<PathEntry> &path)
 }
 
 
-Path SpaceTimeAStar::findOptimalPath(const HLNode& node, const ConstraintTable& initial_constraints,
+Path SpaceTimeDStar::findOptimalPath(const HLNode& node, const ConstraintTable& initial_constraints,
 	const vector<Path*>& paths, int agent, int lowerbound)
 {
 	return findSuboptimalPath(node, initial_constraints, paths, agent, lowerbound, 1).first;
@@ -25,7 +25,7 @@ Path SpaceTimeAStar::findOptimalPath(const HLNode& node, const ConstraintTable& 
 
 // find path by time-space A* search
 // Returns a path that minimizes the collisions with the paths in the path table, breaking ties by the length
-Path SpaceTimeAStar::findPath(const ConstraintTable& constraint_table)
+Path SpaceTimeDStar::findPath(const ConstraintTable& constraint_table)
 {
     reset();
     Path path;
@@ -38,7 +38,7 @@ Path SpaceTimeAStar::findPath(const ConstraintTable& constraint_table)
     auto last_target_collision_time = constraint_table.getLastCollisionTimestep(goal_location);
     // generate start and add it to the OPEN & FOCAL list
     auto h = max(max(my_heuristic[start_location], holding_time), last_target_collision_time + 1);
-    auto start = new AStarNode(start_location, 0, h, nullptr, 0, 0);
+    auto start = new DStarNode(start_location, 0, h, nullptr, 0, 0);
     num_generated++;
     start->in_openlist = true;
     start->focal_handle = focal_list.push(start); // we only use focal list; no open list is used
@@ -67,7 +67,7 @@ Path SpaceTimeAStar::findPath(const ConstraintTable& constraint_table)
                 break;
             }
             // generate a goal node
-            auto goal = new AStarNode(*curr);
+            auto goal = new DStarNode(*curr);
             goal->is_goal = true;
             goal->parent = curr;
             goal->num_of_conflicts += future_collisions;
@@ -129,7 +129,7 @@ Path SpaceTimeAStar::findPath(const ConstraintTable& constraint_table)
             else
                 next_h_val = max(next_h_val, holding_time - next_g_val); // path max
             // generate (maybe temporary) node
-            auto next = new AStarNode(next_location, next_g_val, next_h_val,
+            auto next = new DStarNode(next_location, next_g_val, next_h_val,
                                       curr, next_timestep, num_conflicts);
 
             if (next_location == goal_location && curr->location == goal_location)
@@ -178,7 +178,7 @@ Path SpaceTimeAStar::findPath(const ConstraintTable& constraint_table)
 // Returns a bounded-suboptimal path that satisfies the constraints of the give node  while
 // minimizing the number of internal conflicts (that is conflicts with known_paths for other agents found so far).
 // lowerbound is an underestimation of the length of the path in order to speed up the search.
-pair<Path, int> SpaceTimeAStar::findSuboptimalPath(const HLNode& node, const ConstraintTable& initial_constraints,
+pair<Path, int> SpaceTimeDStar::findSuboptimalPath(const HLNode& node, const ConstraintTable& initial_constraints,
 	const vector<Path*>& paths, int agent, int lowerbound, double w)
 {
     reset();
@@ -205,7 +205,7 @@ pair<Path, int> SpaceTimeAStar::findSuboptimalPath(const HLNode& node, const Con
     lowerbound =  max(holding_time, lowerbound);
 
 	// generate start and add it to the OPEN & FOCAL list
-	auto start = new AStarNode(start_location, 0, max(lowerbound, my_heuristic[start_location]), nullptr, 0, 0);
+	auto start = new DStarNode(start_location, 0, max(lowerbound, my_heuristic[start_location]), nullptr, 0, 0);
 
 	num_generated++;
 	start->open_handle = open_list.push(start);
@@ -259,7 +259,7 @@ pair<Path, int> SpaceTimeAStar::findSuboptimalPath(const HLNode& node, const Con
 				constraint_table.getNumOfConflictsForStep(curr->location, next_location, next_timestep);
 
 			// generate (maybe temporary) node
-			auto next = new AStarNode(next_location, next_g_val, next_h_val,
+			auto next = new DStarNode(next_location, next_g_val, next_h_val,
 				curr, next_timestep, next_internal_conflicts);
 			if (next_location == goal_location && curr->location == goal_location)
 				next->wait_at_goal = true;
@@ -319,15 +319,15 @@ pair<Path, int> SpaceTimeAStar::findSuboptimalPath(const HLNode& node, const Con
 }
 
 
-int SpaceTimeAStar::getTravelTime(int start, int end, const ConstraintTable& constraint_table, int upper_bound)
+int SpaceTimeDStar::getTravelTime(int start, int end, const ConstraintTable& constraint_table, int upper_bound)
 {
     reset();
 	int length = MAX_TIMESTEP;
     auto static_timestep = constraint_table.getMaxTimestep() + 1; // everything is static after this timestep
-	auto root = new AStarNode(start, 0, compute_heuristic(start, end), nullptr, 0, 0);
+	auto root = new DStarNode(start, 0, compute_heuristic(start, end), nullptr, 0, 0);
 	root->open_handle = open_list.push(root);  // add root to heap
 	allNodes_table.insert(root);       // add root to hash_table (nodes)
-	AStarNode* curr = nullptr;
+	DStarNode* curr = nullptr;
 	while (!open_list.empty())
 	{
 		curr = open_list.top(); open_list.pop();
@@ -356,7 +356,7 @@ int SpaceTimeAStar::getTravelTime(int start, int end, const ConstraintTable& con
 				int next_h_val = compute_heuristic(next_location, end);
 				if (next_g_val + next_h_val >= upper_bound) // the cost of the path is larger than the upper bound
 					continue;
-				auto next = new AStarNode(next_location, next_g_val, next_h_val, nullptr, next_timestep, 0);
+				auto next = new DStarNode(next_location, next_g_val, next_h_val, nullptr, next_timestep, 0);
 				auto it = allNodes_table.find(next);
 				if (it == allNodes_table.end())
 				{  // add the newly generated node to heap and hash table
@@ -383,7 +383,7 @@ int SpaceTimeAStar::getTravelTime(int start, int end, const ConstraintTable& con
 	return length;
 }
 
-inline AStarNode* SpaceTimeAStar::popNode()
+inline DStarNode* SpaceTimeDStar::popNode()
 {
 	auto node = focal_list.top(); focal_list.pop();
 	open_list.erase(node->open_handle);
@@ -393,7 +393,7 @@ inline AStarNode* SpaceTimeAStar::popNode()
 }
 
 
-inline void SpaceTimeAStar::pushNode(AStarNode* node)
+inline void SpaceTimeDStar::pushNode(DStarNode* node)
 {
 	node->open_handle = open_list.push(node);
 	node->in_openlist = true;
@@ -403,7 +403,7 @@ inline void SpaceTimeAStar::pushNode(AStarNode* node)
 }
 
 
-void SpaceTimeAStar::updateFocalList()
+void SpaceTimeDStar::updateFocalList()
 {
 	auto open_head = open_list.top();
 	if (open_head->getFVal() > min_f_val)
@@ -419,7 +419,7 @@ void SpaceTimeAStar::updateFocalList()
 }
 
 
-void SpaceTimeAStar::releaseNodes()
+void SpaceTimeDStar::releaseNodes()
 {
 	open_list.clear();
 	focal_list.clear();
