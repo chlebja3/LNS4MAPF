@@ -2,6 +2,7 @@
 #include "common.h"
 #include "SpaceTimeAStar.h"
 #include "SIPP.h"
+#include "MCARP.h"
 
 struct Agent
 {
@@ -9,12 +10,20 @@ struct Agent
     SingleAgentSolver* path_planner = nullptr; // start, goal, and heuristics are stored in the path planner
     Path path;
 
-    Agent(const Instance& instance, int id, bool sipp) : id(id)
+    Agent(const Instance& instance, int id, const string & single_agent_replanner_name) : id(id)
     {
-        if(sipp)
+        if (single_agent_replanner_name == "SIPP")
             path_planner = new SIPP(instance, id);
-        else
+        else if (single_agent_replanner_name == "STAstar")
             path_planner = new SpaceTimeAStar(instance, id);
+        else if (single_agent_replanner_name == "STDstar")
+        {
+            path_planner = new SpaceTimeAStar(instance, id);
+            std::cout << "Space Time Dstar is not yet implemented." << std::endl;
+        }
+        else if (single_agent_replanner_name == "MCARP")
+            path_planner = new MCARP(instance, id);
+        else std::cout << "Unknown single agent replanner." << std::endl;
     }
     ~Agent(){ delete path_planner; }
 

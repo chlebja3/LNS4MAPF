@@ -28,7 +28,7 @@ int main(int argc, char** argv)
 
 		// solver
 		("solver", po::value<string>()->default_value("LNS"), "solver (LNS, A-BCBS, A-EECBS)")
-		("sipp", po::value<bool>()->default_value(true), "Use SIPP as the single-agent solver")
+		("singleAgentReplanner", po::value<string>()->default_value("SIPP"), "Single agent planner used for replanning (STAstar, SIPP, STDstar, MCARP)")
 		("seed", po::value<int>()->default_value(0), "Random seed")
 
         // params for LNS
@@ -83,7 +83,7 @@ int main(int argc, char** argv)
                 vm["maxIterations"].as<int>(),
                 vm["initLNS"].as<bool>(),
                 vm["initDestoryStrategy"].as<string>(),
-                vm["sipp"].as<bool>(),
+                vm["singleAgentReplanner"].as<string>(),
                 screen, pipp_option);
         bool succ = lns.run();
         if (succ)

@@ -4,7 +4,7 @@
 
 LNS::LNS(const Instance& instance, double time_limit, const string & init_algo_name, const string & replan_algo_name,
          const string & destory_name, int neighbor_size, int num_of_iterations, bool use_init_lns,
-         const string & init_destory_name, bool use_sipp, int screen, PIBTPPS_option pipp_option) :
+         const string & init_destory_name, const string & single_agent_replanner_name, int screen, PIBTPPS_option pipp_option) :
          BasicLNS(instance, time_limit, neighbor_size, screen),
          init_algo_name(init_algo_name),  replan_algo_name(replan_algo_name), num_of_iterations(num_of_iterations),
          use_init_lns(use_init_lns),init_destory_name(init_destory_name),
@@ -34,7 +34,7 @@ LNS::LNS(const Instance& instance, double time_limit, const string & init_algo_n
     int N = instance.getDefaultNumberOfAgents();
     agents.reserve(N);
     for (int i = 0; i < N; i++)
-        agents.emplace_back(instance, i, use_sipp);
+        agents.emplace_back(instance, i, single_agent_replanner_name);
     preprocessing_time = ((fsec)(Time::now() - start_time)).count();
     if (screen >= 2)
         cout << "Pre-processing time = " << preprocessing_time << " seconds." << endl;

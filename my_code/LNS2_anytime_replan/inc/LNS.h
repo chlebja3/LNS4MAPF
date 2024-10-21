@@ -30,7 +30,7 @@ public:
 
     LNS(const Instance& instance, double time_limit,
         const string & init_algo_name, const string & replan_algo_name, const string & destory_name,
-        int neighbor_size, int num_of_iterations, bool init_lns, const string & init_destory_name, bool use_sipp,
+        int neighbor_size, int num_of_iterations, bool init_lns, const string & init_destory_name, const string & single_agent_replanner_name,
         int screen, PIBTPPS_option pipp_option);
     ~LNS()
     {
