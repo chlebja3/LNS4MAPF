@@ -7,7 +7,7 @@ Average ALNS time = 1.0862e-07, average RANDOMWALK time = 3.68371e-05, average I
 
 LNS2:
 command: 
-../../papers/MAPF-LNS2/lns -m ../../MAPF-benchmark/mapf-map/den520d.map -a ../../MAPF-benchmark/mapf-scen-random/scen-random/den520d-random-1.scen -o a.csv -k 700 -t 30 --initAlgo PP
+../../papers/MAPF-LNS2/lns -m ../../MAPF-benchmark/mapf-map/den520d.map -a ../../MAPF-benchmark/mapf-scen-random/scen-random/den520d-random-1.scen -o a.csv -k 700 -t 30 --initAlgo PP --maxIterations 100000
 results:
 LNS(PP;PP): runtime = 30.004, iterations = 1581, solution cost = 123548, initial solution cost = 139542, failed iterations = 1031
 average replan time = 0.01742, average iteration time = 0.0175891
@@ -32,3 +32,10 @@ LNS with EECBS for replan:
 results:
 LNS(PP;EECBS): Iterations = 307, solution cost = 132492, initial solution cost = 139498, runtime = 48.084, group size = 4.98693, failed iterations = 5, worse iterations = 135
 Average ALNS time = 1.45324e-07, average RANDOMWALK time = 5.52682e-05, average INTERSECTION time = 4.04576e-05, average RANDOMAGENTS time = 1.11264e-06, average replan time = 0.153752, average iteration time = 0.153872, average ALNS update time = 1.22216e-07
+
+
+
+MCARP:
+../../my_code/LNS2_anytime_replan/lns -m ../../MAPF-benchmark/mapf-map/den520d.map -a ../../MAPF-benchmark/mapf-scen-random/scen-random/den520d-random-1.scen -o a.csv -k 700 -t 30 --initAlgo PP --singleAgentReplan MCARP --maxIterations 100000
+LNS(PP;PP): runtime = 30.0018, iterations = 1471, solution cost = 123267, initial solution cost = 139542, failed iterations = 932
+average replan time = 0.0186752, average iteration time = 0.0188463
