@@ -18,3 +18,7 @@ eecbs je skoro 10x pomalejsi nez pp, asi velky rozptyl casu, skoro zadne failed 
 # do priste zkusit d*lite, 
 
 # podivat se na anytime SIPP - vypada to, ze pouziva D*lite myslenky aplikovane na sipp
+
+# podivat se na nove LNS verzi
+porovnat na stejne instanci sipp a stastar pro hodne instanci -> statisticky overit ktery je tedy lepsi
+prohlednout implementaci sippu
