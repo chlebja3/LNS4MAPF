@@ -54,7 +54,26 @@ bool LNS::run()
     // get initial solution by PP
     bool succ = getInitialSolution();
     initial_solution_runtime = ((fsec)(Time::now() - start_time)).count();
-    std::cout << "Initial solution runtime: " << initial_solution_runtime << ", success: " << succ << ", average replan time: " << avg_replan_time << std:endl;
+
+    // calculate average number of expanded nodes
+    float avg_expanded = 0;
+    int agent_num = 0;
+    for (const auto & agent : agents)
+    {
+        agent.path_planner->reset(); // so that the accumulated values are updated
+        if (agent.path_planner->num_runs > 0)
+        {
+          avg_expanded += agent.path_planner->accumulated_num_expanded / agent.path_planner->num_runs;
+          agent_num += 1;
+        }
+    }
+    if (agent_num > 0)
+    {
+      avg_expanded = avg_expanded / agent_num;
+    }
+    else std::cout << "Error: No agent was planned." << std::endl;
+
+    std::cout << "Initial solution runtime: " << initial_solution_runtime << ", success: " << succ << ", average replan time: " << avg_replan_time << ", average expanded: " << avg_expanded << std::endl;
     return succ;
 }
 
@@ -243,9 +262,9 @@ bool LNS::runPP()
             cout << "Remaining agents = " << remaining_agents <<
                  ", remaining time = " << T - ((fsec)(Time::now() - time)).count() << " seconds. " << endl
                  << "Agent " << agents[id].id << endl;
-        high_resolution_clock::time_point SA_replan_start_time = Time::now(); // start time of single agent replanning 
+        high_resolution_clock::time_point SA_replan_start = Time::now(); // start time of single agent replanning 
         agents[id].path = agents[id].path_planner->findPath(constraint_table);
-        avg_replan_time += ((fsec)(Time::now() - SA_replan_start)).count()
+        avg_replan_time += ((fsec)(Time::now() - SA_replan_start)).count();
         if (agents[id].path.empty()) break;
         neighbor.sum_of_costs += (int)agents[id].path.size() - 1;
         if (neighbor.sum_of_costs >= neighbor.old_sum_of_costs)
