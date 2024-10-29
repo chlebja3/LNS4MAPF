@@ -22,15 +22,15 @@ def parse_subprocess_output(res):
 
 # parameters
 agent_num = 500 # number of agents
-scen_num = 2 # number of scenes
+scen_num = 20 # number of scenes
 results_file = "results"
 mapf_benchmark_dir = "../../MAPF-benchmark/"
 scen_dir = mapf_benchmark_dir + "mapf-scen-random/scen-random/"
 solver_path = "../../my_code/SIPP_STASTAR_comparison/lns"
 
 print("Number of agents:", agent_num)
-# map_names = ["Berlin_1_256", "Boston_0_256", "brc202d", "den312d", "den520d", "empty-32-32", "ht_chantry", "ht_mansion_n", "lak303d", "maze-128-128-10", "random-32-32-10", "random-64-64-20", "warehouse-20-40-10-2-1"]
-map_names = ["brc202d", "den312d"]
+map_names = ["Berlin_1_256", "Boston_0_256", "brc202d", "den312d", "den520d", "empty-32-32", "ht_chantry", "ht_mansion_n", "lak303d", "maze-128-128-10", "random-64-64-20", "warehouse-20-40-10-2-1"]
+# map_names = ["brc202d", "den312d"]
 
 
 # list all maps
@@ -49,14 +49,22 @@ for map_name in tqdm.tqdm(map_names, desc="outer", position=0):
 
         # construct experiment for STAstar
         exp = construct_experiment(solver_path, map_path, scen_path, results_file, agent_num, 15, sipp=0)
-        res = subprocess.check_output(exp)[:-1].decode('UTF-8')
+        try:
+            res = subprocess.check_output(exp)[:-1].decode('UTF-8')
+        except:
+            print("ASTAR Solver returned error for map: ", map_name, ", scene: ", s)
+            continue
         res = parse_subprocess_output(res)
         results_stas_m.append(res)
 
-
         # construct experiment for SIPP
         exp = construct_experiment(solver_path, map_path, scen_path, results_file, agent_num, 15, sipp=1)
-        res = subprocess.check_output(exp)[:-1].decode('UTF-8')
+        try:
+            res = subprocess.check_output(exp)[:-1].decode('UTF-8')
+        except:
+            print("SIPP Solver returned error for map: ", map_name, ", scene: ", s)
+            results_stas_m = results_stas_m[:-1]
+            continue
         res = parse_subprocess_output(res)
         results_sipp_m.append(res)
 
@@ -68,12 +76,6 @@ results_stas = np.asarray(results_stas)
 
 # results_sipp = np.mean(np.asarray(results_sipp), axis=1)
 # results_stas = np.mean(np.asarray(results_stas), axis=1)
-
-print("SIPP results")
-print("runtime", "success", "replan time", "expanded")
-print(results_sipp)
-print("STAS results")
-print(results_stas)
 
 np.savetxt(results_file + "_SIPP.txt", results_sipp.reshape((len(map_names), -1)))
 np.savetxt(results_file + "_STAS.txt", results_stas.reshape((len(map_names), -1)))
