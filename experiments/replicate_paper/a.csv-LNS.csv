@@ -20,3 +20,4 @@ runtime,solution cost,initial solution cost,lower bound,sum of distance,iteratio
 1.8353e-05,139542,139542,117262,117262,0,-1,2.24793,0,0,1282418,1028893,848505,700,2.84345,LNS(PP;PP),../../MAPF-benchmark/mapf-scen-random/scen-random/den520d-random-1.scen
 1.7567e-05,139542,139542,117262,117262,0,-1,2.21273,0,0,1282418,1028893,848505,700,2.8889,LNS(PP;PP),../../MAPF-benchmark/mapf-scen-random/scen-random/den520d-random-1.scen
 1.528e-05,138619,138619,117262,117262,0,-1,0.907284,0,0,880032,1966325,0,700,2.72826,LNS(PP;PP),../../MAPF-benchmark/mapf-scen-random/scen-random/den520d-random-1.scen
+1.719e-05,139542,139542,117262,117262,0,-1,2.22442,0,0,1282418,1028893,848505,700,2.74825,LNS(PP;PP),../../MAPF-benchmark/mapf-scen-random/scen-random/den520d-random-1.scen
