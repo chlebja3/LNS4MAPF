@@ -35,7 +35,8 @@ map_names = []
 for i in maps_rng:
     name = res_STAS[20*i][16]
     idx = name.find("/scen-random/")
-    name = name[idx+13:]
+    idx2 = name.find(".scen")
+    name = name[idx+13:idx2-2]
     print("Map name:", name)
     map_names.append(name)
     expanded_nodes_STAS = np.asarray([float(x[10]) for x in res_STAS[20*i:20*(i+1)]])
@@ -73,6 +74,7 @@ ax[0].plot(maps_rng, max_expanded_sipp, linewidth=2, label="Max SIPP", color="re
 ax[0].grid()
 ax[0].set_xlabel("Map")
 ax[0].set_ylabel("Number of nodes")
+ax[0].set_xticks(maps_rng)
 ax[0].set_xticklabels(map_names, rotation=75)
 ax[0].set_title("Comparison of STAS and SIPP in expanded nodes number")
 ax[1].plot(maps_rng, avg_runtime_stas, linewidth=2, label="Average STAS", color="blue")
@@ -80,13 +82,14 @@ ax[1].plot(maps_rng, avg_runtime_sipp, linewidth=2, label="Average SIPP", color=
 ax[1].plot(maps_rng, max_runtime_stas, linewidth=2, label="Max STAS", color="blue", linestyle="dashed")
 ax[1].plot(maps_rng, max_runtime_sipp, linewidth=2, label="Max SIPP", color="red", linestyle="dashed")
 ax[1].set_title("Comparison of STAS and SIPP in runtime")
+ax[1].set_xticks(maps_rng)
 ax[1].set_xlabel("Map")
 ax[1].set_xticklabels(map_names, rotation=75)
 ax[1].set_ylabel("Runtime")
 ax[1].grid()
 # fig.title("Comparison of Space Time Astar and SIPP")
 plt.subplots_adjust(bottom=0.4)
-plt.subplots_adjust(top=0.9)
+plt.subplots_adjust(top=0.95)
 plt.subplots_adjust(left=0.1, right=0.9, wspace=0.3)
 ax[0].legend()
 ax[1].legend()
