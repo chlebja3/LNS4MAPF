@@ -6,7 +6,7 @@ import tqdm
 
 def construct_experiment(solver_path, map_path, scen_path, output_file_name, agent_num, t, sipp=0):
     """ Construct the input of subprocess.check_output to perform the experiment"""
-    return [solver_path, '-m', map_path, '-a', scen_path, "-o", output_file_name + ".csv", "-k", str(agent_num), '-t', str(t), "--initAlgo", "PP", "--sipp", str(sipp)]
+    return [solver_path, '-m', map_path, '-a', scen_path, "-o", output_file_name + ".csv", "-k", str(agent_num), '-t', str(t), "--initAlgo", "PP", "--sipp", str(sipp), "--maxIterations",  100000]
 
 def construct_scen_path(scen_dir, map_name, k):
     """ Construct the path to a scen file """
