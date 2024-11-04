@@ -28,6 +28,7 @@ void SIPP::updatePath(const LLNode* goal, vector<PathEntry> &path)
 // Returns a path that minimizes the collisions with the paths in the path table, breaking ties by the length
 Path SIPP::findPath(const ConstraintTable& constraint_table)
 {
+    high_resolution_clock::time_point start_time = Time::now(); // start time of the replanning 
     reset();
     //Path path = findNoCollisionPath(constraint_table);
     //if (!path.empty())
@@ -36,7 +37,10 @@ Path SIPP::findPath(const ConstraintTable& constraint_table)
     Path path;
     Interval interval = reservation_table.get_first_safe_interval(start_location);
     if (get<0>(interval) > 0)
+    {
+        replan_time =((fsec)(Time::now() - start_time)).count();    
         return path;
+    }
     auto holding_time = constraint_table.getHoldingTime(goal_location, constraint_table.length_min);
     auto last_target_collision_time = constraint_table.getLastCollisionTimestep(goal_location);
     // generate start and add it to the OPEN & FOCAL list
@@ -131,6 +135,7 @@ Path SIPP::findPath(const ConstraintTable& constraint_table)
     //    printSearchTree();
     //}
     releaseNodes();
+    replan_time = ((fsec)(Time::now() - start_time)).count();    
     return path;
 }
 Path SIPP::findOptimalPath(const HLNode& node, const ConstraintTable& initial_constraints,

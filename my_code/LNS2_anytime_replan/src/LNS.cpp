@@ -856,10 +856,11 @@ void LNS::writeResultToFile(const string & file_name) const
                  "group size," <<
                  "runtime of initial solution,restart times,area under curve," <<
                  "LL expanded nodes,LL generated,LL reopened,LL runs," <<
-                 "preprocessing runtime,solver name,instance name" << endl;
+                 "preprocessing runtime,solver name, ,instance name, avg single replan, avg_replan" << endl;
         addHeads.close();
     }
     uint64_t num_LL_expanded = 0, num_LL_generated = 0, num_LL_reopened = 0, num_LL_runs = 0;
+    double avg_single_replan_time = 0;
     for (auto & agent : agents)
     {
         agent.path_planner->reset();
@@ -867,7 +868,10 @@ void LNS::writeResultToFile(const string & file_name) const
         num_LL_generated += agent.path_planner->accumulated_num_generated;
         num_LL_reopened += agent.path_planner->accumulated_num_reopened;
         num_LL_runs += agent.path_planner->num_runs;
+        avg_single_replan_time += agent.path_planner->accumulated_replan_time;
     }
+    if (num_LL_runs > 0) avg_single_replan_time = avg_single_replan_time / num_LL_runs;
+
     double auc = 0;
     if (!iteration_stats.empty())
     {
@@ -888,7 +892,8 @@ void LNS::writeResultToFile(const string & file_name) const
           iteration_stats.size() << "," << average_group_size << "," <<
           initial_solution_runtime << "," << restart_times << "," << auc << "," <<
           num_LL_expanded << "," << num_LL_generated << "," << num_LL_reopened << "," << num_LL_runs << "," <<
-          preprocessing_time << "," << getSolverName() << "," << instance.getInstanceName() << endl;
+          preprocessing_time << "," << getSolverName() << "," << instance.getInstanceName() << ", " << avg_single_replan_time
+          << ", " << avg_replan_time << endl;
     stats.close();
 }
 
