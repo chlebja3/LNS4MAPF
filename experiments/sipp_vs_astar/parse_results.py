@@ -12,7 +12,7 @@ def read_file(name):
           lines.append(line)
     return lines
 
-file_res = read_file("results.csv")
+file_res = read_file("results_init_sol.csv")
 col_names = file_res[0]
 file_res = file_res[1:]
 
@@ -41,8 +41,8 @@ for i in maps_rng:
     map_names.append(name)
     expanded_nodes_STAS = np.asarray([float(x[10]) for x in res_STAS[20*i:20*(i+1)]])
     expanded_nodes_SIPP = np.asarray([float(x[10]) for x in res_SIPP[20*i:20*(i+1)]])
-    runtime_STAS = np.asarray([float(x[10]) for x in res_STAS[20*i:20*(i+1)]])
-    runtime_SIPP = np.asarray([float(x[10]) for x in res_SIPP[20*i:20*(i+1)]])
+    runtime_STAS = np.asarray([float(x[7]) for x in res_STAS[20*i:20*(i+1)]])
+    runtime_SIPP = np.asarray([float(x[7]) for x in res_SIPP[20*i:20*(i+1)]])
     sipp_better = expanded_nodes_SIPP - expanded_nodes_STAS < 0
     stas_better = expanded_nodes_SIPP - expanded_nodes_STAS > 0
     print("SIPP better in terms of expanded nodes", sipp_better.sum(), "times.")
