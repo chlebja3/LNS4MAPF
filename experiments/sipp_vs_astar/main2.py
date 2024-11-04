@@ -5,8 +5,12 @@ import numpy as np
 import tqdm
 
 def construct_experiment(solver_path, map_path, scen_path, output_file_name, agent_num, t, sipp=0):
+    sareplan = "SIPP"
+    if sipp == 0:
+        sareplan = "STAstar"
+
     """ Construct the input of subprocess.check_output to perform the experiment"""
-    return [solver_path, '-m', map_path, '-a', scen_path, "-o", output_file_name + ".csv", "-k", str(agent_num), '-t', str(t), "--initAlgo", "PP", "--sipp", str(sipp), "--maxIterations",  str(100000)]
+    return [solver_path, '-m', map_path, '-a', scen_path, "-o", output_file_name + ".csv", "-k", str(agent_num), '-t', str(t), "--initAlgo", "PP", "--singleAgentReplan", str(sareplan), "--maxIterations",  str(100000)]
 
 def construct_scen_path(scen_dir, map_name, k):
     """ Construct the path to a scen file """
@@ -18,15 +22,16 @@ def parse_subprocess_output(res):
 
 # parameters
 agent_num = 500 # number of agents
-scen_num = 20 # number of scenes
-t = 30
+scen_num = 15 # number of scenes
+t = 25
 results_file = "results"
 mapf_benchmark_dir = "../../MAPF-benchmark/"
 scen_dir = mapf_benchmark_dir + "mapf-scen-random/scen-random/"
-solver_path = "../../papers/MAPF-LNS2/lns"
+solver_path = "../../my_code/LNS2_anytime_replan/lns"
 
 print("Number of agents:", agent_num)
-map_names = ["Berlin_1_256", "Boston_0_256", "brc202d", "den312d", "den520d", "empty-32-32", "ht_chantry", "ht_mansion_n", "lak303d", "maze-128-128-10", "random-64-64-20", "warehouse-20-40-10-2-1"]
+# map_names = ["Berlin_1_256", "Boston_0_256", "brc202d", "den312d", "den520d", "empty-32-32", "ht_chantry", "ht_mansion_n", "lak303d", "maze-128-128-10", "random-64-64-20", "warehouse-20-40-10-2-1"]
+map_names = ["Berlin_1_256", "Boston_0_256", "brc202d", "den312d", "den520d", "empty-32-32", "ht_chantry"]
 
 
 # list all maps

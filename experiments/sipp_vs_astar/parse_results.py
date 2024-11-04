@@ -32,57 +32,73 @@ max_runtime_sipp= []
 
 maps_rng = range(int(len(res_STAS)/20))
 map_names = []
+skipped = 0
 for i in maps_rng:
     name = res_STAS[20*i][16]
     idx = name.find("/scen-random/")
     idx2 = name.find(".scen")
     name = name[idx+13:idx2-2]
     print("Map name:", name)
+    if name in {"den312d-random", "empty-32-32-random"}:
+        skipped += 1
+        continue
     map_names.append(name)
     expanded_nodes_STAS = np.asarray([float(x[10]) for x in res_STAS[20*i:20*(i+1)]])
     expanded_nodes_SIPP = np.asarray([float(x[10]) for x in res_SIPP[20*i:20*(i+1)]])
+    # runtime_STAS = np.asarray([float(x[18]) for x in res_STAS[20*i:20*(i+1)]])
+    # runtime_SIPP = np.asarray([float(x[18]) for x in res_SIPP[20*i:20*(i+1)]])
     runtime_STAS = np.asarray([float(x[7]) for x in res_STAS[20*i:20*(i+1)]])
     runtime_SIPP = np.asarray([float(x[7]) for x in res_SIPP[20*i:20*(i+1)]])
-    sipp_better = expanded_nodes_SIPP - expanded_nodes_STAS < 0
-    stas_better = expanded_nodes_SIPP - expanded_nodes_STAS > 0
+
+    delay_STAS = np.asarray([(float(x[1]) - float(x[4])) for x in res_STAS[20*i:20*(i+1)]])
+    inv_STAS = delay_STAS < 0
+    print("STAS did not find solution:", np.sum(inv_STAS))
+    delay_SIPP = np.asarray([(float(x[1]) - float(x[4])) for x in res_SIPP[20*i:20*(i+1)]])
+    inv_SIPP = delay_SIPP < 0
+    both_valid = np.logical_and(~inv_SIPP, ~inv_STAS) 
+    print("SIPP did not find solution:", np.sum(inv_SIPP))
+
+
+    sipp_better = expanded_nodes_SIPP[both_valid] - expanded_nodes_STAS[both_valid] < 0
+    stas_better = expanded_nodes_SIPP[both_valid] - expanded_nodes_STAS[both_valid] > 0
     print("SIPP better in terms of expanded nodes", sipp_better.sum(), "times.")
     print("STAS better in terms of expanded nodes", stas_better.sum(), "times.")
-    sipp_better = runtime_SIPP - runtime_STAS < 0
-    stas_better = runtime_SIPP - runtime_STAS > 0
+    sipp_better = runtime_SIPP[both_valid] - runtime_STAS[both_valid] < 0
+    stas_better = runtime_SIPP[both_valid] - runtime_STAS[both_valid] > 0
     print("SIPP better in terms of runtime", sipp_better.sum(), "times.")
     print("STAS better in terms of runtime", stas_better.sum(), "times.")
 
     # expanded nodes
-    avg_expanded_stas.append(np.average(expanded_nodes_STAS))
-    max_expanded_stas.append(np.max(expanded_nodes_STAS))
-    avg_expanded_sipp.append(np.average(expanded_nodes_SIPP))
-    max_expanded_sipp.append(np.max(expanded_nodes_SIPP))
+    avg_expanded_stas.append(np.average(expanded_nodes_STAS[both_valid]))
+    max_expanded_stas.append(np.max(expanded_nodes_STAS[both_valid]))
+    avg_expanded_sipp.append(np.average(expanded_nodes_SIPP[both_valid]))
+    max_expanded_sipp.append(np.max(expanded_nodes_SIPP[both_valid]))
 
     # runtime
-    avg_runtime_stas.append(np.average(runtime_STAS))
-    max_runtime_stas.append(np.max(runtime_STAS))
-    avg_runtime_sipp.append(np.average(runtime_SIPP))
-    max_runtime_sipp.append(np.max(runtime_SIPP))
+    avg_runtime_stas.append(np.average(runtime_STAS[both_valid]))
+    max_runtime_stas.append(np.max(runtime_STAS[both_valid]))
+    avg_runtime_sipp.append(np.average(runtime_SIPP[both_valid]))
+    max_runtime_sipp.append(np.max(runtime_SIPP[both_valid]))
 
     
 fig, ax = plt.subplots(ncols=2, figsize=(12, 6))
 fig.tight_layout()
-ax[0].plot(maps_rng, avg_expanded_stas, linewidth=2, label="Average STAS", color="blue")
-ax[0].plot(maps_rng, avg_expanded_sipp, linewidth=2, label="Average SIPP", color="red")
-ax[0].plot(maps_rng, max_expanded_stas, linewidth=2, label="Max STAS", color="blue", linestyle="dashed")
-ax[0].plot(maps_rng, max_expanded_sipp, linewidth=2, label="Max SIPP", color="red", linestyle="dashed")
+ax[0].plot(maps_rng[:-skipped], avg_expanded_stas, linewidth=2, label="Average STAS", color="blue")
+ax[0].plot(maps_rng[:-skipped], avg_expanded_sipp, linewidth=2, label="Average SIPP", color="red")
+ax[0].plot(maps_rng[:-skipped], max_expanded_stas, linewidth=2, label="Max STAS", color="blue", linestyle="dashed")
+ax[0].plot(maps_rng[:-skipped], max_expanded_sipp, linewidth=2, label="Max SIPP", color="red", linestyle="dashed")
 ax[0].grid()
 ax[0].set_xlabel("Map")
 ax[0].set_ylabel("Number of nodes")
-ax[0].set_xticks(maps_rng)
+ax[0].set_xticks(maps_rng[:-skipped])
 ax[0].set_xticklabels(map_names, rotation=75)
 ax[0].set_title("Comparison of STAS and SIPP in expanded nodes number")
-ax[1].plot(maps_rng, avg_runtime_stas, linewidth=2, label="Average STAS", color="blue")
-ax[1].plot(maps_rng, avg_runtime_sipp, linewidth=2, label="Average SIPP", color="red")
-ax[1].plot(maps_rng, max_runtime_stas, linewidth=2, label="Max STAS", color="blue", linestyle="dashed")
-ax[1].plot(maps_rng, max_runtime_sipp, linewidth=2, label="Max SIPP", color="red", linestyle="dashed")
-ax[1].set_title("Comparison of STAS and SIPP in runtime")
-ax[1].set_xticks(maps_rng)
+ax[1].plot(maps_rng[:-skipped], avg_runtime_stas, linewidth=2, label="Average STAS", color="blue")
+ax[1].plot(maps_rng[:-skipped], avg_runtime_sipp, linewidth=2, label="Average SIPP", color="red")
+ax[1].plot(maps_rng[:-skipped], max_runtime_stas, linewidth=2, label="Max STAS", color="blue", linestyle="dashed")
+ax[1].plot(maps_rng[:-skipped], max_runtime_sipp, linewidth=2, label="Max SIPP", color="red", linestyle="dashed")
+ax[1].set_title("Comparison of STAS and SIPP in time to find initial solution")
+ax[1].set_xticks(maps_rng[:-skipped])
 ax[1].set_xlabel("Map")
 ax[1].set_xticklabels(map_names, rotation=75)
 ax[1].set_ylabel("Runtime")
