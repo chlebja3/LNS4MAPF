@@ -12,7 +12,7 @@ def read_file(name):
           lines.append(line)
     return lines
 
-file_res = read_file("results_init_sol.csv")
+file_res = read_file("results.csv")
 col_names = file_res[0]
 file_res = file_res[1:]
 
@@ -43,12 +43,15 @@ for i in maps_rng:
         skipped += 1
         continue
     map_names.append(name)
-    expanded_nodes_STAS = np.asarray([float(x[10]) for x in res_STAS[20*i:20*(i+1)]])
-    expanded_nodes_SIPP = np.asarray([float(x[10]) for x in res_SIPP[20*i:20*(i+1)]])
-    # runtime_STAS = np.asarray([float(x[18]) for x in res_STAS[20*i:20*(i+1)]])
-    # runtime_SIPP = np.asarray([float(x[18]) for x in res_SIPP[20*i:20*(i+1)]])
-    runtime_STAS = np.asarray([float(x[7]) for x in res_STAS[20*i:20*(i+1)]])
-    runtime_SIPP = np.asarray([float(x[7]) for x in res_SIPP[20*i:20*(i+1)]])
+    # generated + reopened
+    expanded_nodes_STAS = np.asarray([float(x[11]) + float(x[12]) for x in res_STAS[20*i:20*(i+1)]])
+    expanded_nodes_SIPP = np.asarray([float(x[11]) + float(x[12]) for x in res_SIPP[20*i:20*(i+1)]])
+    # expanded_nodes_SIPP = np.asarray([float(x[10]) for x in res_SIPP[20*i:20*(i+1)]])
+    # expanded_nodes_STAS = np.asarray([float(x[10]) for x in res_STAS[20*i:20*(i+1)]])
+    runtime_STAS = np.asarray([float(x[18]) for x in res_STAS[20*i:20*(i+1)]])
+    runtime_SIPP = np.asarray([float(x[18]) for x in res_SIPP[20*i:20*(i+1)]])
+    # runtime_STAS = np.asarray([float(x[7]) for x in res_STAS[20*i:20*(i+1)]])
+    # runtime_SIPP = np.asarray([float(x[7]) for x in res_SIPP[20*i:20*(i+1)]])
 
     delay_STAS = np.asarray([(float(x[1]) - float(x[4])) for x in res_STAS[20*i:20*(i+1)]])
     inv_STAS = delay_STAS < 0
@@ -92,7 +95,7 @@ ax[0].set_xlabel("Map")
 ax[0].set_ylabel("Number of nodes")
 ax[0].set_xticks(maps_rng[:-skipped])
 ax[0].set_xticklabels(map_names, rotation=75)
-ax[0].set_title("Comparison of STAS and SIPP in expanded nodes number")
+ax[0].set_title("Comparison of STAS and SIPP in generated + reopened nodes number")
 ax[1].plot(maps_rng[:-skipped], avg_runtime_stas, linewidth=2, label="Average STAS", color="blue")
 ax[1].plot(maps_rng[:-skipped], avg_runtime_sipp, linewidth=2, label="Average SIPP", color="red")
 ax[1].plot(maps_rng[:-skipped], max_runtime_stas, linewidth=2, label="Max STAS", color="blue", linestyle="dashed")

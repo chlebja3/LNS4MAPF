@@ -157,7 +157,7 @@ Path SpaceTimeAStar::findPath(const ConstraintTable& constraint_table)
                     existing_next->copy(*next);
                     existing_next->focal_handle = focal_list.push(existing_next);
                     existing_next->in_openlist = true;
-                    num_generated++; // reopen is considered as a new node
+                    num_generated++; // reopen is considered as a new node TODO should not it be reopened?
                 }
                 else
                 {
