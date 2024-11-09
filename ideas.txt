@@ -22,3 +22,9 @@ eecbs je skoro 10x pomalejsi nez pp, asi velky rozptyl casu, skoro zadne failed 
 # podivat se na nove LNS verzi
 porovnat na stejne instanci sipp a stastar pro hodne instanci -> statisticky overit ktery je tedy lepsi
 prohlednout implementaci sippu
+
+
+# zmerit profilerem co zdrzuje SIPP a co zdrzuje STAstar
+# nastroj valgrind, KcacheGrind
+# jak se odstranuji cesty - safe intervaly
+# muzu zvetsit cas a porovnat, proc stas obcas nenajde reseni kdya SIPP ano
