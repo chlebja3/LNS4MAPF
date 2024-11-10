@@ -1,0 +1,3715 @@
+# callgrind format
+version: 1
+creator: callgrind-3.15.0
+pid: 31587
+cmd:  ../../../../my_code/LNS2_anytime_replan/lns -m ../../../../MAPF-benchmark/mapf-map/Berlin_1_256.map -a ../../../../MAPF-benchmark/mapf-scen-random/scen-random/Berlin_1_256-random-11.scen -o a.csv -k 200 -t 100 --initAlgo PP --singleAgentReplan MCARP --maxIterations 100000
+part: 10
+
+
+desc: I1 cache: 
+desc: D1 cache: 
+desc: LL cache: 
+
+desc: Timerange: Basic block 9000914372 - 10000985681
+desc: Trigger: --dump-every-bb=1000000000
+
+positions: line
+events: Ir
+summary: 7770038728
+
+
+ob=(10) /home/chlebajz/Programy/diplomka/LNS4MAPF/my_code/LNS2_anytime_replan/lns
+fl=(329) /usr/include/boost/unordered/detail/implementation.hpp
+fn=(4640) boost::unordered::detail::functions<MCARPNode::NodeHasher, MCARPNode::eqnode>::construct_functions(unsigned char, MCARPNode::NodeHasher const&, MCARPNode::eqnode const&)
+2824 168
++2 56
++1 112
+cfi=(277) /usr/include/c++/9/new
+cfn=(2166) operator new(unsigned long, void*)
+calls=14 174 
+* 112
+* 84
+cfn=(4642) boost::unordered::detail::compressed<MCARPNode::NodeHasher, MCARPNode::eqnode>::compressed<MCARPNode::NodeHasher, MCARPNode::eqnode>(MCARPNode::NodeHasher const&, MCARPNode::eqnode const&)
+calls=14 438 
+* 504
++1 98
+
+fn=(4644) boost::unordered::detail::compressed_base<MCARPNode::NodeHasher, 1>::compressed_base(MCARPNode::NodeHasher const&)
+384 112
+
+fn=(4646) boost::unordered::detail::compressed_base<MCARPNode::eqnode, 2>::compressed_base(MCARPNode::eqnode const&)
+384 112
+
+fn=(4652) boost::unordered::detail::compressed_base<std::allocator<boost::unordered::detail::ptr_node<std::pair<MCARPNode* const, std::__cxx11::list<MCARPNode*, std::allocator<MCARPNode*> > > > >, 2>::compressed_base(std::allocator<boost::unordered::detail::ptr_node<std::pair<MCARPNode* const, std::__cxx11::list<MCARPNode*, std::allocator<MCARPNode*> > > > > const&)
+384 154
+cfi=(270) /usr/include/c++/9/bits/allocator.h
+cfn=(4654) std::allocator<boost::unordered::detail::ptr_node<std::pair<MCARPNode* const, std::__cxx11::list<MCARPNode*, std::allocator<MCARPNode*> > > > >::allocator(std::allocator<boost::unordered::detail::ptr_node<std::pair<MCARPNode* const, std::__cxx11::list<MCARPNode*, std::allocator<MCARPNode*> > > > > const&)
+calls=14 140 
+* 308
+* 42
+
+fn=(4642)
+438 168
+cfn=(4644)
+calls=14 -54 
+* 112
+* 70
+cfn=(4646)
+calls=14 -54 
+* 112
++2 42
+
+fn=(4658) boost::unordered::detail::mix64_policy<unsigned long>::new_bucket_count(unsigned long)
+2639 56
++2 28
++2 14
++1 42
++1 42
++1 42
++1 42
++1 42
++1 42
++1 28
++1 28
+
+fn=(4098) boost::unordered::detail::compressed_base<std::allocator<boost::unordered::detail::ptr_bucket>, 1>::compressed_base(std::allocator<boost::unordered::detail::ptr_bucket> const&)
+384 154
+cfi=(270)
+cfn=(4100) std::allocator<boost::unordered::detail::ptr_bucket>::allocator(std::allocator<boost::unordered::detail::ptr_bucket> const&)
+calls=14 140 
+* 308
+* 42
+
+fn=(4648) boost::unordered::detail::compressed<std::allocator<boost::unordered::detail::ptr_bucket>, std::allocator<boost::unordered::detail::ptr_node<std::pair<MCARPNode* const, std::__cxx11::list<MCARPNode*, std::allocator<MCARPNode*> > > > > >::compressed<std::allocator<boost::unordered::detail::ptr_node<std::pair<MCARPNode* const, std::__cxx11::list<MCARPNode*, std::allocator<MCARPNode*> > > > >, std::allocator<boost::unordered::detail::ptr_node<std::pair<MCARPNode* const, std::__cxx11::list<MCARPNode*, std::allocator<MCARPNode*> > > > > >(std::allocator<boost::unordered::detail::ptr_node<std::pair<MCARPNode* const, std::__cxx11::list<MCARPNode*, std::allocator<MCARPNode*> > > > > const&, std::allocator<boost::unordered::detail::ptr_node<std::pair<MCARPNode* const, std::__cxx11::list<MCARPNode*, std::allocator<MCARPNode*> > > > > const&)
+438 210
+cfi=(270)
+cfn=(4650) std::allocator<boost::unordered::detail::ptr_bucket>::allocator<boost::unordered::detail::ptr_node<std::pair<MCARPNode* const, std::__cxx11::list<MCARPNode*, std::allocator<MCARPNode*> > > > >(std::allocator<boost::unordered::detail::ptr_node<std::pair<MCARPNode* const, std::__cxx11::list<MCARPNode*, std::allocator<MCARPNode*> > > > > const&)
+calls=14 150 
+* 266
+* 70
+cfn=(4098)
+calls=14 -54 
+* 504
+* 42
+cfi=(270)
+cfn=(4104) std::allocator<boost::unordered::detail::ptr_bucket>::~allocator()
+calls=14 152 
+* 252
+* 70
+cfn=(4652)
+calls=14 -54 
+* 504
++2 84
+
+fn=(4636) boost::unordered::detail::table<boost::unordered::detail::map<std::allocator<std::pair<MCARPNode* const, std::__cxx11::list<MCARPNode*, std::allocator<MCARPNode*> > > >, MCARPNode*, std::__cxx11::list<MCARPNode*, std::allocator<MCARPNode*> >, MCARPNode::NodeHasher, MCARPNode::eqnode> >::table(unsigned long, MCARPNode::NodeHasher const&, MCARPNode::eqnode const&, std::allocator<boost::unordered::detail::ptr_node<std::pair<MCARPNode* const, std::__cxx11::list<MCARPNode*, std::allocator<MCARPNode*> > > > > const&)
+3118 140
++4 84
+cfn=(4638) boost::unordered::detail::functions<MCARPNode::NodeHasher, MCARPNode::eqnode>::functions(MCARPNode::NodeHasher const&, MCARPNode::eqnode const&)
+calls=14 2761 
+* 1414
+* 98
+cfn=(4648)
+calls=14 438 
+* 2002
+-1 42
+cfn=(4658)
+calls=14 2639 
+* 406
++1 154
++2 70
+
+fn=(4638)
+2761 126
++2 112
+cfn=(4640)
+calls=14 +61 
+* 1134
++1 42
+
+fl=(279) /usr/include/c++/9/bits/vector.tcc
+fn=(4282) void std::vector<Agent, std::allocator<Agent> >::emplace_back<Instance const&, int&, std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const&>(Instance const&, int&, std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const&)
+109 154
++3 84
++3 42
+cfi=(230) /usr/include/c++/9/bits/move.h
+cfn=(2790) std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const& std::forward<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const&>(std::remove_reference<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const&>::type&)
+calls=14 -41 
+* 98
+* 56
+cfi=(230)
+cfn=(4284) int& std::forward<int&>(std::remove_reference<int&>::type&)
+calls=14 -41 
+* 98
+* 56
+cfi=(230)
+cfn=(4286) Instance const& std::forward<Instance const&>(std::remove_reference<Instance const&>::type&)
+calls=14 -41 
+* 98
+* 112
+cfi=(273) /usr/include/c++/9/bits/alloc_traits.h
+cfn=(4288) void std::allocator_traits<std::allocator<Agent> >::construct<Agent, Instance const&, int&, std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const&>(std::allocator<Agent>&, Agent*, Instance const&, int&, std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const&)
+calls=14 481 
+* 7770037552
++2 70
++8 112
+
+fn=(4320) std::vector<int, std::allocator<int> >::_M_fill_insert(__gnu_cxx::__normal_iterator<int*, std::vector<int, std::allocator<int> > >, unsigned long, int const&)
+509 182
++3 28
++2 28
++1 70
+-1 28
++44 84
+cfi=(272) /usr/include/c++/9/bits/stl_vector.h
+cfn=(3854) std::vector<int, std::allocator<int> >::_M_check_len(unsigned long, char const*) const
+calls=14 1753 
+* 3864
+* 14
++2 42
+cfi=(272)
+cfn=(4322) std::vector<int, std::allocator<int> >::begin()
+calls=14 808 
+* 434
+* 84
+cfi=(238) /usr/include/c++/9/bits/stl_iterator.h
+cfn=(4324) __gnu_cxx::__normal_iterator<int*, std::vector<int, std::allocator<int> > >::difference_type __gnu_cxx::operator-<int*, std::vector<int, std::allocator<int> > >(__gnu_cxx::__normal_iterator<int*, std::vector<int, std::allocator<int> > > const&, __gnu_cxx::__normal_iterator<int*, std::vector<int, std::allocator<int> > > const&)
+calls=14 986 
+* 504
+* 14
++1 70
+cfi=(272)
+cfn=(3856) std::_Vector_base<int, std::allocator<int> >::_M_allocate(unsigned long)
+calls=14 340 
+* 313718
+* 14
++1 28
++6 42
+cfi=(272)
+cfn=(3866) std::_Vector_base<int, std::allocator<int> >::_M_get_Tp_allocator()
+calls=14 273 
+* 98
+* 14
+-2 112
+cfi=(275) /usr/include/c++/9/bits/stl_uninitialized.h
+cfn=(4068) int* std::__uninitialized_fill_n_a<int*, unsigned long, int, int>(int*, unsigned long, int const&, std::allocator<int>&)
+calls=14 382 
+* 7341446
++3 14
++5 42
+cfi=(272)
+cfn=(3866)
+calls=14 273 
+* 98
+* 14
+-1 42
+cfi=(238)
+cfn=(4326) __gnu_cxx::__normal_iterator<int*, std::vector<int, std::allocator<int> > >::base() const
+calls=14 868 
+* 98
+* 98
+cfi=(275)
+cfn=(4328) int* std::__uninitialized_move_if_noexcept_a<int*, int*, std::allocator<int> >(int*, int*, int*, std::allocator<int>&)
+calls=14 323 
+* 4354
+* 14
++3 42
++5 42
+cfi=(272)
+cfn=(3866)
+calls=14 273 
+* 98
+* 14
+-1 70
+cfi=(238)
+cfn=(4326)
+calls=14 868 
+* 98
+* 84
+cfi=(275)
+cfn=(4328)
+calls=14 323 
+* 4354
+* 14
++16 42
+cfi=(272)
+cfn=(3866)
+calls=14 273 
+* 98
+* 14
+-1 98
+cfi=(276) /usr/include/c++/9/bits/stl_construct.h
+cfn=(4354) void std::_Destroy<int*, int>(int*, int*, std::allocator<int>&)
+calls=14 203 
+* 518
++3 14
++1 28
++1 70
+-2 98
+cfi=(272)
+cfn=(3890) std::_Vector_base<int, std::allocator<int> >::_M_deallocate(int*, unsigned long)
+calls=14 347 
+* 168
++3 42
++1 42
++1 84
++3 140
+
+fl=(220) /home/chlebajz/Programy/diplomka/LNS4MAPF/my_code/LNS2_anytime_replan/src/driver.cpp
+fn=(1518) main
+cfi=(199) /home/chlebajz/Programy/diplomka/LNS4MAPF/my_code/LNS2_anytime_replan/src/LNS.cpp
+cfn=(3914) LNS::LNS(Instance const&, double, std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const&, std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const&, std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const&, int, int, bool, std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const&, std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const&, int, PIBTPPS_option)
+calls=0 5 
+87 7770038728
+
+fl=(345) /usr/include/c++/9/bits/list.tcc
+fn=(4562) std::__cxx11::_List_base<int, std::allocator<int> >::_M_clear()
+66 3469180
++4 2081508
++1 10069068
++2 5325040
++1 7987560
++1 7987560
+cfi=(322) /usr/include/c++/9/bits/stl_list.h
+cfn=(4510) std::_List_node<int>::_M_valptr()
+calls=2662520 +95 
+* 74550560
+* 2662520
++2 7987560
+cfi=(322)
+cfn=(4504) std::__cxx11::_List_base<int, std::allocator<int> >::_M_get_Node_allocator()
+calls=2662520 448 
+* 18637640
+* 13312600
+cfi=(273)
+cfn=(4564) void std::allocator_traits<std::allocator<std::_List_node<int> > >::destroy<int>(std::allocator<std::_List_node<int> >&, int*)
+calls=2662520 494 
+* 58575440
++4 13312600
+cfi=(322)
+cfn=(4568) std::__cxx11::_List_base<int, std::allocator<int> >::_M_put_node(std::_List_node<int>*)
+calls=2662520 441 
+* 351452640
+-10 2662520
++12 2081508
+
+fl=(334) /usr/include/boost/heap/pairing_heap.hpp
+fn=(4374) boost::heap::pairing_heap<SingleAgentSolver::compute_heuristics()::Node, boost::heap::compare<SingleAgentSolver::compute_heuristics()::SingleAgentSolver::compute_heuristics()::Node::compare_node>, boost::parameter::void_, boost::parameter::void_, boost::parameter::void_, boost::parameter::void_>::push(SingleAgentSolver::compute_heuristics()::Node const&)
+378 5550896
++2 2081586
+cfi=(335) /usr/include/boost/heap/detail/stable_heap.hpp
+cfn=(4376) boost::heap::detail::size_holder<true, unsigned long>::increment()
+calls=693862 74 
+* 8326344
++6 1387724
++1 2775448
+cfi=(273)
+cfn=(4378) std::allocator_traits<std::allocator<boost::heap::detail::heap_node<SingleAgentSolver::compute_heuristics()::Node, false> > >::allocate(std::allocator<boost::heap::detail::heap_node<SingleAgentSolver::compute_heuristics()::Node, false> >&, unsigned long)
+calls=693862 +55 
+* 68968567
+* 693862
++1 3469310
+cfi=(335)
+cfn=(4384) boost::heap::detail::heap_base<SingleAgentSolver::compute_heuristics()::Node, SingleAgentSolver::compute_heuristics()::SingleAgentSolver::compute_heuristics()::Node::compare_node, true, unsigned long, false>::make_node(SingleAgentSolver::compute_heuristics()::Node const&)
+calls=693862 213 
+* 5550896
+* 4857034
+cfi=(273)
+cfn=(4386) void std::allocator_traits<std::allocator<boost::heap::detail::heap_node<SingleAgentSolver::compute_heuristics()::Node, false> > >::construct<boost::heap::detail::heap_node<SingleAgentSolver::compute_heuristics()::Node, false>, SingleAgentSolver::compute_heuristics()::Node>(std::allocator<boost::heap::detail::heap_node<SingleAgentSolver::compute_heuristics()::Node, false> >&, boost::heap::detail::heap_node<SingleAgentSolver::compute_heuristics()::Node, false>*, SingleAgentSolver::compute_heuristics()::Node&&)
+calls=693862 +93 
+* 194281360
++2 3469310
+cfn=(4412) boost::heap::pairing_heap<SingleAgentSolver::compute_heuristics()::Node, boost::heap::compare<SingleAgentSolver::compute_heuristics()::SingleAgentSolver::compute_heuristics()::Node::compare_node>, boost::parameter::void_, boost::parameter::void_, boost::parameter::void_, boost::parameter::void_>::merge_node(boost::heap::detail::heap_node<SingleAgentSolver::compute_heuristics()::Node, false>*)
+calls=693862 692 
+* 186664138
++1 3469310
+cfi=(335)
+cfn=(4414) boost::heap::detail::node_handle<boost::heap::detail::heap_node<SingleAgentSolver::compute_heuristics()::Node, false>*, boost::heap::detail::make_pairing_heap_base<SingleAgentSolver::compute_heuristics()::Node, boost::parameter::aux::flat_like_arg_list<boost::parameter::aux::flat_like_arg_tuple<boost::heap::tag::compare, boost::heap::compare<SingleAgentSolver::compute_heuristics()::SingleAgentSolver::compute_heuristics()::Node::compare_node>, std::integral_constant<bool, true> > > >::type, SingleAgentSolver::compute_heuristics()::Node&>::node_handle(boost::heap::detail::heap_node<SingleAgentSolver::compute_heuristics()::Node, false>*)
+calls=693862 +98 
+* 6938620
+* 693862
++1 3469310
+
+fn=(4582) boost::heap::pairing_heap<SingleAgentSolver::compute_heuristics()::Node, boost::heap::compare<SingleAgentSolver::compute_heuristics()::SingleAgentSolver::compute_heuristics()::Node::compare_node>, boost::parameter::void_, boost::parameter::void_, boost::parameter::void_, boost::parameter::void_>::merge_first_pair(boost::intrusive::list<boost::heap::detail::heap_node_base<true>, boost::intrusive::constant_time_size<false> >&)
+719 15926575
++3 9555945
+cfi=(338) /usr/include/boost/intrusive/list.hpp
+cfn=(4584) boost::intrusive::list_impl<boost::intrusive::bhtraits<boost::heap::detail::heap_node_base<true>, boost::intrusive::list_node_traits<void*>, (boost::intrusive::link_mode_type)2, boost::intrusive::dft_tag, 1u>, unsigned long, false, void>::front()
+calls=3185315 365 
+* 254825200
+* 3185315
++1 9555945
+cfi=(338)
+cfn=(4588) boost::intrusive::list_impl<boost::intrusive::bhtraits<boost::heap::detail::heap_node_base<true>, boost::intrusive::list_node_traits<void*>, (boost::intrusive::link_mode_type)2, boost::intrusive::dft_tag, 1u>, unsigned long, false, void>::pop_front()
+calls=3185315 335 
+* 519206345
++1 9555945
+cfi=(338)
+cfn=(4426) boost::intrusive::list_impl<boost::intrusive::bhtraits<boost::heap::detail::heap_node_base<true>, boost::intrusive::list_node_traits<void*>, (boost::intrusive::link_mode_type)2, boost::intrusive::dft_tag, 1u>, unsigned long, false, void>::empty() const
+calls=3185315 539 
+* 194884855
+* 6370630
++1 1161280
++2 7814025
+cfi=(338)
+cfn=(4584)
+calls=2604675 365 
+* 208374000
+* 2604675
++1 7814025
+cfi=(338)
+cfn=(4588)
+calls=2604675 335 
+* 424562025
++2 15628050
+cfn=(4538) boost::heap::pairing_heap<SingleAgentSolver::compute_heuristics()::Node, boost::heap::compare<SingleAgentSolver::compute_heuristics()::SingleAgentSolver::compute_heuristics()::Node::compare_node>, boost::parameter::void_, boost::parameter::void_, boost::parameter::void_, boost::parameter::void_>::merge_nodes(boost::heap::detail::heap_node<SingleAgentSolver::compute_heuristics()::Node, false>*, boost::heap::detail::heap_node<SingleAgentSolver::compute_heuristics()::Node, false>*)
+calls=2604675 +3 
+* 784007175
++1 6370630
+
+fn=(4416) boost::heap::pairing_heap<SingleAgentSolver::compute_heuristics()::Node, boost::heap::compare<SingleAgentSolver::compute_heuristics()::SingleAgentSolver::compute_heuristics()::Node::compare_node>, boost::parameter::void_, boost::parameter::void_, boost::parameter::void_, boost::parameter::void_>::empty() const
+299 6244608
++2 8326144
++1 4163072
+
+fn=(4412)
+692 3469310
++3 2775448
++1 4856831
+cfn=(4538)
+calls=693833 +37 
+* 171399377
+* 1387666
++3 693833
+-1 87
++1 2081586
+
+fn=(4422) boost::heap::pairing_heap<SingleAgentSolver::compute_heuristics()::Node, boost::heap::compare<SingleAgentSolver::compute_heuristics()::SingleAgentSolver::compute_heuristics()::Node::compare_node>, boost::parameter::void_, boost::parameter::void_, boost::parameter::void_, boost::parameter::void_>::pop()
+429 4856852
++2 2081508
+cfn=(4416)
+calls=693836 299 
+* 6244524
+* 2081508
++2 4163016
+cfi=(335)
+cfn=(4414)
+calls=693836 +56 
+* 6938360
+* 3469180
+cfn=(4424) boost::heap::pairing_heap<SingleAgentSolver::compute_heuristics()::Node, boost::heap::compare<SingleAgentSolver::compute_heuristics()::SingleAgentSolver::compute_heuristics()::Node::compare_node>, boost::parameter::void_, boost::parameter::void_, boost::parameter::void_, boost::parameter::void_>::erase(boost::heap::detail::node_handle<boost::heap::detail::heap_node<SingleAgentSolver::compute_heuristics()::Node, false>*, boost::heap::detail::make_pairing_heap_base<SingleAgentSolver::compute_heuristics()::Node, boost::parameter::aux::flat_like_arg_list<boost::parameter::aux::flat_like_arg_tuple<boost::heap::tag::compare, boost::heap::compare<SingleAgentSolver::compute_heuristics()::SingleAgentSolver::compute_heuristics()::Node::compare_node>, std::integral_constant<bool, true> > > >::type, SingleAgentSolver::compute_heuristics()::Node&>)
+calls=693836 548 
+* 4196102947
++1 4163010
+
+fn=(4622) boost::heap::detail::make_pairing_heap_base<MCARPNode*, boost::parameter::aux::flat_like_arg_list<boost::parameter::aux::flat_like_arg_tuple<boost::heap::tag::compare, boost::heap::compare<LLNode::secondary_compare_node>, std::integral_constant<bool, true> > > >::type::type(LLNode::secondary_compare_node const&)
+72 84
++1 70
+cfi=(335)
+cfn=(4624) boost::heap::detail::heap_base<MCARPNode*, LLNode::secondary_compare_node, true, unsigned long, false>::heap_base(LLNode::secondary_compare_node const&)
+calls=14 +91 
+* 294
+* 42
+cfi=(270)
+cfn=(4616) std::allocator<boost::heap::detail::heap_node<MCARPNode*, false> >::allocator()
+calls=14 +64 
+* 252
++1 42
+
+fn=(4610) boost::heap::pairing_heap<MCARPNode*, boost::heap::compare<LLNode::compare_node>, boost::parameter::void_, boost::parameter::void_, boost::parameter::void_, boost::parameter::void_>::pairing_heap(LLNode::compare_node const&)
+248 84
++1 70
+cfn=(4612) boost::heap::detail::make_pairing_heap_base<MCARPNode*, boost::parameter::aux::flat_like_arg_list<boost::parameter::aux::flat_like_arg_tuple<boost::heap::tag::compare, boost::heap::compare<LLNode::compare_node>, std::integral_constant<bool, true> > > >::type::type(LLNode::compare_node const&)
+calls=14 72 
+* 784
+* 28
++1 42
+
+fn=(4612)
+72 84
++1 70
+cfi=(335)
+cfn=(4614) boost::heap::detail::heap_base<MCARPNode*, LLNode::compare_node, true, unsigned long, false>::heap_base(LLNode::compare_node const&)
+calls=14 +91 
+* 294
+* 42
+cfi=(270)
+cfn=(4616)
+calls=14 +64 
+* 252
++1 42
+
+fn=(4580) boost::heap::pairing_heap<SingleAgentSolver::compute_heuristics()::Node, boost::heap::compare<SingleAgentSolver::compute_heuristics()::SingleAgentSolver::compute_heuristics()::Node::compare_node>, boost::parameter::void_, boost::parameter::void_, boost::parameter::void_, boost::parameter::void_>::merge_node_list(boost::intrusive::list<boost::heap::detail::heap_node_base<true>, boost::intrusive::constant_time_size<false> >&)
+701 6244263
++3 3469035
+cfn=(4582)
+calls=693807 +15 
+* 606599586
+* 693807
++1 2081421
+cfi=(338)
+cfn=(4426)
+calls=693807 539 
+* 42449713
+* 1387614
++1 254972
+fi=(338)
+1475 1698963
+cfn=(4398) boost::intrusive::list_impl<boost::intrusive::bhtraits<boost::heap::detail::heap_node_base<true>, boost::intrusive::list_node_traits<void*>, (boost::intrusive::link_mode_type)2, boost::intrusive::dft_tag, 1u>, unsigned long, false, void>::list_impl()
+calls=566321 179 
+* 66825878
++1 566321
+fe=(334)
+709 2831605
+cfi=(338)
+cfn=(4598) boost::intrusive::list_impl<boost::intrusive::bhtraits<boost::heap::detail::heap_node_base<true>, boost::intrusive::list_node_traits<void*>, (boost::intrusive::link_mode_type)2, boost::intrusive::dft_tag, 1u>, unsigned long, false, void>::push_back(boost::heap::detail::heap_node_base<true>&)
+calls=566321 268 
+* 80983903
++3 5652975
+cfn=(4582)
+calls=1130595 +7 
+* 804796340
+* 1130595
++1 5652975
+cfi=(338)
+cfn=(4598)
+calls=1130595 268 
+* 161675085
++1 3391785
+cfi=(338)
+cfn=(4426)
+calls=1130595 539 
+* 69532616
+* 3391785
+-3 564274
++5 2831605
+cfn=(4581) boost::heap::pairing_heap<SingleAgentSolver::compute_heuristics()::Node, boost::heap::compare<SingleAgentSolver::compute_heuristics()::SingleAgentSolver::compute_heuristics()::Node::compare_node>, boost::parameter::void_, boost::parameter::void_, boost::parameter::void_, boost::parameter::void_>::merge_node_list(boost::intrusive::list<boost::heap::detail::heap_node_base<true>, boost::intrusive::constant_time_size<false> >&)'2
+calls=566321 -15 
+* 1499867119
+* 566320
+-8 1698960
+cfi=(338)
+cfn=(4440) boost::intrusive::list<boost::heap::detail::heap_node_base<true>, boost::intrusive::constant_time_size<false> >::~list()
+calls=566320 1448 
+* 254277680
+* 693806
++9 4856642
+
+fn=(4581)
+701 8142660
++3 4523700
+cfn=(4582)
+calls=904740 +15 
+* 796170320
+* 904739
++1 2714217
+cfi=(338)
+cfn=(4426)
+calls=904739 539 
+* 55755399
+* 1809478
++1 1132640
+fi=(338)
+1475 1015257
+cfn=(4398)
+calls=338419 179 
+* 39933442
++1 338419
+fe=(334)
+709 1692095
+cfi=(338)
+cfn=(4598)
+calls=338419 268 
+* 48393917
++3 2280870
+cfn=(4582)
+calls=456174 +7 
+* 273836394
+* 456174
++1 2280870
+cfi=(338)
+cfn=(4598)
+calls=456174 268 
+* 65232882
++1 1368522
+cfi=(338)
+cfn=(4426)
+calls=456174 539 
+* 28165033
+* 1368522
+-3 117755
++5 1692095
+cfn=(4581)
+calls=338419 -15 
+* 553921515
+* 338419
+-8 1015257
+cfi=(338)
+cfn=(4440)
+calls=338419 1448 
+* 151950131
+* 904739
++9 6333173
+
+fn=(4362) boost::heap::detail::make_pairing_heap_base<SingleAgentSolver::compute_heuristics()::Node, boost::parameter::aux::flat_like_arg_list<boost::parameter::aux::flat_like_arg_tuple<boost::heap::tag::compare, boost::heap::compare<SingleAgentSolver::compute_heuristics()::SingleAgentSolver::compute_heuristics()::Node::compare_node>, std::integral_constant<bool, true> > > >::type::type(SingleAgentSolver::compute_heuristics()::SingleAgentSolver::compute_heuristics()::Node::compare_node const&)
+72 70
++1 70
+cfi=(335)
+cfn=(4364) boost::heap::detail::heap_base<SingleAgentSolver::compute_heuristics()::Node, SingleAgentSolver::compute_heuristics()::SingleAgentSolver::compute_heuristics()::Node::compare_node, true, unsigned long, false>::heap_base(SingleAgentSolver::compute_heuristics()::SingleAgentSolver::compute_heuristics()::Node::compare_node const&)
+calls=14 +91 
+* 280
+* 42
+cfi=(270)
+cfn=(4368) std::allocator<boost::heap::detail::heap_node<SingleAgentSolver::compute_heuristics()::Node, false> >::allocator()
+calls=14 +64 
+* 224
++1 42
+
+fn=(4360) boost::heap::pairing_heap<SingleAgentSolver::compute_heuristics()::Node, boost::heap::compare<SingleAgentSolver::compute_heuristics()::SingleAgentSolver::compute_heuristics()::Node::compare_node>, boost::parameter::void_, boost::parameter::void_, boost::parameter::void_, boost::parameter::void_>::pairing_heap(SingleAgentSolver::compute_heuristics()::SingleAgentSolver::compute_heuristics()::Node::compare_node const&)
+248 70
++1 70
+cfn=(4362)
+calls=14 72 
+* 728
+* 28
++1 42
+
+fn=(4418) boost::heap::pairing_heap<SingleAgentSolver::compute_heuristics()::Node, boost::heap::compare<SingleAgentSolver::compute_heuristics()::SingleAgentSolver::compute_heuristics()::Node::compare_node>, boost::parameter::void_, boost::parameter::void_, boost::parameter::void_, boost::parameter::void_>::top() const
+361 2775344
++2 2081508
+cfn=(4416)
+calls=693836 -64 
+* 6244524
+* 2081508
++2 3469180
+cfi=(335)
+cfn=(4420) boost::heap::detail::heap_base<SingleAgentSolver::compute_heuristics()::Node, SingleAgentSolver::compute_heuristics()::SingleAgentSolver::compute_heuristics()::Node::compare_node, true, unsigned long, false>::get_value(SingleAgentSolver::compute_heuristics()::Node&)
+calls=693836 233 
+* 4163016
++1 1387672
+
+fn=(4424)
+548 5550688
++2 1387672
++1 2775344
++5 2775344
+cfi=(338)
+cfn=(4426)
+calls=693836 -17 
+* 42324025
+* 2081508
++1 4162842
+cfn=(4580)
+calls=693807 701 
+* 3636667643
+* 2081418
++2 58
++3 87
+cfi=(335)
+cfn=(4432) boost::heap::detail::size_holder<true, unsigned long>::decrement()
+calls=29 71 
+* 348
+* 2081418
+cfi=(335)
+cfn=(4432)
+calls=693806 71 
+* 8325672
++5 1387670
++1 3469175
+cfi=(273)
+cfn=(4434) void std::allocator_traits<std::allocator<boost::heap::detail::heap_node<SingleAgentSolver::compute_heuristics()::Node, false> > >::destroy<boost::heap::detail::heap_node<SingleAgentSolver::compute_heuristics()::Node, false> >(std::allocator<boost::heap::detail::heap_node<SingleAgentSolver::compute_heuristics()::Node, false> >&, boost::heap::detail::heap_node<SingleAgentSolver::compute_heuristics()::Node, false>*)
+calls=693835 -74 
+* 392710610
++1 4163010
+cfi=(273)
+cfn=(4466) std::allocator_traits<std::allocator<boost::heap::detail::heap_node<SingleAgentSolver::compute_heuristics()::Node, false> > >::deallocate(std::allocator<boost::heap::detail::heap_node<SingleAgentSolver::compute_heuristics()::Node, false> >&, boost::heap::detail::heap_node<SingleAgentSolver::compute_heuristics()::Node, false>*, unsigned long)
+calls=693835 468 
+* 79995405
++2 4163010
+
+fn=(4604) boost::heap::detail::make_pairing_heap_base<SingleAgentSolver::compute_heuristics()::Node, boost::parameter::aux::flat_like_arg_list<boost::parameter::aux::flat_like_arg_tuple<boost::heap::tag::compare, boost::heap::compare<SingleAgentSolver::compute_heuristics()::SingleAgentSolver::compute_heuristics()::Node::compare_node>, std::integral_constant<bool, true> > > >::type::~type()
+68 98
+cfi=(270)
+cfn=(4606) std::allocator<boost::heap::detail::heap_node<SingleAgentSolver::compute_heuristics()::Node, false> >::~allocator()
+calls=14 +84 
+* 224
+* 42
+
+fn=(4602) boost::heap::pairing_heap<SingleAgentSolver::compute_heuristics()::Node, boost::heap::compare<SingleAgentSolver::compute_heuristics()::SingleAgentSolver::compute_heuristics()::Node::compare_node>, boost::parameter::void_, boost::parameter::void_, boost::parameter::void_, boost::parameter::void_>::~pairing_heap()
+292 56
++2 42
+cfn=(4416)
+calls=14 +5 
+* 126
+* 42
++2 42
+cfn=(4604)
+calls=14 68 
+* 364
+* 42
+
+fn=(4538)
+733 29686572
++2 26388064
+cfi=(335)
+cfn=(4540) boost::heap::detail::heap_base<SingleAgentSolver::compute_heuristics()::Node, SingleAgentSolver::compute_heuristics()::SingleAgentSolver::compute_heuristics()::Node::compare_node, true, unsigned long, false>::operator()(SingleAgentSolver::compute_heuristics()::Node const&, SingleAgentSolver::compute_heuristics()::Node const&) const
+calls=3298508 208 
+* 118746288
+* 6597016
++1 13025470
+cfi=(230)
+cfn=(4546) std::enable_if<std::__and_<std::__not_<std::__is_tuple_like<boost::heap::detail::heap_node<SingleAgentSolver::compute_heuristics()::Node, false>*> >, std::is_move_constructible<boost::heap::detail::heap_node<SingleAgentSolver::compute_heuristics()::Node, false>*>, std::is_move_assignable<boost::heap::detail::heap_node<SingleAgentSolver::compute_heuristics()::Node, false>*> >::value, void>::type std::swap<boost::heap::detail::heap_node<SingleAgentSolver::compute_heuristics()::Node, false>*>(boost::heap::detail::heap_node<SingleAgentSolver::compute_heuristics()::Node, false>*&, boost::heap::detail::heap_node<SingleAgentSolver::compute_heuristics()::Node, false>*&)
+calls=2605094 182 
+* 127649606
++2 13194032
+fi=(342) /usr/include/boost/intrusive/detail/generic_hook.hpp
+165 19791048
+fi=(352) /usr/include/boost/move/detail/meta_utils.hpp
++83 9895524
++1 9895524
++12 3298508
++11 3298508
+fi=(353) /usr/include/boost/intrusive/pointer_traits.hpp
++20 3298508
+fi=(342)
+165 3298508
++47 3298508
++1 13194032
+fi=(354) /usr/include/boost/intrusive/detail/list_node.hpp
+60 9895524
+fi=(340) /usr/include/boost/intrusive/circular_list_algorithms.hpp
++24 6597016
+fi=(342)
+213 9895524
++4 3298508
+fe=(334)
+739 19791048
+cfi=(338)
+cfn=(4552) boost::intrusive::list_impl<boost::intrusive::bhtraits<boost::heap::detail::heap_node_base<true>, boost::intrusive::list_node_traits<void*>, (boost::intrusive::link_mode_type)2, boost::intrusive::dft_tag, 1u>, unsigned long, false, void>::push_front(boost::heap::detail::heap_node_base<true>&)
+calls=3298508 286 
+* 481582168
++1 3298508
++1 16492540
+
+fn=(4620) boost::heap::pairing_heap<MCARPNode*, boost::heap::compare<LLNode::secondary_compare_node>, boost::parameter::void_, boost::parameter::void_, boost::parameter::void_, boost::parameter::void_>::pairing_heap(LLNode::secondary_compare_node const&)
+248 84
++1 70
+cfn=(4622)
+calls=14 72 
+* 784
+* 28
++1 42
+
+fl=(324) /home/chlebajz/Programy/diplomka/LNS4MAPF/my_code/LNS2_anytime_replan/inc/BasicLNS.h
+fn=(4292) Agent::Agent(Instance const&, int, std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const&)
+13 266
+cfi=(272)
+cfn=(4294) std::vector<PathEntry, std::allocator<PathEntry> >::vector()
+calls=14 484 
+* 938
++2 56
+cfi=(237) /usr/include/c++/9/bits/basic_string.h
+cfn=(3910) bool std::operator==<char, std::char_traits<char>, std::allocator<char> >(std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const&, char const*)
+calls=14 6178 
+* 1232
+* 28
++2 56
+cfi=(237)
+cfn=(3910)
+calls=14 6178 
+* 1232
+* 28
++2 56
+cfi=(237)
+cfn=(3910)
+calls=14 6178 
+* 1232
+* 28
++5 56
+cfi=(237)
+cfn=(3910)
+calls=14 6178 
+* 1302
+* 28
++1 28
+cob=(2) ???
+cfi=(18) ???
+cfn=(1686) 0x000000000011a380
+calls=14 -25 
+* 3653
+* 84
+cfi=(332) /home/chlebajz/Programy/diplomka/LNS4MAPF/my_code/LNS2_anytime_replan/inc/MCARP.h
+cfn=(4306) MCARP::MCARP(Instance const&, int)
+calls=14 +57 
+* 7770025317
+* 28
++2 84
+
+fl=(317) /usr/include/c++/9/bits/cpp_type_traits.h
+fn=(4346) int* std::__miter_base<int*>(int*)
+428 224
++1 168
+
+fl=(333) /home/chlebajz/Programy/diplomka/LNS4MAPF/my_code/LNS2_anytime_replan/inc/SingleAgentSolver.h
+fn=(4308) SingleAgentSolver::SingleAgentSolver(Instance const&, int)
+119 112
++3 308
+-1 98
+cfi=(272)
+cfn=(4310) std::vector<int, std::allocator<int> >::operator[](unsigned long) const
+calls=14 1058 
+* 168
++1 140
+cfi=(272)
+cfn=(4310)
+calls=14 1058 
+* 168
+* 98
+cfi=(272)
+cfn=(3386) std::vector<int, std::allocator<int> >::vector()
+calls=14 484 
+* 938
+* 210
++2 42
+cfi=(216) /home/chlebajz/Programy/diplomka/LNS4MAPF/my_code/LNS2_anytime_replan/src/SingleAgentSolver.cpp
+cfn=(4312) SingleAgentSolver::compute_heuristics()
+calls=14 13 
+* 7770012143
++1 70
+
+fl=(216)
+fn=(4372) SingleAgentSolver::compute_heuristics()::Node::Node(int, int)
+20 9714068
+
+fn=(4544) SingleAgentSolver::compute_heuristics()::Node::compare_node::operator()(Node const&, Node const&) const
+25 16492540
++2 19791048
++1 6597016
+
+fn=(4312)
+13 126
++19 154
+cfi=(272)
+cfn=(4314) std::vector<int, std::allocator<int> >::resize(unsigned long, int const&)
+calls=14 954 
+* 7673294
++3 70
+cfi=(334)
+cfn=(4360)
+calls=14 248 
+* 938
++2 98
+cfn=(4372)
+calls=14 -17 
+* 196
++1 112
+cfi=(272)
+cfn=(3896) std::vector<int, std::allocator<int> >::operator[](unsigned long)
+calls=14 1040 
+* 168
+* 14
++1 70
+cfi=(334)
+cfn=(4374)
+calls=14 378 
+* 6566
++1 2081550
+cfi=(334)
+cfn=(4416)
+calls=693850 299 
+* 6244650
+* 2081550
++2 2081508
+cfi=(334)
+cfn=(4418)
+calls=693836 361 
+* 22202752
+* 1387672
++1 2081508
+cfi=(334)
+cfn=(4422)
+calls=693836 429 
+* 4230100905
++1 4856845
+cfi=(197) /home/chlebajz/Programy/diplomka/LNS4MAPF/my_code/LNS2_anytime_replan/src/Instance.cpp
+cfn=(4470) Instance::getNeighbors[abi:cxx11](int) const
+calls=693835 474 
+* 1985500626
+* 3469180
+cfi=(322)
+cfn=(4530) std::__cxx11::list<int, std::allocator<int> >::begin()
+calls=693836 941 
+* 21508916
+* 2775344
+cfi=(322)
+cfn=(4488) std::__cxx11::list<int, std::allocator<int> >::end()
+calls=693836 959 
+* 20815080
+* 4163016
+cfi=(322)
+cfn=(4532) std::operator!=(std::_List_iterator<int> const&, std::_List_iterator<int> const&)
+calls=693836 251 
+* 9019868
+* 13312600
+cfi=(322)
+cfn=(4532)
+calls=2662520 251 
+* 34612760
+* 14700272
+cfi=(322)
+cfn=(4534) std::_List_iterator<int>::operator*() const
+calls=2662520 209 
+* 103838280
+* 5325040
++2 18637640
+cfi=(272)
+cfn=(3896)
+calls=2662520 1040 
+* 31950240
+* 18637640
++2 5550784
+cfi=(272)
+cfn=(3896)
+calls=693848 1040 
+* 8326176
+* 1387696
++1 4856936
+cfn=(4372)
+calls=693848 -29 
+* 9713872
++1 3469240
+cfi=(334)
+cfn=(4374)
+calls=693848 378 
+* 502641011
+-6 7987560
+cfi=(322)
+cfn=(4536) std::_List_iterator<int>::operator++()
+calls=2662520 217 
+* 31950240
+* 4744028
+cfi=(322)
+cfn=(4558) std::__cxx11::list<int, std::allocator<int> >::~list()
+calls=693836 823 
+* 619622648
+-4 693836
+-5 42
+cfi=(334)
+cfn=(4602)
+calls=14 292 
+* 714
++19 112
+
+fl=(273)
+fn=(3850) std::allocator_traits<std::allocator<int> >::max_size(std::allocator<int> const&)
+504 140
++1 84
+cfi=(271) /usr/include/c++/9/ext/new_allocator.h
+cfn=(3852) __gnu_cxx::new_allocator<int>::max_size() const
+calls=28 132 
+* 196
+* 56
+
+fn=(4434)
+494 3469175
++2 3469175
+cfi=(271)
+cfn=(4436) void __gnu_cxx::new_allocator<boost::heap::detail::heap_node<SingleAgentSolver::compute_heuristics()::Node, false> >::destroy<boost::heap::detail::heap_node<SingleAgentSolver::compute_heuristics()::Node, false> >(boost::heap::detail::heap_node<SingleAgentSolver::compute_heuristics()::Node, false>*)
+calls=693835 150 
+* 383690755
+* 2081505
+
+fn=(4570) std::allocator_traits<std::allocator<std::_List_node<int> > >::deallocate(std::allocator<std::_List_node<int> >&, std::_List_node<int>*, unsigned long)
+468 18637640
++1 15975120
+cfi=(271)
+cfn=(4572) __gnu_cxx::new_allocator<std::_List_node<int> >::deallocate(std::_List_node<int>*, unsigned long)
+calls=2662520 119 
+* 268914520
+* 7987560
+
+fn=(4564)
+494 15975120
++2 13312600
+cfi=(271)
+cfn=(4566) void __gnu_cxx::new_allocator<std::_List_node<int> >::destroy<int>(int*)
+calls=2662520 150 
+* 21300160
+* 7987560
+
+fn=(3858) std::allocator_traits<std::allocator<int> >::allocate(std::allocator<int>&, unsigned long)
+442 84
++1 84
+cfi=(271)
+cfn=(3860) __gnu_cxx::new_allocator<int>::allocate(unsigned long, void const*)
+calls=14 102 
+* 313298
+* 28
+
+fn=(4516) void std::allocator_traits<std::allocator<std::_List_node<int> > >::construct<int, int&>(std::allocator<std::_List_node<int> >&, int*, int&)
+481 18637633
++2 7987557
+cfi=(230)
+cfn=(4284)
+calls=2662519 74 
+* 18637633
+* 15975114
+cfi=(271)
+cfn=(4518) void __gnu_cxx::new_allocator<std::_List_node<int> >::construct<int, int&>(int*, int&)
+calls=2662519 144 
+* 98513203
+* 7987557
+
+fn=(4288)
+481 154
++2 42
+cfi=(230)
+cfn=(2790)
+calls=14 74 
+* 98
+* 56
+cfi=(230)
+cfn=(4284)
+calls=14 74 
+* 98
+* 56
+cfi=(230)
+cfn=(4286)
+calls=14 74 
+* 98
+* 98
+cfi=(271)
+cfn=(4290) void __gnu_cxx::new_allocator<Agent>::construct<Agent, Instance const&, int&, std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const&>(Agent*, Instance const&, int&, std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const&)
+calls=14 144 
+* 7770036768
+* 84
+
+fn=(4466)
+468 4163010
++1 4163010
+cfi=(271)
+cfn=(4468) __gnu_cxx::new_allocator<boost::heap::detail::heap_node<SingleAgentSolver::compute_heuristics()::Node, false> >::deallocate(boost::heap::detail::heap_node<SingleAgentSolver::compute_heuristics()::Node, false>*, unsigned long)
+calls=693835 119 
+* 69587880
+* 2081505
+
+fn=(4378)
+442 3469310
++1 4163172
+cfi=(271)
+cfn=(4380) __gnu_cxx::new_allocator<boost::heap::detail::heap_node<SingleAgentSolver::compute_heuristics()::Node, false> >::allocate(unsigned long, void const*)
+calls=693862 102 
+* 59948361
+* 1387724
+
+fn=(4498) std::allocator_traits<std::allocator<std::_List_node<int> > >::allocate(std::allocator<std::_List_node<int> >&, unsigned long)
+442 15975114
++1 15975114
+cfi=(271)
+cfn=(4500) __gnu_cxx::new_allocator<std::_List_node<int> >::allocate(unsigned long, void const*)
+calls=2662519 102 
+* 231639153
+* 5325038
+
+fn=(4386)
+481 4163172
++2 2081586
+cfi=(230)
+cfn=(4388) SingleAgentSolver::compute_heuristics()::Node&& std::forward<SingleAgentSolver::compute_heuristics()::Node>(std::remove_reference<SingleAgentSolver::compute_heuristics()::Node>::type&)
+calls=693862 74 
+* 4163172
+* 4163172
+cfi=(271)
+cfn=(4390) void __gnu_cxx::new_allocator<boost::heap::detail::heap_node<SingleAgentSolver::compute_heuristics()::Node, false> >::construct<boost::heap::detail::heap_node<SingleAgentSolver::compute_heuristics()::Node, false>, SingleAgentSolver::compute_heuristics()::Node>(boost::heap::detail::heap_node<SingleAgentSolver::compute_heuristics()::Node, false>*, SingleAgentSolver::compute_heuristics()::Node&&)
+calls=693862 144 
+* 177628672
+* 2081586
+
+fl=(347) /usr/include/boost/unordered/unordered_map.hpp
+fn=(4626) boost::unordered::unordered_map<MCARPNode*, std::__cxx11::list<MCARPNode*, std::allocator<MCARPNode*> >, MCARPNode::NodeHasher, MCARPNode::eqnode, std::allocator<std::pair<MCARPNode* const, std::__cxx11::list<MCARPNode*, std::allocator<MCARPNode*> > > > >::unordered_map()
+1507 126
++2 56
+cfi=(270)
+cfn=(4628) std::allocator<std::pair<MCARPNode* const, std::__cxx11::list<MCARPNode*, std::allocator<MCARPNode*> > > >::allocator()
+calls=14 137 
+* 252
+* 70
+cfi=(270)
+cfn=(4632) std::allocator<boost::unordered::detail::ptr_node<std::pair<MCARPNode* const, std::__cxx11::list<MCARPNode*, std::allocator<MCARPNode*> > > > >::allocator<std::pair<MCARPNode* const, std::__cxx11::list<MCARPNode*, std::allocator<MCARPNode*> > > >(std::allocator<std::pair<MCARPNode* const, std::__cxx11::list<MCARPNode*, std::allocator<MCARPNode*> > > > const&)
+calls=14 150 
+* 266
+* 126
+cfi=(329)
+cfn=(4636)
+calls=14 3118 
+* 4410
+* 42
+cfi=(270)
+cfn=(4660) std::allocator<boost::unordered::detail::ptr_node<std::pair<MCARPNode* const, std::__cxx11::list<MCARPNode*, std::allocator<MCARPNode*> > > > >::~allocator()
+calls=14 152 
+* 252
+* 42
+cfi=(270)
+cfn=(4664) std::allocator<std::pair<MCARPNode* const, std::__cxx11::list<MCARPNode*, std::allocator<MCARPNode*> > > >::~allocator()
+calls=14 152 
+* 252
++2 112
+
+fl=(342)
+fn=(4462) void boost::intrusive::detail::destructor_impl<boost::intrusive::generic_hook<(boost::intrusive::algo_types)0, boost::intrusive::list_node_traits<void*>, boost::intrusive::dft_tag, (boost::intrusive::link_mode_type)2, (boost::intrusive::base_hook_type)1> >(boost::intrusive::generic_hook<(boost::intrusive::algo_types)0, boost::intrusive::list_node_traits<void*>, boost::intrusive::dft_tag, (boost::intrusive::link_mode_type)2, (boost::intrusive::base_hook_type)1>&, boost::intrusive::detail::link_dispatch<(boost::intrusive::link_mode_type)2>)
+52 8326020
+165 4163010
+fi=(352)
++83 2081505
++1 2081505
++12 693835
++11 693835
+fi=(353)
++20 693835
+fe=(342)
+165 693835
++47 693835
++1 2775340
+fi=(354)
+60 2081505
+fi=(340)
++24 1387670
+fe=(342)
+213 2081505
++4 693835
+53 4163010
+
+fl=(276)
+fn=(4354)
+203 98
++3 70
+cfn=(4356) void std::_Destroy<int*>(int*, int*)
+calls=14 -79 
+* 308
++1 42
+
+fn=(4358) void std::_Destroy_aux<true>::__destroy<int*>(int*, int*)
+117 112
+
+fn=(4356)
+127 84
++10 70
+cfn=(4358)
+calls=14 -20 
+* 112
++1 42
+
+fl=(338)
+fn=(4446) void boost::intrusive::list_impl<boost::intrusive::bhtraits<boost::heap::detail::heap_node_base<true>, boost::intrusive::list_node_traits<void*>, (boost::intrusive::link_mode_type)2, boost::intrusive::dft_tag, 1u>, unsigned long, false, void>::clear_and_dispose<boost::intrusive::detail::null_disposer>(boost::intrusive::detail::null_disposer)
+746 12788592
++2 7992870
+cfn=(4448) boost::intrusive::list_impl<boost::intrusive::bhtraits<boost::heap::detail::heap_node_base<true>, boost::intrusive::list_node_traits<void*>, (boost::intrusive::link_mode_type)2, boost::intrusive::dft_tag, 1u>, unsigned long, false, void>::begin()
+calls=1598574 397 
+* 174244566
+fi=(341) /usr/include/boost/intrusive/detail/list_iterator.hpp
+75 4795722
++13 3197148
+fi=(356) /usr/include/boost/intrusive/detail/iiterator.hpp
++26 1598574
+fi=(341)
+-26 1598574
+-13 4795722
++7 3197148
+-7 3197148
+fi=(356)
++35 4795722
++1 1598574
+fi=(341)
+-35 1598574
+fe=(338)
+748 7992870
+cfn=(4456) boost::intrusive::list_impl<boost::intrusive::bhtraits<boost::heap::detail::heap_node_base<true>, boost::intrusive::list_node_traits<void*>, (boost::intrusive::link_mode_type)2, boost::intrusive::dft_tag, 1u>, unsigned long, false, void>::end()
+calls=1598574 421 
+* 169448844
+fi=(341)
+75 4795722
++13 3197148
+fi=(356)
++26 1598574
+fi=(341)
+-26 1598574
+-13 4795722
++7 3197148
+-7 3197148
+fi=(356)
++35 4795722
++1 1598574
+fi=(341)
+-35 11190018
++6 9591444
++37 3197148
++3 1598574
+fe=(338)
+749 3197148
++7 4795722
+cfn=(4408) boost::intrusive::list_impl<boost::intrusive::bhtraits<boost::heap::detail::heap_node_base<true>, boost::intrusive::list_node_traits<void*>, (boost::intrusive::link_mode_type)2, boost::intrusive::dft_tag, 1u>, unsigned long, false, void>::get_root_node()
+calls=1598574 130 
+* 49555794
+* 7992870
+fi=(354)
+66 12788592
+-9 6394296
+fi=(340)
++41 1598574
+fe=(338)
+757 4795722
+cfn=(4406) boost::intrusive::list_impl<boost::intrusive::bhtraits<boost::heap::detail::heap_node_base<true>, boost::intrusive::list_node_traits<void*>, (boost::intrusive::link_mode_type)2, boost::intrusive::dft_tag, 1u>, unsigned long, false, void>::priv_size_traits()
+calls=1598574 151 
+* 11190018
+* 3197148
+fi=(355) /usr/include/boost/intrusive/detail/size_holder.hpp
+70 1598574
+fe=(338)
+758 9591444
+
+fn=(4448)
+397 14387166
++1 4795722
+cfn=(4450) boost::intrusive::list_impl<boost::intrusive::bhtraits<boost::heap::detail::heap_node_base<true>, boost::intrusive::list_node_traits<void*>, (boost::intrusive::link_mode_type)2, boost::intrusive::dft_tag, 1u>, unsigned long, false, void>::priv_value_traits_ptr() const
+calls=1598574 166 
+* 59147238
+* 6394296
+cfn=(4408)
+calls=1598574 130 
+* 49555794
+* 1598574
+fi=(354)
+63 3197148
+fe=(338)
+398 4795722
+fi=(341)
+67 9591444
+fi=(356)
++43 6394296
++1 1598574
+fi=(341)
+-43 1598574
+fe=(338)
+398 11190018
+
+fn=(4598)
+268 22423581
++2 7474527
+cfn=(4554) boost::intrusive::list_impl<boost::intrusive::bhtraits<boost::heap::detail::heap_node_base<true>, boost::intrusive::list_node_traits<void*>, (boost::intrusive::link_mode_type)2, boost::intrusive::dft_tag, 1u>, unsigned long, false, void>::priv_value_traits()
+calls=2491509 160 
+* 17440563
+* 4983018
+fi=(344) /usr/include/boost/intrusive/detail/hook_traits.hpp
+77 14949054
+fi=(352)
+248 7474527
++1 7474527
++12 2491509
++11 2491509
+fi=(353)
++20 2491509
+fi=(344)
+77 2491509
++1 4983018
++1 2491509
+fe=(338)
+270 2491509
++1 9966036
+fi=(354)
+60 7474527
+fi=(340)
++24 4983018
+fe=(338)
+271 4983018
++1 7474527
+cfn=(4408)
+calls=2491509 130 
+* 77236779
+* 7474527
+fi=(354)
+54 4983018
+fi=(340)
+175 12457545
+fi=(354)
+57 9966036
+fi=(340)
+177 9966036
+fi=(354)
+66 9966036
+fi=(340)
+181 9966036
+fi=(354)
+57 19932072
++9 9966036
+fi=(340)
+183 2491509
+fe=(338)
++90 7474527
+cfn=(4406)
+calls=2491509 151 
+* 17440563
+* 2491509
+fi=(355)
+76 2491509
+fe=(338)
+274 14949054
+
+fn=(4406)
+151 59108732
++1 44331549
+
+fn=(4398)
+179 12788816
++1 7993010
+cfn=(4400) boost::intrusive::list_impl<boost::intrusive::bhtraits<boost::heap::detail::heap_node_base<true>, boost::intrusive::list_node_traits<void*>, (boost::intrusive::link_mode_type)2, boost::intrusive::dft_tag, 1u>, unsigned long, false, void>::data_t::data_t(boost::intrusive::bhtraits<boost::heap::detail::heap_node_base<true>, boost::intrusive::list_node_traits<void*>, (boost::intrusive::link_mode_type)2, boost::intrusive::dft_tag, 1u> const&)
+calls=1598602 -36 
+* 54352468
++2 4795806
+cfn=(4406)
+calls=1598602 -31 
+* 11190214
+* 3197204
+fi=(355)
+70 1598602
+fe=(338)
+183 4795806
+cfn=(4408)
+calls=1598602 -53 
+* 49556662
+* 7993010
+fi=(354)
+66 12788816
+-9 6394408
+fi=(340)
++41 1598602
+fe=(338)
++86 9591612
+
+fn=(4408)
+130 202903160
++1 50725790
+fi=(339) /usr/include/boost/intrusive/detail/default_header_holder.hpp
+-84 152177370
+fi=(352)
+248 76088685
++1 76088685
++12 25362895
++11 25362895
+fi=(353)
++20 25362895
+fi=(339)
+47 25362895
+fe=(338)
++84 126814475
+
+fn=(4444) boost::intrusive::list_impl<boost::intrusive::bhtraits<boost::heap::detail::heap_node_base<true>, boost::intrusive::list_node_traits<void*>, (boost::intrusive::link_mode_type)2, boost::intrusive::dft_tag, 1u>, unsigned long, false, void>::clear()
+723 12788592
++3 4795722
+cfn=(4446)
+calls=1598574 +20 
+* 573888066
++6 9591444
+
+fn=(4456)
+421 14387166
++1 4795722
+cfn=(4450)
+calls=1598574 166 
+* 59147238
+* 6394296
+cfn=(4408)
+calls=1598574 130 
+* 49555794
+* 4795722
+fi=(341)
+67 9591444
+fi=(356)
++43 6394296
++1 1598574
+fi=(341)
+-43 1598574
+fe=(338)
+422 11190018
+
+fn=(4588)
+335 46319920
++1 17369970
+cfn=(4590) void boost::intrusive::list_impl<boost::intrusive::bhtraits<boost::heap::detail::heap_node_base<true>, boost::intrusive::list_node_traits<void*>, (boost::intrusive::link_mode_type)2, boost::intrusive::dft_tag, 1u>, unsigned long, false, void>::pop_front_and_dispose<boost::intrusive::detail::null_disposer>(boost::intrusive::detail::null_disposer)
+calls=5789990 +14 
+* 851128530
+* 28949950
+
+fn=(4400)
+144 9591612
++1 4795806
+cfn=(4402) boost::intrusive::list_impl<boost::intrusive::bhtraits<boost::heap::detail::heap_node_base<true>, boost::intrusive::list_node_traits<void*>, (boost::intrusive::link_mode_type)2, boost::intrusive::dft_tag, 1u>, unsigned long, false, void>::root_plus_size::root_plus_size()
+calls=1598602 -9 
+* 35169244
++1 4795806
+
+fn=(4402)
+136 12788816
+cfi=(339)
+cfn=(4404) boost::intrusive::detail::default_header_holder<boost::intrusive::list_node_traits<void*> >::default_header_holder()
+calls=1598602 -95 
+* 17584622
+* 4795806
+
+fn=(4450)
+166 25577184
++1 9591444
+cfn=(4452) boost::intrusive::list_impl<boost::intrusive::bhtraits<boost::heap::detail::heap_node_base<true>, boost::intrusive::list_node_traits<void*>, (boost::intrusive::link_mode_type)2, boost::intrusive::dft_tag, 1u>, unsigned long, false, void>::priv_value_traits() const
+calls=3197148 -10 
+* 22380036
+* 15985740
+fi=(352)
++81 9591444
++1 9591444
++12 3197148
++11 3197148
+fi=(353)
++20 3197148
+fe=(338)
+167 15985740
+
+fn=(4552)
+286 29686572
++2 9895524
+cfn=(4554)
+calls=3298508 160 
+* 23089556
+* 6597016
+fi=(344)
+77 19791048
+fi=(352)
+248 9895524
++1 9895524
++12 3298508
++11 3298508
+fi=(353)
++20 3298508
+fi=(344)
+77 3298508
++1 6597016
++1 3298508
+fe=(338)
+288 3298508
++1 13194032
+fi=(354)
+60 9895524
+fi=(340)
++24 6597016
+fe=(338)
+289 6597016
++1 9895524
+cfn=(4408)
+calls=3298508 130 
+* 102253748
+* 3298508
+fi=(354)
+63 16492540
+-9 6597016
+fi=(340)
+175 16492540
+fi=(354)
+57 13194032
+fi=(340)
+177 13194032
+fi=(354)
+66 13194032
+fi=(340)
+181 13194032
+fi=(354)
+57 26388064
++9 13194032
+fi=(340)
+183 3298508
+fe=(338)
+291 9895524
+cfn=(4406)
+calls=3298508 151 
+* 23089556
+* 3298508
+fi=(355)
+76 3298508
+fe=(338)
+292 19791048
+
+fn=(4584)
+365 46319920
++1 17369970
+cfn=(4554)
+calls=5789990 160 
+* 40529930
+* 17369970
+cfn=(4408)
+calls=5789990 130 
+* 179489690
+* 5789990
+fi=(354)
+63 11579980
+fe=(338)
+366 5789990
+fi=(344)
+61 34739940
+fi=(352)
+248 17369970
++1 17369970
++12 5789990
++11 5789990
+fi=(353)
++20 5789990
+fi=(344)
+61 5789990
++1 11579980
++1 5789990
+fe=(338)
+366 28949950
+
+fn=(4428) boost::intrusive::list_impl<boost::intrusive::bhtraits<boost::heap::detail::heap_node_base<true>, boost::intrusive::list_node_traits<void*>, (boost::intrusive::link_mode_type)2, boost::intrusive::dft_tag, 1u>, unsigned long, false, void>::get_root_node() const
+133 56515728
++1 14128932
+fi=(339)
+-90 42386796
+fi=(352)
+248 21193398
++1 21193398
++12 7064466
++11 7064466
+fi=(353)
++20 7064466
+fi=(339)
+44 7064466
+fe=(338)
++90 35322330
+
+fn=(4554)
+160 69479988
++1 52109991
+
+fn=(4426)
+539 56515728
++1 21193398
+cfn=(4428)
+calls=7064466 133 
+* 218998446
+* 21193398
+fi=(354)
+60 21193398
+fi=(340)
++51 7064466
++1 49451262
+fe=(338)
+540 14655753
+fi=(340)
+112 2179215
+fe=(338)
+540 20666577
+
+fn=(4440)
+1448 12788592
+cfn=(4442) boost::intrusive::list_impl<boost::intrusive::bhtraits<boost::heap::detail::heap_node_base<true>, boost::intrusive::list_node_traits<void*>, (boost::intrusive::link_mode_type)2, boost::intrusive::dft_tag, 1u>, unsigned long, false, void>::~list_impl()
+calls=1598574 250 
+* 700175412
+* 4795722
+
+fn=(4452)
+157 12788592
++1 9591444
+
+fn=(4590)
+350 46319920
++2 17369970
+cfn=(4408)
+calls=5789990 130 
+* 179489690
+* 5789990
+fi=(354)
+63 11579980
+fe=(338)
+352 5789990
++1 11579980
+fi=(354)
+63 11579980
+fi=(340)
++80 5789990
+fi=(354)
+-89 11579980
+fi=(340)
++90 28949950
+fi=(354)
+-78 46319920
+-9 23159960
+fe=(338)
+354 17369970
+cfn=(4406)
+calls=5789990 151 
+* 40529930
+* 5789990
+fi=(355)
+73 5789990
+fe=(338)
+356 11579980
+fi=(340)
+72 23159960
+fi=(354)
+-6 40529930
+-9 23159960
+fi=(340)
++18 5789990
+fe=(338)
+357 17369970
+cfn=(4554)
+calls=5789990 160 
+* 40529930
+fi=(344)
+61 34739940
+fi=(352)
+248 17369970
++1 17369970
++12 5789990
++11 5789990
+fi=(353)
++20 5789990
+fi=(344)
+61 5789990
++1 11579980
++1 5789990
+fe=(338)
+357 23159960
+cfi=(346) /usr/include/boost/intrusive/detail/simple_disposers.hpp
+cfn=(4594) void boost::intrusive::detail::null_disposer::operator()<boost::heap::detail::heap_node_base<true>*>(boost::heap::detail::heap_node_base<true>*)
+calls=5789990 32 
+* 46319920
++1 34739940
+
+fn=(4442)
+250 7992870
++3 4795722
+cfn=(4444)
+calls=1598574 723 
+* 601063824
++1 4795722
+cfn=(4408)
+calls=1598574 130 
+* 49555794
+* 1598574
+fi=(340)
+72 6394296
+fi=(354)
+-6 11190018
+-9 6394296
+fi=(340)
++18 1598574
+fe=(338)
+256 4795722
+
+fl=(291) /usr/include/c++/9/ext/aligned_buffer.h
+fn=(4512) __gnu_cxx::__aligned_membuf<int>::_M_ptr()
+72 39937795
++1 23962677
+cfn=(4514) __gnu_cxx::__aligned_membuf<int>::_M_addr()
+calls=7987559 -9 
+* 55912913
+* 15975118
+
+fn=(4514)
+64 31950236
++1 23962677
+
+fl=(343) /usr/include/c++/9/bits/allocated_ptr.h
+fn=(4506) std::__allocated_ptr<std::allocator<std::_List_node<int> > >::__allocated_ptr(std::allocator<std::_List_node<int> >&, std::_List_node<int>*)
+52 18637633
++1 7987557
+cfi=(230)
+cfn=(4508) std::allocator<std::_List_node<int> >* std::__addressof<std::allocator<std::_List_node<int> > >(std::allocator<std::_List_node<int> >&)
+calls=2662519 -6 
+* 18637633
+* 13312595
++1 7987557
+
+fn=(4522) std::__allocated_ptr<std::allocator<std::_List_node<int> > >::~__allocated_ptr()
+70 13312595
++2 10650076
++2 7987557
+
+fn=(4520) std::__allocated_ptr<std::allocator<std::_List_node<int> > >::operator=(decltype(nullptr))
+78 13312595
++2 5325038
++1 2662519
++1 5325038
+
+fl=(301) /usr/include/c++/9/bits/stl_bvector.h
+fn=(3384) std::_Bit_iterator_base::_Bit_iterator_base(unsigned long*, unsigned int)
+148 16617240
++1 24925860
+
+fn=(3652) std::_Bit_const_iterator::_Bit_const_iterator(unsigned long*, unsigned int)
+315 19386780
++1 16617240
+cfn=(3384)
+calls=2769540 148 
+* 41543100
+* 8308620
+
+fn=(4474) std::vector<bool, std::allocator<bool> >::operator[](unsigned long) const
+893 24925860
++2 13847700
++1 8308620
+-1 13847700
+cfn=(3652)
+calls=2769540 315 
+* 85855740
+* 8308620
+cfn=(4476) std::_Bit_const_iterator::operator*() const
+calls=2769540 326 
+* 155094240
++2 13847700
+
+fn=(4476)
+326 22156320
++1 30464940
+cfn=(3760) std::_Bit_reference::_Bit_reference(unsigned long*, unsigned long)
+calls=2769540 77 
+* 41543100
+* 8308620
+cfn=(4478) std::_Bit_reference::operator bool() const
+calls=2769540 86 
+* 38773560
+* 13847700
+
+fn=(4478)
+86 11078160
++1 27695400
+
+fn=(3760)
+77 16617240
++1 24925860
+
+fl=(336) /usr/include/boost/heap/detail/heap_node.hpp
+fn=(4394) boost::heap::detail::heap_node_base<true>::heap_node_base()
+31 5550896
+cfi=(337) /usr/include/boost/intrusive/list_hook.hpp
+cfn=(4396) boost::intrusive::list_base_hook<boost::intrusive::link_mode<(boost::intrusive::link_mode_type)2> >::list_base_hook()
+calls=693862 +53 
+* 36080824
+* 2081586
+
+fn=(4458) boost::heap::detail::heap_node_base<true>::~heap_node_base()
+31 5550680
+cfi=(337)
+cfn=(4460) boost::intrusive::list_base_hook<boost::intrusive::link_mode<(boost::intrusive::link_mode_type)2> >::~list_base_hook()
+calls=693835 +53 
+* 47180780
+* 2081505
+
+fn=(4392) boost::heap::detail::heap_node<SingleAgentSolver::compute_heuristics()::Node, false>::heap_node<SingleAgentSolver::compute_heuristics()::Node>(SingleAgentSolver::compute_heuristics()::Node&&)
+200 4163172
++1 2081586
+cfn=(4394)
+calls=693862 31 
+* 43713306
+* 2081586
+cfi=(230)
+cfn=(4388)
+calls=693862 74 
+* 4163172
+* 4163172
+fi=(338)
+1475 2081586
+cfn=(4398)
+calls=693862 179 
+* 81875716
++1 693862
+fe=(336)
+202 3469310
+
+fn=(4438) boost::heap::detail::heap_node<SingleAgentSolver::compute_heuristics()::Node, false>::~heap_node()
+179 5550680
+cfi=(338)
+cfn=(4440)
+calls=693835 1448 
+* 311531915
+* 2081505
+cfn=(4458)
+calls=693835 31 
+* 54812965
+* 2081505
+
+fl=(176) ???
+fn=(1316) _start
+cob=(3) /usr/lib/x86_64-linux-gnu/libc-2.31.so
+cfi=(177) /build/glibc-LcI20x/glibc-2.31/csu/../csu/libc-start.c
+cfn=(1318) (below main)
+calls=0 137 
+0 7770038728
+
+fl=(238)
+fn=(4332) std::move_iterator<int*>::move_iterator(int*)
+1054 280
++1 336
+
+fn=(4318) __gnu_cxx::__normal_iterator<int*, std::vector<int, std::allocator<int> > >::__normal_iterator(int* const&)
+803 140
++1 196
+
+fn=(4342) decltype (__miter_base(({parm#1}.base)())) std::__miter_base<int*>(std::move_iterator<int*>)
+1259 280
++2 168
+cfn=(4344) std::move_iterator<int*>::base() const
+calls=56 1063 
+* 448
+* 112
+cfi=(317)
+cfn=(4346)
+calls=56 428 
+* 392
+* 112
+
+fn=(4330) std::move_iterator<int*> std::__make_move_if_noexcept_iterator<int, std::move_iterator<int*> >(int*)
+1239 448
++1 280
+cfn=(4332)
+calls=56 1054 
+* 616
+* 336
+
+fn=(4324)
+986 98
++3 42
+cfn=(4326)
+calls=14 868 
+* 98
+* 56
+cfn=(4326)
+calls=14 868 
+* 98
+* 112
+
+fn=(4326)
+868 224
++1 168
+
+fn=(4344)
+1063 224
++1 224
+
+fl=(274) /usr/include/c++/9/bits/stl_algobase.h
+fn=(3876) int* std::__niter_base<int*>(int*)
+280 392
++2 294
+
+fn=(3880) int* std::__niter_wrap<int*>(int* const&, int*)
+295 210
++1 126
+
+fn=(3874) int* std::fill_n<int*, unsigned long, int>(int*, unsigned long, int const&)
+802 98
++6 42
+cfn=(3876)
+calls=14 280 
+* 98
+* 84
+cfn=(3878) __gnu_cxx::__enable_if<std::__is_scalar<int>::__value, int*>::__type std::__fill_n_a<int*, unsigned long, int>(int*, unsigned long, int const&)
+calls=14 -41 
+* 7340256
+* 70
+cfn=(3880)
+calls=14 295 
+* 112
++2 28
+
+fn=(3878)
+767 84
++2 42
++1 28
++1 1835036
++1 2752512
+-2 2752512
++3 14
++1 28
+
+fn=(4340) int* std::copy<std::move_iterator<int*>, int*>(std::move_iterator<int*>, std::move_iterator<int*>, int*)
+465 224
++9 84
+cfi=(238)
+cfn=(4342)
+calls=28 1259 
+* 756
+* 112
+cfi=(238)
+cfn=(4342)
+calls=28 1259 
+* 756
+* 168
+cfn=(4348) int* std::__copy_move_a2<true, int*, int*>(int*, int*, int*)
+calls=28 -36 
+* 2744
++1 112
+
+fn=(2142) unsigned long const& std::min<unsigned long>(unsigned long const&, unsigned long const&)
+198 140
++5 168
++2 28
++1 56
+
+fn=(4352) int* std::__copy_move<true, true, std::random_access_iterator_tag>::__copy_m<int>(int const*, int const*, int*)
+375 196
++9 112
++1 56
++2 112
++1 56
+
+fn=(4350) int* std::__copy_move_a<true, int*, int*>(int*, int*, int*)
+393 196
++5 28
++6 168
+cfn=(4352)
+calls=28 -29 
+* 532
++1 56
+
+fn=(2204) unsigned long const& std::max<unsigned long>(unsigned long const&, unsigned long const&)
+222 70
++5 84
++1 28
++2 28
+
+fn=(4348)
+438 252
++2 84
+cfn=(3876)
+calls=28 280 
+* 196
+* 112
+cfn=(3876)
+calls=28 280 
+* 196
+* 112
+cfn=(3876)
+calls=28 280 
+* 196
+* 112
+cfn=(4350)
+calls=28 -47 
+* 980
+* 140
+cfn=(3880)
+calls=28 295 
+* 224
++4 140
+
+fl=(318) /home/chlebajz/Programy/diplomka/LNS4MAPF/my_code/LNS2_anytime_replan/inc/Instance.h
+fn=(4484) Instance::getColCoordinate(int) const
+40 69310488
+
+fn=(4482) Instance::getRowCoordinate(int) const
+39 63978912
+
+fn=(4472) Instance::validMove(int, int) const
+27 19427394
++2 16639872
++1 11604
++1 19386780
+cfi=(301)
+cfn=(4474)
+calls=2769540 893 
+* 324036180
+* 5539080
++1 207506
++1 15994722
+cfn=(4480) Instance::getManhattanDistance(int, int) const
+calls=2665787 +11 
+* 258581436
+* 5331576
++1 5550686
+
+fn=(4480)
+44 18660516
++2 13328940
+cfn=(4482)
+calls=2665788 -7 
+* 31989456
+* 2665788
++1 13328940
+cfn=(4484)
+calls=2665788 -7 
+* 34655244
+* 2665788
++1 13328940
+cfn=(4482)
+calls=2665788 -9 
+* 31989456
+* 2665788
++1 13328940
+cfn=(4484)
+calls=2665788 -9 
+* 34655244
+* 2665788
++1 37321032
++1 5331576
+
+fl=(199)
+fn=(3914)
+36 42
++1 98
+cfi=(279)
+cfn=(4282)
+calls=14 +72 
+* 7770038532
+-1 56
+
+fl=(197)
+fn=(4470)
+474 7632185
++1 2081505
+cfi=(322)
+cfn=(4140) std::__cxx11::list<int, std::allocator<int> >::list()
+calls=693835 669 
+* 56200635
++1 11795195
++1 23590405
++2 16652052
+cfi=(318)
+cfn=(4472)
+calls=2775342 27 
+* 670706836
+* 5550686
++1 13312595
+cfi=(322)
+cfn=(4486) void std::__cxx11::list<int, std::allocator<int> >::emplace_back<int&>(int&)
+calls=2662519 1221 
+* 1166183322
+-3 5550686
++5 693836
++1 5550688
+
+fl=(339)
+fn=(4404)
+41 17584622
+
+fl=(277)
+fn=(2166)
+174 26851272
+
+fl=(346)
+fn=(4594)
+32 28949950
++1 17369970
+
+fl=(230)
+fn=(4508)
+47 10650076
++1 7987557
+
+fn=(2790)
+74 168
++1 126
+
+fn=(4388)
+74 6244758
++1 6244758
+
+fn=(4548) std::remove_reference<boost::heap::detail::heap_node<SingleAgentSolver::compute_heuristics()::Node, false>*&>::type&& std::move<boost::heap::detail::heap_node<SingleAgentSolver::compute_heuristics()::Node, false>*&>(boost::heap::detail::heap_node<SingleAgentSolver::compute_heuristics()::Node, false>*&)
+99 23445846
++1 23445846
+
+fn=(4286)
+74 168
++1 126
+
+fn=(4546)
+182 20840752
++11 7815282
+cfn=(4548)
+calls=2605094 -94 
+* 15630564
+* 5210188
++1 7815282
+cfn=(4548)
+calls=2605094 -95 
+* 15630564
+* 7815282
++1 7815282
+cfn=(4548)
+calls=2605094 -96 
+* 15630564
+* 7815282
++1 15630564
+
+fn=(4284)
+74 53250548
++1 39937911
+
+fl=(271)
+fn=(3394) __gnu_cxx::new_allocator<int>::new_allocator()
+80 98
+
+fn=(4390)
+144 6244758
++2 2081586
+cfi=(230)
+cfn=(4388)
+calls=693862 -72 
+* 4163172
+* 3469310
+cfi=(277)
+cfn=(2166)
+calls=693862 +28 
+* 5550896
+* 2775448
+cfi=(336)
+cfn=(4392)
+calls=693862 +54 
+* 148486468
+* 4857034
+
+fn=(4662) __gnu_cxx::new_allocator<boost::unordered::detail::ptr_node<std::pair<MCARPNode* const, std::__cxx11::list<MCARPNode*, std::allocator<MCARPNode*> > > > >::~new_allocator()
+89 98
+
+fn=(4106) __gnu_cxx::new_allocator<boost::unordered::detail::ptr_bucket>::~new_allocator()
+89 98
+
+fn=(4290)
+144 196
++2 42
+cfi=(230)
+cfn=(4286)
+calls=14 -72 
+* 98
+* 56
+cfi=(230)
+cfn=(4284)
+calls=14 -72 
+* 98
+* 56
+cfi=(230)
+cfn=(2790)
+calls=14 -72 
+* 98
+* 70
+cfi=(277)
+cfn=(2166)
+calls=14 +28 
+* 112
+* 84
+cfi=(324)
+cfn=(4292)
+calls=14 13 
+* 7770035732
+* 126
+
+fn=(4468)
+119 4163010
++9 2081505
+cob=(2)
+cfi=(18)
+cfn=(2246) 0x000000000011a330
+calls=693835 0 
+* 61261860
++1 2081505
+
+fn=(4634) __gnu_cxx::new_allocator<boost::unordered::detail::ptr_node<std::pair<MCARPNode* const, std::__cxx11::list<MCARPNode*, std::allocator<MCARPNode*> > > > >::new_allocator()
+80 98
+
+fn=(4566)
+150 13312600
++2 7987560
+
+fn=(3852)
+132 168
++3 42
++4 84
+
+fn=(4370) __gnu_cxx::new_allocator<boost::heap::detail::heap_node<SingleAgentSolver::compute_heuristics()::Node, false> >::new_allocator()
+80 84
+
+fn=(4382) __gnu_cxx::new_allocator<boost::heap::detail::heap_node<SingleAgentSolver::compute_heuristics()::Node, false> >::max_size() const
+132 2081586
++3 693862
++4 1387724
+
+fn=(4502) __gnu_cxx::new_allocator<std::_List_node<int> >::max_size() const
+132 10650076
++3 2662519
++4 5325038
+
+fn=(4656) __gnu_cxx::new_allocator<boost::unordered::detail::ptr_node<std::pair<MCARPNode* const, std::__cxx11::list<MCARPNode*, std::allocator<MCARPNode*> > > > >::new_allocator(__gnu_cxx::new_allocator<boost::unordered::detail::ptr_node<std::pair<MCARPNode* const, std::__cxx11::list<MCARPNode*, std::allocator<MCARPNode*> > > > > const&)
+83 112
+
+fn=(4572)
+119 18637640
++9 7987560
+cob=(2)
+cfi=(18)
+cfn=(2246)
+calls=2662520 0 
+* 234301760
++1 7987560
+
+fn=(4578) __gnu_cxx::new_allocator<std::_List_node<int> >::~new_allocator()
+89 4856852
+
+fn=(4302) __gnu_cxx::new_allocator<PathEntry>::new_allocator()
+80 196
+
+fn=(4102) __gnu_cxx::new_allocator<boost::unordered::detail::ptr_bucket>::new_allocator(__gnu_cxx::new_allocator<boost::unordered::detail::ptr_bucket> const&)
+83 112
+
+fn=(4380)
+102 4163172
++2 2081586
+cfn=(4382)
+calls=693862 +28 
+* 4163172
+* 2775448
++10 4857034
+cob=(2)
+cfi=(18)
+cfn=(1686)
+calls=693862 0 
+* 40520225
++1 1387724
+
+fn=(4436)
+150 3469175
++2 2081505
+cfi=(336)
+cfn=(4438)
+calls=693835 +27 
+* 376058570
+* 2081505
+
+fn=(4608) __gnu_cxx::new_allocator<boost::heap::detail::heap_node<SingleAgentSolver::compute_heuristics()::Node, false> >::~new_allocator()
+89 84
+
+fn=(3860)
+102 98
++2 42
+cfn=(3852)
+calls=14 +28 
+* 98
+* 56
++10 56
+cob=(2)
+cfi=(18)
+cfn=(1686)
+calls=14 0 
+* 312920
++1 28
+
+fn=(4096) __gnu_cxx::new_allocator<boost::unordered::detail::ptr_bucket>::new_allocator()
+80 98
+
+fn=(4148) __gnu_cxx::new_allocator<std::_List_node<int> >::new_allocator()
+80 4856845
+
+fn=(4618) __gnu_cxx::new_allocator<boost::heap::detail::heap_node<MCARPNode*, false> >::new_allocator()
+80 196
+
+fn=(4630) __gnu_cxx::new_allocator<std::pair<MCARPNode* const, std::__cxx11::list<MCARPNode*, std::allocator<MCARPNode*> > > >::new_allocator()
+80 98
+
+fn=(4666) __gnu_cxx::new_allocator<std::pair<MCARPNode* const, std::__cxx11::list<MCARPNode*, std::allocator<MCARPNode*> > > >::~new_allocator()
+89 98
+
+fn=(4500)
+102 18637633
++2 7987557
+cfn=(4502)
+calls=2662519 +28 
+* 18637633
+* 10650076
++10 18637633
+cob=(2)
+cfi=(18)
+cfn=(1686)
+calls=2662519 0 
+* 151763583
++1 5325038
+
+fn=(4518)
+144 21300152
++2 7987557
+cfi=(230)
+cfn=(4284)
+calls=2662519 -72 
+* 18637633
+* 13312595
+cfi=(277)
+cfn=(2166)
+calls=2662519 +28 
+* 21300152
+* 15975114
+
+fn=(4676) __gnu_cxx::new_allocator<std::_List_node<MCARPNode*> >::new_allocator()
+80 98
+
+fl=(270)
+fn=(4628)
+137 112
+cfi=(271)
+cfn=(4630)
+calls=14 -57 
+* 98
+* 42
+
+fn=(4664)
+152 112
+cfi=(271)
+cfn=(4666)
+calls=14 -63 
+* 98
+* 42
+
+fn=(4606)
+152 98
+cfi=(271)
+cfn=(4608)
+calls=14 -63 
+* 84
+* 42
+
+fn=(4616)
+137 224
+cfi=(271)
+cfn=(4618)
+calls=28 -57 
+* 196
+* 84
+
+fn=(4654)
+140 84
++1 70
+cfi=(271)
+cfn=(4656)
+calls=14 -58 
+* 112
+* 42
+
+fn=(4660)
+152 112
+cfi=(271)
+cfn=(4662)
+calls=14 -63 
+* 98
+* 42
+
+fn=(4576) std::allocator<std::_List_node<int> >::~allocator()
+152 5550688
+cfi=(271)
+cfn=(4578)
+calls=693836 -63 
+* 4856852
+* 2081508
+
+fn=(3392) std::allocator<int>::allocator()
+137 112
+cfi=(271)
+cfn=(3394)
+calls=14 -57 
+* 98
+* 42
+
+fn=(4104)
+152 112
+cfi=(271)
+cfn=(4106)
+calls=14 -63 
+* 98
+* 42
+
+fn=(4632)
+150 126
+cfi=(271)
+cfn=(4634)
+calls=14 -70 
+* 98
+* 42
+
+fn=(4146) std::allocator<std::_List_node<int> >::allocator()
+137 5550680
+cfi=(271)
+cfn=(4148)
+calls=693835 -57 
+* 4856845
+* 2081505
+
+fn=(4650)
+150 126
+cfi=(271)
+cfn=(4096)
+calls=14 -70 
+* 98
+* 42
+
+fn=(4100)
+140 84
++1 70
+cfi=(271)
+cfn=(4102)
+calls=14 -58 
+* 112
+* 42
+
+fn=(4300) std::allocator<PathEntry>::allocator()
+137 224
+cfi=(271)
+cfn=(4302)
+calls=28 -57 
+* 196
+* 84
+
+fn=(4368)
+137 98
+cfi=(271)
+cfn=(4370)
+calls=14 -57 
+* 84
+* 42
+
+fn=(4674) std::allocator<std::_List_node<MCARPNode*> >::allocator()
+137 112
+cfi=(271)
+cfn=(4676)
+calls=14 -57 
+* 98
+* 42
+
+fl=(335)
+fn=(4364)
+164 70
++2 42
+cfn=(4366) boost::heap::detail::size_holder<true, unsigned long>::size_holder()
+calls=14 36 
+* 126
++4 42
+
+fn=(4376)
+74 2775448
++1 5550896
+
+fn=(4414)
+489 5550792
++1 4163094
++1 4163094
+
+fn=(4540)
+208 19791048
++2 9895524
+cfn=(4542) boost::heap::detail::heap_base<SingleAgentSolver::compute_heuristics()::Node, SingleAgentSolver::compute_heuristics()::SingleAgentSolver::compute_heuristics()::Node::compare_node, true, unsigned long, false>::value_comp() const
+calls=3298508 +33 
+* 19791048
+* 19791048
+cfi=(216)
+cfn=(4544)
+calls=3298508 25 
+* 42880604
++1 6597016
+
+fn=(4366)
+36 168
++1 84
++1 126
+
+fn=(4384)
+213 2775448
++2 1387724
++1 1387724
+
+fn=(4420)
+233 2081508
++2 693836
++1 1387672
+
+fn=(4614)
+164 84
++2 42
+cfn=(4366)
+calls=14 36 
+* 126
++4 42
+
+fn=(4432)
+71 2775340
++1 5550680
+
+fn=(4542)
+243 9895524
++3 3298508
++4 6597016
+
+fn=(4624)
+164 84
++2 42
+cfn=(4366)
+calls=14 36 
+* 126
++4 42
+
+fl=(332)
+fn=(4306)
+82 154
++1 84
+cfi=(333)
+cfn=(4308)
+calls=14 +36 
+* 7770014495
+* 126
+cfi=(334)
+cfn=(4610)
+calls=14 248 
+* 1008
+* 84
+cfi=(334)
+cfn=(4620)
+calls=14 248 
+* 1008
+* 56
+cfi=(272)
+cfn=(4294)
+calls=14 484 
+* 938
+* 56
+cfi=(347)
+cfn=(4626)
+calls=14 1507 
+* 6006
+* 56
+cfi=(322)
+cfn=(4668) std::__cxx11::list<MCARPNode*, std::allocator<MCARPNode*> >::list()
+calls=14 669 
+* 1134
+* 112
+
+fl=(337)
+fn=(4460)
+84 6938350
+fi=(342)
+193 2081505
+cfn=(4462)
+calls=693835 52 
+* 33304080
++1 693835
+fe=(337)
+84 4163010
+
+fn=(4396)
+84 8326344
+fi=(342)
++81 4163172
+fi=(352)
++83 2081586
++1 2081586
++12 693862
++11 693862
+fi=(353)
++20 693862
+fi=(342)
+165 1387724
+fi=(340)
+-93 2775448
+fi=(354)
+-6 4857034
+-9 2775448
+fi=(340)
++18 693862
+fi=(342)
+178 693862
+fe=(337)
+-94 4163172
+
+fl=(237)
+fn=(3910)
+6178 336
++2 280
+cob=(2)
+cfi=(18)
+cfn=(3912) 0x0000000000119f10
+calls=56 0 
+* 4158
+* 224
+
+fl=(275)
+fn=(4068)
+382 112
++2 84
+cfn=(4070) int* std::uninitialized_fill_n<int*, unsigned long, int>(int*, unsigned long, int const&)
+calls=14 256 
+* 7341222
+* 28
+
+fn=(4070)
+256 98
++14 14
++3 84
+cfn=(4072) int* std::__uninitialized_fill_n<true>::__uninit_fill_n<int*, unsigned long, int>(int*, unsigned long, int const&)
+calls=14 -35 
+* 7340998
++1 28
+
+fn=(4334) int* std::__uninitialized_copy_a<std::move_iterator<int*>, int*, int>(std::move_iterator<int*>, std::move_iterator<int*>, int*, std::allocator<int>&)
+305 224
++2 168
+cfn=(4336) int* std::uninitialized_copy<std::move_iterator<int*>, int*>(std::move_iterator<int*>, std::move_iterator<int*>, int*)
+calls=28 115 
+* 5824
+* 56
+
+fn=(4336)
+115 196
++19 28
++6 168
+cfn=(4338) int* std::__uninitialized_copy<true>::__uninit_copy<std::move_iterator<int*>, int*>(std::move_iterator<int*>, std::move_iterator<int*>, int*)
+calls=28 -41 
+* 5376
++1 56
+
+fn=(4328)
+323 252
++6 84
+cfi=(238)
+cfn=(4330)
+calls=28 1239 
+* 840
+* 112
+cfi=(238)
+cfn=(4330)
+calls=28 1239 
+* 840
+* 196
+cfn=(4334)
+calls=28 -24 
+* 6272
++2 112
+
+fn=(4072)
+238 98
++2 84
+cfi=(274)
+cfn=(3874)
+calls=14 802 
+* 7340788
+* 28
+
+fn=(4338)
+99 196
++2 168
+cfi=(274)
+cfn=(4340)
+calls=28 465 
+* 4956
+* 56
+
+fl=(322)
+fn=(3930) std::__detail::_List_node_header::_M_init()
+149 2775396
++2 4856943
++2 1387698
++2 2081547
+
+fn=(4140)
+669 5550680
+cfn=(4142) std::__cxx11::_List_base<int, std::allocator<int> >::_List_base()
+calls=693835 456 
+* 48568450
+* 2081505
+
+fn=(4670) std::__cxx11::_List_base<MCARPNode*, std::allocator<MCARPNode*> >::_List_base()
+456 112
+cfn=(4672) std::__cxx11::_List_base<MCARPNode*, std::allocator<MCARPNode*> >::_List_impl::_List_impl()
+calls=14 -81 
+* 826
+* 42
+
+fn=(4144) std::__cxx11::_List_base<int, std::allocator<int> >::_List_impl::_List_impl()
+375 3469175
++2 2081505
+cfi=(270)
+cfn=(4146)
+calls=693835 137 
+* 12489030
+* 2081505
+cfn=(3928) std::__detail::_List_node_header::_List_node_header()
+calls=693835 109 
+* 18733545
++1 2081505
+
+fn=(4558)
+823 5550688
+cfn=(4560) std::__cxx11::_List_base<int, std::allocator<int> >::~_List_base()
+calls=693836 494 
+* 611990452
+* 2081508
+
+fn=(4504)
+448 21300156
++1 15975117
+
+fn=(4668)
+669 112
+cfn=(4670)
+calls=14 456 
+* 980
+* 42
+
+fn=(4568)
+441 15975120
++1 15975120
+cfi=(273)
+cfn=(4570)
+calls=2662520 +26 
+* 311514840
+* 7987560
+
+fn=(3928)
+109 3469245
++1 2081547
+cfn=(3930)
+calls=693849 +39 
+* 11101584
+* 2081547
+
+fn=(4142)
+456 5550680
+cfn=(4144)
+calls=693835 -81 
+* 40936265
+* 2081505
+
+fn=(4536)
+217 10650080
++2 13312600
++1 2662520
++1 5325040
+
+fn=(4560)
+494 3469180
++1 2081508
+cfi=(345)
+cfn=(4562)
+calls=693836 66 
+* 582155504
+* 2081508
+cfn=(4574) std::__cxx11::_List_base<int, std::allocator<int> >::_List_impl::~_List_impl()
+calls=693836 370 
+* 20121244
+* 2081508
+
+fn=(4486)
+1221 18637633
++2 7987557
+cfi=(230)
+cfn=(4284)
+calls=2662519 74 
+* 18637633
+* 10650076
+cfn=(4488)
+calls=2662519 959 
+* 79875570
+* 15975114
+cfn=(4492) void std::__cxx11::list<int, std::allocator<int> >::_M_insert<int&>(std::_List_iterator<int>, int&)
+calls=2662519 1905 
+* 1001107144
++4 13312595
+
+fn=(4488)
+959 26850840
++1 16781775
+cfn=(4490) std::_List_iterator<int>::_List_iterator(std::__detail::_List_node_base*)
+calls=3356355 200 
+* 36919905
+* 20138130
+
+fn=(4492)
+1905 18637633
++2 7987557
+cfi=(230)
+cfn=(4284)
+calls=2662519 74 
+* 18637633
+* 13312595
+cfn=(4494) std::_List_node<int>* std::__cxx11::list<int, std::allocator<int> >::_M_create_node<int&>(int&)
+calls=2662519 628 
+* 844018523
+* 2662519
++1 13312595
+cob=(2)
+cfi=(18)
+cfn=(4524) 0x0000000000119dc0
+calls=2662519 0 
+* 26625190
++1 10650076
+cfn=(4528) std::__cxx11::_List_base<int, std::allocator<int> >::_M_inc_size(unsigned long)
+calls=2662519 404 
+* 37275266
++1 7987557
+
+fn=(4496) std::__cxx11::_List_base<int, std::allocator<int> >::_M_get_node()
+437 13312595
++1 10650076
+cfi=(273)
+cfn=(4498)
+calls=2662519 +4 
+* 268914419
+* 5325038
+
+fn=(4510)
+170 71888031
+cfi=(291)
+cfn=(4512)
+calls=7987559 -98 
+* 135788503
+* 15975118
+
+fn=(4528)
+404 37275266
+
+fn=(4490)
+200 20250955
++1 24301146
+
+fn=(4534)
+209 13312600
++1 10650080
+cfn=(4510)
+calls=2662520 -40 
+* 74550560
+* 5325040
+
+fn=(4574)
+370 5550688
+cfi=(270)
+cfn=(4576)
+calls=693836 152 
+* 12489048
+* 2081508
+
+fn=(4672)
+375 70
++2 42
+cfi=(270)
+cfn=(4674)
+calls=14 137 
+* 252
+* 42
+cfn=(3928)
+calls=14 109 
+* 378
++1 42
+
+fn=(4494)
+628 26625190
++2 7987557
+cfn=(4496)
+calls=2662519 437 
+* 298202128
+* 2662519
++1 7987557
+cfn=(4504)
+calls=2662519 448 
+* 18637633
+* 2662519
++1 15975114
+cfi=(343)
+cfn=(4506)
+calls=2662519 52 
+* 66562975
++1 7987557
+cfi=(230)
+cfn=(4284)
+calls=2662519 74 
+* 18637633
+* 10650076
+cfn=(4510)
+calls=2662519 170 
+* 74550532
+* 15975114
+cfi=(273)
+cfn=(4516)
+calls=2662519 481 
+* 167738697
++2 10650076
+cfi=(343)
+cfn=(4520)
+calls=2662519 78 
+* 26625190
++1 2662519
+-4 7987557
+cfi=(343)
+cfn=(4522)
+calls=2662519 70 
+* 31950228
++4 2662519
++1 18637633
+
+fn=(4530)
+941 5550688
++1 4163016
+cfn=(4490)
+calls=693836 200 
+* 7632196
+* 4163016
+
+fn=(4532)
+251 16781780
++1 26850848
+
+fl=(272)
+fn=(3866)
+273 224
++1 168
+
+fn=(4310)
+1058 140
++3 140
++1 56
+
+fn=(3388) std::_Vector_base<int, std::allocator<int> >::_Vector_base()
+285 112
+cfn=(3390) std::_Vector_base<int, std::allocator<int> >::_Vector_impl::_Vector_impl()
+calls=14 128 
+* 630
+* 42
+
+fn=(3896)
+1040 16781910
++3 16781910
++1 6712764
+
+fn=(4304) std::_Vector_base<PathEntry, std::allocator<PathEntry> >::_Vector_impl_data::_Vector_impl_data()
+94 112
++1 168
++1 84
+
+fn=(4314)
+954 112
++2 42
+cfn=(3840) std::vector<int, std::allocator<int> >::size() const
+calls=14 -41 
+* 182
+* 56
++1 42
+cfn=(3840)
+calls=14 -42 
+* 182
+* 84
+cfn=(4316) std::vector<int, std::allocator<int> >::end()
+calls=14 826 
+* 448
+* 98
+cfi=(279)
+cfn=(4320)
+calls=14 509 
+* 7671964
++3 84
+
+fn=(3396) std::_Vector_base<int, std::allocator<int> >::_Vector_impl_data::_Vector_impl_data()
+94 56
++1 84
++1 42
+
+fn=(3846) std::_Vector_base<int, std::allocator<int> >::_M_get_Tp_allocator() const
+277 112
++1 84
+
+fn=(3848) std::vector<int, std::allocator<int> >::_S_max_size(std::allocator<int> const&)
+1773 224
++5 56
++2 84
+cfi=(273)
+cfn=(3850)
+calls=28 504 
+* 476
+* 28
++1 140
+cfi=(274)
+cfn=(2142)
+calls=28 198 
+* 392
+* 28
++1 140
+
+fn=(4294)
+484 224
+cfn=(4296) std::_Vector_base<PathEntry, std::allocator<PathEntry> >::_Vector_base()
+calls=28 285 
+* 1568
+* 84
+
+fn=(3390)
+128 70
++2 42
+cfi=(270)
+cfn=(3392)
+calls=14 +7 
+* 252
+* 42
+cfn=(3396)
+calls=14 -36 
+* 182
++1 42
+
+fn=(4298) std::_Vector_base<PathEntry, std::allocator<PathEntry> >::_Vector_impl::_Vector_impl()
+128 140
++2 84
+cfi=(270)
+cfn=(4300)
+calls=28 +7 
+* 504
+* 84
+cfn=(4304)
+calls=28 -36 
+* 364
++1 84
+
+fn=(3840)
+915 336
++1 756
+
+fn=(3856)
+340 84
++3 98
+cfi=(273)
+cfn=(3858)
+calls=14 +99 
+* 313494
+* 14
++1 28
+
+fn=(4316)
+826 112
++1 84
+cfi=(238)
+cfn=(4318)
+calls=14 -24 
+* 168
+* 84
+
+fn=(4296)
+285 224
+cfn=(4298)
+calls=28 128 
+* 1260
+* 84
+
+fn=(3386)
+484 112
+cfn=(3388)
+calls=14 285 
+* 784
+* 42
+
+fn=(3854)
+1753 154
++2 42
+cfn=(3844) std::vector<int, std::allocator<int> >::max_size() const
+calls=14 920 
+* 1050
+* 56
+cfn=(3840)
+calls=14 915 
+* 182
+* 98
++3 42
+cfn=(3840)
+calls=14 915 
+* 182
+* 56
+cfn=(3840)
+calls=14 915 
+* 182
+* 84
+cfi=(274)
+cfn=(2204)
+calls=14 222 
+* 210
+* 42
++1 42
+cfn=(3840)
+calls=14 915 
+* 182
+* 70
+cfn=(3844)
+calls=14 920 
+* 1050
+* 42
++1 98
+
+fn=(4322)
+808 112
++1 70
+cfi=(238)
+cfn=(4318)
+calls=14 -6 
+* 168
+* 84
+
+fn=(3844)
+920 140
++1 84
+cfn=(3846)
+calls=28 277 
+* 196
+* 56
+cfn=(3848)
+calls=28 1773 
+* 1568
+* 56
+
+fn=(3890)
+347 98
++3 28
++2 42
+
+ob=(7) /usr/lib/x86_64-linux-gnu/libstdc++.so.6.0.28
+fl=(144) ???
+fn=(1562) operator new(unsigned long)
+0 23494863
+cob=(2)
+cfi=(18)
+cfn=(518) 0x00000000049a3ef0
+calls=3356409 0 
+0 148967064
+0 13425636
+
+fn=(1716) operator delete(void*)
+0 6712710
+cob=(2)
+cfi=(18)
+cfn=(1718) 0x00000000049a4960
+calls=3356355 0 
+0 282138200
+
+fn=(4526) std::__detail::_List_node_base::_M_hook(std::__detail::_List_node_base*)
+0 21300152
+
+fn=(2530) std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >::compare(char const*) const
+0 616
+cob=(2)
+cfi=(18)
+cfn=(1528) 0x00000000049a49d0
+calls=56 0 
+0 1008
+0 504
+cob=(2)
+cfi=(18)
+cfn=(2532) 0x00000000049a61b0
+calls=56 0 
+0 1372
+0 546
+
+ob=(3)
+fl=(327) /build/glibc-LcI20x/glibc-2.31/misc/../sysdeps/unix/sysv/linux/mmap64.c
+fn=(4032) mmap
+48 14
++3 28
+-3 56
++6 28
++5 84
++2 42
+-7 28
+
+fl=(177)
+fn=(1318)
+cob=(10)
+cfi=(220)
+cfn=(1518)
+calls=0 11 
+308 7770038728
+
+fl=(147) /build/glibc-LcI20x/glibc-2.31/malloc/malloc.c
+fn=(3496) malloc_consolidate
+4441 14
++17 14
+-17 42
++28 14
+-28 56
++15 14
++2 14
++13 28
++1 28
+-1 252
++1 252
++58 420
++1 112
+-31 8186
++4 2374
++2 2374
++1 2374
++1 2374
++2 4748
+-4 1719
++1 1719
++1 1719
++2 3438
++1 54
++4 27
++2 27
+-2 27
++2 27
+-2 27
++2 27
++1 27
++9 54
+-12 4066
++2 4066
+-2 4066
++2 4066
+-2 4066
++2 4066
++1 4066
++9 12197
+-52 12195
++1 16260
+-1 84
++1 112
++8 4093
+-3 4093
++3 4093
++1 4093
++1 8186
++2 8186
++1 1465
++2 1465
+-1 1465
++2 5860
++2 4395
+cfn=(3498) unlink_chunk.isra.0
+calls=1465 1451 
+* 26397
+* 1465
++3 8186
++5 1719
+-1 3438
++1 1719
+cfn=(3498)
+calls=1719 1451 
+* 30976
+* 5157
+
+fn=(522) malloc
+3023 3356409
++8 3356409
+-8 13425636
++8 3356409
++1 6712818
+1208 6712818
++2 13425636
+3044 13425636
++3 6712818
++9 14967
++2 14967
+cfn=(556) _int_malloc
+calls=4989 1208 
+* 1255218
+* 4989
++1 34895
++23 16782045
+1210 13425636
+3048 3356395
++1 10069185
+2936 3351420
++2 3351420
+-2 3351420
++1 6702840
++1 3351420
++1 3351420
+3051 3351420
+
+fn=(1722) free
+3087 6712710
++5 6712710
++1 6712710
++6 6712710
++5 3356355
+-2 3356355
++2 6712710
++18 10069065
++2 10069065
++1 3356355
++1 3356355
+-1 3356355
+cfn=(1724) _int_free
+calls=3356355 4155 
+* 204942035
+
+fn=(1724)
+4155 36919905
++10 10069065
++6 16781775
++1 6712710
++4 13425420
++8 16781775
+-1 6712710
++1 6712710
++3 3356355
++6 6712710
++13 16781775
++14 20492
++11 40984
++2 30738
+1875 30738
+4254 10246
++1 10246
++4 30738
++2 30738
++4 20492
++2 10246
++1 10246
++18 40444
+4428 36919905
+2924 6692218
++4 3346109
+-2 6692218
++1 3346109
++1 3346109
+4209 3346109
+
+fn=(556)
+1208 9978
+3513 4989
+1210 4989
+3513 39912
+1210 9978
+3638 4102
++2 4102
+-2 4102
++2 8204
++2 40
++1 80
++6 40
+-4 40
++1 40
++1 40
++2 80
++7 160
+-1 80
++1 120
++5 873
++1 446
++4 211
++1 211
++1 422
+2926 211
+3670 211
+2920 211
++8 211
+3671 211
+2924 211
++2 211
+-6 211
++9 211
+-1 211
++1 211
+1210 9978
+3553 9978
+1637 9978
+3577 9978
++58 56
++62 532
++1 42
++1 28
+cfn=(3496)
+calls=14 4441 
+* 228343
+* 14
+3582 9922
++2 9922
+-4 873
++6 3492
++1 873
++5 1746
++1 1746
++7 3492
+-1 1746
++1 1746
++5 4365
++4 5105
+2924 5105
+-4 10210
++6 20420
+-6 5105
++8 20420
+3605 15315
++1 15966
++2 20420
+-19 12306
+1868 913
+3678 913
+1868 1826
+4147 67908
+3637 12186
++3 44682
++77 4062
++1 4062
+-1 8124
+-1 8124
++2 8124
+-1 14
++1 14
+-1 28
+-1 28
++2 28
+-2 12228
++6 8152
++73 12228
+-67 12228
+3892 3301
+-91 3301
++91 6602
+-91 3301
+-74 3301
++74 6602
+-42 19806
+-28 6602
++1 3301
++2 6602
+-3 2602
++1 1301
++2 2602
++1 13806
++2 4602
++1 18408
++2 18408
+-10 4602
++12 9204
++1 9204
++2 9204
++11 15778
++31 2553
++1 2553
++4 5106
++29 4148
++2 4124
++1 6186
++1 2062
+-1 2062
++57 2062
++2 4124
+-2 4124
++2 2062
++7 2062
+-9 6186
++9 2062
+-7 2062
++1 2062
++1 2062
++6 4124
+-10 12
++2 24
+-2 24
++2 12
++7 12
+-9 36
++9 12
+-7 12
++1 12
++1 12
++6 24
+3728 958
++66 479
++1 479
+-1 479
++1 958
++5 1437
++1 2395
++28 60
++1 36
++1 12
+-1 12
++4 24
++66 6222
+3728 6222
+3917 3096
++2 42
++3 14
+-3 14
++3 28
++68 3096
++1 1548
++1 1548
+-1 1548
++1 1548
++1 3096
++1 4644
++5 8501
++16 7182
++2 14364
+-4 18538
++8 2087
++3 4174
++2 649
++1 649
++1 649
+-2 2596
+-27 649
+2926 479
++2 479
+-4 479
++2 958
+3805 479
+2927 479
++1 479
+3805 479
+3697 56
+3878 60
+3757 6574
++1 6574
++5 6147
+-1 2049
++1 4098
++1 4098
+-1 2049
++2 2049
++1 6147
++1 4098
++2 452
++4 226
++6 226
+-6 1582
++2 678
++1 226
+1868 678
+3773 1823
++6 1823
+-6 12761
++2 5469
++1 1823
+1868 5469
+4003 471
++3 568
+-3 309
++3 392
+-3 180
++3 270
++97 110
++1 220
++2 220
++3 344
++17 42
+-93 4314
++3 2876
++2 1438
++3 2876
+-3 1438
++3 2876
+cfn=(3498)
+calls=1438 1451 
+* 26014
++3 5752
++15 1245
+-5 1245
++6 2490
++3 4980
++1 1245
++1 1245
++3 2490
++1 1245
++1 2490
++2 20
++3 80
++2 30
++1 10
+1868 10
+4081 10
+1868 20
+4075 9880
++2 3705
++1 1235
+1868 1235
+4081 1235
+1868 2663
+4081 193
+1868 386
+4006 47
++2 188
++1 94
++38 193
+-1 193
++1 386
++67 96
+-3 96
++1 192
++2 96
+-1 96
++1 96
++2 96
++3 96
+-5 480
++2 96
+1868 767
+2936 1437
++1 958
++1 479
++1 479
+3908 479
+4141 56
+cfn=(558) sysmalloc
+calls=14 2255 
+* 1190
+* 14
++1 28
+1868 42
+
+fn=(558)
+2255 112
++20 28
++11 28
++1 42
+2728 126
+2288 42
++14 56
++6 28
++19 42
++16 14
+-1 14
++1 28
++5 42
++1 70
++3 42
++1 70
+-43 98
+cfi=(327)
+cfn=(4032)
+calls=14 48 
+* 280
++2 28
+
+fn=(3498)
+1451 4622
++2 23110
++3 4622
++1 4622
++2 18488
++3 4622
++1 4622
++1 9325
++2 22
++1 33
++3 22
++14 11
++1 22
++3 9244
+
+fl=(171) /build/glibc-LcI20x/glibc-2.31/string/../sysdeps/x86_64/multiarch/memcmp-avx2-movbe.S
+fn=(884) __memcmp_avx2_movbe
+59 56
++7 56
++1 56
+182 56
++1 56
++1 56
++1 56
++1 56
++1 56
++1 56
++1 56
++1 56
++1 56
++1 42
++1 42
++1 42
++4 14
++38 56
++1 56
++1 56
++1 56
++1 56
++1 56
++1 56
+
+fl=(170) /build/glibc-LcI20x/glibc-2.31/string/../sysdeps/x86_64/multiarch/strlen-avx2.S
+fn=(880) __strlen_avx2
+42 56
++13 56
++1 56
++1 56
++3 56
++1 56
++1 56
++3 56
++1 56
++1 56
++8 56
+335 56
++1 56
++1 56
++4 56
++1 56
+
+ob=(1) /usr/lib/x86_64-linux-gnu/ld-2.31.so
+fl=(1) ???
+fn=(0) 0x0000000000001100
+cob=(10)
+cfi=(176)
+cfn=(1316)
+calls=0 0 
+0 7770038728
+
+ob=(2)
+fl=(18)
+fn=(1528)
+0 112
+cob=(3)
+cfi=(170)
+cfn=(880)
+calls=56 42 
+0 896
+
+fn=(2246)
+0 6712710
+cob=(7)
+cfi=(144)
+cfn=(1716)
+calls=3356355 0 
+0 288850910
+
+fn=(3912)
+0 112
+cob=(7)
+cfi=(144)
+cfn=(2530)
+calls=56 0 
+0 4046
+
+fn=(1686)
+0 6712818
+cob=(7)
+cfi=(144)
+cfn=(1562)
+calls=3356409 0 
+0 185887563
+
+fn=(2532)
+0 112
+cob=(3)
+cfi=(171)
+cfn=(884)
+calls=56 59 
+0 1260
+
+fn=(518)
+0 6712818
+cob=(3)
+cfi=(147)
+cfn=(522)
+calls=3356409 3023 
+0 142254246
+
+fn=(1718)
+0 6712710
+cob=(3)
+cfi=(147)
+cfn=(1722)
+calls=3356355 3087 
+0 275425490
+
+fn=(4524)
+0 5325038
+cob=(7)
+cfi=(144)
+cfn=(4526)
+calls=2662519 0 
+0 21300152
+
+totals: 7770038728
