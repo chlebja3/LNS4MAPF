@@ -28,3 +28,7 @@ prohlednout implementaci sippu
 # nastroj valgrind, KcacheGrind
 # jak se odstranuji cesty - safe intervaly
 # muzu zvetsit cas a porovnat, proc stas obcas nenajde reseni kdya SIPP ano
+
+# lepe interpretovat vysledky profileru, pouzit call graph
+# reservation table - zamyslet se nad efektivnejsi implementaci
+# zprovoznit vizualizaci replanningu
