@@ -23,7 +23,6 @@ if f:
             term = line2[i]
             x, y = term[1:-1].split(",")
             h.append("(" + str(y) + "," + str(x) + ")")
-        print(h)
         agents_paths.append(h)
 else:
     print("Error: Could not open '" + input_name + "'")
@@ -43,7 +42,7 @@ if f:
                 end = False
             else:
                 h.append(agents_paths[j][-1])
-        f.write(str(i) + ":" +",".join(h) + "\n")
+        f.write(str(i) + ":" +",".join(h) + "," + "\n")
         i += 1
 else:
     print("Error: Could not open '" + input_name + "'")
