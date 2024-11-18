@@ -1,0 +1,2 @@
+../../../../my_code/LNS2_anytime_replan/lns -m ../../../../MAPF-benchmark/mapf-map/empty-8-8.map -a ../../../../MAPF-benchmark/mapf-scen-random/scen-random/empty-8-8-random-1.scen -o a.csv -k 4 -t 30 --initAlgo PP --singleAgentReplan MCARP --maxIterations 2
+mapf-visualizer ../../../../MAPF-benchmark/mapf-map/empty-8-8.map converted_2.txt
