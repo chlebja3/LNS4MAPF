@@ -102,10 +102,10 @@ bool LNS::run()
 
     while (runtime < time_limit && iteration_stats.size() <= num_of_iterations)
     {
-        if (num_of_iterations < 5)
-        {
-          writePathsToFile(std::to_string(iteration_stats.size()));
-        }
+        // if (num_of_iterations < 5)
+        // {
+        //   writePathsToFile(std::to_string(iteration_stats.size()));
+        // }
         high_resolution_clock::time_point it_start_time = Time::now(); // start time of the iteration
         runtime =((fsec)(Time::now() - start_time)).count();
         if(screen >= 1)
