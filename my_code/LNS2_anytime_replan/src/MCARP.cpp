@@ -118,7 +118,8 @@ Path MCARP::findPath(const ConstraintTable& constraint_table)
                   // std::cout << "Distance from last path: " << dist_from_last_path << std::endl; 
                   if (last_path.size() > 0)
                   {
-                    next_h_val += last_path.size() * dist_from_last_path;
+                    // next_h_val += last_path.size() * dist_from_last_path;
+                    next_h_val += last_path.size() * (std::max(dist_from_last_path-5, 0));
                   }
                 }
                 // generate (maybe temporary) node
