@@ -27,6 +27,19 @@
 	return t;
 }*/
 
+void ReservationTable::setGoal(int goal)
+{
+  // set the new goal
+  goal_location = goal;
+  // erase previous safe intervals on the goal location
+  sit[goal].clear();
+}
+
+void ReservationTable::clearLocation(int location)
+{
+  st[location].clear();
+}
+
 
 void ReservationTable::insert2SIT(int location, int t_min, int t_max)
 {

@@ -1,7 +1,6 @@
 ﻿#pragma once
 #include "SingleAgentSolver.h"
 
-
 class AStarNode: public LLNode
 {
 public:
@@ -64,6 +63,7 @@ public:
     // find path by time-space A* search
     // Returns a path that satisfies the constraint_table while
     // minimizing the number of conflicts with constraint_table, breaking ties by the path length.
+    Path findPath(const ConstraintTable& constraint_table, const ReservationTable& reservation_table);
     Path findPath(const ConstraintTable& constraint_table);
 
 	pair<Path, int> findSuboptimalPath(const HLNode& node, const ConstraintTable& initial_constraints,

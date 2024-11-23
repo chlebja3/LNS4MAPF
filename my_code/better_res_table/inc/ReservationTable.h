@@ -9,12 +9,14 @@ class ReservationTable
 public:
     const ConstraintTable& constraint_table;
 
-    ReservationTable(const ConstraintTable& constraint_table, int goal_location) :
-        constraint_table(constraint_table), goal_location(goal_location), sit(constraint_table.map_size) {}
+    ReservationTable(const ConstraintTable& constraint_table) :
+        constraint_table(constraint_table), sit(constraint_table.map_size) {}
 
     list<tuple<int, int, int, bool, bool> > get_safe_intervals(int from, int to, int lower_bound, int upper_bound);
     Interval get_first_safe_interval(size_t location);
     bool find_safe_interval(Interval& interval, size_t location, int t_min);
+    void setGoal(int goal);
+    void clearLocation(int location);
 
 private:
     int goal_location;

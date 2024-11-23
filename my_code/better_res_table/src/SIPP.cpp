@@ -24,16 +24,33 @@ void SIPP::updatePath(const LLNode* goal, vector<PathEntry> &path)
 }
 
 
+void SIPP::forgetPath(const ReservationTable& reservation_table, const LLNode* goal, vector<PathEntry> &path)
+{
+	const auto* curr = goal;
+	while (curr->parent != nullptr) // non-root node
+	{
+		const auto* prev = curr->parent;
+		reservation_table.clearLocation(curr->location); // clear the safe intervals in the location 
+		curr = prev;
+	}
+	reservation_table.clearLocation(curr->location); // clear the safe intervals in the location 
+}
+
+Path SIPP::findPath(const ConstraintTable& constraint_table)
+{
+  return findPath(constraint_table, ReservationTable(constraint_table));
+}
 // find path by A*
 // Returns a path that minimizes the collisions with the paths in the path table, breaking ties by the length
-Path SIPP::findPath(const ConstraintTable& constraint_table)
+Path SIPP::findPath(const ConstraintTable& constraint_table, const ReservationTable& reservation_table)
 {
     high_resolution_clock::time_point start_time = Time::now(); // start time of the replanning 
     reset();
     //Path path = findNoCollisionPath(constraint_table);
     //if (!path.empty())
     //    return path;
-    ReservationTable reservation_table(constraint_table, goal_location);
+    // set the goal for the reservation table
+    reservation_table.setGoal(goal_location);
     Path path;
     Interval interval = reservation_table.get_first_safe_interval(start_location);
     if (get<0>(interval) > 0)
@@ -59,6 +76,7 @@ Path SIPP::findPath(const ConstraintTable& constraint_table)
         // check if the popped node is a goal
         if (curr->is_goal)
         {
+            forgetPath(reservation_table, curr, path);
             updatePath(curr, path);
             break;
         }
@@ -69,6 +87,7 @@ Path SIPP::findPath(const ConstraintTable& constraint_table)
             int future_collisions = constraint_table.getFutureNumOfCollisions(curr->location, curr->timestep);
             if (future_collisions == 0)
             {
+                forgetPath(reservation_table, curr, path);
                 updatePath(curr, path);
                 break;
             }
