@@ -609,30 +609,6 @@ src/LNS.cpp.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/lns.dir/build.make CMakeFiles/lns.dir/src/LNS.cpp.s
 .PHONY : src/LNS.cpp.s
 
-src/MCARP.o: src/MCARP.cpp.o
-.PHONY : src/MCARP.o
-
-# target to build an object file
-src/MCARP.cpp.o:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/lns.dir/build.make CMakeFiles/lns.dir/src/MCARP.cpp.o
-.PHONY : src/MCARP.cpp.o
-
-src/MCARP.i: src/MCARP.cpp.i
-.PHONY : src/MCARP.i
-
-# target to preprocess a source file
-src/MCARP.cpp.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/lns.dir/build.make CMakeFiles/lns.dir/src/MCARP.cpp.i
-.PHONY : src/MCARP.cpp.i
-
-src/MCARP.s: src/MCARP.cpp.s
-.PHONY : src/MCARP.s
-
-# target to generate assembly for a file
-src/MCARP.cpp.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/lns.dir/build.make CMakeFiles/lns.dir/src/MCARP.cpp.s
-.PHONY : src/MCARP.cpp.s
-
 src/PIBT/graph.o: src/PIBT/graph.cpp.o
 .PHONY : src/PIBT/graph.o
 
@@ -1182,9 +1158,6 @@ help:
 	@echo "... src/LNS.o"
 	@echo "... src/LNS.i"
 	@echo "... src/LNS.s"
-	@echo "... src/MCARP.o"
-	@echo "... src/MCARP.i"
-	@echo "... src/MCARP.s"
 	@echo "... src/PIBT/graph.o"
 	@echo "... src/PIBT/graph.i"
 	@echo "... src/PIBT/graph.s"

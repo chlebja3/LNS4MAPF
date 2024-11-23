@@ -25,6 +25,11 @@ Path SpaceTimeAStar::findOptimalPath(const HLNode& node, const ConstraintTable& 
 
 // find path by time-space A* search
 // Returns a path that minimizes the collisions with the paths in the path table, breaking ties by the length
+Path SpaceTimeAStar::findPath(const ConstraintTable& constraint_table, ReservationTable& reservation_table)
+{
+  return findPath(constraint_table);
+}
+
 Path SpaceTimeAStar::findPath(const ConstraintTable& constraint_table)
 {
     high_resolution_clock::time_point start_time = Time::now(); // start time of the replanning 

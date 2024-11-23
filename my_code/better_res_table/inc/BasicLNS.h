@@ -2,7 +2,6 @@
 #include "common.h"
 #include "SpaceTimeAStar.h"
 #include "SIPP.h"
-#include "MCARP.h"
 
 struct Agent
 {
@@ -16,13 +15,6 @@ struct Agent
             path_planner = new SIPP(instance, id);
         else if (single_agent_replanner_name == "STAstar")
             path_planner = new SpaceTimeAStar(instance, id);
-        // else if (single_agent_replanner_name == "STDstar")
-        // {
-        //     path_planner = new SpaceTimeAStar(instance, id);
-        //     std::cout << "Space Time Dstar is not yet implemented." << std::endl;
-        // }
-        // else if (single_agent_replanner_name == "MCARP")
-        //     path_planner = new MCARP(instance, id);
         else std::cout << "Unknown single agent replanner." << std::endl;
     }
     ~Agent(){ delete path_planner; }

@@ -24,7 +24,7 @@ void SIPP::updatePath(const LLNode* goal, vector<PathEntry> &path)
 }
 
 
-void SIPP::forgetPath(const ReservationTable& reservation_table, const LLNode* goal, vector<PathEntry> &path)
+void SIPP::forgetPath(ReservationTable& reservation_table, const LLNode* goal, vector<PathEntry> &path)
 {
 	const auto* curr = goal;
 	while (curr->parent != nullptr) // non-root node
@@ -38,11 +38,12 @@ void SIPP::forgetPath(const ReservationTable& reservation_table, const LLNode* g
 
 Path SIPP::findPath(const ConstraintTable& constraint_table)
 {
-  return findPath(constraint_table, ReservationTable(constraint_table));
+  ReservationTable reservation_table(constraint_table);
+  return findPath(constraint_table, reservation_table);
 }
 // find path by A*
 // Returns a path that minimizes the collisions with the paths in the path table, breaking ties by the length
-Path SIPP::findPath(const ConstraintTable& constraint_table, const ReservationTable& reservation_table)
+Path SIPP::findPath(const ConstraintTable& constraint_table, ReservationTable& reservation_table)
 {
     high_resolution_clock::time_point start_time = Time::now(); // start time of the replanning 
     reset();
@@ -183,7 +184,8 @@ pair<Path, int> SIPP::findSuboptimalPath(const HLNode& node, const ConstraintTab
 	runtime_build_CAT = (double)(clock() - t) / CLOCKS_PER_SEC;
 
 	// build reservation table
-	ReservationTable reservation_table(constraint_table, goal_location);
+	ReservationTable reservation_table(constraint_table);
+  reservation_table.setGoal(goal_location);
 
     Path path;
 	num_expanded = 0;

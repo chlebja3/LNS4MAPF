@@ -37,7 +37,7 @@ void ReservationTable::setGoal(int goal)
 
 void ReservationTable::clearLocation(int location)
 {
-  st[location].clear();
+  sit[location].clear();
 }
 
 
