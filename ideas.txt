@@ -32,3 +32,9 @@ prohlednout implementaci sippu
 # lepe interpretovat vysledky profileru, pouzit call graph
 # reservation table - zamyslet se nad efektivnejsi implementaci
 # zprovoznit vizualizaci replanningu
+
+# presunout reservation table konstruktor mimo find path
+# alokace pameti zere hodne, podivat se na to
+# zkusit EECBS s vetsi vahou na nalezeni pocatecniho reseni, nebo jiny rychly algoritmus
+# pouzit weighted SIPP (SIPP zalozeny na weighted astaru) na replanning  - je treba resit jiz navstivene uzly, aby byla garantovana suboptimalita takze se podivat na Focal SIPP - solver z clanku/  precist clanky zatim
+# vymyslet vybirani okna aby se nepreplanovavalo pred krizenim cest

@@ -46,6 +46,7 @@ public:
 
     // timing variables
     double avg_replan_time = 0;
+    double avg_iteration_time = 0;
 
 private:
     InitLNS* init_lns = nullptr;

@@ -27,10 +27,12 @@ Path SpaceTimeAStar::findOptimalPath(const HLNode& node, const ConstraintTable& 
 // Returns a path that minimizes the collisions with the paths in the path table, breaking ties by the length
 Path SpaceTimeAStar::findPath(const ConstraintTable& constraint_table)
 {
+    high_resolution_clock::time_point start_time = Time::now(); // start time of the replanning 
     reset();
     Path path;
     if (constraint_table.constrained(start_location, 0))
     {
+        replan_time =((fsec)(Time::now() - start_time)).count();    
         return path;
     }
     auto holding_time = constraint_table.getHoldingTime(goal_location, constraint_table.length_min); // the earliest timestep that the agent can hold its goal location. The length_min is considered here.
@@ -171,6 +173,7 @@ Path SpaceTimeAStar::findPath(const ConstraintTable& constraint_table)
     }  // end while loop
 
     releaseNodes();
+    replan_time =((fsec)(Time::now() - start_time)).count();    
     return path;
 }
 

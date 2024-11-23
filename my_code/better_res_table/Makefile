@@ -57,10 +57,10 @@ RM = /home/chlebajz/.local/lib/python3.8/site-packages/cmake/data/bin/cmake -E r
 EQUALS = =
 
 # The top-level source directory on which CMake was run.
-CMAKE_SOURCE_DIR = /home/chlebajz/Programy/diplomka/LNS4MAPF/my_code/SIPP_STASTAR_comparison
+CMAKE_SOURCE_DIR = /home/chlebajz/Programy/diplomka/LNS4MAPF/my_code/better_res_table
 
 # The top-level build directory on which CMake was run.
-CMAKE_BINARY_DIR = /home/chlebajz/Programy/diplomka/LNS4MAPF/my_code/SIPP_STASTAR_comparison
+CMAKE_BINARY_DIR = /home/chlebajz/Programy/diplomka/LNS4MAPF/my_code/better_res_table
 
 #=============================================================================
 # Targets provided globally by CMake.
@@ -87,9 +87,9 @@ rebuild_cache/fast: rebuild_cache
 
 # The main all target
 all: cmake_check_build_system
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/chlebajz/Programy/diplomka/LNS4MAPF/my_code/SIPP_STASTAR_comparison/CMakeFiles /home/chlebajz/Programy/diplomka/LNS4MAPF/my_code/SIPP_STASTAR_comparison//CMakeFiles/progress.marks
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/chlebajz/Programy/diplomka/LNS4MAPF/my_code/better_res_table/CMakeFiles /home/chlebajz/Programy/diplomka/LNS4MAPF/my_code/better_res_table//CMakeFiles/progress.marks
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 all
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/chlebajz/Programy/diplomka/LNS4MAPF/my_code/SIPP_STASTAR_comparison/CMakeFiles 0
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/chlebajz/Programy/diplomka/LNS4MAPF/my_code/better_res_table/CMakeFiles 0
 .PHONY : all
 
 # The main clean target

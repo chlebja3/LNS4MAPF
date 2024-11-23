@@ -2,8 +2,6 @@
 
 void MCARP::updatePath(const LLNode* goal, vector<PathEntry> &path)
 {
-  // update the last planned path
-  last_path = path;
   num_collisions = goal->num_of_conflicts;
 	path.resize(goal->timestep + 1);
 	// num_of_conflicts = goal->num_of_conflicts;
@@ -30,6 +28,7 @@ void MCARP::updatePath(const LLNode* goal, vector<PathEntry> &path)
 // Returns a path that minimizes the collisions with the paths in the path table, breaking ties by the length
 Path MCARP::findPath(const ConstraintTable& constraint_table)
 {
+    high_resolution_clock::time_point start_time = Time::now(); // start time of the replanning 
     reset();
     //Path path = findNoCollisionPath(constraint_table);
     //if (!path.empty())
@@ -38,7 +37,10 @@ Path MCARP::findPath(const ConstraintTable& constraint_table)
     Path path;
     Interval interval = reservation_table.get_first_safe_interval(start_location);
     if (get<0>(interval) > 0)
+    {
+        replan_time =((fsec)(Time::now() - start_time)).count();    
         return path;
+    }
     auto holding_time = constraint_table.getHoldingTime(goal_location, constraint_table.length_min);
     auto last_target_collision_time = constraint_table.getLastCollisionTimestep(goal_location);
     // generate start and add it to the OPEN & FOCAL list
@@ -96,22 +98,29 @@ Path MCARP::findPath(const ConstraintTable& constraint_table)
                 auto next_collisions = curr->num_of_conflicts +
                                     // (int)curr->collision_v * max(next_timestep - curr->timestep - 1, 0) + // wait time
                                       (int)next_v_collision + (int)next_e_collision;
-                // calculate distance from old path
-                int dist_from_last_path = std::numeric_limits<int>::max(); 
-                for (int i = 0; i < last_path.size(); i++)
-                {
-                  int dist_now = instance.getManhattanDistance(next_location, last_path[i].location);
-                  if (dist_now < dist_from_last_path)
-                  {
-                    dist_from_last_path = dist_now;
-                  }
-                  if (dist_from_last_path == 0) break;
-                }
+
                 auto next_h_val = max(my_heuristic[next_location], (next_collisions > 0?
                     holding_time : curr->getFVal()) - next_timestep); // path max
+                // calculate distance from old path
                 if (last_path.size() > 0)
                 {
-                  next_h_val += last_path.size() * dist_from_last_path;
+                  int dist_from_last_path = std::numeric_limits<int>::max(); 
+                  // std::cout << "Last path size " << last_path.size() << std::endl;
+                  for (int i = 0; i < last_path.size(); i++)
+                  {
+                    int dist_now = instance.getManhattanDistance(next_location, last_path[i].location);
+                    if (dist_now < dist_from_last_path)
+                    {
+                      dist_from_last_path = dist_now;
+                    }
+                    if (dist_from_last_path == 0) break;
+                  }
+                  // std::cout << "Distance from last path: " << dist_from_last_path << std::endl; 
+                  if (last_path.size() > 0)
+                  {
+                    // next_h_val += last_path.size() * dist_from_last_path;
+                    next_h_val += last_path.size() * (std::max(dist_from_last_path-5, 0));
+                  }
                 }
                 // generate (maybe temporary) node
                 auto next = new MCARPNode(next_location, next_timestep, next_h_val, curr, next_timestep,
@@ -148,7 +157,10 @@ Path MCARP::findPath(const ConstraintTable& constraint_table)
     //{
     //    printSearchTree();
     //}
+    // update the last planned path
+    last_path = path;
     releaseNodes();
+    replan_time =((fsec)(Time::now() - start_time)).count();    
     return path;
 }
 Path MCARP::findOptimalPath(const HLNode& node, const ConstraintTable& initial_constraints,

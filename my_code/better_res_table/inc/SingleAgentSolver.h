@@ -83,6 +83,7 @@ public:
     uint64_t accumulated_num_expanded = 0;
     uint64_t accumulated_num_generated = 0;
     uint64_t accumulated_num_reopened = 0;
+    double accumulated_replan_time = 0;
     uint64_t num_runs = 0;
 
     int num_collisions = -1;
@@ -130,8 +131,10 @@ public:
             accumulated_num_expanded += num_expanded;
             accumulated_num_generated += num_generated;
             accumulated_num_reopened += num_reopened;
+            accumulated_replan_time += replan_time;
             num_runs++;
         }
+        replan_time = 0;
         num_expanded = 0;
         num_generated = 0;
         num_reopened = 0;
@@ -140,6 +143,7 @@ protected:
     uint64_t num_expanded = 0;
     uint64_t num_generated = 0;
     uint64_t num_reopened = 0;
+    double replan_time = 0;
 	int min_f_val; // minimal f value in OPEN
 	// int lower_bound; // Threshold for FOCAL
 	double w = 1; // suboptimal bound

@@ -42,7 +42,7 @@ LNS::LNS(const Instance& instance, double time_limit, const string & init_algo_n
 
 bool LNS::run()
 {
-    // calculate the lower bound
+    // only for statistic analysis, and thus is not included in runtime
     sum_of_distances = 0;
     for (const auto & agent : agents)
     {
@@ -51,30 +51,159 @@ bool LNS::run()
 
     initial_solution_runtime = 0;
     start_time = Time::now();
-    // get initial solution by PP
     bool succ = getInitialSolution();
     initial_solution_runtime = ((fsec)(Time::now() - start_time)).count();
-
-    // calculate average number of expanded nodes
-    float avg_expanded = 0;
-    int agent_num = 0;
-    for (const auto & agent : agents)
+    if (!succ && initial_solution_runtime < time_limit)
     {
-        agent.path_planner->reset(); // so that the accumulated values are updated
-        if (agent.path_planner->num_runs > 0)
+        if (use_init_lns)
         {
-          avg_expanded += agent.path_planner->accumulated_num_expanded / agent.path_planner->num_runs;
-          agent_num += 1;
+            init_lns = new InitLNS(instance, agents, time_limit - initial_solution_runtime,
+                    replan_algo_name,init_destory_name, neighbor_size, screen);
+            succ = init_lns->run();
+            if (succ) // accept new paths
+            {
+                path_table.reset();
+                for (const auto & agent : agents)
+                {
+                    path_table.insertPath(agent.id, agent.path);
+                }
+                init_lns->clear();
+                initial_sum_of_costs = init_lns->sum_of_costs;
+                sum_of_costs = initial_sum_of_costs;
+            }
+            initial_solution_runtime = ((fsec)(Time::now() - start_time)).count();
+        }
+        else // use random restart
+        {
+            while (!succ && initial_solution_runtime < time_limit)
+            {
+                succ = getInitialSolution();
+                initial_solution_runtime = ((fsec)(Time::now() - start_time)).count();
+                restart_times++;
+            }
         }
     }
-    if (agent_num > 0)
-    {
-      avg_expanded = avg_expanded / agent_num;
-    }
-    else std::cout << "Error: No agent was planned." << std::endl;
 
-    std::cout << "Initial solution runtime: " << initial_solution_runtime << ", success: " << succ << ", average replan time: " << avg_replan_time << ", average expanded: " << avg_expanded << std::endl;
-    return succ;
+    iteration_stats.emplace_back(neighbor.agents.size(),
+                                 initial_sum_of_costs, initial_solution_runtime, init_algo_name);
+    runtime = initial_solution_runtime;
+    if (succ)
+    {
+        if (screen >= 1)
+            cout << "Initial solution cost = " << initial_sum_of_costs << ", "
+                 << "runtime = " << initial_solution_runtime << endl;
+    }
+    else
+    {
+        cout << "Failed to find an initial solution in "
+             << runtime << " seconds after  " << restart_times << " restarts" << endl;
+        return false; // terminate because no initial solution is found
+    }
+
+    while (runtime < time_limit && iteration_stats.size() <= num_of_iterations)
+    {
+        // if (num_of_iterations < 5)
+        // {
+        //   writePathsToFile(std::to_string(iteration_stats.size()));
+        // }
+        high_resolution_clock::time_point it_start_time = Time::now(); // start time of the iteration
+        runtime =((fsec)(Time::now() - start_time)).count();
+        if(screen >= 1)
+            validateSolution();
+        if (ALNS)
+            chooseDestroyHeuristicbyALNS();
+
+        switch (destroy_strategy)
+        {
+            case RANDOMWALK:
+                succ = generateNeighborByRandomWalk();
+                break;
+            case INTERSECTION:
+                succ = generateNeighborByIntersection();
+                break;
+            case RANDOMAGENTS:
+                neighbor.agents.resize(agents.size());
+                for (int i = 0; i < (int)agents.size(); i++)
+                    neighbor.agents[i] = i;
+                if (neighbor.agents.size() > neighbor_size)
+                {
+                    std::random_shuffle(neighbor.agents.begin(), neighbor.agents.end());
+                    neighbor.agents.resize(neighbor_size);
+                }
+                succ = true;
+                break;
+            default:
+                cerr << "Wrong neighbor generation strategy" << endl;
+                exit(-1);
+        }
+        if(!succ)
+            continue;
+
+        // store the neighbor information
+        neighbor.old_paths.resize(neighbor.agents.size());
+        neighbor.old_sum_of_costs = 0;
+        for (int i = 0; i < (int)neighbor.agents.size(); i++)
+        {
+            if (replan_algo_name == "PP")
+                neighbor.old_paths[i] = agents[neighbor.agents[i]].path;
+            path_table.deletePath(neighbor.agents[i], agents[neighbor.agents[i]].path);
+            neighbor.old_sum_of_costs += agents[neighbor.agents[i]].path.size() - 1;
+        }
+
+        high_resolution_clock::time_point REPLAN_start = Time::now();
+        if (replan_algo_name == "EECBS")
+            succ = runEECBS();
+        else if (replan_algo_name == "CBS")
+            succ = runCBS();
+        else if (replan_algo_name == "PP")
+            succ = runPP();
+        else
+        {
+            cerr << "Wrong replanning strategy" << endl;
+            exit(-1);
+        }
+        avg_replan_time = avg_replan_time + ((fsec)(Time::now() - REPLAN_start)).count();
+
+        if (ALNS) // update destroy heuristics
+        {
+            if (neighbor.old_sum_of_costs > neighbor.sum_of_costs )
+                destroy_weights[selected_neighbor] =
+                        reaction_factor * (neighbor.old_sum_of_costs - neighbor.sum_of_costs) / neighbor.agents.size()
+                        + (1 - reaction_factor) * destroy_weights[selected_neighbor];
+            else
+                destroy_weights[selected_neighbor] =
+                        (1 - decay_factor) * destroy_weights[selected_neighbor];
+        }
+        runtime = ((fsec)(Time::now() - start_time)).count();
+        sum_of_costs += neighbor.sum_of_costs - neighbor.old_sum_of_costs;
+        if (screen >= 1)
+            cout << "Iteration " << iteration_stats.size() << ", "
+                 << "group size = " << neighbor.agents.size() << ", "
+                 << "solution cost = " << sum_of_costs << ", "
+                 << "remaining time = " << time_limit - runtime << endl;
+        iteration_stats.emplace_back(neighbor.agents.size(), sum_of_costs, runtime, replan_algo_name);
+        avg_iteration_time = avg_iteration_time + ((fsec)(Time::now() - it_start_time)).count();
+    }
+
+
+    average_group_size = - iteration_stats.front().num_of_agents;
+    for (const auto& data : iteration_stats)
+        average_group_size += data.num_of_agents;
+    if (average_group_size > 0)
+        average_group_size /= (double)(iteration_stats.size() - 1);
+
+    avg_replan_time /= (double)(iteration_stats.size() - 1);
+    avg_iteration_time /= (double)(iteration_stats.size() - 1);
+
+    cout << getSolverName() << ": "
+         << "runtime = " << runtime << ", "
+         << "iterations = " << iteration_stats.size() << ", "
+         << "solution cost = " << sum_of_costs << ", "
+         << "initial solution cost = " << initial_sum_of_costs << ", "
+         << "failed iterations = " << num_of_failures << endl;
+    cout << "average replan time = " << avg_replan_time << ", "
+         << "average iteration time = " << avg_iteration_time << endl;
+    return true;
 }
 
 
@@ -253,18 +382,14 @@ bool LNS::runPP()
         T = min(T, replan_time_limit);
     auto time = Time::now();
     ConstraintTable constraint_table(instance.num_of_cols, instance.map_size, &path_table);
-    int i = 0;
     while (p != shuffled_agents.end() && ((fsec)(Time::now() - time)).count() < T)
     {
-        ++i;
         int id = *p;
         if (screen >= 3)
             cout << "Remaining agents = " << remaining_agents <<
                  ", remaining time = " << T - ((fsec)(Time::now() - time)).count() << " seconds. " << endl
                  << "Agent " << agents[id].id << endl;
-        high_resolution_clock::time_point SA_replan_start = Time::now(); // start time of single agent replanning 
         agents[id].path = agents[id].path_planner->findPath(constraint_table);
-        avg_replan_time += ((fsec)(Time::now() - SA_replan_start)).count();
         if (agents[id].path.empty()) break;
         neighbor.sum_of_costs += (int)agents[id].path.size() - 1;
         if (neighbor.sum_of_costs >= neighbor.old_sum_of_costs)
@@ -273,7 +398,6 @@ bool LNS::runPP()
         path_table.insertPath(agents[id].id, agents[id].path);
         ++p;
     }
-    avg_replan_time /= (double) i;
     if (remaining_agents == 0 && neighbor.sum_of_costs <= neighbor.old_sum_of_costs) // accept new paths
     {
         return true;
@@ -736,10 +860,11 @@ void LNS::writeResultToFile(const string & file_name) const
                  "group size," <<
                  "runtime of initial solution,restart times,area under curve," <<
                  "LL expanded nodes,LL generated,LL reopened,LL runs," <<
-                 "preprocessing runtime,solver name,instance name" << endl;
+                 "preprocessing runtime,solver name, ,instance name, avg single replan, avg_replan" << endl;
         addHeads.close();
     }
     uint64_t num_LL_expanded = 0, num_LL_generated = 0, num_LL_reopened = 0, num_LL_runs = 0;
+    double avg_single_replan_time = 0;
     for (auto & agent : agents)
     {
         agent.path_planner->reset();
@@ -747,7 +872,10 @@ void LNS::writeResultToFile(const string & file_name) const
         num_LL_generated += agent.path_planner->accumulated_num_generated;
         num_LL_reopened += agent.path_planner->accumulated_num_reopened;
         num_LL_runs += agent.path_planner->num_runs;
+        avg_single_replan_time += agent.path_planner->accumulated_replan_time;
     }
+    if (num_LL_runs > 0) avg_single_replan_time = avg_single_replan_time / num_LL_runs;
+
     double auc = 0;
     if (!iteration_stats.empty())
     {
@@ -768,7 +896,8 @@ void LNS::writeResultToFile(const string & file_name) const
           iteration_stats.size() << "," << average_group_size << "," <<
           initial_solution_runtime << "," << restart_times << "," << auc << "," <<
           num_LL_expanded << "," << num_LL_generated << "," << num_LL_reopened << "," << num_LL_runs << "," <<
-          preprocessing_time << "," << getSolverName() << "," << instance.getInstanceName() << endl;
+          preprocessing_time << "," << getSolverName() << "," << instance.getInstanceName() << ", " << avg_single_replan_time
+          << ", " << avg_replan_time << endl;
     stats.close();
 }
 
