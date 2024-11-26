@@ -1,0 +1,21 @@
+runtime,solution cost,initial solution cost,lower bound,sum of distance,iterations,group size,runtime of initial solution,restart times,area under curve,LL expanded nodes,LL generated,LL reopened,LL runs,preprocessing runtime,solver name, ,instance name, avg single replan, avg_replan,
+9.35135,118702,118702,117278,117262,1,0,9.35135,0,29734.1,1598967,4640998,179021,3262,2.73637,LNS(EECBS,PP),../../MAPF-benchmark/mapf-scen-random/scen-random/den520d-random-1.scen,0, -nan,W=5
+8.98938,118723,118723,117278,117262,1,0,8.98938,0,30696.5,1533092,4631566,124461,3246,2.74271,LNS(EECBS,PP),../../MAPF-benchmark/mapf-scen-random/scen-random/den520d-random-1.scen,0, -nan,W=10
+9.92393,118736,118736,117278,117262,1,0,9.92393,0,29592.1,1648765,4640642,229185,3260,3.02319,LNS(EECBS,PP),../../MAPF-benchmark/mapf-scen-random/scen-random/den520d-random-1.scen,0, -nan,W=20
+9.17987,118674,118674,117278,117262,1,0,9.17987,0,29398,1597351,4619036,182799,3271,2.92364,LNS(EECBS,PP),../../MAPF-benchmark/mapf-scen-random/scen-random/den520d-random-1.scen,0, -nan,W=2
+9.05024,118746,118746,117278,117262,1,0,9.05024,0,31089.4,1576544,4661381,145454,3288,2.78639,LNS(EECBS,PP),../../MAPF-benchmark/mapf-scen-random/scen-random/den520d-random-1.scen,0, -nan,W=1.5
+8.90117,118676,118676,117278,117262,1,0,8.90117,0,29833.7,1573599,4656263,154363,3224,2.75296,LNS(EECBS,PP),../../MAPF-benchmark/mapf-scen-random/scen-random/den520d-random-1.scen,0, -nan,W=1.1
+31.1845,0,-1,117262,117262,1,-1,31.1845,0,138901,5691773,14707932,513981,7071,2.8702,LNS(EECBS,PP),../../MAPF-benchmark/mapf-scen-random/scen-random/den520d-random-1.scen,0,0,W=1.01
+9.53696,118711,118711,117286,117262,1,0,9.53696,0,29650.9,1704670,5015844,157325,3405,2.75362,LNS(EECBS,PP),../../MAPF-benchmark/mapf-scen-random/scen-random/den520d-random-1.scen,0, -nan,W=1.05
+15.6418,119325,119325,117338,117262,1,0,15.6418,0,29620.9,2809388,7964661,220398,4541,2.78482,LNS(EECBS,PP),../../MAPF-benchmark/mapf-scen-random/scen-random/den520d-random-1.scen,0, -nan,W=1.02
+16.9861,119325,119325,117338,117262,1,0,16.9861,0,26847.8,2809388,7964661,220398,4541,2.96139,LNS(EECBS,PP),../../MAPF-benchmark/mapf-scen-random/scen-random/den520d-random-1.scen,0, -nan,W=1.02
+21.3198,126450,126450,124383,124324,1,0,21.3198,0,18454.1,4485947,11402365,546684,4004,2.77814,LNS(EECBS,PP),../../MAPF-benchmark/mapf-scen-random/scen-random/den520d-random-2.scen,0, -nan,W=1.02
+9.05544,125660,125660,124337,124324,1,0,9.05544,0,27981.9,1503913,4636256,117629,2819,2.74269,LNS(EECBS,PP),../../MAPF-benchmark/mapf-scen-random/scen-random/den520d-random-2.scen,0, -nan,W=100
+9.06202,118684,118684,117278,117262,1,0,9.06202,0,29773.8,1571382,4636516,150253,3322,2.74774,LNS(EECBS,PP),../../MAPF-benchmark/mapf-scen-random/scen-random/den520d-random-1.scen,0, -nan,W=100
+8.77074,25175,25175,10664,10657,1,0,8.77074,0,308206,3300323,5713111,36964,3827,0.0794138,LNS(EECBS,PP),../../MAPF-benchmark/mapf-scen-random/scen-random/empty-32-32-random-1.scen,0, -nan,W=100
+32.7981,0,-1,10657,10657,1,-1,32.7981,0,29822.4,8963143,23904474,8656,137221,0.0744891,LNS(EECBS,PP),../../MAPF-benchmark/mapf-scen-random/scen-random/empty-32-32-random-1.scen,0,0,W=1.1
+30.7137,0,-1,10657,10657,1,-1,30.7137,0,7606.71,13007053,29011630,34404,275882,0.0736474,LNS(EECBS,PP),../../MAPF-benchmark/mapf-scen-random/scen-random/empty-32-32-random-1.scen,0,0,W=1.5
+10.9848,24029,24029,10665,10657,1,0,10.9848,0,254271,3935080,6569697,40305,4149,0.0755356,LNS(EECBS,PP),../../MAPF-benchmark/mapf-scen-random/scen-random/empty-32-32-random-1.scen,0, -nan,W=5
+9.34032,25527,25527,10876,10862,1,0,9.34032,0,302974,3105063,5657925,33136,3980,0.0917954,LNS(EECBS,PP),../../MAPF-benchmark/mapf-scen-random/scen-random/empty-32-32-random-2.scen,0, -nan,W=5
+8.01792,26648,26648,10875,10862,1,0,8.01792,0,347009,2956188,5180492,29934,3601,0.0698306,LNS(EECBS,PP),../../MAPF-benchmark/mapf-scen-random/scen-random/empty-32-32-random-2.scen,0, -nan,W=1000
+15.1363,20671,20671,10882,10862,1,0,15.1363,0,145798,5230989,9561397,53852,6051,0.0723364,LNS(EECBS,PP),../../MAPF-benchmark/mapf-scen-random/scen-random/empty-32-32-random-2.scen,0, -nan,W=2

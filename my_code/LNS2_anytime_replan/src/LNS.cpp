@@ -268,7 +268,8 @@ bool LNS::runEECBS()
     ecbs.setSavingStats(false);
     double w;
     if (iteration_stats.empty())
-        w = 5; // initial run
+        // w = 5; // initial run (default 5)
+        w = 5; 
     else
         w = 1.1; // replan
     ecbs.setHighLevelSolver(high_level_solver_type::EES, w);
