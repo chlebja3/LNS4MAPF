@@ -1,0 +1,2 @@
+runtime,solution cost,initial solution cost,lower bound,sum of distance,iterations,group size,runtime of initial solution,restart times,area under curve,LL expanded nodes,LL generated,LL reopened,LL runs,preprocessing runtime,solver name, ,instance name, avg single replan, avg_replan
+30.0386,96013,96424,84864,84864,28,7.33333,20.3731,0,109762,348379,811408,20332,634,125.989,LNS(PP;PP),../../../MAPF-benchmark/mapf-scen-random/scen-random/den520d-random-1.scen, 0.0433751, 0.349651

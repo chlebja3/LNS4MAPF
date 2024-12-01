@@ -29,23 +29,24 @@ avg_runtime_orig= []
 max_runtime_orig= []
 avg_runtime_improved= []
 max_runtime_improved= []
+num_runs = 15
 
-maps_rng = range(int(len(res_orig)/20))
+maps_rng = range(int(len(res_orig)/num_runs))
 map_names = []
 for i in maps_rng:
-    name = res_orig[20*i][16]
+    name = res_orig[num_runs*i][16]
     idx = name.find("/scen-random/")
     idx2 = name.find(".scen")
     name = name[idx+13:idx2-2]
     print("Map name:", name)
     map_names.append(name)
     # generated + reopened
-    iterations_orig = np.asarray([float(x[5]) for x in res_orig[20*i:20*(i+1)]])
-    iterations_improved = np.asarray([float(x[5]) for x in res_improved[20*i:20*(i+1)]])
+    iterations_orig = np.asarray([float(x[5]) for x in res_orig[num_runs*i:num_runs*(i+1)]])
+    iterations_improved = np.asarray([float(x[5]) for x in res_improved[num_runs*i:num_runs*(i+1)]])
     # iterations_improved = np.asarray([float(x[10]) for x in res_improved[20*i:20*(i+1)]])
     # iterations_orig = np.asarray([float(x[10]) for x in res_orig[20*i:20*(i+1)]])
-    runtime_orig = np.asarray([float(x[17]) for x in res_orig[20*i:20*(i+1)]])
-    runtime_improved = np.asarray([float(x[17]) for x in res_improved[20*i:20*(i+1)]])
+    runtime_orig = np.asarray([float(x[17]) for x in res_orig[num_runs*i:num_runs*(i+1)]])
+    runtime_improved = np.asarray([float(x[17]) for x in res_improved[num_runs*i:num_runs*(i+1)]])
     # runtime_orig = np.asarray([float(x[7]) for x in res_orig[20*i:20*(i+1)]])
     # runtime_improved = np.asarray([float(x[7]) for x in res_improved[20*i:20*(i+1)]])
 

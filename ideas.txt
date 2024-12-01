@@ -38,3 +38,8 @@ prohlednout implementaci sippu
 # zkusit EECBS s vetsi vahou na nalezeni pocatecniho reseni, nebo jiny rychly algoritmus
 # pouzit weighted SIPP (SIPP zalozeny na weighted astaru) na replanning  - je treba resit jiz navstivene uzly, aby byla garantovana suboptimalita takze se podivat na Focal SIPP - solver z clanku/  precist clanky zatim
 # vymyslet vybirani okna aby se nepreplanovavalo pred krizenim cest
+
+# lepe interpretovat fvysledky implementace - byla chyba v ploticim skriptu, jedina mapa kde je nova implementace horsi je brc202d - velka mapa, asi dlouhe cesty
+# zkusit pro mene agentu
+# pustit se do implementace weighted sippu
+# casem: menit vahy po failed iteration zkusit s mensi vahou
