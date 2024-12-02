@@ -379,10 +379,10 @@ bool LNS::runPP()
     neighbor.sum_of_costs = 0;
     runtime = ((fsec)(Time::now() - start_time)).count();
     double T = time_limit - runtime; // time limit
-    double w = 1.005;
+    double w = 1.05;
     if (!iteration_stats.empty()) // replan
         T = min(T, replan_time_limit);
-    // else w = 1.0;
+    else w = 1.0;
     auto time = Time::now();
     ConstraintTable constraint_table(instance.num_of_cols, instance.map_size, &path_table);
     while (p != shuffled_agents.end() && ((fsec)(Time::now() - time)).count() < T)
