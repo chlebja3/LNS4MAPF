@@ -97,6 +97,7 @@ private:
 
     void updatePath(const LLNode* goal, std::vector<PathEntry> &path);
 
+  inline void pushNodeToOpen(SIPPNode* node);
 	inline void pushNodeToOpenAndFocal(SIPPNode* node);
     inline void pushNodeToFocal(SIPPNode* node);
     inline void eraseNodeFromLists(SIPPNode* node);

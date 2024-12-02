@@ -139,6 +139,7 @@ public:
         num_generated = 0;
         num_reopened = 0;
     }
+	double w = 1; // suboptimal bound (should be protected)
 protected:
     uint64_t num_expanded = 0;
     uint64_t num_generated = 0;
@@ -146,7 +147,6 @@ protected:
     double replan_time = 0;
 	int min_f_val; // minimal f value in OPEN
 	// int lower_bound; // Threshold for FOCAL
-	double w = 1; // suboptimal bound
 
 	void compute_heuristics();
 	int get_DH_heuristic(int from, int to) const { return abs(my_heuristic[from] - my_heuristic[to]); }

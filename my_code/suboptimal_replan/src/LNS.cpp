@@ -379,8 +379,10 @@ bool LNS::runPP()
     neighbor.sum_of_costs = 0;
     runtime = ((fsec)(Time::now() - start_time)).count();
     double T = time_limit - runtime; // time limit
+    double w = 1.005;
     if (!iteration_stats.empty()) // replan
         T = min(T, replan_time_limit);
+    // else w = 1.0;
     auto time = Time::now();
     ConstraintTable constraint_table(instance.num_of_cols, instance.map_size, &path_table);
     while (p != shuffled_agents.end() && ((fsec)(Time::now() - time)).count() < T)
@@ -390,6 +392,7 @@ bool LNS::runPP()
             cout << "Remaining agents = " << remaining_agents <<
                  ", remaining time = " << T - ((fsec)(Time::now() - time)).count() << " seconds. " << endl
                  << "Agent " << agents[id].id << endl;
+        agents[id].path_planner->w = w;
         agents[id].path = agents[id].path_planner->findPath(constraint_table);
         if (agents[id].path.empty()) break;
         neighbor.sum_of_costs += (int)agents[id].path.size() - 1;

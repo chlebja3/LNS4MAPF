@@ -30,7 +30,6 @@ Path SIPP::findPath(const ConstraintTable& constraint_table)
 {
     high_resolution_clock::time_point start_time = Time::now(); // start time of the replanning 
     reset();
-    this->w = 1.1;
     //Path path = findNoCollisionPath(constraint_table);
     //if (!path.empty())
     //    return path;
@@ -45,15 +44,15 @@ Path SIPP::findPath(const ConstraintTable& constraint_table)
     auto holding_time = constraint_table.getHoldingTime(goal_location, constraint_table.length_min);
     auto last_target_collision_time = constraint_table.getLastCollisionTimestep(goal_location);
     // generate start and add it to the OPEN & FOCAL list
-    auto h = max(max(my_heuristic[start_location], holding_time), last_target_collision_time + 1);
-    auto start = new SIPPNode(start_location, 0, w*h, nullptr, 0, get<1>(interval), get<1>(interval),
+    auto h = max(max(w*my_heuristic[start_location], (double) holding_time), w*(last_target_collision_time + 1));
+    auto start = new SIPPNode(start_location, 0, h, nullptr, 0, get<1>(interval), get<1>(interval),
                                 get<2>(interval), get<2>(interval));
-    pushNodeToFocal(start);
+    pushNodeToOpen(start);
 
-    while (!focal_list.empty())
+    while (!open_list.empty())
     {
-        auto* curr = focal_list.top();
-        focal_list.pop();
+        auto* curr = open_list.top();
+        open_list.pop();
         curr->in_openlist = false;
         num_expanded++;
         assert(curr->location >= 0);
@@ -80,7 +79,7 @@ Path SIPP::findPath(const ConstraintTable& constraint_table)
             goal->num_of_conflicts += future_collisions;
             // try to retrieve it from the hash table
             if (dominanceCheck(goal))
-                pushNodeToFocal(goal);
+                pushNodeToOpen(goal);
             else
                 delete goal;
         }
@@ -93,19 +92,19 @@ Path SIPP::findPath(const ConstraintTable& constraint_table)
                 int next_high_generation, next_timestep, next_high_expansion;
                 bool next_v_collision, next_e_collision;
                 tie(next_high_generation, next_timestep, next_high_expansion, next_v_collision, next_e_collision) = i;
-                if (next_timestep + my_heuristic[next_location] > constraint_table.length_max)
+                if (next_timestep + w*my_heuristic[next_location] > w*constraint_table.length_max)
                     break;
                 auto next_collisions = curr->num_of_conflicts +
                                     // (int)curr->collision_v * max(next_timestep - curr->timestep - 1, 0) + // wait time
                                       (int)next_v_collision + (int)next_e_collision;
-                auto next_h_val = max(my_heuristic[next_location], (next_collisions > 0?
-                    holding_time : curr->getFVal()) - next_timestep); // path max
+                auto next_h_val = max(w*my_heuristic[next_location], w*((next_collisions > 0?
+                    holding_time : curr->getFVal()) - next_timestep)); // path max
                 // generate (maybe temporary) node
-                auto next = new SIPPNode(next_location, next_timestep, w*next_h_val, curr, next_timestep,
+                auto next = new SIPPNode(next_location, next_timestep, next_h_val, curr, next_timestep,
                                          next_high_generation, next_high_expansion, next_v_collision, next_collisions);
                 // try to retrieve it from the hash table
                 if (dominanceCheck(next))
-                    pushNodeToFocal(next);
+                    pushNodeToOpen(next);
                 else
                     delete next;
             }
@@ -113,19 +112,19 @@ Path SIPP::findPath(const ConstraintTable& constraint_table)
         // wait at the current location
         if (curr->high_expansion == curr->high_generation and
             reservation_table.find_safe_interval(interval, curr->location, curr->high_expansion) and
-                get<0>(interval) + curr->h_val <= reservation_table.constraint_table.length_max)
+                get<0>(interval) + curr->h_val <= w*reservation_table.constraint_table.length_max)
         {
             auto next_timestep = get<0>(interval);
-            auto next_h_val = max(my_heuristic[curr->location], (get<2>(interval) ? holding_time : curr->getFVal()) - next_timestep); // path max
+            auto next_h_val = max(w*my_heuristic[curr->location], w*((get<2>(interval) ? holding_time : curr->getFVal()) - next_timestep)); // path max
             auto next_collisions = curr->num_of_conflicts +
                     // (int)curr->collision_v * max(next_timestep - curr->timestep - 1, 0) +
 		    (int)get<2>(interval);
-            auto next = new SIPPNode(curr->location, next_timestep, w*next_h_val, curr, next_timestep,
+            auto next = new SIPPNode(curr->location, next_timestep, next_h_val, curr, next_timestep,
                                      get<1>(interval), get<1>(interval), get<2>(interval),
                                      next_collisions);
             next->wait_at_goal = (curr->location == goal_location);
             if (dominanceCheck(next))
-                pushNodeToFocal(next);
+                pushNodeToOpen(next);
             else
                 delete next;
         }
@@ -388,6 +387,15 @@ inline void SIPP::pushNodeToFocal(SIPPNode* node)
     node->in_openlist = true;
     node->focal_handle = focal_list.push(node); // we only use focal list; no open list is used
 }
+
+inline void SIPP::pushNodeToOpen(SIPPNode* node)
+{
+    num_generated++;
+    allNodes_table[node].push_back(node);
+    node->in_openlist = true;
+    node->open_handle = open_list.push(node); // we only use open list; no focal list is used
+}
+
 inline void SIPP::eraseNodeFromLists(SIPPNode* node)
 {
     if (open_list.empty())
