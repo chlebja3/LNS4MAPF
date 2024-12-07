@@ -50,6 +50,8 @@ int main(int argc, char** argv)
          // params for initLNS
          ("initDestoryStrategy", po::value<string>()->default_value("Adaptive"),
           "Heuristics for finding subgroups (Target, Collision, Random, Adaptive)")
+         // params for suboptimality
+        ("w", po::value<double>()->default_value(1.0), "suboptimality factor")
 		;
 	po::variables_map vm;
 	po::store(po::parse_command_line(argc, argv, desc), vm);
@@ -84,7 +86,7 @@ int main(int argc, char** argv)
                 vm["initLNS"].as<bool>(),
                 vm["initDestoryStrategy"].as<string>(),
                 vm["singleAgentReplanner"].as<string>(),
-                screen, pipp_option);
+                screen, pipp_option, vm["w"].as<double>());
         bool succ = lns.run();
         if (succ)
         {

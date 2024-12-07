@@ -4,12 +4,13 @@
 
 LNS::LNS(const Instance& instance, double time_limit, const string & init_algo_name, const string & replan_algo_name,
          const string & destory_name, int neighbor_size, int num_of_iterations, bool use_init_lns,
-         const string & init_destory_name, const string & single_agent_replanner_name, int screen, PIBTPPS_option pipp_option) :
+         const string & init_destory_name, const string & single_agent_replanner_name, int screen, PIBTPPS_option pipp_option, double w) :
          BasicLNS(instance, time_limit, neighbor_size, screen),
          init_algo_name(init_algo_name),  replan_algo_name(replan_algo_name), num_of_iterations(num_of_iterations),
          use_init_lns(use_init_lns),init_destory_name(init_destory_name),
-         path_table(instance.map_size), pipp_option(pipp_option)
+         path_table(instance.map_size), pipp_option(pipp_option), w(w)
 {
+    std::cout << "The suboptimality factor is: " << w <<std::endl;
     start_time = Time::now();
     replan_time_limit = time_limit / 100;
     if (destory_name == "Adaptive")
@@ -379,10 +380,8 @@ bool LNS::runPP()
     neighbor.sum_of_costs = 0;
     runtime = ((fsec)(Time::now() - start_time)).count();
     double T = time_limit - runtime; // time limit
-    double w = 100.0;
     if (!iteration_stats.empty()) // replan
         T = min(T, replan_time_limit);
-    else w = 100.0;
     auto time = Time::now();
     ConstraintTable constraint_table(instance.num_of_cols, instance.map_size, &path_table);
     while (p != shuffled_agents.end() && ((fsec)(Time::now() - time)).count() < T)
