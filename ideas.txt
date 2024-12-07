@@ -43,3 +43,10 @@ prohlednout implementaci sippu
 # zkusit pro mene agentu
 # pustit se do implementace weighted sippu
 # casem: menit vahy po failed iteration zkusit s mensi vahou
+
+# porovnat vliv vahy v me implementaci s jednoduchou heuristikou, taky vliv casu na vyvoj reseni (cenu po kazde iteraci)
+# zkusit pochopit co dela jejich heuristika
+# optional: zkusit implementaci s predalokaci
+# vymyslet strategie adaptivnich vah - nahodna atd
+# jak velky ma vliv drhy clen v heuristice
+# zacit c++ vlastni implementaci?
