@@ -15,7 +15,7 @@ def read_file(name):
 file_res = read_file("results.csv")
 col_names = file_res[0]
 file_res = file_res[1:]
-weights = [1.0, 1.1, 1.5, 2, 10]
+weights = ["orig", 1.0, 1.1, 1.5, 2, 10]
 res = [file_res[i::len(weights)] for i in range(len(weights))]
 
 avg_delay = [[] for i in range(len(weights))]
@@ -30,7 +30,7 @@ max_iterations = [[] for i in range(len(weights))]
 avg_reopened = [[] for i in range(len(weights))]
 max_reopened = [[] for i in range(len(weights))]
 
-num_runs = 10
+num_runs = 20
 
 maps_rng = range(int(len(res[0])/num_runs))
 map_names = []

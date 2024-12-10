@@ -98,6 +98,10 @@ Path SIPP::findPath(const ConstraintTable& constraint_table)
                 auto next_collisions = curr->num_of_conflicts +
                                     // (int)curr->collision_v * max(next_timestep - curr->timestep - 1, 0) + // wait time
                                       (int)next_v_collision + (int)next_e_collision;
+
+                // dont tolerate collisions
+                if (next_collisions > 0) continue;
+
                 //auto next_h_val = max(w*my_heuristic[next_location], (double) ((next_collisions > 0?
                 //    holding_time : curr->getFVal()) - next_timestep)); // path max
                 auto next_h_val = w*my_heuristic[next_location];
@@ -122,6 +126,8 @@ Path SIPP::findPath(const ConstraintTable& constraint_table)
             auto next_collisions = curr->num_of_conflicts +
                     // (int)curr->collision_v * max(next_timestep - curr->timestep - 1, 0) +
 		    (int)get<2>(interval);
+            // dont tolerate collisions
+            if (next_collisions > 0) continue;
             auto next = new SIPPNode(curr->location, next_timestep, next_h_val, curr, next_timestep,
                                      get<1>(interval), get<1>(interval), get<2>(interval),
                                      next_collisions);

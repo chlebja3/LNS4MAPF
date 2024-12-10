@@ -1,0 +1,6 @@
+runtime,solution cost,initial solution cost,lower bound,sum of distance,iterations,group size,runtime of initial solution,restart times,area under curve,LL expanded nodes,LL generated,LL reopened,LL runs,preprocessing runtime,solver name, ,instance name, avg single replan, avg_replan,
+20.0014,98730,108525,96974,96974,505,7.31944,3.07294,0,94973.6,9115490,14816001,0,4182,3.34736,LNS(PP,PP),../../MAPF-benchmark/mapf-scen-random/scen-random/Boston_0_256-random-1.scen,0.00406682,0.0333974,W=1.0
+20.0013,98749,109888,96974,96974,1410,7.39106,1.149,0,63282.2,7197482,15005565,1176575,10904,3.28936,LNS(PP,PP),../../MAPF-benchmark/mapf-scen-random/scen-random/Boston_0_256-random-1.scen,0.00148206,0.0131743,original
+20.0006,97886,108433,96974,96974,1525,7.51247,1.7588,0,55100.5,7519039,13926377,1227163,11941,3.33706,LNS(PP,PP),../../MAPF-benchmark/mapf-scen-random/scen-random/Boston_0_256-random-1.scen,0.00137119,0.0117746,W=1.5
+20.0001,97879,108984,96974,96974,2429,7.39951,0.353893,0,45838.6,4433531,14152511,48905,18452,3.33893,LNS(PP,PP),../../MAPF-benchmark/mapf-scen-random/scen-random/Boston_0_256-random-1.scen,0.000835856,0.00790658,W=10
+20.0014,97715,108205,96974,96974,2467,7.44444,0.312525,0,39504.1,4356386,14274173,9935,18840,3.35609,LNS(PP,PP),../../MAPF-benchmark/mapf-scen-random/scen-random/Boston_0_256-random-1.scen,0.00081914,0.0078021,W=100
