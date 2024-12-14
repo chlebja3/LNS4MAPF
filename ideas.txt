@@ -48,5 +48,12 @@ prohlednout implementaci sippu
 # zkusit pochopit co dela jejich heuristika
 # optional: zkusit implementaci s predalokaci
 # vymyslet strategie adaptivnich vah - nahodna atd
+
+
+# zvetsit diverzitu pridanim nahodnosti pri stejne f value v astaru
+#? experiment merit diverzitu reseni?
+# zjistit co je last target collision time - nejpozdejsi cas, kdy je goal_location v kolizi, kdyz prictu 1 melo by to byt to same jako holding time
+# pridat do grafu vyvoje reseni puvodni solver
+# zkusit ruzne cley z jejich heuristiky pridavat do tehle
 # jak velky ma vliv drhy clen v heuristice
 # zacit c++ vlastni implementaci?
