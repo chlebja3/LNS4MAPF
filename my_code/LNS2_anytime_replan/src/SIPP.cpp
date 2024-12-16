@@ -99,6 +99,10 @@ Path SIPP::findPath(const ConstraintTable& constraint_table)
                                       (int)next_v_collision + (int)next_e_collision;
                 auto next_h_val = max(my_heuristic[next_location], (next_collisions > 0?
                     holding_time : curr->getFVal()) - next_timestep); // path max
+                // if ( ((holding_time - next_timestep > my_heuristic[next_location]) || (curr->getFVal() - next_timestep > my_heuristic[next_location] ))  && holding_time != curr->getFVal())
+                // {
+                //   std::cout << "Holding time: " << holding_time << ", fval: " << curr->getFVal() << std::endl;
+                // }
                 // generate (maybe temporary) node
                 auto next = new SIPPNode(next_location, next_timestep, next_h_val, curr, next_timestep,
                                          next_high_generation, next_high_expansion, next_v_collision, next_collisions);

@@ -58,4 +58,5 @@ prohlednout implementaci sippu
 # pridat do grafu vyvoje reseni puvodni solver - proc je puvodni o tolik lepsi
 # zkusit ruzne cley z jejich heuristiky pridavat do tehle
 # jak velky ma vliv drhy clen v heuristice
+#     zkusil jsem vypsat jaky je rozdil mezi holding timem a tim druhym v moment kdy je heuristika pouzita a zda se ze zadny
 # zacit c++ vlastni implementaci?
