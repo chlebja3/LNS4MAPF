@@ -51,8 +51,10 @@ prohlednout implementaci sippu
 
 
 # zvetsit diverzitu pridanim nahodnosti pri stejne f value v astaru - pokud stejna f porovnava se podle h pokud stejna h, tak se rozhodne nahodne (puvodne meli to stejne ale prvnotni porovnani jeste pocet konfliktu -> proto pouzivali jen focal a ne open i focal)
+#     random tiebreaking malicko zhorsi reseni a o dost zpomali replanning
 #? experiment merit diverzitu reseni?
 # zjistit co je last target collision time - nejpozdejsi cas, kdy je goal_location v kolizi, kdyz prictu 1 melo by to byt to same jako holding time
+#     experimenty ukazuji, ze pokud se holding time nerovna last_colision_time+1, tak je last_collision_time+1=0
 # pridat do grafu vyvoje reseni puvodni solver - proc je puvodni o tolik lepsi
 # zkusit ruzne cley z jejich heuristiky pridavat do tehle
 # jak velky ma vliv drhy clen v heuristice

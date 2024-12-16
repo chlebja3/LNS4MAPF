@@ -22,6 +22,7 @@ public:
 		{
             if (n1->g_val + n1->h_val == n2->g_val + n2->h_val)
             {
+                return rand() % 2 == 0;   // break ties randomly (TODO just added by me)
                 if (n1->h_val == n2->h_val)
                 {
                     return rand() % 2 == 0;   // break ties randomly
