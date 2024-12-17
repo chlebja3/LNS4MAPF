@@ -7,7 +7,7 @@ class LLNode // low-level node
 public:
 	int location = 0;
 	int g_val = 0;
-	int h_val = 0;
+	double h_val = 0;
 	LLNode* parent = nullptr;
 	int timestep = 0;
 	int num_of_conflicts = 0;
