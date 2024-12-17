@@ -59,4 +59,9 @@ prohlednout implementaci sippu
 # zkusit ruzne cley z jejich heuristiky pridavat do tehle
 # jak velky ma vliv drhy clen v heuristice
 #     zkusil jsem vypsat jaky je rozdil mezi holding timem a tim druhym v moment kdy je heuristika pouzita a zda se ze zadny
-# zacit c++ vlastni implementaci?
+# zacit c++ vlastni implementaci? - aspon vytvoren cmake project
+
+# porovnat ty dve implementace suboptimality ted kdyz uz mam h double a ne int
+# zkusit porovnavat v compare funkci misto f: g + w*h
+# zacit psat teoretickou cast a co jsem doted udelal,
+# schuze po Novem roce prvni utery
