@@ -64,7 +64,6 @@ Path SIPP::findPath(const ConstraintTable& constraint_table)
         curr->in_openlist = false;
         num_expanded++;
         assert(curr->location >= 0);
-        std::cout << "cur h val" << curr->h_val << std::endl;
         // check if the popped node is a goal
         if (curr->is_goal)
         {
@@ -120,11 +119,9 @@ Path SIPP::findPath(const ConstraintTable& constraint_table)
                 double fval = curr->g_val + curr->h_val/w;
                 if (next_h_val > fval - next_timestep) next_h_val = (double) next_h_val*w;
                 else next_h_val = w*(fval - next_timestep);
-                std::cout << "Before " << next_h_val << std::endl; 
                 // generate (maybe temporary) node
                 auto next = new SIPPNode(next_location, next_timestep, next_h_val, curr, next_timestep,
                                          next_high_generation, next_high_expansion, next_v_collision, next_collisions);
-                std::cout << "After " << next->h_val << std::endl; 
                 // try to retrieve it from the hash table
                 if (dominanceCheck(next))
                     pushNodeToOpen(next);
