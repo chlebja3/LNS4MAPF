@@ -15,8 +15,14 @@ endif()
 # include directories
 include_directories("inc")
 
+# all source files
+file(GLOB SOURCES "src/*.cpp")
+
+# turn on compile commands export to allow code completion see my include files
+set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
+
 # Add the executable
-add_executable(simple_MAPF_solver src/main.cpp)
+add_executable(simple_MAPF_solver ${SOURCES})
 
 # Find Boost
 find_package(Boost REQUIRED COMPONENTS program_options system filesystem)
@@ -29,3 +35,5 @@ include_directories( ${Boost_INCLUDE_DIRS} )
 
 # link
 target_link_libraries(simple_MAPF_solver ${Boost_LIBRARIES} Eigen3::Eigen)
+
+

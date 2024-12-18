@@ -1,6 +1,8 @@
 #include <boost/program_options.hpp>
 #include <iostream>
 
+#include "Instance.h"
+
 // create program options namespace
 namespace po = boost::program_options;
 
@@ -11,7 +13,8 @@ int main(int argc, char** argv)
     po::options_description desc("Allowed options");
     desc.add_options()
         ("help,h", "Show help message")
-        ("something,s", po::value<std::string>(), "Some dummy string");
+		    ("map,m", po::value<std::string>()->required(), "file with the map")
+		    ("agentNum,k", po::value<int>()->default_value(0), "number of agents");
 
     // Parse command-line arguments
     po::variables_map vm;
@@ -22,21 +25,23 @@ int main(int argc, char** argv)
     } 
     catch (const po::error& ex) 
     {
+        // Handle --help
+        if (vm.count("help")) {
+            std::cout << desc << std::endl;
+            return 0;
+        }
         std::cerr << "Error: " << ex.what() << "\n";
         return 1;
     }
 
-    // Handle --help
-    if (vm.count("help")) {
-        std::cout << desc << std::endl;
-        return 0;
-    }
+    std::string map_name = vm["map"].as<std::string>();
+    int agent_num = vm["agentNum"].as<int>();
 
-    // Handle --something
-    if (vm.count("something")) 
-    {
-      std::cout << "The something argument is " << vm["something"].as<std::string>() << std::endl;
-    };
+    // create the instance
+	  Instance instance(map_name, agent_num);
+
+
+    // create the instance object
 
     return 0;
 }
