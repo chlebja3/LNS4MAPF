@@ -3,6 +3,7 @@
 #include <fstream>
 #include <bits/stdc++.h>
 #include <boost/algorithm/string.hpp>
+#include <stdexcept>
 
 Instance::Instance(const std::string& map_fname, int num_of_agents, int num_of_rows, int num_of_cols):
 	num_of_cols(num_of_cols), num_of_rows(num_of_rows), num_of_agents(num_of_agents), map_fname(map_fname)
@@ -60,10 +61,35 @@ bool Instance::loadMap()
     {
       while (getline(map_file, line)) 
       {
-        // TODO 
-        std::cout << "Not implemented." << std::endl;
+        for (int i = 0; i < (int) line.size(); i++)
+        {
+          // treat . as free cell
+          if (line[i] == '.')
+          {
+            map_data.push_back(0);
+          }
+          // treat @ as obstacle
+          else if (line[i] == '@')
+          {
+            map_data.push_back(1);
+          }
+          // report all other symbols as unknown
+          else
+          {
+            throw std::runtime_error("Unknown symbol in map description.");
+          }
+        }
+        // check whether the number of cells in this row is consistent with num_of_columns 
+        if (map_data.size() % num_of_cols != 0)
+        {
+          throw std::runtime_error("Inconsistent number of symbols in a row in the map description.");
+        }
       }
-       
+      // check whether the number of lines is consistent with num_of_rows
+      if ((int) map_data.size() != num_of_cols * num_of_rows)
+      {
+        throw std::runtime_error("Inconsistent number of rows in the map description.");
+      }
     }
   }
 
@@ -71,4 +97,17 @@ bool Instance::loadMap()
   map_file.close();
 
 	return true;
+}
+
+void Instance::print_map()
+{
+  for (int i = 0; i < (int) map_data.size(); i++)
+  {
+    std::cout << (int) map_data[i];
+    if (i % num_of_cols == num_of_cols - 1)
+    {
+      std::cout << std::endl;
+    }
+    else std::cout << " ";
+  }
 }

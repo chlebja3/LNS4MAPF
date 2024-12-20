@@ -40,8 +40,8 @@ int main(int argc, char** argv)
     // create the instance
 	  Instance instance(map_name, agent_num);
 
-
-    // create the instance object
-
+    // print the map
+    std::cout << "The map is:" << std::endl;
+    instance.print_map();
     return 0;
 }

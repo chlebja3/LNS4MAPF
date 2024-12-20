@@ -16,6 +16,9 @@ class Instance
     // function to load a map
     bool loadMap();
 
+    // function to print the map
+    void print_map();
+
   private:
     std::string map_fname;
     std::string type;
