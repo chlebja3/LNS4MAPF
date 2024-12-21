@@ -1,12 +1,17 @@
 #include <SFML/Graphics.hpp>
 #include <iostream>
+#include <cmath>
 #include "Visualizer.h"
 
+#define WINDOW_WIDTH 800
 #define CELL_SIZE 20
+#define BORDER_SIZE 1
 
 Visualizer::Visualizer(Instance& instance)
 {
   running = false;
+  map_width = instance.num_of_cols;
+  map_height = instance.num_of_rows;
 
   // create the map texture
   mapToTexture(instance.get_map_data(), instance.num_of_rows, instance.num_of_cols);
@@ -42,7 +47,8 @@ void Visualizer::join_thread()
 
 void Visualizer::run()
 {
-  sf::RenderWindow window(sf::VideoMode(800, 600), "Visualization");
+  int window_height = std::round(WINDOW_WIDTH * (map_height / map_width));
+  sf::RenderWindow window(sf::VideoMode(WINDOW_WIDTH, window_height), "Visualization");
 
   // set framerate
   window.setFramerateLimit(60);
@@ -51,7 +57,7 @@ void Visualizer::run()
   window.setActive();
 
   // create a view
-  sf::View view(sf::FloatRect(0, 0, 800, 600));
+  sf::View view(sf::FloatRect(0, 0, WINDOW_WIDTH, window_height));
 
   // Zoom settings
   float zoomLevel = 1.0f;
@@ -81,6 +87,23 @@ void Visualizer::run()
           view.zoom(zoomStep); // Zoom out
           zoomLevel *= zoomStep;
         }
+      }
+      // Panning with arrow keys
+      else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Left)) 
+      {
+          view.move(-10 * zoomLevel, 0);
+      }
+      else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Right))
+      {
+          view.move(10 * zoomLevel, 0);
+      }
+      else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up))
+      {
+          view.move(0, -10 * zoomLevel);
+      }
+      else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Down))
+      {
+          view.move(0, 10 * zoomLevel);
       }
     }
 
@@ -120,11 +143,10 @@ void Visualizer::mapToTexture(const std::vector<std::uint8_t>& map_data, int num
       // create the cell 
       sf::RectangleShape cell(sf::Vector2f(CELL_SIZE, CELL_SIZE));
       cell.setPosition(x * CELL_SIZE, y * CELL_SIZE);
-
-      if (map_data[y*num_of_rows + num_of_columns] == 1) 
+      if ((int) map_data[y*num_of_columns + x] == 1) 
       {
         // obstacles
-        cell.setFillColor(sf::Color::Red);
+        cell.setFillColor(sf::Color::Black);
       } 
       else 
       {
@@ -132,8 +154,8 @@ void Visualizer::mapToTexture(const std::vector<std::uint8_t>& map_data, int num
         cell.setFillColor(sf::Color::White);
       }
 
-      // grid colro and thickness
-      cell.setOutlineThickness(1);
+      // grid color and thickness
+      cell.setOutlineThickness(-BORDER_SIZE);
       cell.setOutlineColor(sf::Color::Black);
 
       map_render_texture.draw(cell);
@@ -146,4 +168,6 @@ void Visualizer::mapToTexture(const std::vector<std::uint8_t>& map_data, int num
     // set the map texture
     map_texture = map_render_texture.getTexture();
     map_sprite = sf::Sprite(map_texture);
+    double scale = (double) WINDOW_WIDTH / (CELL_SIZE*num_of_columns);
+    map_sprite.setScale(sf::Vector2f(scale, scale));
 }

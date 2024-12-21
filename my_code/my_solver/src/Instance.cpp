@@ -68,8 +68,8 @@ bool Instance::loadMap()
           {
             map_data.push_back(0);
           }
-          // treat @ as obstacle
-          else if (line[i] == '@')
+          // treat @, T as obstacle
+          else if (line[i] == '@' || line[i] == 'T')
           {
             map_data.push_back(1);
           }

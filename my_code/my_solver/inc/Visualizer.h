@@ -27,4 +27,6 @@ class Visualizer
     std::atomic<bool> running; // indicator whether the thread should be running
     sf::Texture map_texture; // the map texture
     sf::Sprite map_sprite; // the sprite that represents the map
+    int map_width;
+    int map_height;
 };
