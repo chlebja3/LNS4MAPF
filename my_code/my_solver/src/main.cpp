@@ -2,6 +2,8 @@
 #include <iostream>
 
 #include "Instance.h"
+#include "Visualizer.h"
+#include "Computation.h"
 
 // create program options namespace
 namespace po = boost::program_options;
@@ -43,5 +45,21 @@ int main(int argc, char** argv)
     // print the map
     std::cout << "The map is:" << std::endl;
     instance.print_map();
-    return 0;
+
+    // create the visualization object
+    Visualizer visualizer(instance);
+    
+    // create the computation object
+    Computation computation(instance);
+    // TODO copy the instance so that the two threads dont share the same object
+
+    // start the threads
+    visualizer.start();
+    computation.start();
+
+    // wait for the threads to finish
+    visualizer.join_thread();
+    computation.join_thread();
+    
+    return EXIT_SUCCESS;
 }
