@@ -16,6 +16,7 @@ int main(int argc, char** argv)
     desc.add_options()
         ("help,h", "Show help message")
 		    ("map,m", po::value<std::string>()->required(), "file with the map")
+		    ("agents,a", po::value<std::string>()->required(), "input file for agents")
 		    ("agentNum,k", po::value<int>()->default_value(0), "number of agents");
 
     // Parse command-line arguments
@@ -37,14 +38,16 @@ int main(int argc, char** argv)
     }
 
     std::string map_name = vm["map"].as<std::string>();
+    std::string scene_name = vm["agents"].as<std::string>();
     int agent_num = vm["agentNum"].as<int>();
 
     // create the instance
-	  Instance instance(map_name, agent_num);
+	  Instance instance(map_name, scene_name, agent_num);
 
     // print the map
     std::cout << "The map is:" << std::endl;
-    instance.print_map();
+    // instance.print_map();
+    instance.print_agents();
 
     // create the visualization object
     Visualizer visualizer(instance);
