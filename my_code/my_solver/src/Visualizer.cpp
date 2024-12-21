@@ -1,5 +1,6 @@
-#include "Visualizer.h"
+#include <SFML/Graphics.hpp>
 #include <iostream>
+#include "Visualizer.h"
 
 Visualizer::Visualizer(Instance& instance):instance(instance)
 {
@@ -36,13 +37,36 @@ void Visualizer::join_thread()
 
 void Visualizer::run()
 {
-  int i = 0;
-  while (running)
+  sf::RenderWindow window(sf::VideoMode(800, 600), "Visualization");
+
+  // set framerate
+  window.setFramerateLimit(60);
+
+  // Activate the window for OpenGL rendering
+  window.setActive();
+
+  while (window.isOpen() && running)
   {
-    std::cout << "Visualizer thread running" << std::endl;
-    i++;
-    if (i >= 3) running = false;
-    std::this_thread::sleep_for(std::chrono::seconds(5));
+    // poll all events from the window
+    sf::Event event;
+    while (window.pollEvent(event)) 
+    {
+      if (event.type == sf::Event::Closed) 
+      {
+        running = false;
+      }
+    }
+
+    // clear the window
+    window.clear(sf::Color::Black);
+
+    // TODO draw
+    
+    // display 
+    window.display();
   }
+
+  // close the window
+  if (window.isOpen()) window.close();
   std::cout << "Visualizer thread ended" << std::endl;
 }

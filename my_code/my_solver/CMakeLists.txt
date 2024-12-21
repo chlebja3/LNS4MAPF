@@ -37,12 +37,15 @@ add_executable(simple_MAPF_solver ${SOURCES})
 find_package(Boost REQUIRED COMPONENTS program_options system filesystem)
 
 # Find Eigen3 for PIBT
-find_package (Eigen3 3.3 REQUIRED NO_MODULE)
+find_package (Eigen3 REQUIRED NO_MODULE)
+
+# Find SFML
+find_package(SFML REQUIRED COMPONENTS graphics window system )
 
 # add include directories
 include_directories( ${Boost_INCLUDE_DIRS} )
 
-# link
-target_link_libraries(simple_MAPF_solver ${Boost_LIBRARIES} Eigen3::Eigen)
+# link the libraries
+target_link_libraries(simple_MAPF_solver ${Boost_LIBRARIES} Eigen3::Eigen sfml-graphics sfml-window sfml-system)
 
 
