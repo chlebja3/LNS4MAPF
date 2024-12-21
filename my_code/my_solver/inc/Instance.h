@@ -19,6 +19,9 @@ class Instance
     // function to print the map
     void print_map();
 
+    // function to obtain the map data
+    std::vector<uint8_t> get_map_data();
+
   private:
     std::string map_fname;
     std::string type;

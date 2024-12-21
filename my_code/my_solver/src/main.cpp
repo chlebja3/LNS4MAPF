@@ -51,7 +51,6 @@ int main(int argc, char** argv)
     
     // create the computation object
     Computation computation(instance);
-    // TODO copy the instance so that the two threads dont share the same object
 
     // start the threads
     visualizer.start();

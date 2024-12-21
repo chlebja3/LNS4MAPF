@@ -111,3 +111,8 @@ void Instance::print_map()
     else std::cout << " ";
   }
 }
+
+std::vector<uint8_t> Instance::get_map_data()
+{
+  return map_data; // should copy the vector
+}
