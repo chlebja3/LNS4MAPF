@@ -28,6 +28,9 @@ class Instance
     // function to obtain the map data
     std::vector<uint8_t> get_map_data();
 
+    // functions to obtain the agent starts and goals
+    std::vector<std::tuple<int, int>> get_start_positions();
+    std::vector<std::tuple<int, int>> get_goal_positions();
   private:
     std::string map_fname;
     std::string scene_fname;

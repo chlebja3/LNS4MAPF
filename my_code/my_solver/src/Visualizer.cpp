@@ -1,7 +1,10 @@
 #include <SFML/Graphics.hpp>
+#include <SFML/Graphics/CircleShape.hpp>
+#include <SFML/Window/WindowStyle.hpp>
 #include <iostream>
 #include <cmath>
 #include "Visualizer.h"
+#include "utils.h"
 
 #define WINDOW_WIDTH 800
 #define CELL_SIZE 20
@@ -12,6 +15,14 @@ Visualizer::Visualizer(Instance& instance)
   running = false;
   map_width = instance.num_of_cols;
   map_height = instance.num_of_rows;
+  start_positions = instance.get_start_positions();
+  goal_positions = instance.get_goal_positions();
+
+  // generate random colors for the agents
+  for (int i = 0; i < (int) start_positions.size(); i++)
+  {
+    agents_colors.push_back(generate_random_color(255, 255, 255, 0.25));
+  }
 
   // create the map texture
   mapToTexture(instance.get_map_data(), instance.num_of_rows, instance.num_of_cols);
@@ -48,7 +59,12 @@ void Visualizer::join_thread()
 void Visualizer::run()
 {
   int window_height = std::round(WINDOW_WIDTH * (map_height / map_width));
-  sf::RenderWindow window(sf::VideoMode(WINDOW_WIDTH, window_height), "Visualization");
+
+  // turn on antialiasing
+  sf::ContextSettings settings;
+  settings.antialiasingLevel = 8.0;
+
+  sf::RenderWindow window(sf::VideoMode(WINDOW_WIDTH, window_height), "Visualization", sf::Style::Default, settings);
 
   // set framerate
   window.setFramerateLimit(60);
@@ -107,15 +123,18 @@ void Visualizer::run()
       }
     }
 
-    // set the view 
-    window.setView(view);
-
     // clear the window
     window.clear(sf::Color::Black);
 
-    // TODO draw
+    // draw the map
     window.draw(map_sprite);
-    
+
+    // draw the agents
+    draw_agents(window);
+
+    // set the view 
+    window.setView(view);
+
     // display 
     window.display();
   }
@@ -167,7 +186,28 @@ void Visualizer::mapToTexture(const std::vector<std::uint8_t>& map_data, int num
 
     // set the map texture
     map_texture = map_render_texture.getTexture();
+    // turn on antialiasing
+    // map_texture.setSmooth(true);
     map_sprite = sf::Sprite(map_texture);
-    double scale = (double) WINDOW_WIDTH / (CELL_SIZE*num_of_columns);
+    scale = (double) WINDOW_WIDTH / (CELL_SIZE*num_of_columns);
     map_sprite.setScale(sf::Vector2f(scale, scale));
+}
+
+void Visualizer::draw_agents(sf::RenderWindow& window)
+{
+  agents_circles.clear();
+  for (int i = 0; i < (int) start_positions.size(); i++)
+  {
+    int x = std::get<0>(start_positions[i]);
+    int y = std::get<1>(start_positions[i]);
+    // create shape
+    agents_circles.push_back(sf::CircleShape((double) (CELL_SIZE - 2*BORDER_SIZE)/2));
+    // set color
+    agents_circles.back().setFillColor(agents_colors[i]);
+    // set position
+    agents_circles.back().setPosition(x*scale*CELL_SIZE+scale*BORDER_SIZE, y*scale*CELL_SIZE+scale*BORDER_SIZE);
+    agents_circles.back().setScale(sf::Vector2f(scale, scale));
+    // draw the shape 
+    window.draw(agents_circles.back());
+  }
 }

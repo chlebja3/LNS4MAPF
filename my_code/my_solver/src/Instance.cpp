@@ -187,3 +187,13 @@ std::vector<uint8_t> Instance::get_map_data()
 {
   return map_data; // should copy the vector
 }
+
+ std::vector<std::tuple<int, int>> Instance::get_start_positions()
+{
+  return start_positions; // should copy the vector
+}
+
+ std::vector<std::tuple<int, int>> Instance::get_goal_positions()
+{
+  return goal_positions; // should copy the vector
+}
