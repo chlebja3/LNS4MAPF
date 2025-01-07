@@ -1,5 +1,11 @@
 cmake_minimum_required(VERSION 3.16)
 
+# enable testing if the user does not specify otherwise
+option(ENABLE_TESTS "Enable tests" ON)
+if (${ENABLE_TESTS})
+    enable_testing()
+endif()
+
 # Project name and version
 project(simple_MAPF_solver VERSION 1.0 LANGUAGES CXX)
 
@@ -15,11 +21,14 @@ endif()
 # include directories
 include_directories("inc")
 
-# all source files
+# collect all source files
 file(GLOB SOURCES "src/*.cpp")
 
+# Remove main.cpp from the list
+list(REMOVE_ITEM SOURCES "${CMAKE_CURRENT_SOURCE_DIR}/src/main.cpp")
+
 # turn on compile commands export to allow code completion see my include files
-set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
+# set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
 # allow threads
 set(CMAKE_THREAD_LIBS_INIT "-lpthread")
@@ -28,10 +37,6 @@ set(CMAKE_HAVE_THREADS_LIBRARY 1)
 set(CMAKE_USE_WIN32_THREADS_INIT 0)
 set(CMAKE_USE_PTHREADS_INIT 1)
 set(THREADS_PREFER_PTHREAD_FLAG ON)
-
-
-# Add the executable
-add_executable(simple_MAPF_solver ${SOURCES})
 
 # Find Boost
 find_package(Boost REQUIRED COMPONENTS program_options system filesystem)
@@ -45,7 +50,18 @@ find_package(SFML REQUIRED COMPONENTS graphics window system )
 # add include directories
 include_directories( ${Boost_INCLUDE_DIRS} )
 
+# create a library, so that it can be used in the unit testing
+add_library(MAPF_lib ${SOURCES})
+
+
+# Add the executable
+add_executable(simple_MAPF_solver src/main.cpp)
+
 # link the libraries
-target_link_libraries(simple_MAPF_solver ${Boost_LIBRARIES} Eigen3::Eigen sfml-graphics sfml-window sfml-system)
+target_link_libraries(MAPF_lib ${Boost_LIBRARIES} Eigen3::Eigen sfml-graphics sfml-window sfml-system)
+target_link_libraries(simple_MAPF_solver MAPF_lib)
+
+# Add subdirectory for tests
+add_subdirectory(tests)
 
 
