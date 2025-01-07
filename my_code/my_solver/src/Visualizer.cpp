@@ -9,6 +9,7 @@
 #define WINDOW_WIDTH 800
 #define CELL_SIZE 20
 #define BORDER_SIZE 1
+#define GOAL_VIS_THICKNESS 3
 
 Visualizer::Visualizer(Instance& instance)
 {
@@ -131,6 +132,7 @@ void Visualizer::run()
 
     // draw the agents
     draw_agents(window);
+    draw_goals(window);
 
     // set the view 
     window.setView(view);
@@ -204,6 +206,26 @@ void Visualizer::draw_agents(sf::RenderWindow& window)
     agents_circles.push_back(sf::CircleShape((double) (CELL_SIZE - 2*BORDER_SIZE)/2));
     // set color
     agents_circles.back().setFillColor(agents_colors[i]);
+    // set position
+    agents_circles.back().setPosition(x*scale*CELL_SIZE+scale*BORDER_SIZE, y*scale*CELL_SIZE+scale*BORDER_SIZE);
+    agents_circles.back().setScale(sf::Vector2f(scale, scale));
+    // draw the shape 
+    window.draw(agents_circles.back());
+  }
+}
+
+void Visualizer::draw_goals(sf::RenderWindow& window)
+{
+  agents_circles.clear();
+  for (int i = 0; i < (int) start_positions.size(); i++)
+  {
+    int x = std::get<0>(goal_positions[i]);
+    int y = std::get<1>(goal_positions[i]);
+    // create shape
+    agents_circles.push_back(sf::CircleShape((double) (CELL_SIZE - 2*BORDER_SIZE)/2));
+    // set color
+    agents_circles.back().setOutlineColor(agents_colors[i]);
+    agents_circles.back().setOutlineThickness(-GOAL_VIS_THICKNESS);
     // set position
     agents_circles.back().setPosition(x*scale*CELL_SIZE+scale*BORDER_SIZE, y*scale*CELL_SIZE+scale*BORDER_SIZE);
     agents_circles.back().setScale(sf::Vector2f(scale, scale));

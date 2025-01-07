@@ -25,6 +25,7 @@ class Visualizer
 
     // draw the agents 
     void draw_agents(sf::RenderWindow& window);
+    void draw_goals(sf::RenderWindow& window);
 
   private:
     std::thread vis_thread; // the underlying thread
