@@ -14,7 +14,7 @@ set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED True)
 
 # static code analysis with clang-tidy
-set(CMAKE_CXX_CLANG_TIDY "clang-tidy;-checks=*")
+# set(CMAKE_CXX_CLANG_TIDY "clang-tidy;-checks=*")
 
 # Set a default build type if not specified
 if(NOT CMAKE_BUILD_TYPE)

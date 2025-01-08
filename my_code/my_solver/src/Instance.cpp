@@ -22,6 +22,11 @@ Instance::Instance(const std::string& map_fname, const std::string& scene_fname,
   std::cout << "Successfully initialized instance." << std::endl;
 }
 
+/**
+ * @brief Load the map from a file specified during Instance initialization.
+ *
+ * @return Success of the operation
+ */
 bool Instance::load_map()
 {
   // open the map file
