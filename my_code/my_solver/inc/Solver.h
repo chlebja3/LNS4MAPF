@@ -1,3 +1,10 @@
+/*
+ * Author: Jan Chleboun
+ * Date: 08-01-2025
+ * Email: chlebja3@fel.cvut.cz
+ * Description: 
+ */
+
 #pragma once
 #include <string>
 #include <vector>
@@ -13,19 +20,19 @@ struct Solution
   std::vector<Path> paths;
 
   int cost;
-  int delay; // cost - distance
+  int delay;  // cost - distance
 };
 
 class Solver
 // abstract class to represent a solver for the mapf problem
 {
-  public:
-    std::string name;
-    Instance instance;
+public:
+  std::string name;
+  Instance    instance;
 
-    // constructor
-    Solver(const std::string& name, Instance& instance);
+  // constructor
+  Solver(const std::string& name, Instance& instance);
 
-    // pure virtual function solve
-    virtual Solution solve() = 0;
+  // pure virtual function solve
+  virtual Solution solve() = 0;
 };

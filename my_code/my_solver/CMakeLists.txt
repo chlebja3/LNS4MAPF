@@ -13,6 +13,9 @@ project(simple_MAPF_solver VERSION 1.0 LANGUAGES CXX)
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED True)
 
+# static code analysis with clang-tidy
+set(CMAKE_CXX_CLANG_TIDY "clang-tidy;-checks=*")
+
 # Set a default build type if not specified
 if(NOT CMAKE_BUILD_TYPE)
   set(CMAKE_BUILD_TYPE Release)
@@ -28,7 +31,7 @@ file(GLOB SOURCES "src/*.cpp")
 list(REMOVE_ITEM SOURCES "${CMAKE_CURRENT_SOURCE_DIR}/src/main.cpp")
 
 # turn on compile commands export to allow code completion see my include files
-# set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
+set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
 # allow threads
 set(CMAKE_THREAD_LIBS_INIT "-lpthread")

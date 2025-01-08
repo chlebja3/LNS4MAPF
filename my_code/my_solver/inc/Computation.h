@@ -1,3 +1,10 @@
+/*
+ * Author: Jan Chleboun
+ * Date: 08-01-2025
+ * Email: chlebja3@fel.cvut.cz
+ * Description: 
+ */
+
 #pragma once
 #include <thread>
 #include <atomic>
@@ -5,22 +12,22 @@
 
 class Computation
 {
-  public:
-    Instance& instance;
-	
-    // constructor and destructor
-    Computation(Instance& instance);
-    ~Computation();
+public:
+  Instance& instance;
 
-    // manage the underlying thread
-    void start();
-    void stop();
-    void join_thread();
+  // constructor and destructor
+  Computation(Instance& instance);
+  ~Computation();
 
-    // the function called in the thread
-    void run();
+  // manage the underlying thread
+  void start();
+  void stop();
+  void join_thread();
 
-  private:
-    std::thread comp_thread;
-    std::atomic<bool> running;
+  // the function called in the thread
+  void run();
+
+private:
+  std::thread       comp_thread;
+  std::atomic<bool> running;
 };
