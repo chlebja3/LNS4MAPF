@@ -1,6 +1,7 @@
 #pragma once
 #include <string>
 #include <vector>
+#include "utils.h"
 
 class Instance
 {
@@ -20,17 +21,21 @@ class Instance
     bool load_scene();
 
     // function to print the map
-    void print_map();
+    void print_map() const;
 
     // function to print the agents starts and goal positions
-    void print_agents();
+    void print_agents() const;
 
     // function to obtain the map data
-    std::vector<uint8_t> get_map_data();
+    std::vector<uint8_t> get_map_data() const;
 
     // functions to obtain the agent starts and goals
-    std::vector<std::tuple<int, int>> get_start_positions();
-    std::vector<std::tuple<int, int>> get_goal_positions();
+    std::vector<std::tuple<int, int>> get_start_positions() const;
+    std::vector<std::tuple<int, int>> get_goal_positions() const;
+
+    // function to calculate the optimal paths ignoring the other agents
+    void calculate_optimal_paths();
+
   private:
     std::string map_fname;
     std::string scene_fname;
@@ -38,6 +43,7 @@ class Instance
     std::vector<uint8_t> map_data;
     std::vector<std::tuple<int, int>> start_positions;
     std::vector<std::tuple<int, int>> goal_positions;
+    std::vector<Path> optimal_paths;
 };
 
 

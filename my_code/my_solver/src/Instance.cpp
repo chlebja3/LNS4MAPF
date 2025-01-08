@@ -119,6 +119,8 @@ bool Instance::load_scene()
   if (!getline(scene_file, line) || line != "version 1") return false;
 
   int loaded_agents = 0;
+  start_positions.reserve(num_of_agents);
+  goal_positions.reserve(num_of_agents);
   // read the file line by line until enough agents were loaded
   while (loaded_agents < num_of_agents && getline(scene_file, line)) 
   {
@@ -161,7 +163,7 @@ bool Instance::load_scene()
 	return true;
 }
 
-void Instance::print_map()
+void Instance::print_map() const
 {
   for (int i = 0; i < (int) map_data.size(); i++)
   {
@@ -174,7 +176,7 @@ void Instance::print_map()
   }
 }
 
-void Instance::print_agents()
+void Instance::print_agents() const
 {
   for (int i = 0; i < (int) start_positions.size(); i++)
   {
@@ -183,17 +185,29 @@ void Instance::print_agents()
   }
 }
 
-std::vector<uint8_t> Instance::get_map_data()
+std::vector<uint8_t> Instance::get_map_data() const
 {
   return map_data; // should copy the vector
 }
 
- std::vector<std::tuple<int, int>> Instance::get_start_positions()
+ std::vector<std::tuple<int, int>> Instance::get_start_positions() const
 {
   return start_positions; // should copy the vector
 }
 
- std::vector<std::tuple<int, int>> Instance::get_goal_positions()
+ std::vector<std::tuple<int, int>> Instance::get_goal_positions() const
 {
   return goal_positions; // should copy the vector
+}
+
+void Instance::calculate_optimal_paths()
+{
+  optimal_paths.reserve(num_of_agents);
+  // calculate the optimal paths one by one in parallel
+  for (int i = 0; i < num_of_agents; i++)
+  {
+    // TODO
+    Path p;
+    optimal_paths.push_back(p);
+  }
 }
