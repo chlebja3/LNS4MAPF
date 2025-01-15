@@ -2,9 +2,6 @@ cmake_minimum_required(VERSION 3.16)
 
 # enable testing if the user does not specify otherwise
 option(ENABLE_TESTS "Enable tests" ON)
-if (${ENABLE_TESTS})
-    enable_testing()
-endif()
 
 # Project name and version
 project(simple_MAPF_solver VERSION 1.0 LANGUAGES CXX)
@@ -65,6 +62,9 @@ target_link_libraries(MAPF_lib ${Boost_LIBRARIES} Eigen3::Eigen sfml-graphics sf
 target_link_libraries(simple_MAPF_solver MAPF_lib)
 
 # Add subdirectory for tests
-add_subdirectory(tests)
+if (${ENABLE_TESTS})
+    enable_testing()
+    add_subdirectory(tests)
+endif()
 
 
