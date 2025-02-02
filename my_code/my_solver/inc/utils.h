@@ -17,12 +17,15 @@ class Node
 {
   public:
     Node* parent;
-    double g, h;
+    const double g, h, f;
 
-    Node(const int g, const int h);
-    virtual ~Node() = default;
+    Node(const double g, const double h);
+    virtual ~Node() = default; // make Node an abstract class
 
-    int get_f(void);
+    // compare
+    virtual bool operator>(const Node& other);
+    virtual bool operator<(const Node& other);
+    virtual bool operator==(const Node& other);
 };
 
 // generate a random visually pleasing color, based on

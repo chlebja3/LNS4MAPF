@@ -8,6 +8,23 @@
 #include <utils.h>
 #include <cmath>
 
+Node::Node(const double g, const double h) : g(g), h(h), f(g+h) {};
+
+bool Node::operator>(const Node& other)
+{
+  return f > other.f;
+}
+
+bool Node::operator<(const Node& other)
+{
+  return f < other.f;
+}
+
+bool Node::operator==(const Node& other)
+{
+  return g == other.g && h == other.h;
+}
+
 /**
  * @brief Generate a random color. To make the color palette look more visually pleasing, mix the random color with (mix_r, mix_g, mix_b).
  *
