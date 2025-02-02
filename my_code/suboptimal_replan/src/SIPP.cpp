@@ -53,7 +53,7 @@ Path SIPP::findPath(const ConstraintTable& constraint_table)
     // double h = (double) my_heuristic[start_location];
     // if (h > holding_time) h = h*w;
     // else h = (double) holding_time*w;
-    auto start = new SIPPNode(start_location, 0, w*h, nullptr, 0, get<1>(interval), get<1>(interval),
+    auto start = new SIPPNode(start_location, 0, h, nullptr, 0, get<1>(interval), get<1>(interval),
                                 get<2>(interval), get<2>(interval));
     pushNodeToOpen(start);
 
@@ -111,10 +111,10 @@ Path SIPP::findPath(const ConstraintTable& constraint_table)
 
                 // auto next_h_val = max(my_heuristic[next_location], ((next_collisions > 0?
                 //     holding_time : curr->getFVal()) - next_timestep)); // path max ORIGINAL
-                auto next_h_val = max((double) my_heuristic[next_location], ((next_collisions > 0?
-                    holding_time : curr->g_val + (curr->h_val)/w) - next_timestep)); // path max FVAL compensation
+                //auto next_h_val = max((double) my_heuristic[next_location], ((next_collisions > 0?
+                //    holding_time : curr->g_val + (curr->h_val)/w) - next_timestep)); // path max FVAL compensation
                 // if (next_h_val != my_heuristic[next_location]) std::cout << "Next h val is:" << next_h_val << ", my heuristic is " << my_heuristic[next_location] << " cur f " << curr->getFVal() << " next_timestep " << next_timestep << std::endl;
-                // auto next_h_val = w*my_heuristic[next_location];
+                auto next_h_val = my_heuristic[next_location];
                 // double next_h_val = (double) my_heuristic[next_location];
                 // double fval = curr->g_val + curr->h_val/w;
                 // if (next_h_val > fval - next_timestep) next_h_val = (double) next_h_val*w;
@@ -137,8 +137,8 @@ Path SIPP::findPath(const ConstraintTable& constraint_table)
         {
             auto next_timestep = get<0>(interval);
             // auto next_h_val = max(my_heuristic[curr->location], ((get<2>(interval) ? holding_time : curr->getFVal()) - next_timestep)); // path max ORIGINAL
-            auto next_h_val = max((double) my_heuristic[curr->location], ((get<2>(interval) ? holding_time : curr->g_val + (curr->h_val/w)) - next_timestep)); // path max Fval compensation
-            // auto next_h_val = w*my_heuristic[curr->location];
+            // auto next_h_val = max((double) my_heuristic[curr->location], ((get<2>(interval) ? holding_time : curr->g_val + (curr->h_val/w)) - next_timestep)); // path max Fval compensation
+            auto next_h_val = my_heuristic[curr->location];
             // double next_h_val = (double) my_heuristic[curr->location];
             // double fval = curr->g_val + curr->h_val/w;
             // if (next_h_val > fval - next_timestep) next_h_val = next_h_val*w;
