@@ -49,11 +49,11 @@ Path SIPP::findPath(const ConstraintTable& constraint_table)
     // {
     //   std::cout << "Holding time: " << holding_time << ", ltc_time + 1: " << last_target_collision_time + 1 << std::endl; 
     // }
-    // auto h = max(w*my_heuristic[start_location], (double)(last_target_collision_time + 1));
-    double h = (double) my_heuristic[start_location];
-    if (h > holding_time) h = h*w;
-    else h = (double) holding_time*w;
-    auto start = new SIPPNode(start_location, 0, h, nullptr, 0, get<1>(interval), get<1>(interval),
+    auto h = max(my_heuristic[start_location], (double)(last_target_collision_time + 1));
+    // double h = (double) my_heuristic[start_location];
+    // if (h > holding_time) h = h*w;
+    // else h = (double) holding_time*w;
+    auto start = new SIPPNode(start_location, 0, w*h, nullptr, 0, get<1>(interval), get<1>(interval),
                                 get<2>(interval), get<2>(interval));
     pushNodeToOpen(start);
 
@@ -111,16 +111,16 @@ Path SIPP::findPath(const ConstraintTable& constraint_table)
                 // dont tolerate collisions
                 if (next_collisions > 0) continue;
 
-                // auto next_h_val = max(my_heuristic[next_location], ((next_collisions > 0?
-                //    holding_time : curr->getFVal()) - next_timestep)); // path max
+                auto next_h_val = max(my_heuristic[next_location], ((next_collisions > 0?
+                    holding_time : curr->getFVal()) - next_timestep)); // path max
                 //if (next_h_val != my_heuristic[next_location]) std::cout << "Next h val is:" << next_h_val << ", my heuristic is " << my_heuristic[next_location] << " cur f " << curr->getFVal() << " next_timestep " << next_timestep << std::endl;
                 // auto next_h_val = w*my_heuristic[next_location];
-                double next_h_val = (double) my_heuristic[next_location];
-                double fval = curr->g_val + curr->h_val/w;
-                if (next_h_val > fval - next_timestep) next_h_val = (double) next_h_val*w;
-                else next_h_val = w*(fval - next_timestep);
+                // double next_h_val = (double) my_heuristic[next_location];
+                // double fval = curr->g_val + curr->h_val/w;
+                // if (next_h_val > fval - next_timestep) next_h_val = (double) next_h_val*w;
+                // else next_h_val = w*(fval - next_timestep);
                 // generate (maybe temporary) node
-                auto next = new SIPPNode(next_location, next_timestep, next_h_val, curr, next_timestep,
+                auto next = new SIPPNode(next_location, next_timestep, w*next_h_val, curr, next_timestep,
                                          next_high_generation, next_high_expansion, next_v_collision, next_collisions);
                 // try to retrieve it from the hash table
                 if (dominanceCheck(next))
@@ -132,21 +132,21 @@ Path SIPP::findPath(const ConstraintTable& constraint_table)
         // wait at the current location
         if (curr->high_expansion == curr->high_generation and
             reservation_table.find_safe_interval(interval, curr->location, curr->high_expansion) and
-                get<0>(interval) + curr->h_val <= w*reservation_table.constraint_table.length_max)
+                w*get<0>(interval) + curr->h_val <= w*reservation_table.constraint_table.length_max)
         {
             auto next_timestep = get<0>(interval);
-            // auto next_h_val = max(my_heuristic[curr->location], ((get<2>(interval) ? holding_time : curr->getFVal()) - next_timestep)); // path max
+            auto next_h_val = max(my_heuristic[curr->location], ((get<2>(interval) ? holding_time : curr->getFVal()) - next_timestep)); // path max
             // auto next_h_val = w*my_heuristic[curr->location];
-            double next_h_val = (double) my_heuristic[curr->location];
-            double fval = curr->g_val + curr->h_val/w;
-            if (next_h_val > fval - next_timestep) next_h_val = next_h_val*w;
-            else next_h_val = w*(fval - next_timestep);
+            // double next_h_val = (double) my_heuristic[curr->location];
+            // double fval = curr->g_val + curr->h_val/w;
+            // if (next_h_val > fval - next_timestep) next_h_val = next_h_val*w;
+            // else next_h_val = w*(fval - next_timestep);
             auto next_collisions = curr->num_of_conflicts +
                     // (int)curr->collision_v * max(next_timestep - curr->timestep - 1, 0) +
 		    (int)get<2>(interval);
             // dont tolerate collisions
             if (next_collisions > 0) continue;
-            auto next = new SIPPNode(curr->location, next_timestep, next_h_val, curr, next_timestep,
+            auto next = new SIPPNode(curr->location, next_timestep, w*next_h_val, curr, next_timestep,
                                      get<1>(interval), get<1>(interval), get<2>(interval),
                                      next_collisions);
             next->wait_at_goal = (curr->location == goal_location);
