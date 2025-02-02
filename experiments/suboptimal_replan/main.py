@@ -32,7 +32,7 @@ map_names = ["Berlin_1_256", "Boston_0_256", "brc202d", "den520d"]
 
 # list all maps
 for map_name in tqdm.tqdm(map_names, desc="outer", position=0):
-    print("Map:", map_name)
+    # print("Map:", map_name)
     map_path = mapf_benchmark_dir + "mapf-map/" + map_name + ".map"
     results = [] 
 
@@ -41,8 +41,8 @@ for map_name in tqdm.tqdm(map_names, desc="outer", position=0):
         scen_path = construct_scen_path(scen_dir, map_name, s)
 
         exp = construct_experiment(solver_path2, map_path, scen_path, results_file, agent_num, t, None)
-        print(" ".join(exp))
-        exit()
+        # print(" ".join(exp))
+        # exit()
         try:
             res = subprocess.check_output(exp)[:-1].decode('UTF-8')
         except:
@@ -50,6 +50,7 @@ for map_name in tqdm.tqdm(map_names, desc="outer", position=0):
             print(" ".join(map(str, exp)))
 
         for w in [1.0, 1.1, 1.5, 2, 5]:
+        # for w in [1.0, 1.1]:
             # construct experiment for improved
             exp = construct_experiment(solver_path, map_path, scen_path, results_file, agent_num, t, w)
             # print(" ".join(exp))

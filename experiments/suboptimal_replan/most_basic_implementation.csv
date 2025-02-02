@@ -1,0 +1,16 @@
+runtime,solution cost,initial solution cost,lower bound,sum of distance,iterations,group size,runtime of initial solution,restart times,area under curve,LL expanded nodes,LL generated,LL reopened,LL runs,preprocessing runtime,solver name, ,instance name, avg single replan, avg_replan
+20.0013,88531,96655,88354,88354,2184,6.55108,0.438234,0,27566,6390156,15593060,686992,14786,3.17369,LNS(PP,PP),../../MAPF-benchmark/mapf-scen-random/scen-random/Berlin_1_256-random-1.scen,0.00105456,0.00876741
+20.0013,88531,96655,88354,88354,2224,6.5614,0.431676,0,27306.2,6506348,15906889,687030,15070,3.30182,LNS(PP,PP),../../MAPF-benchmark/mapf-scen-random/scen-random/Berlin_1_256-random-1.scen,0.00102465,0.0086091
+45.6709,0,-1,88354,88354,1,-1,45.6709,0,2268150,58173590,994729,57271474,41,3.33439,LNS(PP,PP),../../MAPF-benchmark/mapf-scen-random/scen-random/Berlin_1_256-random-1.scen,1.03831,0
+20.0004,91571,99676,91053,91053,1842,6.80608,0.481889,0,38094.8,6252113,16126098,153573,13021,3.2548,LNS(PP,PP),../../MAPF-benchmark/mapf-scen-random/scen-random/Berlin_1_256-random-2.scen,0.00120062,0.010397
+20.0005,91570,99676,91053,91053,1846,6.80325,0.496733,0,38142.4,6261675,16152618,153573,13045,3.38505,LNS(PP,PP),../../MAPF-benchmark/mapf-scen-random/scen-random/Berlin_1_256-random-2.scen,0.00118841,0.0103625
+23.0163,0,-1,91053,91053,1,-1,23.0163,0,274647,30654796,106189,30553304,3,3.4397,LNS(PP,PP),../../MAPF-benchmark/mapf-scen-random/scen-random/Berlin_1_256-random-2.scen,7.19555,0
+20.0005,90742,98689,90158,90158,1656,6.92931,2.53272,0,36473.9,7641281,14747665,2020650,11961,3.28755,LNS(PP,PP),../../MAPF-benchmark/mapf-scen-random/scen-random/Berlin_1_256-random-3.scen,0.00133434,0.0103523
+20.0002,90736,98689,90158,90158,1712,6.91233,2.59409,0,35637.4,7782788,15134324,2021096,12312,3.40932,LNS(PP,PP),../../MAPF-benchmark/mapf-scen-random/scen-random/Berlin_1_256-random-3.scen,0.00128764,0.00997124
+20.6939,0,-1,90158,90158,1,-1,20.6939,0,62557.5,31798197,444613,31383517,16,3.43288,LNS(PP,PP),../../MAPF-benchmark/mapf-scen-random/scen-random/Berlin_1_256-random-3.scen,1.18929,0
+20.0007,88724,95094,88572,88572,2027,6.6387,0.413956,0,12088.2,5451678,14793486,63116,13945,3.29288,LNS(PP,PP),../../MAPF-benchmark/mapf-scen-random/scen-random/Berlin_1_256-random-4.scen,0.00109863,0.00946248
+20.0002,88724,95094,88572,88572,2129,6.64004,0.421526,0,12073.6,5692382,15477045,63163,14622,3.49363,LNS(PP,PP),../../MAPF-benchmark/mapf-scen-random/scen-random/Berlin_1_256-random-4.scen,0.00104204,0.00899722
+35.2767,0,-1,88572,88572,1,-1,35.2767,0,1353100,43820413,474460,43366766,23,3.49599,LNS(PP,PP),../../MAPF-benchmark/mapf-scen-random/scen-random/Berlin_1_256-random-4.scen,1.44192,0
+22.1498,0,-1,88354,88354,1,-1,22.1498,0,189945,1126928,108683,1025684,5,3.18013,LNS(PP,PP),../../MAPF-benchmark/mapf-scen-random/scen-random/Berlin_1_256-random-1.scen,4.41671,0
+,,,,,,,,,,,,,,,,,,,
+,"In this implementation the code was the same as original, just in creation of the sipp node instead of using h_val, it was using w*h_val. This makes the hval converge to very large numbers very soon",,,,,,,,,,,,,,,,,,

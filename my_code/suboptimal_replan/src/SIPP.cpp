@@ -109,9 +109,11 @@ Path SIPP::findPath(const ConstraintTable& constraint_table)
                 // dont tolerate collisions
                 if (next_collisions > 0) continue;
 
-                auto next_h_val = max(my_heuristic[next_location], ((next_collisions > 0?
-                    holding_time : curr->getFVal()) - next_timestep)); // path max
-                //if (next_h_val != my_heuristic[next_location]) std::cout << "Next h val is:" << next_h_val << ", my heuristic is " << my_heuristic[next_location] << " cur f " << curr->getFVal() << " next_timestep " << next_timestep << std::endl;
+                // auto next_h_val = max(my_heuristic[next_location], ((next_collisions > 0?
+                //     holding_time : curr->getFVal()) - next_timestep)); // path max ORIGINAL
+                auto next_h_val = max((double) my_heuristic[next_location], ((next_collisions > 0?
+                    holding_time : curr->g_val + (curr->h_val)/w) - next_timestep)); // path max FVAL compensation
+                // if (next_h_val != my_heuristic[next_location]) std::cout << "Next h val is:" << next_h_val << ", my heuristic is " << my_heuristic[next_location] << " cur f " << curr->getFVal() << " next_timestep " << next_timestep << std::endl;
                 // auto next_h_val = w*my_heuristic[next_location];
                 // double next_h_val = (double) my_heuristic[next_location];
                 // double fval = curr->g_val + curr->h_val/w;
@@ -120,6 +122,7 @@ Path SIPP::findPath(const ConstraintTable& constraint_table)
                 // generate (maybe temporary) node
                 auto next = new SIPPNode(next_location, next_timestep, w*next_h_val, curr, next_timestep,
                                          next_high_generation, next_high_expansion, next_v_collision, next_collisions);
+                //std::cout << "Next h val is: " << next_h_val << ", node h is: " << next->h_val << ", my heuristic is " << my_heuristic[next_location] << " cur f " << curr->getFVal() << " next_timestep " << next_timestep << std::endl;
                 // try to retrieve it from the hash table
                 if (dominanceCheck(next))
                     pushNodeToOpen(next);
@@ -133,7 +136,8 @@ Path SIPP::findPath(const ConstraintTable& constraint_table)
                 w*get<0>(interval) + curr->h_val <= w*reservation_table.constraint_table.length_max)
         {
             auto next_timestep = get<0>(interval);
-            auto next_h_val = max(my_heuristic[curr->location], ((get<2>(interval) ? holding_time : curr->getFVal()) - next_timestep)); // path max
+            // auto next_h_val = max(my_heuristic[curr->location], ((get<2>(interval) ? holding_time : curr->getFVal()) - next_timestep)); // path max ORIGINAL
+            auto next_h_val = max((double) my_heuristic[curr->location], ((get<2>(interval) ? holding_time : curr->g_val + (curr->h_val/w)) - next_timestep)); // path max Fval compensation
             // auto next_h_val = w*my_heuristic[curr->location];
             // double next_h_val = (double) my_heuristic[curr->location];
             // double fval = curr->g_val + curr->h_val/w;

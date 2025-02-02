@@ -18,10 +18,10 @@
  *
  * @return
  */
-sf::Color generate_random_color(int mix_r, int mix_g, int mix_b, double mix_ratio)
+sf::Color generate_random_color(const int mix_r, const int mix_g, const int mix_b, const double mix_ratio)
 {
-  int r = (int)std::round((std::rand() % 256) * (1 - mix_ratio) + mix_r * mix_ratio);
-  int g = (int)std::round((std::rand() % 256) * (1 - mix_ratio) + mix_g * mix_ratio);
-  int b = (int)std::round((std::rand() % 256) * (1 - mix_ratio) + mix_b * mix_ratio);
+  const int r = (int)std::round((std::rand() % 256) * (1 - mix_ratio) + mix_r * mix_ratio);
+  const int g = (int)std::round((std::rand() % 256) * (1 - mix_ratio) + mix_g * mix_ratio);
+  const int b = (int)std::round((std::rand() % 256) * (1 - mix_ratio) + mix_b * mix_ratio);
   return sf::Color(r, g, b);
 }
