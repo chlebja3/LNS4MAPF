@@ -27,7 +27,7 @@ TEST(ColorGeneration, ValueCheck)
 }
 
 // test, whether nodes are compared the right way
-TEST(NodeComparisonGt, ValueCheck)
+TEST(NodeComparison, GreaterThan)
 {
   // ints
   EXPECT_TRUE(Node(1, 2) > Node(2, 0)) << "Wrong comparison positive.";
@@ -53,7 +53,7 @@ TEST(NodeComparisonGt, ValueCheck)
   EXPECT_FALSE(Node(-3, -5) > Node(-3, -5)) << "Wrong comparison on equal.";
 }
 
-TEST(NodeComparisonLt, ValueCheck)
+TEST(NodeComparison, LessThan)
 {
   // ints
   EXPECT_FALSE(Node(1, 2) < Node(2, 0)) << "Wrong comparison positive.";
@@ -79,7 +79,7 @@ TEST(NodeComparisonLt, ValueCheck)
   EXPECT_FALSE(Node(-3, -5) < Node(-3, -5)) << "Wrong comparison on equal.";
 }
 
-TEST(NodeComparisonEq, ValueCheck)
+TEST(NodeComparison, Equal)
 {
   EXPECT_TRUE(Node(0, 0) == Node(0, 0)) << "Wrong comparison on equal.";
   EXPECT_TRUE(Node(1, 2) == Node(1, 2)) << "Wrong comparison on equal.";
