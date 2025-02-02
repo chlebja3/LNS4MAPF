@@ -44,12 +44,12 @@ Path SIPP::findPath(const ConstraintTable& constraint_table)
     auto holding_time = constraint_table.getHoldingTime(goal_location, constraint_table.length_min);
     auto last_target_collision_time = constraint_table.getLastCollisionTimestep(goal_location);
     // generate start and add it to the OPEN & FOCAL list
-    // auto h = max(max(my_heuristic[start_location], holding_time), (last_target_collision_time + 1));
+    auto h = max(max(my_heuristic[start_location], holding_time), (last_target_collision_time + 1));
     // if (holding_time != last_target_collision_time + 1)
     // {
     //   std::cout << "Holding time: " << holding_time << ", ltc_time + 1: " << last_target_collision_time + 1 << std::endl; 
     // }
-    auto h = max(my_heuristic[start_location], (last_target_collision_time + 1));
+    // auto h = max(my_heuristic[start_location], (last_target_collision_time + 1));
     // double h = (double) my_heuristic[start_location];
     // if (h > holding_time) h = h*w;
     // else h = (double) holding_time*w;
@@ -81,7 +81,6 @@ Path SIPP::findPath(const ConstraintTable& constraint_table)
                 break;
             }
             // generate a goal node
-            /* we dont want to allow any collisions
             auto goal = new SIPPNode(*curr);
             goal->is_goal = true;
             goal->h_val = 0;
@@ -91,7 +90,6 @@ Path SIPP::findPath(const ConstraintTable& constraint_table)
                 pushNodeToOpen(goal);
             else
                 delete goal;
-            */
         }
 
         for (int next_location : instance.getNeighbors(curr->location)) // move to neighboring locations
