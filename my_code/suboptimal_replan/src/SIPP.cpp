@@ -49,7 +49,7 @@ Path SIPP::findPath(const ConstraintTable& constraint_table)
     // {
     //   std::cout << "Holding time: " << holding_time << ", ltc_time + 1: " << last_target_collision_time + 1 << std::endl; 
     // }
-    auto h = max(my_heuristic[start_location], (double)(last_target_collision_time + 1));
+    auto h = max(my_heuristic[start_location], (last_target_collision_time + 1));
     // double h = (double) my_heuristic[start_location];
     // if (h > holding_time) h = h*w;
     // else h = (double) holding_time*w;
