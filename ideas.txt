@@ -65,3 +65,9 @@ prohlednout implementaci sippu
 # zkusit porovnavat v compare funkci misto f: g + w*h
 # zacit psat teoretickou cast a co jsem doted udelal,
 # schuze po Novem roce prvni utery
+
+
+# LACAM solver, prozkoumat, pridat do overview state of the art
+# do konce unora se pokusit zprovoznit svuj solver
+# report neni treba
+# prepsat report do diplomkoveho textu

@@ -2,13 +2,23 @@
  * Author: Jan Chleboun
  * Date: 08-01-2025
  * Email: chlebja3@fel.cvut.cz
- * Description: 
+ * Description:
  */
 
 #pragma once
 #include <string>
 #include <vector>
 #include "utils.h"
+
+class Map
+{
+public:
+  int                  width  = 0;
+  int                  height = 0;
+  std::vector<uint8_t> data;
+
+  void print() const;
+};
 
 class Instance
 {
@@ -34,7 +44,7 @@ public:
   void print_agents() const;
 
   // function to obtain the map data
-  std::vector<uint8_t> get_map_data() const;
+  const Map& get_map_data() const;
 
   // functions to obtain the agent starts and goals
   std::vector<std::tuple<int, int>> get_start_positions() const;
@@ -47,7 +57,7 @@ private:
   std::string                       map_fname;
   std::string                       scene_fname;
   std::string                       type;
-  std::vector<uint8_t>              map_data;
+  Map                               map_data;
   std::vector<std::tuple<int, int>> start_positions;
   std::vector<std::tuple<int, int>> goal_positions;
   std::vector<Path>                 optimal_paths;

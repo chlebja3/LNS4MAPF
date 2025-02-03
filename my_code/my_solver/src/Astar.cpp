@@ -11,6 +11,7 @@
 #include <unordered_set>
 #include "Astar.h"
 
+
 class AstarNode : Node
 {
 public:
@@ -23,9 +24,9 @@ public:
     return x == other.x && y == other.y && g == other.g && h == other.h;
   }
 
-  struct compare
+  struct compare_node_ptrs
   {
-    bool operator()(const std::unique_ptr<AstarNode> n1, const std::unique_ptr<AstarNode> n2) const
+    bool operator()(const std::shared_ptr<AstarNode> n1, const std::shared_ptr<AstarNode> n2) const
     {
       // compare f
       if (n1->f < n2->f)
@@ -42,26 +43,34 @@ public:
     }
   };
 
-  struct hash
+  struct hash_node_ptrs
   {
-    size_t operator()(const AstarNode& node) const
+    size_t operator()(const std::shared_ptr<AstarNode>& node) const
     {
       // hash x and y, bit shift to break the symmetry (x, y) wont have the same hash as (y, x) and xor to finalize
-      return std::hash<int>()(node.x) ^ (std::hash<int>()(node.y) << 1);
+      return std::hash<int>()(node.get()->x) ^ (std::hash<int>()(node.get()->y) << 1);
     }
   };
 
-  struct equal
+  struct equal_node_ptrs
   {
-    bool operator()(const AstarNode& n1, const AstarNode& n2) const
+    bool operator()(const std::shared_ptr<AstarNode>& n1, const std::shared_ptr<AstarNode>& n2) const
     {
-      return n1 == n2;
+      return *n1.get() == *n2.get();
     }
   };
 };
 
-Path ASTAR::find_path(const std::tuple<int, int>& start, const std::tuple<int, int>& goal, const std::vector<uint8_t>& map_data, const int map_width,
-                      const int map_height)
+
+namespace ASTAR
+{
+typedef std::priority_queue<std::shared_ptr<AstarNode>, std::vector<std::shared_ptr<AstarNode>>, AstarNode::compare_node_ptrs> PriorityQueue;
+typedef std::unordered_set<std::shared_ptr<AstarNode>, AstarNode::hash_node_ptrs, AstarNode::equal_node_ptrs>                  UnorderedSet;
+
+void expand_node(const AstarNode& node, const Map& map_data, ASTAR::PriorityQueue& open_list, ASTAR::UnorderedSet& known);
+}  // namespace ASTAR
+
+Path ASTAR::find_path(const std::tuple<int, int>& start, const std::tuple<int, int>& goal, const Map& map_data)
 {
   const int start_x = std::get<0>(start);
   const int start_y = std::get<1>(start);
@@ -71,48 +80,56 @@ Path ASTAR::find_path(const std::tuple<int, int>& start, const std::tuple<int, i
   Path path;
 
   // check whether start and goal valid
-  if (start_x < 0 || start_y < 0 || start_x >= map_width || start_y >= map_height)
+  if (start_x < 0 || start_y < 0 || start_x >= map_data.width || start_y >= map_data.height)
     return path;
-  if (goal_x < 0 || goal_y < 0 || goal_x >= map_width || goal_y >= map_height)
+  if (goal_x < 0 || goal_y < 0 || goal_x >= map_data.width || goal_y >= map_data.height)
     return path;
 
   // check whether start and goal not obstructed
-  if (map_data[start_y * map_width + start_x * map_height] == 1 || map_data[start_y * map_width + start_x * map_height] == 1)
+  if (map_data.data[start_y * map_data.width + start_x * map_data.height] == 1 || map_data.data[start_y * map_data.width + start_x * map_data.height] == 1)
     return path;
 
   // calculate the heuristic
   double h = std::hypot(goal_x - start_x, goal_y - start_y);
 
   // create frontier - possible datastructures priority_queue, ordered set and pairing heap, TODO try all of them
-  std::priority_queue<std::unique_ptr<AstarNode>, std::vector<std::unique_ptr<AstarNode>>, AstarNode::compare> open_list;
+  ASTAR::PriorityQueue open_list;
 
   // create the start node
-  open_list.push(std::make_unique<AstarNode>(start_x, start_y, 0, h));
+  open_list.push(std::make_shared<AstarNode>(start_x, start_y, 0, h));
 
   // create known nodes database
-  std::unordered_set<AstarNode, AstarNode::hash, AstarNode::equal> known;
+  ASTAR::UnorderedSet known;
 
   // main loop
   while (!open_list.empty())
     {
       // pop the node to be processed
-      std::unique_ptr<AstarNode> current = std::move(const_cast<std::unique_ptr<AstarNode>&>(open_list.top()));
+      std::shared_ptr<AstarNode> current = std::move(open_list.top());
       open_list.pop();
 
       // check whether node is in known set
-      if (known.find(*current.get()) != known.end())
+      if (known.find(current) != known.end())
         continue;
-      else
-        known.insert(*current.get());
-
-      //TODO doesnt this introduce memory leaks?
-
-      // add to known nodes
 
       // check whether goal is reached
+      if (current.get()->x == goal_x && current.get()->y == goal_y)
+        {
+          // TODO extract the path
+
+          break;
+        }
+
+      // add to known nodes
+      known.insert(current);
+
+      // expand current node
     }
 
 
   return path;
 }
 
+void ASTAR::expand_node(const AstarNode& node, const Map& map_data, ASTAR::PriorityQueue& open_list, ASTAR::UnorderedSet& known)
+{
+}

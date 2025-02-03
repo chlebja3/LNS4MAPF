@@ -14,6 +14,20 @@
 
 #include "Instance.h"
 
+void Map::print() const
+{
+  for (int i = 0; i < (int)data.size(); i++)
+    {
+      std::cout << (int)data[i];
+      if (i % width == height - 1)
+        {
+          std::cout << std::endl;
+        }
+      else
+        std::cout << " ";
+    }
+}
+
 Instance::Instance(const std::string& map_fname, const std::string& scene_fname, int num_of_agents, int num_of_rows, int num_of_cols)
     : num_of_cols(num_of_cols), num_of_rows(num_of_rows), num_of_agents(num_of_agents), map_fname(map_fname), scene_fname(scene_fname)
 {
@@ -83,12 +97,12 @@ bool Instance::load_map()
                   // treat . as free cell
                   if (line[i] == '.')
                     {
-                      map_data.push_back(0);
+                      map_data.data.push_back(0);
                     }
                   // treat @, T as obstacle
                   else if (line[i] == '@' || line[i] == 'T')
                     {
-                      map_data.push_back(1);
+                      map_data.data.push_back(1);
                     }
                   // report all other symbols as unknown
                   else
@@ -97,22 +111,23 @@ bool Instance::load_map()
                     }
                 }
               // check whether the number of cells in this row is consistent with num_of_columns
-              if (map_data.size() % num_of_cols != 0)
+              if (map_data.data.size() % num_of_cols != 0)
                 {
                   throw std::runtime_error("Inconsistent number of symbols in a row in the map description.");
                 }
             }
           // check whether the number of lines is consistent with num_of_rows
-          if ((int)map_data.size() != num_of_cols * num_of_rows)
+          if ((int)map_data.data.size() != num_of_cols * num_of_rows)
             {
               throw std::runtime_error("Inconsistent number of rows in the map description.");
             }
         }
     }
 
-  // cloase the map file
+  // close the map file
   map_file.close();
-
+  map_data.width = num_of_cols;
+  map_data.height = num_of_rows;
   return true;
 }
 
@@ -180,20 +195,6 @@ bool Instance::load_scene()
   return true;
 }
 
-void Instance::print_map() const
-{
-  for (int i = 0; i < (int)map_data.size(); i++)
-    {
-      std::cout << (int)map_data[i];
-      if (i % num_of_cols == num_of_cols - 1)
-        {
-          std::cout << std::endl;
-        }
-      else
-        std::cout << " ";
-    }
-}
-
 void Instance::print_agents() const
 {
   for (int i = 0; i < (int)start_positions.size(); i++)
@@ -203,7 +204,12 @@ void Instance::print_agents() const
     }
 }
 
-std::vector<uint8_t> Instance::get_map_data() const
+void Instance::print_map() const
+{
+  map_data.print();
+}
+
+const Map& Instance::get_map_data() const
 {
   return map_data;  // should copy the vector
 }
