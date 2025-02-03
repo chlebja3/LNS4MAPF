@@ -33,7 +33,7 @@ Visualizer::Visualizer(Instance& instance)
     }
 
   // create the map texture
-  mapToTexture(instance.get_map_data(), instance.num_of_rows, instance.num_of_cols);
+  mapToTexture(instance.get_map_data());
   std::cout << "Initialized visualizer." << std::endl;
 }
 
@@ -155,24 +155,24 @@ void Visualizer::run()
 }
 
 // Render the map onto a texture
-void Visualizer::mapToTexture(const std::vector<std::uint8_t>& map_data, int num_of_rows, int num_of_columns)
+void Visualizer::mapToTexture(const Map& map_data)
 {
   // initialize the texture
   sf::RenderTexture map_render_texture;
-  map_render_texture.create(num_of_columns * CELL_SIZE, num_of_rows * CELL_SIZE);
+  map_render_texture.create(map_data.width * CELL_SIZE, map_data.height * CELL_SIZE);
 
   // clear the texture with a background color
   map_render_texture.clear(sf::Color::White);
 
   // Draw the grid onto the texture
-  for (int y = 0; y < num_of_rows; y++)
+  for (int y = 0; y < map_data.height; y++)
     {
-      for (int x = 0; x < num_of_columns; x++)
+      for (int x = 0; x < map_data.width; x++)
         {
           // create the cell
           sf::RectangleShape cell(sf::Vector2f(CELL_SIZE, CELL_SIZE));
           cell.setPosition(x * CELL_SIZE, y * CELL_SIZE);
-          if ((int)map_data[y * num_of_columns + x] == 1)
+          if ((int)map_data.data[y * map_data.width + x] == 1)
             {
               // obstacles
               cell.setFillColor(sf::Color::Black);
@@ -199,7 +199,7 @@ void Visualizer::mapToTexture(const std::vector<std::uint8_t>& map_data, int num
   // turn on antialiasing
   // map_texture.setSmooth(true);
   map_sprite = sf::Sprite(map_texture);
-  scale      = (double)WINDOW_WIDTH / (CELL_SIZE * num_of_columns);
+  scale      = (double)WINDOW_WIDTH / (CELL_SIZE * map_data.width);
   map_sprite.setScale(sf::Vector2f(scale, scale));
 }
 
@@ -208,8 +208,8 @@ void Visualizer::draw_agents(sf::RenderWindow& window)
   agents_circles.clear();
   for (int i = 0; i < (int)start_positions.size(); i++)
     {
-      int x = std::get<0>(start_positions[i]);
-      int y = std::get<1>(start_positions[i]);
+      const int x = start_positions[i].x;
+      const int y = start_positions[i].y;
       // create shape
       agents_circles.push_back(sf::CircleShape((double)(CELL_SIZE - 2 * BORDER_SIZE) / 2));
       // set color
@@ -227,8 +227,8 @@ void Visualizer::draw_goals(sf::RenderWindow& window)
   agents_circles.clear();
   for (int i = 0; i < (int)start_positions.size(); i++)
     {
-      int x = std::get<0>(goal_positions[i]);
-      int y = std::get<1>(goal_positions[i]);
+      const int x = goal_positions[i].x;
+      const int y = goal_positions[i].y;
       // create shape
       agents_circles.push_back(sf::CircleShape((double)(CELL_SIZE - 2 * BORDER_SIZE) / 2));
       // set color

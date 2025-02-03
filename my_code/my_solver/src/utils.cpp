@@ -2,13 +2,13 @@
  * Author: Jan Chleboun
  * Date: 08-01-2025
  * Email: chlebja3@fel.cvut.cz
- * Description: 
+ * Description:
  */
 
 #include <utils.h>
 #include <cmath>
 
-Node::Node(const double g, const double h) : g(g), h(h), f(g+h) {};
+Node::Node(const double g, const double h) : g(g), h(h), f(g + h){};
 
 bool Node::operator>(const Node& other)
 {
@@ -24,6 +24,27 @@ bool Node::operator==(const Node& other)
 {
   return g == other.g && h == other.h;
 }
+
+
+Point2d::Point2d(int x, int y) : x(x), y(y){};
+
+Point2d Point2d::operator+(const Point2d& other) const
+{
+  Point2d ret(x + other.x, y + other.y);
+  return ret;
+}
+
+bool Point2d::operator==(const Point2d& other) const
+{
+  return x == other.x && y == other.y;
+}
+
+void Point2d::add(const Point2d& other)
+{
+  x += other.x;
+  y += other.y;
+}
+
 
 /**
  * @brief Generate a random color. To make the color palette look more visually pleasing, mix the random color with (mix_r, mix_g, mix_b).

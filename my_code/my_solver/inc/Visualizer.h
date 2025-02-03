@@ -28,7 +28,7 @@ public:
   void run();
 
   // create a texture from the map
-  void mapToTexture(const std::vector<std::uint8_t>& map_data, int num_of_rows, int num_of_columns);
+  void mapToTexture(const Map& map_data);
 
   // draw the agents
   void draw_agents(sf::RenderWindow& window);
@@ -39,8 +39,8 @@ private:
   std::atomic<bool>                 running;     // indicator whether the thread should be running
   int                               map_width;
   int                               map_height;
-  std::vector<std::tuple<int, int>> start_positions;
-  std::vector<std::tuple<int, int>> goal_positions;
+  std::vector<Point2d> start_positions;
+  std::vector<Point2d> goal_positions;
 
   // drawing objects
   sf::Texture                  map_texture;  // the map texture

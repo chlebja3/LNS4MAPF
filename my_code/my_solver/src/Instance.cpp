@@ -2,7 +2,7 @@
  * Author: Jan Chleboun
  * Date: 08-01-2025
  * Email: chlebja3@fel.cvut.cz
- * Description: 
+ * Description:
  */
 
 #include <iostream>
@@ -10,7 +10,6 @@
 #include <bits/stdc++.h>
 #include <boost/algorithm/string.hpp>
 #include <stdexcept>
-#include <tuple>
 
 #include "Instance.h"
 
@@ -126,7 +125,7 @@ bool Instance::load_map()
 
   // close the map file
   map_file.close();
-  map_data.width = num_of_cols;
+  map_data.width  = num_of_cols;
   map_data.height = num_of_rows;
   return true;
 }
@@ -165,14 +164,14 @@ bool Instance::load_scene()
       // read the start and goal positions
       try
         {
-          int start_x = stoi(split_line[4]);
-          int start_y = stoi(split_line[5]);
-          int goal_x  = stoi(split_line[6]);
-          int goal_y  = stoi(split_line[7]);
+          const int start_x = stoi(split_line[4]);
+          const int start_y = stoi(split_line[5]);
+          const int goal_x  = stoi(split_line[6]);
+          const int goal_y  = stoi(split_line[7]);
 
           // store the positions in the list
-          start_positions.push_back(std::make_tuple(start_x, start_y));
-          goal_positions.push_back(std::make_tuple(goal_x, goal_y));
+          start_positions.emplace_back(start_x, start_y);
+          goal_positions.emplace_back(goal_x, goal_y);
           loaded_agents++;
         }
       catch (std::exception& e)
@@ -199,8 +198,8 @@ void Instance::print_agents() const
 {
   for (int i = 0; i < (int)start_positions.size(); i++)
     {
-      std::cout << "Agent " << i << ": \t start (" << std::get<0>(start_positions[i]) << "," << std::get<1>(start_positions[i]) << ") \t"
-                << "goal (" << std::get<0>(goal_positions[i]) << "," << std::get<1>(goal_positions[i]) << ")" << std::endl;
+      std::cout << "Agent " << i << ": \t start (" << start_positions[i].x << "," << start_positions[i].y << ") \t"
+                << "goal (" << goal_positions[i].x << "," << goal_positions[i].y << ")" << std::endl;
     }
 }
 
@@ -214,12 +213,12 @@ const Map& Instance::get_map_data() const
   return map_data;  // should copy the vector
 }
 
-std::vector<std::tuple<int, int>> Instance::get_start_positions() const
+std::vector<Point2d> Instance::get_start_positions() const
 {
   return start_positions;  // should copy the vector
 }
 
-std::vector<std::tuple<int, int>> Instance::get_goal_positions() const
+std::vector<Point2d> Instance::get_goal_positions() const
 {
   return goal_positions;  // should copy the vector
 }

@@ -10,16 +10,6 @@
 #include <vector>
 #include "utils.h"
 
-class Map
-{
-public:
-  int                  width  = 0;
-  int                  height = 0;
-  std::vector<uint8_t> data;
-
-  void print() const;
-};
-
 class Instance
 {
 public:
@@ -47,19 +37,19 @@ public:
   const Map& get_map_data() const;
 
   // functions to obtain the agent starts and goals
-  std::vector<std::tuple<int, int>> get_start_positions() const;
-  std::vector<std::tuple<int, int>> get_goal_positions() const;
+  std::vector<Point2d> get_start_positions() const;
+  std::vector<Point2d> get_goal_positions() const;
 
   // function to calculate the optimal paths ignoring the other agents
   void calculate_optimal_paths();
 
 private:
-  std::string                       map_fname;
-  std::string                       scene_fname;
-  std::string                       type;
-  Map                               map_data;
-  std::vector<std::tuple<int, int>> start_positions;
-  std::vector<std::tuple<int, int>> goal_positions;
-  std::vector<Path>                 optimal_paths;
+  std::string          map_fname;
+  std::string          scene_fname;
+  std::string          type;
+  Map                  map_data;
+  std::vector<Point2d> start_positions;
+  std::vector<Point2d> goal_positions;
+  std::vector<Path>    optimal_paths;
 };
 

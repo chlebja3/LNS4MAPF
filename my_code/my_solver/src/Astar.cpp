@@ -132,4 +132,5 @@ Path ASTAR::find_path(const std::tuple<int, int>& start, const std::tuple<int, i
 
 void ASTAR::expand_node(const AstarNode& node, const Map& map_data, ASTAR::PriorityQueue& open_list, ASTAR::UnorderedSet& known)
 {
+
 }

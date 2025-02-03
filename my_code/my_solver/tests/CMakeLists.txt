@@ -27,7 +27,7 @@ FetchContent_MakeAvailable(benchmark)
 endif()
 
 # Create a unit test executable
-add_executable(simple_tests simple_tests.cpp)
+add_executable(simple_tests simple_tests.cpp utils_tests.cpp)
 
 # Link GoogleTest and the MAPF library
 target_link_libraries(simple_tests PRIVATE MAPF_lib GTest::GTest GTest::Main)
