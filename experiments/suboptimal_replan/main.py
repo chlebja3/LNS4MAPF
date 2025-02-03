@@ -41,8 +41,8 @@ for map_name in tqdm.tqdm(map_names, desc="outer", position=0):
         scen_path = construct_scen_path(scen_dir, map_name, s)
 
         exp = construct_experiment(solver_path2, map_path, scen_path, results_file, agent_num, t, None)
-        print(" ".join(exp))
-        exit()
+        # print(" ".join(exp))
+        # exit()
         try:
             res = subprocess.check_output(exp)[:-1].decode('UTF-8')
         except:
