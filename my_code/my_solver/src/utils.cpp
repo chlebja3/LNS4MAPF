@@ -45,17 +45,41 @@ void Point2d::add(const Point2d& other)
   y += other.y;
 }
 
+bool Map::is_in(const Point2d& p) const
+{
+  return !(p.x < 0 || p.x >= width || p.y < 0 || p.y >= height);
+}
 
-/**
- * @brief Generate a random color. To make the color palette look more visually pleasing, mix the random color with (mix_r, mix_g, mix_b).
- *
- * @param mix_r The red channel value of the mix color, recommended value is 255.
- * @param mix_g The green channel value of the mix color, recommended value is 255.
- * @param mix_b The blue channel value of the mix color, recommended value is 255.
- * @param mix_ratio The ratio at which to blend the randomly generated color with the mix color.
- *
- * @return
- */
+uint8_t Map::index(const Point2d& point) const
+{
+  if (!is_in(point))
+    return -1;
+  return data[point.y * width + point.x];
+}
+std::ostream& operator<<(std::ostream& os, Point2d const& p)
+{
+  return os << "(" << p.x << "," << p.y << ")";
+}
+
+std::vector<Point2d> find_neighbors(const Point2d& point, const Map& map_data)
+{
+  if (!map_data.is_in(point))
+    return {};  // invalid point
+  std::vector<Point2d>         ret;
+  const std::array<Point2d, 4> neighbors = {Point2d(0, 1), Point2d(1, 0), Point2d(0, -1), Point2d(-1, 0)};
+  for (auto& it : neighbors)
+    {
+      Point2d neigh = point + it;
+      if (!map_data.is_in(neigh))
+        continue;
+      if (map_data.index(neigh) != 0)
+        continue;
+      ret.push_back(neigh);
+    }
+  return ret;
+}
+
+// based on https://stackoverflow.com/questions/43044/algorithm-to-randomly-generate-an-aesthetically-pleasing-color-palette
 sf::Color generate_random_color(const int mix_r, const int mix_g, const int mix_b, const double mix_ratio)
 {
   const int r = (int)std::round((std::rand() % 256) * (1 - mix_ratio) + mix_r * mix_ratio);

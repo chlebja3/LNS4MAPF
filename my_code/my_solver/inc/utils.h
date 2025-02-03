@@ -9,18 +9,6 @@
 #include <SFML/Graphics.hpp>
 #include <vector>
 
-
-class Map
-{
-public:
-  int                  width  = 0;
-  int                  height = 0;
-  std::vector<uint8_t> data;
-
-  void print() const;
-};
-
-// an abstract node class
 class Node
 {
 public:
@@ -45,14 +33,45 @@ public:
 
   Point2d operator+(const Point2d& other) const;
   bool    operator==(const Point2d& other) const;
-  void add(const Point2d& other);
+  void    add(const Point2d& other);
+
+  friend std::ostream& operator<<(std::ostream& os, Point2d const& p);
+};
+
+class Map
+{
+public:
+  int                  width  = 0;
+  int                  height = 0;
+  std::vector<uint8_t> data;
+
+  void    print() const;
+  bool    is_in(const Point2d& point) const;
+  uint8_t index(const Point2d& point) const;
 };
 
 // define a path as a vectors of (int, int) tuples
 typedef std::vector<Point2d> Path;
+
+/**
+ * @brief Find unoccupied neighbour positions in the map.
+ *
+ * @param p The point whose neighborhood is checked.
+ * @param map_data The map.
+ *
+ * @return A vector of obstacle free neighbouring points.
+ */
 std::vector<Point2d> find_neighbors(const Point2d& p, const Map& map_data);
 
-// generate a random visually pleasing color, based on
-// https://stackoverflow.com/questions/43044/algorithm-to-randomly-generate-an-aesthetically-pleasing-color-palette
+/**
+ * @brief Generate a random color. To make the color palette look more visually pleasing, the random color is mixed with (mix_r, mix_g, mix_b).
+ *
+ * @param mix_r The red channel value of the mix color, recommended value is 255.
+ * @param mix_g The green channel value of the mix color, recommended value is 255.
+ * @param mix_b The blue channel value of the mix color, recommended value is 255.
+ * @param mix_ratio The ratio at which to blend the randomly generated color with the mix color.
+ *
+ * @return A random color.
+ */
 sf::Color generate_random_color(const int mix_r, const int mix_g, const int mix_b, const double mix_ratio = 0.5);
 

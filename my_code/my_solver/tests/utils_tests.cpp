@@ -6,6 +6,7 @@
  */
 
 #include <gtest/gtest.h>
+#include <gmock/gmock.h> 
 
 // Include the header where Point2d is declared
 #include "utils.h"
@@ -166,6 +167,101 @@ TEST(Point2dTest, LargeValues)
   EXPECT_EQ(result.y, 2000000000) << "Overflow not handled in y.";
 }
 
+// test finding the neighbours
+
+// Helper function to create a map
+Map create_test_map()
+{
+  Map map;
+  map.width  = 3;
+  map.height = 3;
+  map.data   = {
+    0, 1, 0, 
+    0, 0, 1, 
+    1, 0, 1};
+  return map;
+}
+
+// Test Case: Center Position (Now Order-Independent)
+TEST(FindNeighborsTest, CenterPosition) {
+    Map map = create_test_map();
+    Point2d pos(1, 1);
+
+    std::vector<Point2d> neighbors = find_neighbors(pos, map);
+
+    EXPECT_THAT(neighbors, ::testing::UnorderedElementsAre(Point2d(1, 2), Point2d(0, 1)));
+}
+
+// Test Case: Corner Position (Top-Left)
+TEST(FindNeighborsTest, TopLeftCorner)
+{
+  Map     map = create_test_map();
+  Point2d pos(0, 0);
+
+  std::vector<Point2d> neighbors = find_neighbors(pos, map);
+
+  std::vector<Point2d> expected = {{0, 1}};
+  EXPECT_EQ(neighbors, expected);
+}
+
+// Test Case: Corner Position (Bottom-Right)
+TEST(FindNeighborsTest, BottomRightCorner)
+{
+  Map     map = create_test_map();
+  Point2d pos(2, 2);
+
+  std::vector<Point2d> neighbors = find_neighbors(pos, map);
+
+  std::vector<Point2d> expected = {{1, 2}};  // No valid neighbors
+  EXPECT_EQ(neighbors, expected);
+}
+
+// Test Case: Left Edge (Now Order-Independent)
+TEST(FindNeighborsTest, LeftEdge) {
+    Map map = create_test_map();
+    Point2d pos(0, 1);
+
+    std::vector<Point2d> neighbors = find_neighbors(pos, map);
+
+    EXPECT_THAT(neighbors, ::testing::UnorderedElementsAre(Point2d(0, 0), Point2d(1, 1)));
+}
+
+// Test Case: Out-of-Bounds Position
+TEST(FindNeighborsTest, OutOfBounds)
+{
+  Map     map = create_test_map();
+  Point2d pos(-1, -1);
+
+  std::vector<Point2d> neighbors = find_neighbors(pos, map);
+
+  EXPECT_TRUE(neighbors.empty());  // Should return empty vector
+}
+
+// Test Case: Position Inside an Obstacle
+TEST(FindNeighborsTest, InsideObstacle)
+{
+  Map     map = create_test_map();
+  Point2d pos(2, 0);  // This is an obstacle
+
+  std::vector<Point2d> neighbors = find_neighbors(pos, map);
+
+  EXPECT_TRUE(neighbors.empty());  // No neighbors should be returned
+}
+
+// Test Case: Large Map Edge Case
+TEST(FindNeighborsTest, LargeMapEdge)
+{
+  Map map;
+  map.width  = 100;
+  map.height = 100;
+  map.data.resize(100 * 100, 0);  // All free cells
+
+  Point2d pos(99, 99);  // Bottom-right corner
+
+  std::vector<Point2d> neighbors = find_neighbors(pos, map);
+
+  EXPECT_THAT(neighbors, ::testing::UnorderedElementsAre(Point2d(98, 99), Point2d(99, 98)));
+}
 // Color Generation test
 // generate 100 random colors and check, whether they are valid (just a simple test to test the  unit test environment)
 TEST(ColorGeneration, ValueCheck)

@@ -30,7 +30,7 @@ endif()
 add_executable(simple_tests simple_tests.cpp utils_tests.cpp)
 
 # Link GoogleTest and the MAPF library
-target_link_libraries(simple_tests PRIVATE MAPF_lib GTest::GTest GTest::Main)
+target_link_libraries(simple_tests PRIVATE MAPF_lib GTest::GTest GTest::Main gmock)
 
 # Create a benchmark tests
 add_executable(benchmark_tests benchmark_tests.cpp)
