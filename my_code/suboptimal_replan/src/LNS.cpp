@@ -10,7 +10,8 @@ LNS::LNS(const Instance& instance, double time_limit, const string & init_algo_n
          use_init_lns(use_init_lns),init_destory_name(init_destory_name),
          path_table(instance.map_size), pipp_option(pipp_option), w(w)
 {
-    std::cout << "The suboptimality factor is: " << w <<std::endl;
+    LLNode::w = w;
+    std::cout << "The suboptimality factor is: " << w << ", LLnode:w is: "<< LLNode::w <<std::endl;
     start_time = Time::now();
     replan_time_limit = time_limit / 100;
     if (destory_name == "Adaptive")

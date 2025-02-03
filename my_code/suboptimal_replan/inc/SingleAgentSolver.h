@@ -14,13 +14,14 @@ public:
 	bool in_openlist = false;
 	bool wait_at_goal = false; // the action is to wait at the goal vertex or not. This is used for >lenghth constraints
     bool is_goal = false;
+  static double w;
 	// the following is used to comapre nodes in the OPEN list
 	struct compare_node
 	{
 		// returns true if n1 > n2 (note -- this gives us *min*-heap).
 		bool operator()(const LLNode* n1, const LLNode* n2) const
 		{
-            if (n1->g_val + n1->h_val == n2->g_val + n2->h_val)
+            if (n1->g_val + w*n1->h_val == n2->g_val + w*n2->h_val)
             {
                 if (n1->h_val == n2->h_val)
                 {
@@ -28,7 +29,7 @@ public:
                 }
                 return n1->h_val >= n2->h_val;  // break ties towards smaller h_vals (closer to goal location)
             }
-			return n1->g_val + n1->h_val >= n2->g_val + n2->h_val;
+			return n1->g_val + w*n1->h_val >= n2->g_val + w*n2->h_val;
 		}
 	};  // used by OPEN (heap) to compare nodes (top of the heap has min f-val, and then highest g-val)
 
@@ -39,7 +40,7 @@ public:
 		{
 			if (n1->num_of_conflicts == n2->num_of_conflicts)
 			{
-                if (n1->g_val + n1->h_val == n2->g_val + n2->h_val)
+                if (n1->g_val + w*n1->h_val == n2->g_val + w*n2->h_val)
                 {
                     if (n1->h_val == n2->h_val)
                     {
@@ -47,7 +48,7 @@ public:
                     }
                     return n1->h_val >= n2->h_val;  // break ties towards smaller h_vals (closer to goal location)
                 }
-                return n1->g_val+n1->h_val >= n2->g_val+n2->h_val;  // break ties towards smaller f_vals (prefer shorter solutions)
+                return n1->g_val+w*n1->h_val >= n2->g_val+w*n2->h_val;  // break ties towards smaller f_vals (prefer shorter solutions)
 			}
 			return n1->num_of_conflicts >= n2->num_of_conflicts;  // n1 > n2 if it has more conflicts
 		}
