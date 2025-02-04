@@ -23,7 +23,8 @@ static void BM_AStar_Sequential(benchmark::State& state)
   for (auto _ : state)
   {
     int             num_agents = state.range(0);
-    std::unique_ptr instance   = std::make_unique<Instance>(base_path + "/tests/test_maps/den520d.map", base_path + "/tests/test_scen/a.scen", num_agents);
+    std::unique_ptr instance =
+        std::make_unique<Instance>(base_path + "/tests/test_maps/den520d.map", base_path + "/tests/test_scen/den520d-random-0.scen", num_agents);
     instance->calculate_optimal_paths();
   }
 }
@@ -36,7 +37,7 @@ static void BM_AStar_Parallel(benchmark::State& state)
   std::string base_path = get_base_path();
   for (auto _ : state)
   {
-    int num_agents = state.range(0);
+    int             num_agents = state.range(0);
     std::unique_ptr instance =
         std::make_unique<Instance>(base_path + "/tests/test_maps/den520d.map", base_path + "/tests/test_scen/den520d-random-0.scen", num_agents);
     instance->calculate_optimal_paths_parallel();
