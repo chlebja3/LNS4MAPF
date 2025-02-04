@@ -49,9 +49,9 @@ void Computation::run()
     {
       std::cout << "Computation thread running" << std::endl;
       i++;
-      if (i >= 3)
+      if (i >= 1)
         running = false;
-      std::this_thread::sleep_for(std::chrono::seconds(5));
+      std::this_thread::sleep_for(std::chrono::seconds(3));
     }
   std::cout << "Computation thread ended" << std::endl;
 }

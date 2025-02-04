@@ -21,7 +21,7 @@
 #define CELL_SIZE 20
 #define BORDER_SIZE 1
 #define GOAL_VIS_THICKNESS 3
-#define LINE_WIDTH 3 // denominator od line width, so line width is 1/LINE_WIDTH * CELL_SIZE
+#define LINE_WIDTH 3  // denominator od line width, so line width is 1/LINE_WIDTH * CELL_SIZE
 
 
 Visualizer::Visualizer(Instance& instance)
@@ -144,11 +144,12 @@ void Visualizer::run()
     // draw the map
     window.draw(map_sprite);
 
-    // draw the optimal path
-    for (int i = 0; i < (int) optimal_paths.size(); i++)
-    {
-      draw_path(window, optimal_paths[i], agents_colors[i]);
-    }
+    // draw the optimal paths
+    // for (int i = 0; i < (int) optimal_paths.size(); i++)
+    //{
+    //  draw_path(window, optimal_paths[i], agents_colors[i]);
+    //}
+    draw_path(window, optimal_paths[0], agents_colors[0]);
 
     // draw the agents
     draw_agents(window);
@@ -266,15 +267,15 @@ void Visualizer::draw_arrow(sf::RenderWindow& window, const Point2d& start, cons
   sf::RectangleShape line;
   if (start.x == end.x)  // vertical
   {
-    shape = sf::Vector2f(CELL_SIZE / (float) LINE_WIDTH, CELL_SIZE + (float) CELL_SIZE/(2*LINE_WIDTH));
+    shape = sf::Vector2f(CELL_SIZE / (float)LINE_WIDTH, CELL_SIZE + (float)CELL_SIZE / LINE_WIDTH);
     line  = sf::RectangleShape(shape);
-    line.setPosition((x + (float)1 / LINE_WIDTH) * scale * CELL_SIZE, y * scale * CELL_SIZE);
+    line.setPosition((x + (float)1 / LINE_WIDTH) * scale * CELL_SIZE, (y - (float) 1/(2*LINE_WIDTH)) * scale * CELL_SIZE);
   }
   else  // horizontal
   {
-    shape = sf::Vector2f(CELL_SIZE + (float) CELL_SIZE/(2*LINE_WIDTH), CELL_SIZE / (float) LINE_WIDTH);
+    shape = sf::Vector2f(CELL_SIZE + (float)CELL_SIZE / LINE_WIDTH, CELL_SIZE / (float)LINE_WIDTH);
     line  = sf::RectangleShape(shape);
-    line.setPosition(x * scale * CELL_SIZE, (y + (float)1 / LINE_WIDTH) * scale * CELL_SIZE);
+    line.setPosition((x - (float) 1/(2*LINE_WIDTH)) * scale * CELL_SIZE, (y + (float)1 / LINE_WIDTH) * scale * CELL_SIZE);
   }
   line.setScale(sf::Vector2f(scale, scale));
   line.setFillColor(color);
