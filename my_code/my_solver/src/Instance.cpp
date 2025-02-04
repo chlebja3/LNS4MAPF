@@ -146,10 +146,14 @@ bool Instance::load_scene(void)
   {
     // split the line - the format is 'bucket, map, map_width, map_height, start_x, start_y, goal_x, goal_y, optimal_length'
     std::vector<std::string> split_line;
-    boost::split(split_line, line, boost::is_any_of("\t"));
+    boost::split(split_line, line, boost::is_any_of("\t "));
 
     // filter out invalid lines
-    if (split_line.size() != 9) continue;
+    if (split_line.size() != 9)
+    {
+      std::cout << "Invalid line in scen file: " << line << " length: " << split_line.size() <<  std::endl;
+      continue;
+    }
 
     // read the start and goal positions
     try

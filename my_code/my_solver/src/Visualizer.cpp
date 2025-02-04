@@ -9,6 +9,7 @@
 
 #include <SFML/Graphics.hpp>
 #include <SFML/Graphics/CircleShape.hpp>
+#include <SFML/Graphics/RectangleShape.hpp>
 #include <SFML/System/Vector2.hpp>
 #include <SFML/Window/WindowStyle.hpp>
 #include <cmath>
@@ -20,6 +21,7 @@
 #define CELL_SIZE 20
 #define BORDER_SIZE 1
 #define GOAL_VIS_THICKNESS 3
+#define LINE_WIDTH 3 // denominator od line width, so line width is 1/LINE_WIDTH * CELL_SIZE
 
 
 Visualizer::Visualizer(Instance& instance)
@@ -143,7 +145,10 @@ void Visualizer::run()
     window.draw(map_sprite);
 
     // draw the optimal path
-    draw_path(window, optimal_paths[0], sf::Color::Red);
+    for (int i = 0; i < (int) optimal_paths.size(); i++)
+    {
+      draw_path(window, optimal_paths[i], agents_colors[i]);
+    }
 
     // draw the agents
     draw_agents(window);
@@ -257,8 +262,20 @@ void Visualizer::draw_arrow(sf::RenderWindow& window, const Point2d& start, cons
   const double y = (end.y + start.y) / 2.;
 
   // draw the line
-  sf::RectangleShape line(sf::Vector2f(CELL_SIZE, CELL_SIZE));
-  line.setPosition(x * scale * CELL_SIZE, y * scale * CELL_SIZE);
+  sf::Vector2f       shape;
+  sf::RectangleShape line;
+  if (start.x == end.x)  // vertical
+  {
+    shape = sf::Vector2f(CELL_SIZE / (float) LINE_WIDTH, CELL_SIZE + (float) CELL_SIZE/(2*LINE_WIDTH));
+    line  = sf::RectangleShape(shape);
+    line.setPosition((x + (float)1 / LINE_WIDTH) * scale * CELL_SIZE, y * scale * CELL_SIZE);
+  }
+  else  // horizontal
+  {
+    shape = sf::Vector2f(CELL_SIZE + (float) CELL_SIZE/(2*LINE_WIDTH), CELL_SIZE / (float) LINE_WIDTH);
+    line  = sf::RectangleShape(shape);
+    line.setPosition(x * scale * CELL_SIZE, (y + (float)1 / LINE_WIDTH) * scale * CELL_SIZE);
+  }
   line.setScale(sf::Vector2f(scale, scale));
   line.setFillColor(color);
   window.draw(line);
