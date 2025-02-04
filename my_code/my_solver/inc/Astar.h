@@ -2,15 +2,15 @@
  * Author: Jan Chleboun
  * Date: 08-01-2025
  * Email: chlebja3@fel.cvut.cz
- * Description: 
+ * Description:
  */
 
 #pragma once
-#include "utils.h"
 #include "Instance.h"
+#include "utils.h"
 
 namespace ASTAR
 {
-  Path find_path(const std::tuple<int, int>& start, const std::tuple<int, int>& goal, const Map& map_data);
+Path find_path(const Point2d& start, const Point2d& goal, const Map& map_data);
 }
 

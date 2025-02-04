@@ -6,6 +6,7 @@
  */
 
 #include <utils.h>
+
 #include <cmath>
 
 Node::Node(const double g, const double h) : g(g), h(h), f(g + h){};
@@ -45,6 +46,12 @@ void Point2d::add(const Point2d& other)
   y += other.y;
 }
 
+size_t Point2d::hash_point::operator()(const Point2d& p) const
+{
+  // hash x and y, bit shift to break the symmetry (x, y) wont have the same hash as (y, x) and xor to finalize
+  return std::hash<int>()(p.x) ^ (std::hash<int>()(p.y) << 1);
+}
+
 bool Map::is_in(const Point2d& p) const
 {
   return !(p.x < 0 || p.x >= width || p.y < 0 || p.y >= height);
@@ -52,8 +59,7 @@ bool Map::is_in(const Point2d& p) const
 
 uint8_t Map::index(const Point2d& point) const
 {
-  if (!is_in(point))
-    return -1;
+  if (!is_in(point)) return -1;
   return data[point.y * width + point.x];
 }
 std::ostream& operator<<(std::ostream& os, Point2d const& p)
@@ -61,21 +67,18 @@ std::ostream& operator<<(std::ostream& os, Point2d const& p)
   return os << "(" << p.x << "," << p.y << ")";
 }
 
-std::vector<Point2d> find_neighbors(const Point2d& point, const Map& map_data)
+std::vector<Point2d> Map::find_neighbors(const Point2d& point) const
 {
-  if (!map_data.is_in(point))
-    return {};  // invalid point
+  if (!is_in(point)) return {};  // invalid point
   std::vector<Point2d>         ret;
   const std::array<Point2d, 4> neighbors = {Point2d(0, 1), Point2d(1, 0), Point2d(0, -1), Point2d(-1, 0)};
   for (auto& it : neighbors)
-    {
-      Point2d neigh = point + it;
-      if (!map_data.is_in(neigh))
-        continue;
-      if (map_data.index(neigh) != 0)
-        continue;
-      ret.push_back(neigh);
-    }
+  {
+    Point2d neigh = point + it;
+    if (!is_in(neigh)) continue;
+    if (index(neigh) != 0) continue;
+    ret.push_back(neigh);
+  }
   return ret;
 }
 

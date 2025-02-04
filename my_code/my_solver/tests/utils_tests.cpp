@@ -170,24 +170,27 @@ TEST(Point2dTest, LargeValues)
 // test finding the neighbours
 
 // Helper function to create a map
+namespace UTILS_TEST
+{
 Map create_test_map()
 {
-  Map map;
-  map.width  = 3;
-  map.height = 3;
-  map.data   = {
+  Map my_map;
+  my_map.width  = 3;
+  my_map.height = 3;
+  my_map.data   = {
     0, 1, 0, 
     0, 0, 1, 
     1, 0, 1};
-  return map;
+  return my_map;
+}
 }
 
 // Test Case: Center Position (Now Order-Independent)
 TEST(FindNeighborsTest, CenterPosition) {
-    Map map = create_test_map();
+    Map my_map = UTILS_TEST::create_test_map();
     Point2d pos(1, 1);
 
-    std::vector<Point2d> neighbors = find_neighbors(pos, map);
+    std::vector<Point2d> neighbors = my_map.find_neighbors(pos);
 
     EXPECT_THAT(neighbors, ::testing::UnorderedElementsAre(Point2d(1, 2), Point2d(0, 1)));
 }
@@ -195,10 +198,10 @@ TEST(FindNeighborsTest, CenterPosition) {
 // Test Case: Corner Position (Top-Left)
 TEST(FindNeighborsTest, TopLeftCorner)
 {
-  Map     map = create_test_map();
+  Map     my_map = UTILS_TEST::create_test_map();
   Point2d pos(0, 0);
 
-  std::vector<Point2d> neighbors = find_neighbors(pos, map);
+  std::vector<Point2d> neighbors = my_map.find_neighbors(pos);
 
   std::vector<Point2d> expected = {{0, 1}};
   EXPECT_EQ(neighbors, expected);
@@ -207,10 +210,10 @@ TEST(FindNeighborsTest, TopLeftCorner)
 // Test Case: Corner Position (Bottom-Right)
 TEST(FindNeighborsTest, BottomRightCorner)
 {
-  Map     map = create_test_map();
+  Map     my_map = UTILS_TEST::create_test_map();
   Point2d pos(2, 2);
 
-  std::vector<Point2d> neighbors = find_neighbors(pos, map);
+  std::vector<Point2d> neighbors = my_map.find_neighbors(pos);
 
   std::vector<Point2d> expected = {{1, 2}};  // No valid neighbors
   EXPECT_EQ(neighbors, expected);
@@ -218,10 +221,10 @@ TEST(FindNeighborsTest, BottomRightCorner)
 
 // Test Case: Left Edge (Now Order-Independent)
 TEST(FindNeighborsTest, LeftEdge) {
-    Map map = create_test_map();
+    Map my_map = UTILS_TEST::create_test_map();
     Point2d pos(0, 1);
 
-    std::vector<Point2d> neighbors = find_neighbors(pos, map);
+    std::vector<Point2d> neighbors = my_map.find_neighbors(pos);
 
     EXPECT_THAT(neighbors, ::testing::UnorderedElementsAre(Point2d(0, 0), Point2d(1, 1)));
 }
@@ -229,10 +232,10 @@ TEST(FindNeighborsTest, LeftEdge) {
 // Test Case: Out-of-Bounds Position
 TEST(FindNeighborsTest, OutOfBounds)
 {
-  Map     map = create_test_map();
+  Map     my_map = UTILS_TEST::create_test_map();
   Point2d pos(-1, -1);
 
-  std::vector<Point2d> neighbors = find_neighbors(pos, map);
+  std::vector<Point2d> neighbors = my_map.find_neighbors(pos);
 
   EXPECT_TRUE(neighbors.empty());  // Should return empty vector
 }
@@ -240,10 +243,10 @@ TEST(FindNeighborsTest, OutOfBounds)
 // Test Case: Position Inside an Obstacle
 TEST(FindNeighborsTest, InsideObstacle)
 {
-  Map     map = create_test_map();
+  Map     my_map = UTILS_TEST::create_test_map();
   Point2d pos(2, 0);  // This is an obstacle
 
-  std::vector<Point2d> neighbors = find_neighbors(pos, map);
+  std::vector<Point2d> neighbors = my_map.find_neighbors(pos);
 
   EXPECT_TRUE(neighbors.empty());  // No neighbors should be returned
 }
@@ -251,14 +254,14 @@ TEST(FindNeighborsTest, InsideObstacle)
 // Test Case: Large Map Edge Case
 TEST(FindNeighborsTest, LargeMapEdge)
 {
-  Map map;
-  map.width  = 100;
-  map.height = 100;
-  map.data.resize(100 * 100, 0);  // All free cells
+  Map my_map;
+  my_map.width  = 100;
+  my_map.height = 100;
+  my_map.data.resize(100 * 100, 0);  // All free cells
 
   Point2d pos(99, 99);  // Bottom-right corner
 
-  std::vector<Point2d> neighbors = find_neighbors(pos, map);
+  std::vector<Point2d> neighbors = my_map.find_neighbors(pos);
 
   EXPECT_THAT(neighbors, ::testing::UnorderedElementsAre(Point2d(98, 99), Point2d(99, 98)));
 }

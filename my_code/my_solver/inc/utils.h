@@ -12,7 +12,6 @@
 class Node
 {
 public:
-  Node*        parent;
   const double g, h, f;
 
   Node(const double g, const double h);
@@ -36,6 +35,11 @@ public:
   void    add(const Point2d& other);
 
   friend std::ostream& operator<<(std::ostream& os, Point2d const& p);
+
+  struct hash_point
+  {
+    size_t operator()(const Point2d& p) const;
+  };
 };
 
 class Map
@@ -48,20 +52,11 @@ public:
   void    print() const;
   bool    is_in(const Point2d& point) const;
   uint8_t index(const Point2d& point) const;
+  std::vector<Point2d> find_neighbors(const Point2d& p) const;
 };
 
 // define a path as a vectors of (int, int) tuples
 typedef std::vector<Point2d> Path;
-
-/**
- * @brief Find unoccupied neighbour positions in the map.
- *
- * @param p The point whose neighborhood is checked.
- * @param map_data The map.
- *
- * @return A vector of obstacle free neighbouring points.
- */
-std::vector<Point2d> find_neighbors(const Point2d& p, const Map& map_data);
 
 /**
  * @brief Generate a random color. To make the color palette look more visually pleasing, the random color is mixed with (mix_r, mix_g, mix_b).
