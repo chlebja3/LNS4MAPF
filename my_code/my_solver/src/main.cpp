@@ -48,6 +48,7 @@ int main(int argc, char** argv)
 
   // create the instance
   Instance instance(map_name, scene_name, agent_num);
+  instance.calculate_optimal_paths_parallel();
 
   // print the map
   std::cout << "The map is:" << std::endl;

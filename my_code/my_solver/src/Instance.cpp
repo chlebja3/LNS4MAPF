@@ -35,8 +35,9 @@ Instance::Instance(const std::string& map_fname, const std::string& scene_fname,
 {
   load_map();
   load_scene();
-  calculate_optimal_paths();
-  std::cout << "Successfully initialized instance." << std::endl;
+  // calculate_optimal_paths();
+  // calculate_optimal_paths_parallel();
+  // std::cout << "Successfully initialized instance." << std::endl;
 }
 
 bool Instance::load_map(void)
@@ -131,7 +132,12 @@ bool Instance::load_scene(void)
   std::ifstream scene_file(scene_fname.c_str());
 
   // check if the open was successful
-  if (!scene_file.is_open()) return false;
+  if (!scene_file.is_open()) 
+  {
+    std::cout << "Unable to open scene file '" << scene_fname << "'"  << std::endl;
+    std::cout << strerror(errno) << std::endl;
+    return false;
+  }
 
   std::string line;
 
@@ -151,7 +157,7 @@ bool Instance::load_scene(void)
     // filter out invalid lines
     if (split_line.size() != 9)
     {
-      std::cout << "Invalid line in scen file: " << line << " length: " << split_line.size() <<  std::endl;
+      std::cout << "Invalid line in scen file: " << line << " length: " << split_line.size() << std::endl;
       continue;
     }
 
@@ -218,6 +224,7 @@ const std::vector<Point2d>& Instance::get_goal_positions(void) const
 
 void Instance::calculate_optimal_paths(void)
 {
+  optimal_paths.clear();
   optimal_paths.reserve(num_of_agents);
   // calculate the optimal paths one by one
   for (int i = 0; i < num_of_agents; i++)
@@ -225,6 +232,28 @@ void Instance::calculate_optimal_paths(void)
     // find the optimal path for each agent not considering other agents
     Path p = ASTAR::find_path(start_positions[i], goal_positions[i], map_data);
     optimal_paths.push_back(p);
+  }
+}
+
+void Instance::calculate_optimal_paths_parallel(void)
+{
+  optimal_paths.clear();
+  optimal_paths.reserve(num_of_agents);
+  // calculate the optimal paths one by one
+
+  // prepare the vector with future paths
+  std::vector<std::future<Path>> futures;
+
+  // calculate asynchronously the paths
+  for (int i = 0; i < num_of_agents; i++)
+  {
+    futures.push_back(std::async(std::launch::async, [this, i]() { return ASTAR::find_path(start_positions[i], goal_positions[i], map_data); }));
+  }
+
+  // wait for the paths and save them
+  for (int i = 0; i < num_of_agents; i++)
+  {
+    optimal_paths.push_back(futures[i].get());
   }
 }
 

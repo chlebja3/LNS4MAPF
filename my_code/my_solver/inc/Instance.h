@@ -46,10 +46,12 @@ public:
   const std::vector<Point2d>& get_goal_positions(void) const;
   const std::vector<Path>& get_optimal_paths(void) const;
 
-
-private:
   // function to calculate the optimal paths ignoring the other agents
   void calculate_optimal_paths();
+  void calculate_optimal_paths_parallel(void);
+
+
+private:
 
   std::string          map_fname;
   std::string          scene_fname;
