@@ -8,6 +8,7 @@
 #pragma once
 #include <string>
 #include <vector>
+
 #include "utils.h"
 
 class Instance
@@ -21,29 +22,35 @@ public:
   // constructor
   Instance(const std::string& map_fname, const std::string& scene_fname, int num_of_agents = 0, int num_of_rows = 0, int num_of_cols = 0);
 
-  // function to load a map
-  bool load_map();
+  /**
+   * @brief Load the map from a file specified during Instance initialization.
+   *
+   * @return Success of the operation
+   */
+  bool load_map(void);
 
   // function to load a scene
-  bool load_scene();
+  bool load_scene(void);
 
   // function to print the map
-  void print_map() const;
+  void print_map(void) const;
 
   // function to print the agents starts and goal positions
-  void print_agents() const;
+  void print_agents(void) const;
 
   // function to obtain the map data
-  const Map& get_map_data() const;
+  const Map& get_map_data(void) const;
 
-  // functions to obtain the agent starts and goals
-  std::vector<Point2d> get_start_positions() const;
-  std::vector<Point2d> get_goal_positions() const;
+  // functions to obtain the agent starts, goals and optimal paths
+  const std::vector<Point2d>& get_start_positions(void) const;
+  const std::vector<Point2d>& get_goal_positions(void) const;
+  const std::vector<Path>& get_optimal_paths(void) const;
 
+
+private:
   // function to calculate the optimal paths ignoring the other agents
   void calculate_optimal_paths();
 
-private:
   std::string          map_fname;
   std::string          scene_fname;
   std::string          type;

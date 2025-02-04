@@ -2,21 +2,25 @@
  * Author: Jan Chleboun
  * Date: 08-01-2025
  * Email: chlebja3@fel.cvut.cz
- * Description: 
+ * Description:
  */
+
+#include "Visualizer.h"
 
 #include <SFML/Graphics.hpp>
 #include <SFML/Graphics/CircleShape.hpp>
+#include <SFML/System/Vector2.hpp>
 #include <SFML/Window/WindowStyle.hpp>
-#include <iostream>
 #include <cmath>
-#include "Visualizer.h"
+#include <iostream>
+
 #include "utils.h"
 
 #define WINDOW_WIDTH 800
 #define CELL_SIZE 20
 #define BORDER_SIZE 1
 #define GOAL_VIS_THICKNESS 3
+
 
 Visualizer::Visualizer(Instance& instance)
 {
@@ -25,12 +29,13 @@ Visualizer::Visualizer(Instance& instance)
   map_height      = instance.num_of_rows;
   start_positions = instance.get_start_positions();
   goal_positions  = instance.get_goal_positions();
+  optimal_paths   = instance.get_optimal_paths();
 
   // generate random colors for the agents
   for (int i = 0; i < (int)start_positions.size(); i++)
-    {
-      agents_colors.push_back(generate_random_color(255, 255, 255, 0.25));
-    }
+  {
+    agents_colors.push_back(generate_random_color(255, 255, 255, 0.25));
+  }
 
   // create the map texture
   mapToTexture(instance.get_map_data());
@@ -59,14 +64,14 @@ void Visualizer::stop()
 void Visualizer::join_thread()
 {
   if (vis_thread.joinable())
-    {
-      vis_thread.join();
-    }
+  {
+    vis_thread.join();
+  }
 }
 
 void Visualizer::run()
 {
-  int window_height = std::round(WINDOW_WIDTH * (map_height / map_width));
+  const int window_height = std::round(WINDOW_WIDTH * (map_height / map_width));
 
   // turn on antialiasing
   sf::ContextSettings settings;
@@ -88,69 +93,71 @@ void Visualizer::run()
   const float zoomStep  = 1.1f;
 
   while (window.isOpen() && running)
+  {
+    // poll all events from the window
+    sf::Event event;
+    while (window.pollEvent(event))
     {
-      // poll all events from the window
-      sf::Event event;
-      while (window.pollEvent(event))
+      // close event
+      if (event.type == sf::Event::Closed)
+      {
+        running = false;
+      }
+      // zoom event
+      else if (event.type == sf::Event::MouseWheelScrolled)
+      {
+        if (event.mouseWheelScroll.delta > 0)
         {
-          // close event
-          if (event.type == sf::Event::Closed)
-            {
-              running = false;
-            }
-          // zoom event
-          else if (event.type == sf::Event::MouseWheelScrolled)
-            {
-              if (event.mouseWheelScroll.delta > 0)
-                {
-                  view.zoom(1 / zoomStep);  // Zoom in
-                  zoomLevel *= 1 / zoomStep;
-                }
-              else
-                {
-                  view.zoom(zoomStep);  // Zoom out
-                  zoomLevel *= zoomStep;
-                }
-            }
-          // Panning with arrow keys
-          else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Left))
-            {
-              view.move(-10 * zoomLevel, 0);
-            }
-          else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Right))
-            {
-              view.move(10 * zoomLevel, 0);
-            }
-          else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up))
-            {
-              view.move(0, -10 * zoomLevel);
-            }
-          else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Down))
-            {
-              view.move(0, 10 * zoomLevel);
-            }
+          view.zoom(1 / zoomStep);  // Zoom in
+          zoomLevel *= 1 / zoomStep;
         }
-
-      // clear the window
-      window.clear(sf::Color::Black);
-
-      // draw the map
-      window.draw(map_sprite);
-
-      // draw the agents
-      draw_agents(window);
-      draw_goals(window);
-
-      // set the view
-      window.setView(view);
-
-      // display
-      window.display();
+        else
+        {
+          view.zoom(zoomStep);  // Zoom out
+          zoomLevel *= zoomStep;
+        }
+      }
+      // Panning with arrow keys
+      else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Left))
+      {
+        view.move(-10 * zoomLevel, 0);
+      }
+      else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Right))
+      {
+        view.move(10 * zoomLevel, 0);
+      }
+      else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up))
+      {
+        view.move(0, -10 * zoomLevel);
+      }
+      else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Down))
+      {
+        view.move(0, 10 * zoomLevel);
+      }
     }
 
+    // clear the window
+    window.clear(sf::Color::Black);
+
+    // draw the map
+    window.draw(map_sprite);
+
+    // draw the optimal path
+    draw_path(window, optimal_paths[0], sf::Color::Red);
+
+    // draw the agents
+    draw_agents(window);
+    draw_goals(window);
+
+    // set the view
+    window.setView(view);
+
+    // display
+    window.display();
+  }
+
   // close the window
-  if (window.isOpen())
-    window.close();
+  if (window.isOpen()) window.close();
   std::cout << "Visualizer thread ended" << std::endl;
 }
 
@@ -166,30 +173,30 @@ void Visualizer::mapToTexture(const Map& map_data)
 
   // Draw the grid onto the texture
   for (int y = 0; y < map_data.height; y++)
+  {
+    for (int x = 0; x < map_data.width; x++)
     {
-      for (int x = 0; x < map_data.width; x++)
-        {
-          // create the cell
-          sf::RectangleShape cell(sf::Vector2f(CELL_SIZE, CELL_SIZE));
-          cell.setPosition(x * CELL_SIZE, y * CELL_SIZE);
-          if ((int)map_data.data[y * map_data.width + x] == 1)
-            {
-              // obstacles
-              cell.setFillColor(sf::Color::Black);
-            }
-          else
-            {
-              // free cells
-              cell.setFillColor(sf::Color::White);
-            }
+      // create the cell
+      sf::RectangleShape cell(sf::Vector2f(CELL_SIZE, CELL_SIZE));
+      cell.setPosition(x * CELL_SIZE, y * CELL_SIZE);
+      if ((int)map_data.data[y * map_data.width + x] == 1)
+      {
+        // obstacles
+        cell.setFillColor(sf::Color::Black);
+      }
+      else
+      {
+        // free cells
+        cell.setFillColor(sf::Color::White);
+      }
 
-          // grid color and thickness
-          cell.setOutlineThickness(-BORDER_SIZE);
-          cell.setOutlineColor(sf::Color::Black);
+      // grid color and thickness
+      cell.setOutlineThickness(-BORDER_SIZE);
+      cell.setOutlineColor(sf::Color::Black);
 
-          map_render_texture.draw(cell);
-        }
+      map_render_texture.draw(cell);
     }
+  }
 
   // Finalize the rendering
   map_render_texture.display();
@@ -207,37 +214,82 @@ void Visualizer::draw_agents(sf::RenderWindow& window)
 {
   agents_circles.clear();
   for (int i = 0; i < (int)start_positions.size(); i++)
-    {
-      const int x = start_positions[i].x;
-      const int y = start_positions[i].y;
-      // create shape
-      agents_circles.push_back(sf::CircleShape((double)(CELL_SIZE - 2 * BORDER_SIZE) / 2));
-      // set color
-      agents_circles.back().setFillColor(agents_colors[i]);
-      // set position
-      agents_circles.back().setPosition(x * scale * CELL_SIZE + scale * BORDER_SIZE, y * scale * CELL_SIZE + scale * BORDER_SIZE);
-      agents_circles.back().setScale(sf::Vector2f(scale, scale));
-      // draw the shape
-      window.draw(agents_circles.back());
-    }
+  {
+    const int x = start_positions[i].x;
+    const int y = start_positions[i].y;
+    // create shape
+    agents_circles.push_back(sf::CircleShape((double)(CELL_SIZE - 2 * BORDER_SIZE) / 2));
+    // set color
+    agents_circles.back().setFillColor(agents_colors[i]);
+    // set position
+    agents_circles.back().setPosition(x * scale * CELL_SIZE + scale * BORDER_SIZE, y * scale * CELL_SIZE + scale * BORDER_SIZE);
+    agents_circles.back().setScale(sf::Vector2f(scale, scale));
+    // draw the shape
+    window.draw(agents_circles.back());
+  }
 }
 
 void Visualizer::draw_goals(sf::RenderWindow& window)
 {
   agents_circles.clear();
   for (int i = 0; i < (int)start_positions.size(); i++)
-    {
-      const int x = goal_positions[i].x;
-      const int y = goal_positions[i].y;
-      // create shape
-      agents_circles.push_back(sf::CircleShape((double)(CELL_SIZE - 2 * BORDER_SIZE) / 2));
-      // set color
-      agents_circles.back().setOutlineColor(agents_colors[i]);
-      agents_circles.back().setOutlineThickness(-GOAL_VIS_THICKNESS);
-      // set position
-      agents_circles.back().setPosition(x * scale * CELL_SIZE + scale * BORDER_SIZE, y * scale * CELL_SIZE + scale * BORDER_SIZE);
-      agents_circles.back().setScale(sf::Vector2f(scale, scale));
-      // draw the shape
-      window.draw(agents_circles.back());
-    }
+  {
+    const int x = goal_positions[i].x;
+    const int y = goal_positions[i].y;
+    // create shape
+    agents_circles.push_back(sf::CircleShape((double)(CELL_SIZE - 2 * BORDER_SIZE) / 2));
+    // set color
+    agents_circles.back().setOutlineColor(agents_colors[i]);
+    agents_circles.back().setOutlineThickness(-GOAL_VIS_THICKNESS);
+    // set position
+    agents_circles.back().setPosition(x * scale * CELL_SIZE + scale * BORDER_SIZE, y * scale * CELL_SIZE + scale * BORDER_SIZE);
+    agents_circles.back().setScale(sf::Vector2f(scale, scale));
+    // draw the shape
+    window.draw(agents_circles.back());
+  }
+}
+
+void Visualizer::draw_arrow(sf::RenderWindow& window, const Point2d& start, const Point2d& end, const sf::Color& color)
+{
+  // const sf::Vector2f start_vec(start.x, start.y);
+  // const sf::Vector2f end_vec(end.x, end.y);
+  const double x = (end.x + start.x) / 2.;
+  const double y = (end.y + start.y) / 2.;
+
+  // draw the line
+  sf::RectangleShape line(sf::Vector2f(CELL_SIZE, CELL_SIZE));
+  line.setPosition(x * scale * CELL_SIZE, y * scale * CELL_SIZE);
+  line.setScale(sf::Vector2f(scale, scale));
+  line.setFillColor(color);
+  window.draw(line);
+
+  // Draw the main line
+  // sf::Vertex line[] = {sf::Vertex(start_vec, color), sf::Vertex(end_vec, color)};
+
+  //// Compute direction vector
+  // sf::Vector2f direction = end_vec - start_vec;
+  // float        length    = std::sqrt(direction.x * direction.x + direction.y * direction.y);
+
+  //// Perpendicular vector for arrowhead
+  // sf::Vector2f perp(-direction.y, direction.x);
+
+  //// Arrowhead points
+  // sf::Vector2f arrowLeft  = end_vec - direction + (perp / (float)2);
+  // sf::Vector2f arrowRight = end_vec - direction - (perp / (float)2);
+
+  //// Draw arrowhead as a triangle
+  // sf::ConvexShape arrow;
+  // arrow.setPointCount(3);
+  // arrow.setPoint(0, end_vec);
+  // arrow.setPoint(1, arrowLeft);
+  // arrow.setPoint(2, arrowRight);
+  // arrow.setFillColor(sf::Color::Red);
+}
+
+void Visualizer::draw_path(sf::RenderWindow& window, const Path& path, const sf::Color& color)
+{
+  for (int i = 1; i < (int)path.size(); i++)
+  {
+    draw_arrow(window, path[i - 1], path[i], color);
+  }
 }
