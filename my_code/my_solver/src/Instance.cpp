@@ -30,23 +30,34 @@ void Map::print(void) const
   }
 }
 
-Instance::Instance(const std::string& map_fname, const std::string& scene_fname, int num_of_agents, int num_of_rows, int num_of_cols)
-    : num_of_cols(num_of_cols), num_of_rows(num_of_rows), num_of_agents(num_of_agents), map_fname(map_fname), scene_fname(scene_fname)
+Instance::Instance(const std::string& map_fname, const std::string& scene_fname, int num_of_agents)
+    : num_of_agents(num_of_agents), map_fname(map_fname), scene_fname(scene_fname)
+{
+  initialize();
+}
+
+void Instance::initialize(const std::string& map_fname_, const std::string& scene_fname_, int num_of_agents_)
+{
+  map_fname     = map_fname_;
+  scene_fname   = scene_fname_;
+  num_of_agents = num_of_agents_;
+  return initialize();
+}
+
+void Instance::initialize()
 {
   load_map();
   load_scene();
-  // calculate_optimal_paths();
-  // calculate_optimal_paths_parallel();
-  // std::cout << "Successfully initialized instance." << std::endl;
 }
 
-bool Instance::load_map(void)
+void Instance::load_map(void)
 {
+  int num_of_cols, num_of_rows = 0;
   // open the map file
   std::ifstream map_file(map_fname.c_str());
 
   // check if the open was successful
-  if (!map_file.is_open()) return false;
+  if (!map_file.is_open()) throw std::runtime_error("Could not open map file.");
 
   // read the file line by line
   std::string line;
@@ -69,7 +80,7 @@ bool Instance::load_map(void)
       }
       catch (std::exception& e)
       {
-        std::cout << "Could not read height: '" << e.what() << "'" << std::endl;
+        throw std::runtime_error("Unable to read the number of rows.");
       }
     }
     else if (boost::iequals(split_line[0], "width"))  // read width
@@ -80,7 +91,7 @@ bool Instance::load_map(void)
       }
       catch (std::exception& e)
       {
-        std::cout << "Could not read width: '" << e.what() << "'" << std::endl;
+        throw std::runtime_error("Unable to read the number of rows.");
       }
     }
     else if (boost::iequals(split_line[0], "map"))  // read the map
@@ -119,30 +130,27 @@ bool Instance::load_map(void)
     }
   }
 
+  if (num_of_cols <= 0) throw std::runtime_error("Invalid number of columns.");
+  if (num_of_rows <= 0) throw std::runtime_error("Invalid number of rows.");
+
   // close the map file
   map_file.close();
   map_data.width  = num_of_cols;
   map_data.height = num_of_rows;
-  return true;
 }
 
-bool Instance::load_scene(void)
+void Instance::load_scene(void)
 {
   // open the scene file
   std::ifstream scene_file(scene_fname.c_str());
 
   // check if the open was successful
-  if (!scene_file.is_open()) 
-  {
-    std::cout << "Unable to open scene file '" << scene_fname << "'"  << std::endl;
-    std::cout << strerror(errno) << std::endl;
-    return false;
-  }
+  if (!scene_file.is_open()) throw std::runtime_error("Unable to open scene file.");
 
   std::string line;
 
   // read the version
-  if (!getline(scene_file, line) || line != "version 1") return false;
+  if (!getline(scene_file, line) || line != "version 1") throw std::invalid_argument("Invalid version of scene file.");
 
   int loaded_agents = 0;
   start_positions.reserve(num_of_agents);
@@ -176,7 +184,7 @@ bool Instance::load_scene(void)
     }
     catch (std::exception& e)
     {
-      std::cout << "Could not read start and goal positions: '" << e.what() << "'" << std::endl;
+      throw std::runtime_error("Could not read start and goal positions: '" + (std::string)e.what() + "'");
     }
   }
 
@@ -189,8 +197,6 @@ bool Instance::load_scene(void)
     std::cout << "WARNING: Unable to load " << num_of_agents << " agents, as only " << loaded_agents << " agents are available in the scene file." << std::endl;
     num_of_agents = loaded_agents;
   }
-
-  return true;
 }
 
 void Instance::print_agents(void) const

@@ -14,23 +14,14 @@
 class Instance
 {
 public:
-  int num_of_cols;
-  int num_of_rows;
   int num_of_agents;
-  int map_size;
 
   // constructor
-  Instance(const std::string& map_fname, const std::string& scene_fname, int num_of_agents = 0, int num_of_rows = 0, int num_of_cols = 0);
+  Instance(void) = default;
+  Instance(const std::string& map_fname, const std::string& scene_fname, int num_of_agents = 0);
 
-  /**
-   * @brief Load the map from a file specified during Instance initialization.
-   *
-   * @return Success of the operation
-   */
-  bool load_map(void);
-
-  // function to load a scene
-  bool load_scene(void);
+  void initialize(const std::string& map_fname, const std::string& scene_fname, int num_of_agents = 0);
+  void initialize(void);
 
   // function to print the map
   void print_map(void) const;
@@ -44,15 +35,25 @@ public:
   // functions to obtain the agent starts, goals and optimal paths
   const std::vector<Point2d>& get_start_positions(void) const;
   const std::vector<Point2d>& get_goal_positions(void) const;
-  const std::vector<Path>& get_optimal_paths(void) const;
+  const std::vector<Path>&    get_optimal_paths(void) const;
 
   // function to calculate the optimal paths ignoring the other agents
-  void calculate_optimal_paths();
+  void calculate_optimal_paths(void);
   void calculate_optimal_paths_parallel(void);
 
 
 private:
+  /**
+   * @brief Load the map from a file specified during Instance initialization.
+   *
+   * @return Success of the operation
+   */
+  void load_map(void);
 
+  // function to load a scene
+  void load_scene(void);
+
+  bool                 initialized = false;
   std::string          map_fname;
   std::string          scene_fname;
   std::string          type;

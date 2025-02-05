@@ -71,8 +71,10 @@ void Visualizer::join_thread()
 
 void Visualizer::run()
 {
-  const int window_height = (int) std::round(WINDOW_WIDTH * ((double) instance.get()->num_of_cols / (double) instance.get()->num_of_rows));
-  std::cout << "Requested window height " << window_height << std::endl;
+  const int map_width = instance.get()->get_map_data().width;
+  const int map_height = instance.get()->get_map_data().height;
+  const int window_height = (int) std::round(WINDOW_WIDTH * ((double)map_width  / (double) map_height));
+  // std::cout << "Requested window height " << window_height << std::endl;
 
   // turn on antialiasing
   sf::ContextSettings settings;
@@ -183,7 +185,7 @@ void Visualizer::mapToTexture(const Map& map_data)
     {
       // create the cell
       sf::RectangleShape cell(sf::Vector2f(CELL_SIZE, CELL_SIZE));
-      cell.setPosition(x * CELL_SIZE, y * CELL_SIZE);
+      cell.setPosition((float) x * CELL_SIZE, (float) y * CELL_SIZE);
       if ((int)map_data.data[y * map_data.width + x] == 1)
       {
         // obstacles
@@ -247,7 +249,7 @@ void Visualizer::draw_goals(sf::RenderWindow& window)
     agents_circles.back().setOutlineColor(agents_colors[i]);
     agents_circles.back().setOutlineThickness(-GOAL_VIS_THICKNESS);
     // set position
-    agents_circles.back().setPosition(x * scale * CELL_SIZE + scale * BORDER_SIZE, y * scale * CELL_SIZE + scale * BORDER_SIZE);
+    agents_circles.back().setPosition((float) (x * scale * CELL_SIZE + scale * BORDER_SIZE), (float) (y * scale * CELL_SIZE + scale * BORDER_SIZE));
     agents_circles.back().setScale(sf::Vector2f(scale, scale));
     // draw the shape
     window.draw(agents_circles.back());
