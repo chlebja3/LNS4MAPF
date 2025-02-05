@@ -15,14 +15,15 @@ set(CMAKE_CXX_STANDARD_REQUIRED True)
 
 # Set a default build type if not specified
 if(NOT CMAKE_BUILD_TYPE)
-  set(CMAKE_BUILD_TYPE Release)
+  set(CMAKE_BUILD_TYPE Debug)
 endif()
 
 # include directories
 include_directories("inc")
 
 # collect all source files
-file(GLOB SOURCES "src/*.cpp")
+file(GLOB SOURCES "src/*.cpp" )
+file(GLOB IMGUI_SOURCES "/third_party_libraries/imgui-sfml/imgui-SFML.cpp" "/third_party_libraries/imgui/*.cpp" "/third_party_libraries/imgui/*.h" "/third_party_libraries/imgui-sfml/*.h")
 
 # Remove main.cpp from the list
 list(REMOVE_ITEM SOURCES "${CMAKE_CURRENT_SOURCE_DIR}/src/main.cpp")
@@ -51,11 +52,12 @@ find_package(SFML REQUIRED COMPONENTS graphics window system )
 include_directories( ${Boost_INCLUDE_DIRS} )
 
 # create a library, so that it can be used in the unit testing
-add_library(MAPF_lib ${SOURCES})
-
+add_library(MAPF_lib ${SOURCES} ${IMGUI_SOURCES} )
 
 # Add the executable
 add_executable(simple_MAPF_solver src/main.cpp)
+
+target_include_directories(MAPF_lib PRIVATE "third_party_libraries/imgui" "third_party_libraries/imgui-sfml")
 
 # link the libraries
 target_link_libraries(MAPF_lib ${Boost_LIBRARIES} Eigen3::Eigen sfml-graphics sfml-window sfml-system)
@@ -63,8 +65,8 @@ target_link_libraries(simple_MAPF_solver MAPF_lib)
 
 # Add subdirectory for tests
 if (${ENABLE_TESTS})
-    enable_testing()
-    add_subdirectory(tests)
+  enable_testing()
+  add_subdirectory(tests)
 endif()
 
 

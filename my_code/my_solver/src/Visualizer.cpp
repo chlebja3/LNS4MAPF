@@ -12,6 +12,8 @@
 #include <SFML/Graphics/RectangleShape.hpp>
 #include <SFML/System/Vector2.hpp>
 #include <SFML/Window/WindowStyle.hpp>
+#include "imgui.h"
+#include "imgui-SFML.h"
 #include <cmath>
 #include <iostream>
 #include <memory>
