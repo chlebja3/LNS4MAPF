@@ -9,6 +9,7 @@
 #include <SFML/Graphics.hpp>
 #include <SFML/Graphics/CircleShape.hpp>
 #include <atomic>
+#include <memory>
 #include <thread>
 
 #include "Instance.h"
@@ -17,7 +18,7 @@ class Visualizer
 {
 public:
   // constructor and destructor
-  Visualizer(Instance& instance);
+  Visualizer(std::shared_ptr<Instance> instance);
   ~Visualizer();
 
   // manage the underlying thread
@@ -39,11 +40,7 @@ private:
   void                 draw_arrow(sf::RenderWindow& window, const Point2d& start, const Point2d& end, const sf::Color& color);
   std::thread          vis_thread;  // the underlying thread
   std::atomic<bool>    running;     // indicator whether the thread should be running
-  int                  map_width;
-  int                  map_height;
-  std::vector<Point2d> start_positions;
-  std::vector<Point2d> goal_positions;
-  std::vector<Path>    optimal_paths;
+  std::shared_ptr<Instance> instance;
 
   // drawing objects
   sf::Texture                  map_texture;  // the map texture

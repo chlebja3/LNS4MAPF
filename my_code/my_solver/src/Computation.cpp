@@ -9,7 +9,7 @@
 #include <chrono>
 #include "Computation.h"
 
-Computation::Computation(Instance& instance) : instance(instance)
+Computation::Computation(std::shared_ptr<Instance> instance) : instance(instance)
 {
   std::cout << "Initialized computation." << std::endl;
   running = false;

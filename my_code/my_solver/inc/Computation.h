@@ -6,6 +6,7 @@
  */
 
 #pragma once
+#include <memory>
 #include <thread>
 #include <atomic>
 #include "Instance.h"
@@ -13,10 +14,8 @@
 class Computation
 {
 public:
-  Instance& instance;
-
   // constructor and destructor
-  Computation(Instance& instance);
+  Computation(std::shared_ptr<Instance> instance);
   ~Computation();
 
   // manage the underlying thread
@@ -29,5 +28,6 @@ public:
 
 private:
   std::thread       comp_thread;
+  std::shared_ptr<Instance> instance;
   std::atomic<bool> running;
 };
