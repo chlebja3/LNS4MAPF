@@ -12,12 +12,12 @@
 #include <SFML/Graphics/RectangleShape.hpp>
 #include <SFML/System/Vector2.hpp>
 #include <SFML/Window/WindowStyle.hpp>
-#include "imgui.h"
-#include "imgui-SFML.h"
 #include <cmath>
 #include <iostream>
 #include <memory>
 
+#include "imgui-SFML.h"
+#include "imgui.h"
 #include "utils.h"
 
 #define WINDOW_WIDTH 800
@@ -71,9 +71,9 @@ void Visualizer::join_thread()
 
 void Visualizer::run()
 {
-  const int map_width = instance.get()->get_map_data().width;
-  const int map_height = instance.get()->get_map_data().height;
-  const int window_height = (int) std::round(WINDOW_WIDTH * ((double)map_width  / (double) map_height));
+  const int map_width     = instance.get()->get_map_data().width;
+  const int map_height    = instance.get()->get_map_data().height;
+  const int window_height = (int)std::round(WINDOW_WIDTH * ((double)map_width / (double)map_height));
   // std::cout << "Requested window height " << window_height << std::endl;
 
   // turn on antialiasing
@@ -85,6 +85,8 @@ void Visualizer::run()
   // set framerate
   window.setFramerateLimit(60);
 
+  ImGui::SFML::Init(window);
+
   // Activate the window for OpenGL rendering
   window.setActive();
 
@@ -95,6 +97,7 @@ void Visualizer::run()
   float       zoomLevel = 1.0f;
   const float zoomStep  = 1.1f;
 
+  sf::Clock deltaClock;
   while (window.isOpen() && running)
   {
     // poll all events from the window
@@ -142,6 +145,9 @@ void Visualizer::run()
     // clear the window
     window.clear(sf::Color::Black);
 
+    // update imgui
+    ImGui::SFML::Update(window, deltaClock.restart());
+
     // draw the map
     window.draw(map_sprite);
 
@@ -159,12 +165,34 @@ void Visualizer::run()
     // set the view
     window.setView(view);
 
+    // **ImGui UI Overlay**
+    ImGui::SetNextWindowPos(ImVec2(0, 460));  // Position below SFML map
+    ImGui::SetNextWindowSize(ImVec2(800, 140));
+    ImGui::Begin("Control Panel", nullptr, ImGuiWindowFlags_NoResize);
+
+    if (ImGui::Button("Run A* Solver"))
+    {
+      std::cout << "Running A*..." << std::endl;
+      // TODO: Trigger A* algorithm
+    }
+
+    if (ImGui::Button("Load Instance"))
+    {
+      std::cout << "Loading new instance..." << std::endl;
+      // TODO: Load new instance
+    }
+
+    ImGui::End();
+
+    // Render ImGui on top
+    ImGui::SFML::Render(window);
     // display
     window.display();
   }
 
   // close the window
   if (window.isOpen()) window.close();
+  ImGui::SFML::Shutdown();
   std::cout << "Visualizer thread ended" << std::endl;
 }
 
@@ -185,7 +213,7 @@ void Visualizer::mapToTexture(const Map& map_data)
     {
       // create the cell
       sf::RectangleShape cell(sf::Vector2f(CELL_SIZE, CELL_SIZE));
-      cell.setPosition((float) x * CELL_SIZE, (float) y * CELL_SIZE);
+      cell.setPosition((float)x * CELL_SIZE, (float)y * CELL_SIZE);
       if ((int)map_data.data[y * map_data.width + x] == 1)
       {
         // obstacles
@@ -249,7 +277,7 @@ void Visualizer::draw_goals(sf::RenderWindow& window)
     agents_circles.back().setOutlineColor(agents_colors[i]);
     agents_circles.back().setOutlineThickness(-GOAL_VIS_THICKNESS);
     // set position
-    agents_circles.back().setPosition((float) (x * scale * CELL_SIZE + scale * BORDER_SIZE), (float) (y * scale * CELL_SIZE + scale * BORDER_SIZE));
+    agents_circles.back().setPosition((float)(x * scale * CELL_SIZE + scale * BORDER_SIZE), (float)(y * scale * CELL_SIZE + scale * BORDER_SIZE));
     agents_circles.back().setScale(sf::Vector2f(scale, scale));
     // draw the shape
     window.draw(agents_circles.back());

@@ -23,8 +23,18 @@ include_directories("inc")
 
 # collect all source files
 file(GLOB SOURCES "src/*.cpp" )
-file(GLOB IMGUI_SOURCES "/third_party_libraries/imgui-sfml/imgui-SFML.cpp" "/third_party_libraries/imgui/*.cpp" "/third_party_libraries/imgui/*.h" "/third_party_libraries/imgui-sfml/*.h")
+#file(GLOB IMGUI_SOURCES "/third_party_libraries/imgui-sfml/imgui-SFML.cpp" "/third_party_libraries/imgui/*.cpp" "/third_party_libraries/imgui/*.h" "/third_party_libraries/imgui-sfml/*.h")
 
+# Manually specify ImGui and ImGui-SFML source files
+set(IMGUI_SOURCES
+    third_party_libraries/imgui/imgui.cpp
+    third_party_libraries/imgui/imgui_draw.cpp
+    third_party_libraries/imgui/imgui_widgets.cpp
+    third_party_libraries/imgui/imgui_tables.cpp
+    third_party_libraries/imgui/imgui_demo.cpp
+    third_party_libraries/imgui-sfml/imgui-SFML.cpp
+    third_party_libraries/imgui/backends/imgui_impl_opengl3.cpp
+)
 # Remove main.cpp from the list
 list(REMOVE_ITEM SOURCES "${CMAKE_CURRENT_SOURCE_DIR}/src/main.cpp")
 
@@ -48,6 +58,11 @@ find_package (Eigen3 REQUIRED NO_MODULE)
 # Find SFML
 find_package(SFML REQUIRED COMPONENTS graphics window system )
 
+find_package(OpenGL REQUIRED)  # Ensure OpenGL is found
+
+# Add include directories for ImGui and ImGui-SFML
+include_directories(third_party_libraries/imgui third_party_libraries/imgui-sfml)
+
 # add include directories
 include_directories( ${Boost_INCLUDE_DIRS} )
 
@@ -60,8 +75,8 @@ add_executable(simple_MAPF_solver src/main.cpp)
 target_include_directories(MAPF_lib PRIVATE "third_party_libraries/imgui" "third_party_libraries/imgui-sfml")
 
 # link the libraries
-target_link_libraries(MAPF_lib ${Boost_LIBRARIES} Eigen3::Eigen sfml-graphics sfml-window sfml-system)
-target_link_libraries(simple_MAPF_solver MAPF_lib)
+target_link_libraries(MAPF_lib ${Boost_LIBRARIES} Eigen3::Eigen sfml-graphics sfml-window sfml-system OpenGL::GL)
+target_link_libraries(simple_MAPF_solver MAPF_lib sfml-graphics sfml-window sfml-system OpenGL::GL )
 
 # Add subdirectory for tests
 if (${ENABLE_TESTS})
