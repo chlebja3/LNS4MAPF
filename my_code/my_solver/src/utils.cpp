@@ -8,6 +8,7 @@
 #include <utils.h>
 
 #include <cmath>
+#include <filesystem>
 
 Node::Node(const double g, const double h) : g(g), h(h), f(g + h){};
 
@@ -89,4 +90,10 @@ sf::Color generate_random_color(const int mix_r, const int mix_g, const int mix_
   const int g = (int)std::round((std::rand() % 256) * (1 - mix_ratio) + mix_g * mix_ratio);
   const int b = (int)std::round((std::rand() % 256) * (1 - mix_ratio) + mix_b * mix_ratio);
   return sf::Color(r, g, b);
+}
+
+// Function to get the directory of the running executable
+std::string get_base_path()
+{
+  return std::filesystem::canonical("/proc/self/exe").parent_path().parent_path().string();  // Linux only
 }

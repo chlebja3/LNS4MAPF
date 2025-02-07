@@ -70,3 +70,4 @@ typedef std::vector<Point2d> Path;
  */
 sf::Color generate_random_color(const int mix_r, const int mix_g, const int mix_b, const double mix_ratio = 0.5);
 
+std::string get_base_path();

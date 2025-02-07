@@ -9,8 +9,7 @@
 
 #include "Instance.h"
 
-// Function to get the directory of the running executable
-std::string get_base_path()
+std::string get_base_path_tests()
 {
   return std::filesystem::canonical("/proc/self/exe").parent_path().parent_path().parent_path().string();  // Linux only
 }
@@ -19,7 +18,7 @@ std::string get_base_path()
 static void BM_AStar_Sequential(benchmark::State& state)
 {
   // setup the instance
-  std::string base_path = get_base_path();  // path to my_solver
+  std::string base_path = get_base_path_tests();  // path to my_solver
   for (auto _ : state)
   {
     int             num_agents = state.range(0);
@@ -34,7 +33,7 @@ BENCHMARK(BM_AStar_Sequential)->Arg(5)->Arg(10)->Arg(20)->Arg(50)->Arg(100)->Arg
 static void BM_AStar_Parallel(benchmark::State& state)
 {
   // setup the instance
-  std::string base_path = get_base_path();
+  std::string base_path = get_base_path_tests();
   for (auto _ : state)
   {
     int             num_agents = state.range(0);

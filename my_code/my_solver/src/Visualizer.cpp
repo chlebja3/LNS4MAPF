@@ -15,6 +15,7 @@
 #include <cmath>
 #include <iostream>
 #include <memory>
+#include <stdexcept>
 
 #include "imgui-SFML.h"
 #include "imgui.h"
@@ -25,6 +26,7 @@
 #define BORDER_SIZE 1
 #define GOAL_VIS_THICKNESS 3
 #define LINE_WIDTH 3  // denominator od line width, so line width is 1/LINE_WIDTH * CELL_SIZE
+#define MENU_BAR_SIZE 46
 
 
 Visualizer::Visualizer(std::shared_ptr<Instance> instance) : instance(instance)
@@ -73,19 +75,20 @@ void Visualizer::run()
 {
   const int map_width     = instance.get()->get_map_data().width;
   const int map_height    = instance.get()->get_map_data().height;
-  const int window_height = (int)std::round(WINDOW_WIDTH * ((double)map_width / (double)map_height));
+  const int window_height = (int)std::round(WINDOW_WIDTH * ((double)map_width / (double)map_height)) + MENU_BAR_SIZE;
   // std::cout << "Requested window height " << window_height << std::endl;
 
   // turn on antialiasing
   sf::ContextSettings settings;
   settings.antialiasingLevel = 8.0;
 
+
   sf::RenderWindow window(sf::VideoMode(WINDOW_WIDTH, window_height), "Visualization", sf::Style::Default, settings);
 
   // set framerate
   window.setFramerateLimit(60);
 
-  ImGui::SFML::Init(window);
+  if (!ImGui::SFML::Init(window)) throw std::runtime_error("Unable to initialize ImGUI.");
 
   // Activate the window for OpenGL rendering
   window.setActive();
@@ -96,6 +99,15 @@ void Visualizer::run()
   // Zoom settings
   float       zoomLevel = 1.0f;
   const float zoomStep  = 1.1f;
+
+
+  // turn on antialisasing for fonts
+  // ImGuiIO& io = ImGui::GetIO();
+  // io.Fonts->Clear();                                             // Clear old fonts
+  // std::cout << (get_base_path() + "/fonts/timeburner-font/Timeburner-xJB8.ttf" ).c_str() << std::endl;
+  // io.Fonts->AddFontFromFileTTF((get_base_path() + "/fonts/timeburner-font/Timeburner-xJB8.ttf" ).c_str(), 18.0f, NULL, io.Fonts->GetGlyphRangesDefault()); //
+  // Load font with size 18 io.Fonts->Build(); io.Fonts->TexGlyphPadding = 1;  // Improves quality
+  ImGui::GetIO().FontGlobalScale = 2.0f;  // Increase all UI elements
 
   sf::Clock deltaClock;
   while (window.isOpen() && running)
@@ -165,24 +177,44 @@ void Visualizer::run()
     // set the view
     window.setView(view);
 
+    ImGui::PushStyleVar(ImGuiStyleVar_FramePadding, ImVec2(10, 10));   // Increase padding (width, height)
+    ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(10, 10));  // Adjust window padding
+    ImGui::GetStyle().WindowBorderSize        = 2.0f;                  // Add border
+    ImGui::GetStyle().Colors[ImGuiCol_Border] = ImVec4(0.1, 0.1, 0.1, 1);    // border
+
+    if (ImGui::BeginMainMenuBar())
+    {
+      if (ImGui::BeginMenu("Menu"))
+      {
+        ImGui::MenuItem("Console");
+        ImGui::EndMenu();
+      }
+      ImVec2 menu_bar_size = ImGui::GetWindowSize();
+      // set the are where the map and agents will be rendered
+      view.setViewport(sf::FloatRect({0.f, (float) menu_bar_size.y/ (float) window_height}, {1.0f, 1.f}));
+
+      ImGui::EndMainMenuBar();
+    }
+    ImGui::PopStyleVar(2);  // Pop both styles
+
     // **ImGui UI Overlay**
-    ImGui::SetNextWindowPos(ImVec2(0, 460));  // Position below SFML map
-    ImGui::SetNextWindowSize(ImVec2(800, 140));
-    ImGui::Begin("Control Panel", nullptr, ImGuiWindowFlags_NoResize);
+    // ImGui::SetNextWindowPos(ImVec2(0, 460));  // Position below SFML map
+    // ImGui::SetNextWindowSize(ImVec2(800, 140));
+    // ImGui::Begin("Control Panel", nullptr, ImGuiWindowFlags_NoResize);
 
-    if (ImGui::Button("Run A* Solver"))
-    {
-      std::cout << "Running A*..." << std::endl;
-      // TODO: Trigger A* algorithm
-    }
+    // if (ImGui::Button("Run A* Solver"))
+    //{
+    //  std::cout << "Running A*..." << std::endl;
+    //  // TODO: Trigger A* algorithm
+    //}
 
-    if (ImGui::Button("Load Instance"))
-    {
-      std::cout << "Loading new instance..." << std::endl;
-      // TODO: Load new instance
-    }
+    // if (ImGui::Button("Load Instance"))
+    //{
+    //  std::cout << "Loading new instance..." << std::endl;
+    //  // TODO: Load new instance
+    //}
 
-    ImGui::End();
+    // ImGui::End();
 
     // Render ImGui on top
     ImGui::SFML::Render(window);
