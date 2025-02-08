@@ -2,12 +2,14 @@
  * Author: Jan Chleboun
  * Date: 08-01-2025
  * Email: chlebja3@fel.cvut.cz
- * Description: 
+ * Description:
  */
 
 #pragma once
+#include <memory>
 #include <string>
 #include <vector>
+
 #include "Instance.h"
 #include "utils.h"
 
@@ -27,11 +29,11 @@ class Solver
 // abstract class to represent a solver for the mapf problem
 {
 public:
-  std::string name;
-  Instance    instance;
+  const std::string         name;
+  std::shared_ptr<Instance> instance;
 
   // constructor
-  Solver(const std::string& name, Instance& instance);
+  Solver(const std::string& name, std::shared_ptr<Instance> instance);
 
   // pure virtual function solve
   virtual Solution solve() = 0;

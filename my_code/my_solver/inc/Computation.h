@@ -2,14 +2,16 @@
  * Author: Jan Chleboun
  * Date: 08-01-2025
  * Email: chlebja3@fel.cvut.cz
- * Description: 
+ * Description:
  */
 
 #pragma once
+#include <atomic>
 #include <memory>
 #include <thread>
-#include <atomic>
+
 #include "Instance.h"
+#include "LNS.h"
 
 class Computation
 {
@@ -27,7 +29,8 @@ public:
   void run();
 
 private:
-  std::thread       comp_thread;
+  std::unique_ptr<LNS>      solver;
+  std::thread               comp_thread;
   std::shared_ptr<Instance> instance;
-  std::atomic<bool> running;
+  std::atomic<bool>         running;
 };

@@ -2,7 +2,7 @@
  * Author: Jan Chleboun
  * Date: 08-01-2025
  * Email: chlebja3@fel.cvut.cz
- * Description: 
+ * Description:
  */
 
 #pragma once
@@ -10,7 +10,11 @@
 
 class LNS : public Solver
 {
+public:
   // constructor
-  LNS();
+  LNS(std::shared_ptr<Instance> instance);
 
+  // solve method
+  Solution solve() override;
 };
+
