@@ -71,8 +71,9 @@ public:
 
 namespace ASTAR
 {
-typedef std::priority_queue<std::shared_ptr<AstarNode>, std::vector<std::shared_ptr<AstarNode>>, AstarNode::compare_node_ptrs> PriorityQueue;
-typedef std::unordered_set<Point2d, Point2d::hash_point>                                                                       UnorderedSet;
+typedef std::priority_queue<std::shared_ptr<AstarNode>, std::vector<std::shared_ptr<AstarNode>>, AstarNode::compare_node_ptrs>
+                                                         PriorityQueue;
+typedef std::unordered_set<Point2d, Point2d::hash_point> UnorderedSet;
 
 Path extract_path(const std::shared_ptr<AstarNode>& final_node);
 }  // namespace ASTAR

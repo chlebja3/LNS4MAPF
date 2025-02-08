@@ -22,8 +22,8 @@ int main(int argc, char** argv)
   // Define command-line options
   po::options_description desc("Allowed options");
   desc.add_options()("help,h", "Show help message")("map,m", po::value<std::string>()->required(), "file with the map")(
-      "agents,a", po::value<std::string>()->required(), "input file for agents")("agentNum,k", po::value<int>()->default_value(0), "number of agents")(
-      "GUI,G", po::value<bool>()->default_value(1));
+      "agents,a", po::value<std::string>()->required(), "input file for agents")(
+      "agentNum,k", po::value<int>()->default_value(0), "number of agents")("GUI,G", po::value<bool>()->default_value(1));
 
   // Parse command-line arguments
   po::variables_map vm;
@@ -40,6 +40,7 @@ int main(int argc, char** argv)
       std::cout << desc << std::endl;
       return 0;
     }
+    // Handle missing arguments
     std::cerr << "Error: " << ex.what() << "\n";
     return 1;
   }
@@ -51,25 +52,32 @@ int main(int argc, char** argv)
 
   // create the instance
   std::shared_ptr<Instance> instance = std::make_shared<Instance>(map_name, scene_name, agent_num);
+
+  // calculate the optimal paths neglecting the other agents
   instance->calculate_optimal_paths_parallel();
 
   // print the map
-  std::cout << "The map is:" << std::endl;
+  // std::cout << "The map is:" << std::endl;
   // instance.print_map();
-  instance->print_agents();
+  // instance->print_agents();
 
-  // create the visualization object
-  Visualizer visualizer(instance);
 
   // create the computation object
   Computation computation(instance);
 
-  // start the threads
-  visualizer.start();
+  // start the computation thread
   computation.start();
 
-  // wait for the threads to finish
-  visualizer.join_thread();
+  // create the visualization object
+  if (GUI)
+  {
+    Visualizer visualizer(instance);
+    visualizer.start();
+    // wait for the visualization thread to finish
+    visualizer.join_thread();
+  }
+
+  // wait for the computation thread to finish
   computation.join_thread();
 
   return EXIT_SUCCESS;

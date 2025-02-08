@@ -22,9 +22,7 @@ void Map::print(void) const
   {
     std::cout << (int)data[i];
     if (i % width == height - 1)
-    {
       std::cout << std::endl;
-    }
     else
       std::cout << " ";
   }
@@ -101,10 +99,7 @@ void Instance::load_map(void)
         for (int i = 0; i < (int)line.size(); i++)
         {
           // treat . as free cell
-          if (line[i] == '.')
-          {
-            map_data.data.push_back(0);
-          }
+          if (line[i] == '.') map_data.data.push_back(0);
           // treat @, T as obstacle
           else if (line[i] == '@' || line[i] == 'T')
           {
@@ -118,15 +113,11 @@ void Instance::load_map(void)
         }
         // check whether the number of cells in this row is consistent with num_of_columns
         if (map_data.data.size() % num_of_cols != 0)
-        {
-          throw std::runtime_error("Inconsistent number of symbols in a row in the map description.");
-        }
+        { throw std::runtime_error("Inconsistent number of symbols in a row in the map description."); }
       }
       // check whether the number of lines is consistent with num_of_rows
       if ((int)map_data.data.size() != num_of_cols * num_of_rows)
-      {
-        throw std::runtime_error("Inconsistent number of rows in the map description.");
-      }
+      { throw std::runtime_error("Inconsistent number of rows in the map description."); }
     }
   }
 
@@ -194,7 +185,8 @@ void Instance::load_scene(void)
   // check whether enough agents were loaded
   if (loaded_agents != num_of_agents)
   {
-    std::cout << "WARNING: Unable to load " << num_of_agents << " agents, as only " << loaded_agents << " agents are available in the scene file." << std::endl;
+    std::cout << "WARNING: Unable to load " << num_of_agents << " agents, as only " << loaded_agents
+              << " agents are available in the scene file." << std::endl;
     num_of_agents = loaded_agents;
   }
 }
@@ -253,14 +245,12 @@ void Instance::calculate_optimal_paths_parallel(void)
   // calculate asynchronously the paths
   for (int i = 0; i < num_of_agents; i++)
   {
-    futures.push_back(std::async(std::launch::async, [this, i]() { return ASTAR::find_path(start_positions[i], goal_positions[i], map_data); }));
+    futures.push_back(
+        std::async(std::launch::async, [this, i]() { return ASTAR::find_path(start_positions[i], goal_positions[i], map_data); }));
   }
 
   // wait for the paths and save them
-  for (int i = 0; i < num_of_agents; i++)
-  {
-    optimal_paths.push_back(futures[i].get());
-  }
+  for (int i = 0; i < num_of_agents; i++) { optimal_paths.push_back(futures[i].get()); }
 }
 
 const std::vector<Path>& Instance::get_optimal_paths(void) const

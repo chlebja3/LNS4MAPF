@@ -2,7 +2,7 @@
  * Author: Jan Chleboun
  * Date: 08-01-2025
  * Email: chlebja3@fel.cvut.cz
- * Description:
+ * Description: A class that represents an instance of the MAPF problem and related functions.
  */
 
 #pragma once
