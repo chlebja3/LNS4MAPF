@@ -35,6 +35,9 @@ public:
   // constructor
   Solver(const std::string& name, std::shared_ptr<Instance> instance);
 
+  // virtual destructor
+  virtual ~Solver() = default;
+
   // pure virtual function solve
   virtual Solution solve() = 0;
 };

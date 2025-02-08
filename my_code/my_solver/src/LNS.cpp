@@ -9,10 +9,11 @@
 
 LNS::LNS(std::shared_ptr<Instance> instance) : Solver("LNS", instance){};
 
-Solution solve()
+Solution LNS::solve()
 {
   // calculate initial solution
+  Solution sol = Solution();
 
   // improve the solution
-  return Solution();
+  return sol;
 }

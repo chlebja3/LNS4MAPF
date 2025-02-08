@@ -14,6 +14,9 @@ public:
   // constructor
   LNS(std::shared_ptr<Instance> instance);
 
+  // Destructor
+  ~LNS() = default;
+
   // solve method
   Solution solve() override;
 };
