@@ -111,6 +111,8 @@ void Visualizer::run()
     sf::Event event;
     while (window.pollEvent(event))
     {
+      ImGui::SFML::ProcessEvent(window, event);  // Send event to ImGui
+
       // close event
       if (event.type == sf::Event::Closed) { running = false; }
       // zoom event
@@ -176,9 +178,15 @@ void Visualizer::run()
 
     if (ImGui::BeginMainMenuBar())
     {
-      if (ImGui::BeginMenu("Menu"))
+      if (ImGui::BeginMenu("Instance"))
       {
-        ImGui::MenuItem("Console");
+        if (ImGui::MenuItem("Load map")) std::cout << "Loading a map." << std::endl;
+        if (ImGui::MenuItem("Load scene")) std::cout << "Loading a scene." << std::endl;
+        ImGui::EndMenu();
+      }
+      if (ImGui::BeginMenu("Settings"))
+      {
+        if (ImGui::MenuItem("Algorithm settings")) std::cout << "Algorithm settings." << std::endl;
         ImGui::EndMenu();
       }
       ImVec2 menu_bar_size = ImGui::GetWindowSize();
