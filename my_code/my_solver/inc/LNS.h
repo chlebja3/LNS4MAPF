@@ -6,6 +6,7 @@
  */
 
 #pragma once
+#include "SIPP.h"
 #include "Solver.h"
 
 class LNS : public Solver
@@ -18,6 +19,12 @@ public:
   ~LNS() = default;
 
   // solve method
-  Solution solve() override;
+  void solve() override;
+
+  void find_initial_solution();
+
+private:
+  Solution              PrioritizedPlanning();
+  std::unique_ptr<SIPP> planner;
 };
 

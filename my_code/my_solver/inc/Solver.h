@@ -39,5 +39,8 @@ public:
   virtual ~Solver() = default;
 
   // pure virtual function solve
-  virtual Solution solve() = 0;
+  virtual void solve() = 0;
+
+protected:
+  Solution solution;  // the so far best solution
 };

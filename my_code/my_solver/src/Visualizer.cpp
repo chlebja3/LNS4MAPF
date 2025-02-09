@@ -34,10 +34,8 @@ Visualizer::Visualizer(std::shared_ptr<Instance> instance) : instance(instance)
   running = false;
 
   // generate random colors for the agents
-  for (int i = 0; i < (int)instance.get()->get_start_positions().size(); i++)
-  {
-    agents_colors.push_back(generate_random_color(255, 255, 255, 0.25));
-  }
+  for (int i = 0; i < (int)instance->get_start_positions().size(); i++)
+  { agents_colors.push_back(generate_random_color(255, 255, 255, 0.25)); }
 
   // create the map texture
   mapToTexture(instance->get_map_data());
@@ -65,16 +63,13 @@ void Visualizer::stop()
 
 void Visualizer::join_thread()
 {
-  if (vis_thread.joinable())
-  {
-    vis_thread.join();
-  }
+  if (vis_thread.joinable()) { vis_thread.join(); }
 }
 
 void Visualizer::run()
 {
-  const int map_width     = instance.get()->get_map_data().width;
-  const int map_height    = instance.get()->get_map_data().height;
+  const int map_width     = instance->get_map_data().width;
+  const int map_height    = instance->get_map_data().height;
   const int window_height = (int)std::round(WINDOW_WIDTH * ((double)map_width / (double)map_height)) + MENU_BAR_SIZE;
   // std::cout << "Requested window height " << window_height << std::endl;
 
@@ -105,8 +100,8 @@ void Visualizer::run()
   // ImGuiIO& io = ImGui::GetIO();
   // io.Fonts->Clear();                                             // Clear old fonts
   // std::cout << (get_base_path() + "/fonts/timeburner-font/Timeburner-xJB8.ttf" ).c_str() << std::endl;
-  // io.Fonts->AddFontFromFileTTF((get_base_path() + "/fonts/timeburner-font/Timeburner-xJB8.ttf" ).c_str(), 18.0f, NULL, io.Fonts->GetGlyphRangesDefault()); //
-  // Load font with size 18 io.Fonts->Build(); io.Fonts->TexGlyphPadding = 1;  // Improves quality
+  // io.Fonts->AddFontFromFileTTF((get_base_path() + "/fonts/timeburner-font/Timeburner-xJB8.ttf" ).c_str(), 18.0f, NULL,
+  // io.Fonts->GetGlyphRangesDefault()); // Load font with size 18 io.Fonts->Build(); io.Fonts->TexGlyphPadding = 1;  // Improves quality
   ImGui::GetIO().FontGlobalScale = 2.0f;  // Increase all UI elements
 
   sf::Clock deltaClock;
@@ -117,10 +112,7 @@ void Visualizer::run()
     while (window.pollEvent(event))
     {
       // close event
-      if (event.type == sf::Event::Closed)
-      {
-        running = false;
-      }
+      if (event.type == sf::Event::Closed) { running = false; }
       // zoom event
       else if (event.type == sf::Event::MouseWheelScrolled)
       {
@@ -168,7 +160,7 @@ void Visualizer::run()
     //{
     //  draw_path(window, optimal_paths[i], agents_colors[i]);
     //}
-    draw_path(window, instance.get()->get_optimal_paths()[0], agents_colors[0]);
+    draw_path(window, instance->get_optimal_paths()[0], agents_colors[0]);
 
     // draw the agents
     draw_agents(window);
@@ -177,10 +169,10 @@ void Visualizer::run()
     // set the view
     window.setView(view);
 
-    ImGui::PushStyleVar(ImGuiStyleVar_FramePadding, ImVec2(10, 10));   // Increase padding (width, height)
-    ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(10, 10));  // Adjust window padding
-    ImGui::GetStyle().WindowBorderSize        = 2.0f;                  // Add border
-    ImGui::GetStyle().Colors[ImGuiCol_Border] = ImVec4(0.1, 0.1, 0.1, 1);    // border
+    ImGui::PushStyleVar(ImGuiStyleVar_FramePadding, ImVec2(10, 10));       // Increase padding (width, height)
+    ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(10, 10));      // Adjust window padding
+    ImGui::GetStyle().WindowBorderSize        = 2.0f;                      // Add border
+    ImGui::GetStyle().Colors[ImGuiCol_Border] = ImVec4(0.1, 0.1, 0.1, 1);  // border
 
     if (ImGui::BeginMainMenuBar())
     {
@@ -191,7 +183,7 @@ void Visualizer::run()
       }
       ImVec2 menu_bar_size = ImGui::GetWindowSize();
       // set the are where the map and agents will be rendered
-      view.setViewport(sf::FloatRect({0.f, (float) menu_bar_size.y/ (float) window_height}, {1.0f, 1.f}));
+      view.setViewport(sf::FloatRect({0.f, (float)menu_bar_size.y / (float)window_height}, {1.0f, 1.f}));
 
       ImGui::EndMainMenuBar();
     }
@@ -280,10 +272,10 @@ void Visualizer::mapToTexture(const Map& map_data)
 void Visualizer::draw_agents(sf::RenderWindow& window)
 {
   agents_circles.clear();
-  for (int i = 0; i < (int)instance.get()->get_start_positions().size(); i++)
+  for (int i = 0; i < (int)instance->get_start_positions().size(); i++)
   {
-    const int x = instance.get()->get_start_positions()[i].x;
-    const int y = instance.get()->get_start_positions()[i].y;
+    const int x = instance->get_start_positions()[i].x;
+    const int y = instance->get_start_positions()[i].y;
     // create shape
     agents_circles.push_back(sf::CircleShape((double)(CELL_SIZE - 2 * BORDER_SIZE) / 2));
     // set color
@@ -299,17 +291,18 @@ void Visualizer::draw_agents(sf::RenderWindow& window)
 void Visualizer::draw_goals(sf::RenderWindow& window)
 {
   agents_circles.clear();
-  for (int i = 0; i < (int)instance.get()->get_start_positions().size(); i++)
+  for (int i = 0; i < (int)instance->get_start_positions().size(); i++)
   {
-    const int x = instance.get()->get_goal_positions()[i].x;
-    const int y = instance.get()->get_goal_positions()[i].y;
+    const int x = instance->get_goal_positions()[i].x;
+    const int y = instance->get_goal_positions()[i].y;
     // create shape
     agents_circles.push_back(sf::CircleShape((double)(CELL_SIZE - 2 * BORDER_SIZE) / 2));
     // set color
     agents_circles.back().setOutlineColor(agents_colors[i]);
     agents_circles.back().setOutlineThickness(-GOAL_VIS_THICKNESS);
     // set position
-    agents_circles.back().setPosition((float)(x * scale * CELL_SIZE + scale * BORDER_SIZE), (float)(y * scale * CELL_SIZE + scale * BORDER_SIZE));
+    agents_circles.back().setPosition((float)(x * scale * CELL_SIZE + scale * BORDER_SIZE),
+                                      (float)(y * scale * CELL_SIZE + scale * BORDER_SIZE));
     agents_circles.back().setScale(sf::Vector2f(scale, scale));
     // draw the shape
     window.draw(agents_circles.back());
@@ -343,8 +336,5 @@ void Visualizer::draw_arrow(sf::RenderWindow& window, const Point2d& start, cons
 
 void Visualizer::draw_path(sf::RenderWindow& window, const Path& path, const sf::Color& color)
 {
-  for (int i = 1; i < (int)path.size(); i++)
-  {
-    draw_arrow(window, path[i - 1], path[i], color);
-  }
+  for (int i = 1; i < (int)path.size(); i++) { draw_arrow(window, path[i - 1], path[i], color); }
 }
