@@ -113,7 +113,7 @@ Path SIPP::plan(const Point2d& start, const Point2d& goal, const Map& map_data)
     // check whether node is in known set
 
     // check whether goal is reached
-    if (current->position.x == goal.x && current->position.y == goal.y)
+    if (current->position == goal)
     {
       // extract the path
       return sipp::extract_path(current);

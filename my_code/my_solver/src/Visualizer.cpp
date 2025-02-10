@@ -35,7 +35,9 @@ Visualizer::Visualizer(std::shared_ptr<Instance> instance) : instance(instance)
 
   // generate random colors for the agents
   for (int i = 0; i < (int)instance->get_start_positions().size(); i++)
-  { agents_colors.push_back(generate_random_color(255, 255, 255, 0.25)); }
+  {
+    agents_colors.push_back(generate_random_color(255, 255, 255, 0.25));
+  }
 
   // create the map texture
   mapToTexture(instance->get_map_data());
@@ -63,7 +65,10 @@ void Visualizer::stop()
 
 void Visualizer::join_thread()
 {
-  if (vis_thread.joinable()) { vis_thread.join(); }
+  if (vis_thread.joinable())
+  {
+    vis_thread.join();
+  }
 }
 
 void Visualizer::run()
@@ -116,7 +121,10 @@ void Visualizer::run()
       ImGui::SFML::ProcessEvent(window, event);  // Send event to ImGui
 
       // close event
-      if (event.type == sf::Event::Closed) { running = false; }
+      if (event.type == sf::Event::Closed)
+      {
+        running = false;
+      }
       // zoom event
       else if (event.type == sf::Event::MouseWheelScrolled)
       {
@@ -160,11 +168,11 @@ void Visualizer::run()
     window.draw(map_sprite);
 
     // draw the optimal paths
-    // for (int i = 0; i < (int) optimal_paths.size(); i++)
-    //{
-    //  draw_path(window, optimal_paths[i], agents_colors[i]);
-    //}
-    draw_path(window, instance->get_optimal_paths()[0], agents_colors[0]);
+    for (int i = 0; i < (int)instance->get_optimal_paths().size(); i++)
+    {
+      draw_path(window, instance->get_optimal_paths()[i], agents_colors[i]);
+    }
+    // draw_path(window, instance->get_optimal_paths()[0], agents_colors[0]);
 
     // draw the agents
     draw_agents(window);
@@ -346,5 +354,8 @@ void Visualizer::draw_arrow(sf::RenderWindow& window, const Point2d& start, cons
 
 void Visualizer::draw_path(sf::RenderWindow& window, const Path& path, const sf::Color& color)
 {
-  for (int i = 1; i < (int)path.size(); i++) { draw_arrow(window, path[i - 1], path[i], color); }
+  for (int i = 1; i < (int)path.size(); i++)
+  {
+    draw_arrow(window, path[i - 1], path[i], color);
+  }
 }
