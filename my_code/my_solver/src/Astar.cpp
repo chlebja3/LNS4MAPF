@@ -55,7 +55,7 @@ public:
     size_t operator()(const std::shared_ptr<AstarNode>& node) const
     {
       // hash x and y, bit shift to break the symmetry (x, y) wont have the same hash as (y, x) and xor to finalize
-      return std::hash<int>()(node.get()->position.x) ^ (std::hash<int>()(node.get()->position.y) << 1);
+      return std::hash<int>()(node->position.x) ^ (std::hash<int>()(node->position.y) << 1);
     }
   };
 
@@ -63,7 +63,7 @@ public:
   {
     bool operator()(const std::shared_ptr<AstarNode>& n1, const std::shared_ptr<AstarNode>& n2) const
     {
-      return *n1.get() == *n2.get();
+      return *n1 == *n2;
     }
   };
 };
@@ -108,20 +108,20 @@ Path ASTAR::find_path(const Point2d& start, const Point2d& goal, const Map& map_
     open_list.pop();
 
     // check whether node is in known set
-    if (known.find(current.get()->position) != known.end()) continue;
+    if (known.find(current->position) != known.end()) continue;
 
     // check whether goal is reached
-    if (current.get()->position.x == goal.x && current.get()->position.y == goal.y)
+    if (current->position.x == goal.x && current->position.y == goal.y)
     {
       // extract the path
       return ASTAR::extract_path(current);
     }
 
     // add to known nodes
-    known.insert(current.get()->position);
+    known.insert(current->position);
 
     // expand current node
-    std::vector<Point2d> neighbors = map_data.find_neighbors(current.get()->position);
+    std::vector<Point2d> neighbors = map_data.find_neighbors(current->position);
     for (Point2d& neighbor : neighbors)
     {
       // check whether neighbor already known
@@ -129,7 +129,7 @@ Path ASTAR::find_path(const Point2d& start, const Point2d& goal, const Map& map_
 
       double h = std::hypot(goal.x - neighbor.x, goal.y - neighbor.y);
       // add to the open list
-      open_list.push(std::make_shared<AstarNode>(neighbor, current.get()->g + 1, h, current));
+      open_list.push(std::make_shared<AstarNode>(neighbor, current->g + 1, h, current));
     }
   }
 
@@ -143,7 +143,7 @@ Path ASTAR::extract_path(const std::shared_ptr<AstarNode>& final_node)
   std::shared_ptr<AstarNode> curr = final_node;
   while (curr != nullptr)
   {
-    path.push_back(curr.get()->position);
+    path.push_back(curr->position);
     curr = curr->parent;
   }
   std::reverse(path.begin(), path.end());
