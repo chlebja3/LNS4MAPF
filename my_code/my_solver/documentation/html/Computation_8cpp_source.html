@@ -78,67 +78,71 @@ $(function() {
 <div class="line"><a name="l00005"></a><span class="lineno">    5</span>&#160;<span class="comment"> * Description:</span></div>
 <div class="line"><a name="l00006"></a><span class="lineno">    6</span>&#160;<span class="comment"> */</span></div>
 <div class="line"><a name="l00007"></a><span class="lineno">    7</span>&#160; </div>
-<div class="line"><a name="l00008"></a><span class="lineno">    8</span>&#160;<span class="preprocessor">#include &lt;iostream&gt;</span></div>
-<div class="line"><a name="l00009"></a><span class="lineno">    9</span>&#160;<span class="preprocessor">#include &lt;chrono&gt;</span></div>
-<div class="line"><a name="l00010"></a><span class="lineno">   10</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="Computation_8h.html">Computation.h</a>&quot;</span></div>
-<div class="line"><a name="l00011"></a><span class="lineno">   11</span>&#160; </div>
-<div class="line"><a name="l00012"></a><span class="lineno"><a class="line" href="classComputation.html#aaa3ac078d2677e3515e1cd9653cada9b">   12</a></span>&#160;<a class="code" href="classComputation.html#aaa3ac078d2677e3515e1cd9653cada9b">Computation::Computation</a>(<a class="code" href="classInstance.html">Instance</a>&amp; instance) : instance(instance)</div>
-<div class="line"><a name="l00013"></a><span class="lineno">   13</span>&#160;{</div>
-<div class="line"><a name="l00014"></a><span class="lineno">   14</span>&#160;  std::cout &lt;&lt; <span class="stringliteral">&quot;Initialized computation.&quot;</span> &lt;&lt; std::endl;</div>
-<div class="line"><a name="l00015"></a><span class="lineno">   15</span>&#160;  <a class="code" href="classComputation.html#a84bd2a347ef1e69c59b08d035473771a">running</a> = <span class="keyword">false</span>;</div>
-<div class="line"><a name="l00016"></a><span class="lineno">   16</span>&#160;}</div>
-<div class="line"><a name="l00017"></a><span class="lineno">   17</span>&#160; </div>
-<div class="line"><a name="l00018"></a><span class="lineno"><a class="line" href="classComputation.html#aad14e9593597150e351ee5d3a9a87ebe">   18</a></span>&#160;<a class="code" href="classComputation.html#aad14e9593597150e351ee5d3a9a87ebe">Computation::~Computation</a>()</div>
-<div class="line"><a name="l00019"></a><span class="lineno">   19</span>&#160;{</div>
-<div class="line"><a name="l00020"></a><span class="lineno">   20</span>&#160;  <a class="code" href="classComputation.html#a2aad70f6343bf8c0b704142eb76ba7ac">stop</a>();</div>
-<div class="line"><a name="l00021"></a><span class="lineno">   21</span>&#160;  <a class="code" href="classComputation.html#a13bc9058dbd9b7c6335c64876dab36d0">join_thread</a>();</div>
+<div class="line"><a name="l00008"></a><span class="lineno">    8</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="Computation_8h.html">Computation.h</a>&quot;</span></div>
+<div class="line"><a name="l00009"></a><span class="lineno">    9</span>&#160; </div>
+<div class="line"><a name="l00010"></a><span class="lineno">   10</span>&#160;<span class="preprocessor">#include &lt;chrono&gt;</span></div>
+<div class="line"><a name="l00011"></a><span class="lineno">   11</span>&#160;<span class="preprocessor">#include &lt;iostream&gt;</span></div>
+<div class="line"><a name="l00012"></a><span class="lineno">   12</span>&#160; </div>
+<div class="line"><a name="l00013"></a><span class="lineno">   13</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="LNS_8h.html">LNS.h</a>&quot;</span></div>
+<div class="line"><a name="l00014"></a><span class="lineno">   14</span>&#160; </div>
+<div class="line"><a name="l00015"></a><span class="lineno"><a class="line" href="classComputation.html#afa8a0a0a3e6588dd5c8a377e5c27d0f9">   15</a></span>&#160;<a class="code" href="classComputation.html#afa8a0a0a3e6588dd5c8a377e5c27d0f9">Computation::Computation</a>(std::shared_ptr&lt;Instance&gt; instance) : instance(instance)</div>
+<div class="line"><a name="l00016"></a><span class="lineno">   16</span>&#160;{</div>
+<div class="line"><a name="l00017"></a><span class="lineno">   17</span>&#160;  std::cout &lt;&lt; <span class="stringliteral">&quot;Initialized computation.&quot;</span> &lt;&lt; std::endl;</div>
+<div class="line"><a name="l00018"></a><span class="lineno">   18</span>&#160;  <a class="code" href="classComputation.html#a84bd2a347ef1e69c59b08d035473771a">running</a> = <span class="keyword">false</span>;</div>
+<div class="line"><a name="l00019"></a><span class="lineno">   19</span>&#160; </div>
+<div class="line"><a name="l00020"></a><span class="lineno">   20</span>&#160;  <span class="comment">// initialize the solver</span></div>
+<div class="line"><a name="l00021"></a><span class="lineno">   21</span>&#160;  <a class="code" href="classComputation.html#a2be82e54fb42a78b3d2d330ffce98143">solver</a> = std::make_unique&lt;LNS&gt;(<a class="code" href="classComputation.html#a479f633580e728983cc2ebf2a888a0e6">instance</a>);</div>
 <div class="line"><a name="l00022"></a><span class="lineno">   22</span>&#160;}</div>
 <div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160; </div>
-<div class="line"><a name="l00024"></a><span class="lineno"><a class="line" href="classComputation.html#a5afbbb03e99cf15d4c9647ef6b44299d">   24</a></span>&#160;<span class="keywordtype">void</span> <a class="code" href="classComputation.html#a5afbbb03e99cf15d4c9647ef6b44299d">Computation::start</a>()</div>
+<div class="line"><a name="l00024"></a><span class="lineno"><a class="line" href="classComputation.html#aad14e9593597150e351ee5d3a9a87ebe">   24</a></span>&#160;<a class="code" href="classComputation.html#aad14e9593597150e351ee5d3a9a87ebe">Computation::~Computation</a>()</div>
 <div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;{</div>
-<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;  <span class="comment">// start the underlying thread</span></div>
-<div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;  <a class="code" href="classComputation.html#a73090532312ed5f81ebcad2157607515">comp_thread</a> = std::thread(&amp;<a class="code" href="classComputation.html#ae8a494e778c3c2f0087e187b0d0bef65">Computation::run</a>, <span class="keyword">this</span>);</div>
-<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;  <a class="code" href="classComputation.html#a84bd2a347ef1e69c59b08d035473771a">running</a>     = <span class="keyword">true</span>;</div>
-<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;}</div>
-<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160; </div>
-<div class="line"><a name="l00031"></a><span class="lineno"><a class="line" href="classComputation.html#a2aad70f6343bf8c0b704142eb76ba7ac">   31</a></span>&#160;<span class="keywordtype">void</span> <a class="code" href="classComputation.html#a2aad70f6343bf8c0b704142eb76ba7ac">Computation::stop</a>()</div>
-<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;{</div>
-<div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;  <span class="comment">// set the stop signal</span></div>
-<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;  <a class="code" href="classComputation.html#a84bd2a347ef1e69c59b08d035473771a">running</a> = <span class="keyword">false</span>;</div>
+<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;  <a class="code" href="classComputation.html#a2aad70f6343bf8c0b704142eb76ba7ac">stop</a>();</div>
+<div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;  <a class="code" href="classComputation.html#a13bc9058dbd9b7c6335c64876dab36d0">join_thread</a>();</div>
+<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;}</div>
+<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160; </div>
+<div class="line"><a name="l00030"></a><span class="lineno"><a class="line" href="classComputation.html#a5afbbb03e99cf15d4c9647ef6b44299d">   30</a></span>&#160;<span class="keywordtype">void</span> <a class="code" href="classComputation.html#a5afbbb03e99cf15d4c9647ef6b44299d">Computation::start</a>()</div>
+<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;{</div>
+<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;  <span class="comment">// start the underlying thread</span></div>
+<div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;  <a class="code" href="classComputation.html#a73090532312ed5f81ebcad2157607515">comp_thread</a> = std::thread(&amp;<a class="code" href="classComputation.html#ae8a494e778c3c2f0087e187b0d0bef65">Computation::run</a>, <span class="keyword">this</span>);</div>
+<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;  <a class="code" href="classComputation.html#a84bd2a347ef1e69c59b08d035473771a">running</a>     = <span class="keyword">true</span>;</div>
 <div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;}</div>
 <div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160; </div>
-<div class="line"><a name="l00037"></a><span class="lineno"><a class="line" href="classComputation.html#a13bc9058dbd9b7c6335c64876dab36d0">   37</a></span>&#160;<span class="keywordtype">void</span> <a class="code" href="classComputation.html#a13bc9058dbd9b7c6335c64876dab36d0">Computation::join_thread</a>()</div>
+<div class="line"><a name="l00037"></a><span class="lineno"><a class="line" href="classComputation.html#a2aad70f6343bf8c0b704142eb76ba7ac">   37</a></span>&#160;<span class="keywordtype">void</span> <a class="code" href="classComputation.html#a2aad70f6343bf8c0b704142eb76ba7ac">Computation::stop</a>()</div>
 <div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;{</div>
-<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;  <span class="keywordflow">if</span> (<a class="code" href="classComputation.html#a73090532312ed5f81ebcad2157607515">comp_thread</a>.joinable())</div>
-<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;    {</div>
-<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;      <a class="code" href="classComputation.html#a73090532312ed5f81ebcad2157607515">comp_thread</a>.join();</div>
-<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;    }</div>
-<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;}</div>
-<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160; </div>
-<div class="line"><a name="l00045"></a><span class="lineno"><a class="line" href="classComputation.html#ae8a494e778c3c2f0087e187b0d0bef65">   45</a></span>&#160;<span class="keywordtype">void</span> <a class="code" href="classComputation.html#ae8a494e778c3c2f0087e187b0d0bef65">Computation::run</a>()</div>
-<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;{</div>
-<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;  <span class="keywordtype">int</span> i = 0;</div>
-<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;  <span class="keywordflow">while</span> (<a class="code" href="classComputation.html#a84bd2a347ef1e69c59b08d035473771a">running</a>)</div>
-<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;    {</div>
-<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;      std::cout &lt;&lt; <span class="stringliteral">&quot;Computation thread running&quot;</span> &lt;&lt; std::endl;</div>
-<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;      i++;</div>
-<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;      <span class="keywordflow">if</span> (i &gt;= 3)</div>
-<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;        <a class="code" href="classComputation.html#a84bd2a347ef1e69c59b08d035473771a">running</a> = <span class="keyword">false</span>;</div>
-<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;      std::this_thread::sleep_for(std::chrono::seconds(5));</div>
-<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;    }</div>
-<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;  std::cout &lt;&lt; <span class="stringliteral">&quot;Computation thread ended&quot;</span> &lt;&lt; std::endl;</div>
-<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;}</div>
+<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;  <span class="comment">// set the stop signal</span></div>
+<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;  <a class="code" href="classComputation.html#a84bd2a347ef1e69c59b08d035473771a">running</a> = <span class="keyword">false</span>;</div>
+<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;}</div>
+<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160; </div>
+<div class="line"><a name="l00043"></a><span class="lineno"><a class="line" href="classComputation.html#a13bc9058dbd9b7c6335c64876dab36d0">   43</a></span>&#160;<span class="keywordtype">void</span> <a class="code" href="classComputation.html#a13bc9058dbd9b7c6335c64876dab36d0">Computation::join_thread</a>()</div>
+<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;{</div>
+<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;  <span class="keywordflow">if</span> (<a class="code" href="classComputation.html#a73090532312ed5f81ebcad2157607515">comp_thread</a>.joinable()) { <a class="code" href="classComputation.html#a73090532312ed5f81ebcad2157607515">comp_thread</a>.join(); }</div>
+<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;}</div>
+<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160; </div>
+<div class="line"><a name="l00048"></a><span class="lineno"><a class="line" href="classComputation.html#ae8a494e778c3c2f0087e187b0d0bef65">   48</a></span>&#160;<span class="keywordtype">void</span> <a class="code" href="classComputation.html#ae8a494e778c3c2f0087e187b0d0bef65">Computation::run</a>()</div>
+<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;{</div>
+<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;  <span class="keywordtype">int</span> i = 0;</div>
+<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;  <span class="keywordflow">while</span> (<a class="code" href="classComputation.html#a84bd2a347ef1e69c59b08d035473771a">running</a>)</div>
+<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;  {</div>
+<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;    std::cout &lt;&lt; <span class="stringliteral">&quot;Computation thread running&quot;</span> &lt;&lt; std::endl;</div>
+<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;    i++;</div>
+<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;    <span class="keywordflow">if</span> (i &gt;= 1) <a class="code" href="classComputation.html#a84bd2a347ef1e69c59b08d035473771a">running</a> = <span class="keyword">false</span>;</div>
+<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;    std::this_thread::sleep_for(std::chrono::seconds(3));</div>
+<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;  }</div>
+<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;  std::cout &lt;&lt; <span class="stringliteral">&quot;Computation thread ended&quot;</span> &lt;&lt; std::endl;</div>
+<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;}</div>
 </div><!-- fragment --></div><!-- contents -->
-<div class="ttc" id="aclassComputation_html_a5afbbb03e99cf15d4c9647ef6b44299d"><div class="ttname"><a href="classComputation.html#a5afbbb03e99cf15d4c9647ef6b44299d">Computation::start</a></div><div class="ttdeci">void start()</div><div class="ttdef"><b>Definition:</b> <a href="Computation_8cpp_source.html#l00024">Computation.cpp:24</a></div></div>
+<div class="ttc" id="aLNS_8h_html"><div class="ttname"><a href="LNS_8h.html">LNS.h</a></div></div>
+<div class="ttc" id="aclassComputation_html_a5afbbb03e99cf15d4c9647ef6b44299d"><div class="ttname"><a href="classComputation.html#a5afbbb03e99cf15d4c9647ef6b44299d">Computation::start</a></div><div class="ttdeci">void start()</div><div class="ttdef"><b>Definition:</b> <a href="Computation_8cpp_source.html#l00030">Computation.cpp:30</a></div></div>
 <div class="ttc" id="aComputation_8h_html"><div class="ttname"><a href="Computation_8h.html">Computation.h</a></div></div>
-<div class="ttc" id="aclassComputation_html_aad14e9593597150e351ee5d3a9a87ebe"><div class="ttname"><a href="classComputation.html#aad14e9593597150e351ee5d3a9a87ebe">Computation::~Computation</a></div><div class="ttdeci">~Computation()</div><div class="ttdef"><b>Definition:</b> <a href="Computation_8cpp_source.html#l00018">Computation.cpp:18</a></div></div>
-<div class="ttc" id="aclassComputation_html_aaa3ac078d2677e3515e1cd9653cada9b"><div class="ttname"><a href="classComputation.html#aaa3ac078d2677e3515e1cd9653cada9b">Computation::Computation</a></div><div class="ttdeci">Computation(Instance &amp;instance)</div><div class="ttdef"><b>Definition:</b> <a href="Computation_8cpp_source.html#l00012">Computation.cpp:12</a></div></div>
-<div class="ttc" id="aclassComputation_html_a84bd2a347ef1e69c59b08d035473771a"><div class="ttname"><a href="classComputation.html#a84bd2a347ef1e69c59b08d035473771a">Computation::running</a></div><div class="ttdeci">std::atomic&lt; bool &gt; running</div><div class="ttdef"><b>Definition:</b> <a href="Computation_8h_source.html#l00032">Computation.h:32</a></div></div>
-<div class="ttc" id="aclassComputation_html_ae8a494e778c3c2f0087e187b0d0bef65"><div class="ttname"><a href="classComputation.html#ae8a494e778c3c2f0087e187b0d0bef65">Computation::run</a></div><div class="ttdeci">void run()</div><div class="ttdef"><b>Definition:</b> <a href="Computation_8cpp_source.html#l00045">Computation.cpp:45</a></div></div>
-<div class="ttc" id="aclassInstance_html"><div class="ttname"><a href="classInstance.html">Instance</a></div><div class="ttdef"><b>Definition:</b> <a href="Instance_8h_source.html#l00013">Instance.h:13</a></div></div>
-<div class="ttc" id="aclassComputation_html_a2aad70f6343bf8c0b704142eb76ba7ac"><div class="ttname"><a href="classComputation.html#a2aad70f6343bf8c0b704142eb76ba7ac">Computation::stop</a></div><div class="ttdeci">void stop()</div><div class="ttdef"><b>Definition:</b> <a href="Computation_8cpp_source.html#l00031">Computation.cpp:31</a></div></div>
-<div class="ttc" id="aclassComputation_html_a73090532312ed5f81ebcad2157607515"><div class="ttname"><a href="classComputation.html#a73090532312ed5f81ebcad2157607515">Computation::comp_thread</a></div><div class="ttdeci">std::thread comp_thread</div><div class="ttdef"><b>Definition:</b> <a href="Computation_8h_source.html#l00031">Computation.h:31</a></div></div>
-<div class="ttc" id="aclassComputation_html_a13bc9058dbd9b7c6335c64876dab36d0"><div class="ttname"><a href="classComputation.html#a13bc9058dbd9b7c6335c64876dab36d0">Computation::join_thread</a></div><div class="ttdeci">void join_thread()</div><div class="ttdef"><b>Definition:</b> <a href="Computation_8cpp_source.html#l00037">Computation.cpp:37</a></div></div>
+<div class="ttc" id="aclassComputation_html_a479f633580e728983cc2ebf2a888a0e6"><div class="ttname"><a href="classComputation.html#a479f633580e728983cc2ebf2a888a0e6">Computation::instance</a></div><div class="ttdeci">std::shared_ptr&lt; Instance &gt; instance</div><div class="ttdef"><b>Definition:</b> <a href="Computation_8h_source.html#l00034">Computation.h:34</a></div></div>
+<div class="ttc" id="aclassComputation_html_aad14e9593597150e351ee5d3a9a87ebe"><div class="ttname"><a href="classComputation.html#aad14e9593597150e351ee5d3a9a87ebe">Computation::~Computation</a></div><div class="ttdeci">~Computation()</div><div class="ttdef"><b>Definition:</b> <a href="Computation_8cpp_source.html#l00024">Computation.cpp:24</a></div></div>
+<div class="ttc" id="aclassComputation_html_a84bd2a347ef1e69c59b08d035473771a"><div class="ttname"><a href="classComputation.html#a84bd2a347ef1e69c59b08d035473771a">Computation::running</a></div><div class="ttdeci">std::atomic&lt; bool &gt; running</div><div class="ttdef"><b>Definition:</b> <a href="Computation_8h_source.html#l00035">Computation.h:35</a></div></div>
+<div class="ttc" id="aclassComputation_html_ae8a494e778c3c2f0087e187b0d0bef65"><div class="ttname"><a href="classComputation.html#ae8a494e778c3c2f0087e187b0d0bef65">Computation::run</a></div><div class="ttdeci">void run()</div><div class="ttdef"><b>Definition:</b> <a href="Computation_8cpp_source.html#l00048">Computation.cpp:48</a></div></div>
+<div class="ttc" id="aclassComputation_html_a2aad70f6343bf8c0b704142eb76ba7ac"><div class="ttname"><a href="classComputation.html#a2aad70f6343bf8c0b704142eb76ba7ac">Computation::stop</a></div><div class="ttdeci">void stop()</div><div class="ttdef"><b>Definition:</b> <a href="Computation_8cpp_source.html#l00037">Computation.cpp:37</a></div></div>
+<div class="ttc" id="aclassComputation_html_a73090532312ed5f81ebcad2157607515"><div class="ttname"><a href="classComputation.html#a73090532312ed5f81ebcad2157607515">Computation::comp_thread</a></div><div class="ttdeci">std::thread comp_thread</div><div class="ttdef"><b>Definition:</b> <a href="Computation_8h_source.html#l00033">Computation.h:33</a></div></div>
+<div class="ttc" id="aclassComputation_html_a2be82e54fb42a78b3d2d330ffce98143"><div class="ttname"><a href="classComputation.html#a2be82e54fb42a78b3d2d330ffce98143">Computation::solver</a></div><div class="ttdeci">std::unique_ptr&lt; LNS &gt; solver</div><div class="ttdef"><b>Definition:</b> <a href="Computation_8h_source.html#l00032">Computation.h:32</a></div></div>
+<div class="ttc" id="aclassComputation_html_afa8a0a0a3e6588dd5c8a377e5c27d0f9"><div class="ttname"><a href="classComputation.html#afa8a0a0a3e6588dd5c8a377e5c27d0f9">Computation::Computation</a></div><div class="ttdeci">Computation(std::shared_ptr&lt; Instance &gt; instance)</div><div class="ttdef"><b>Definition:</b> <a href="Computation_8cpp_source.html#l00015">Computation.cpp:15</a></div></div>
+<div class="ttc" id="aclassComputation_html_a13bc9058dbd9b7c6335c64876dab36d0"><div class="ttname"><a href="classComputation.html#a13bc9058dbd9b7c6335c64876dab36d0">Computation::join_thread</a></div><div class="ttdeci">void join_thread()</div><div class="ttdef"><b>Definition:</b> <a href="Computation_8cpp_source.html#l00043">Computation.cpp:43</a></div></div>
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
 Generated by &#160;<a href="http://www.doxygen.org/index.html">

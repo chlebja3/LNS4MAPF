@@ -74,15 +74,19 @@ $(function() {
 </div><!--header-->
 <div class="contents">
 <div class="textblock"><code>#include &lt;<a class="el" href="utils_8h_source.html">utils.h</a>&gt;</code><br />
+<code>#include &lt;array&gt;</code><br />
 <code>#include &lt;cmath&gt;</code><br />
+<code>#include &lt;filesystem&gt;</code><br />
 </div><div class="textblock"><div class="dynheader">
 Include dependency graph for utils.cpp:</div>
 <div class="dyncontent">
 <div class="center"><img src="utils_8cpp__incl.png" border="0" usemap="#src_2utils_8cpp" alt=""/></div>
 <map name="src_2utils_8cpp" id="src_2utils_8cpp">
-<area shape="rect" title=" " alt="" coords="135,5,235,32"/>
+<area shape="rect" title=" " alt="" coords="218,5,318,32"/>
 <area shape="rect" href="utils_8h.html" title=" " alt="" coords="111,80,174,107"/>
-<area shape="rect" title=" " alt="" coords="198,80,261,107"/>
+<area shape="rect" title=" " alt="" coords="199,80,255,107"/>
+<area shape="rect" title=" " alt="" coords="279,80,342,107"/>
+<area shape="rect" title=" " alt="" coords="367,80,457,107"/>
 <area shape="rect" title=" " alt="" coords="5,155,152,181"/>
 <area shape="rect" title=" " alt="" coords="177,155,239,181"/>
 </map>
@@ -92,13 +96,18 @@ Include dependency graph for utils.cpp:</div>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="func-members"></a>
 Functions</h2></td></tr>
-<tr class="memitem:a395cb40e08ba02883c2e243211301ec4"><td class="memItemLeft" align="right" valign="top">sf::Color&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="utils_8cpp.html#a395cb40e08ba02883c2e243211301ec4">generate_random_color</a> (int mix_r, int mix_g, int mix_b, double mix_ratio)</td></tr>
-<tr class="memdesc:a395cb40e08ba02883c2e243211301ec4"><td class="mdescLeft">&#160;</td><td class="mdescRight">Generate a random color. To make the color palette look more visually pleasing, mix the random color with (mix_r, mix_g, mix_b).  <a href="utils_8cpp.html#a395cb40e08ba02883c2e243211301ec4">More...</a><br /></td></tr>
-<tr class="separator:a395cb40e08ba02883c2e243211301ec4"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:afede3732fe3bbe3cd4b263ac2c7ea46a"><td class="memItemLeft" align="right" valign="top">std::ostream &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="utils_8cpp.html#afede3732fe3bbe3cd4b263ac2c7ea46a">operator&lt;&lt;</a> (std::ostream &amp;os, <a class="el" href="classPoint2d.html">Point2d</a> const &amp;p)</td></tr>
+<tr class="separator:afede3732fe3bbe3cd4b263ac2c7ea46a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aca7ece3811dea8c953a7e8090a93f41a"><td class="memItemLeft" align="right" valign="top">sf::Color&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="utils_8cpp.html#aca7ece3811dea8c953a7e8090a93f41a">generate_random_color</a> (const int mix_r, const int mix_g, const int mix_b, const double mix_ratio)</td></tr>
+<tr class="memdesc:aca7ece3811dea8c953a7e8090a93f41a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Generate a random color. To make the color palette look more visually pleasing, the random color is mixed with (mix_r, mix_g, mix_b).  <a href="utils_8cpp.html#aca7ece3811dea8c953a7e8090a93f41a">More...</a><br /></td></tr>
+<tr class="separator:aca7ece3811dea8c953a7e8090a93f41a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a6962d5b6ad4c7ddbdd4ad3f1fcb14352"><td class="memItemLeft" align="right" valign="top">std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="utils_8cpp.html#a6962d5b6ad4c7ddbdd4ad3f1fcb14352">get_base_path</a> ()</td></tr>
+<tr class="memdesc:a6962d5b6ad4c7ddbdd4ad3f1fcb14352"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the path to the project directory, assuming the project is run from the build directory. This function is useful for loading files from the project directory.  <a href="utils_8cpp.html#a6962d5b6ad4c7ddbdd4ad3f1fcb14352">More...</a><br /></td></tr>
+<tr class="separator:a6962d5b6ad4c7ddbdd4ad3f1fcb14352"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <h2 class="groupheader">Function Documentation</h2>
-<a id="a395cb40e08ba02883c2e243211301ec4"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a395cb40e08ba02883c2e243211301ec4">&#9670;&nbsp;</a></span>generate_random_color()</h2>
+<a id="aca7ece3811dea8c953a7e8090a93f41a"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aca7ece3811dea8c953a7e8090a93f41a">&#9670;&nbsp;</a></span>generate_random_color()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -106,26 +115,26 @@ Functions</h2></td></tr>
         <tr>
           <td class="memname">sf::Color generate_random_color </td>
           <td>(</td>
-          <td class="paramtype">int&#160;</td>
+          <td class="paramtype">const int&#160;</td>
           <td class="paramname"><em>mix_r</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">int&#160;</td>
+          <td class="paramtype">const int&#160;</td>
           <td class="paramname"><em>mix_g</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">int&#160;</td>
+          <td class="paramtype">const int&#160;</td>
           <td class="paramname"><em>mix_b</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">double&#160;</td>
-          <td class="paramname"><em>mix_ratio</em>&#160;</td>
+          <td class="paramtype">const double&#160;</td>
+          <td class="paramname"><em>mix_ratio</em> = <code>0.5</code>&#160;</td>
         </tr>
         <tr>
           <td></td>
@@ -135,7 +144,7 @@ Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p>Generate a random color. To make the color palette look more visually pleasing, mix the random color with (mix_r, mix_g, mix_b). </p>
+<p>Generate a random color. To make the color palette look more visually pleasing, the random color is mixed with (mix_r, mix_g, mix_b). </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">mix_r</td><td>The red channel value of the mix color, recommended value is 255. </td></tr>
@@ -145,18 +154,91 @@ Functions</h2></td></tr>
   </table>
   </dd>
 </dl>
-<dl class="section return"><dt>Returns</dt><dd></dd></dl>
+<dl class="section return"><dt>Returns</dt><dd>A random color. </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="utils_8cpp_source.html#l00021">21</a> of file <a class="el" href="utils_8cpp_source.html">utils.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="utils_8cpp_source.html#l00088">88</a> of file <a class="el" href="utils_8cpp_source.html">utils.cpp</a>.</p>
 <div class="dynheader">
 Here is the caller graph for this function:</div>
 <div class="dyncontent">
-<div class="center"><img src="utils_8cpp_a395cb40e08ba02883c2e243211301ec4_icgraph.png" border="0" usemap="#utils_8cpp_a395cb40e08ba02883c2e243211301ec4_icgraph" alt=""/></div>
-<map name="utils_8cpp_a395cb40e08ba02883c2e243211301ec4_icgraph" id="utils_8cpp_a395cb40e08ba02883c2e243211301ec4_icgraph">
-<area shape="rect" title="Generate a random color. To make the color palette look more visually pleasing, mix the random color ..." alt="" coords="212,5,388,32"/>
-<area shape="rect" href="classVisualizer.html#a592257767dcd73200be84968cf779b91" title=" " alt="" coords="5,5,164,32"/>
+<div class="center"><img src="utils_8cpp_aca7ece3811dea8c953a7e8090a93f41a_icgraph.png" border="0" usemap="#utils_8cpp_aca7ece3811dea8c953a7e8090a93f41a_icgraph" alt=""/></div>
+<map name="utils_8cpp_aca7ece3811dea8c953a7e8090a93f41a_icgraph" id="utils_8cpp_aca7ece3811dea8c953a7e8090a93f41a_icgraph">
+<area shape="rect" title="Generate a random color. To make the color palette look more visually pleasing, the random color is m..." alt="" coords="212,5,388,32"/>
+<area shape="rect" href="classVisualizer.html#ab2ce0e69dcc009a7ead6df33bca1ca77" title=" " alt="" coords="5,5,164,32"/>
 </map>
 </div>
+
+</div>
+</div>
+<a id="a6962d5b6ad4c7ddbdd4ad3f1fcb14352"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a6962d5b6ad4c7ddbdd4ad3f1fcb14352">&#9670;&nbsp;</a></span>get_base_path()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::string get_base_path </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Get the path to the project directory, assuming the project is run from the build directory. This function is useful for loading files from the project directory. </p>
+<dl class="section return"><dt>Returns</dt><dd>The path to the project directory. </dd></dl>
+
+<p class="definition">Definition at line <a class="el" href="utils_8cpp_source.html#l00097">97</a> of file <a class="el" href="utils_8cpp_source.html">utils.cpp</a>.</p>
+<div class="dynheader">
+Here is the caller graph for this function:</div>
+<div class="dyncontent">
+<div class="center"><img src="utils_8cpp_a6962d5b6ad4c7ddbdd4ad3f1fcb14352_icgraph.png" border="0" usemap="#utils_8cpp_a6962d5b6ad4c7ddbdd4ad3f1fcb14352_icgraph" alt=""/></div>
+<map name="utils_8cpp_a6962d5b6ad4c7ddbdd4ad3f1fcb14352_icgraph" id="utils_8cpp_a6962d5b6ad4c7ddbdd4ad3f1fcb14352_icgraph">
+<area shape="rect" title="Get the path to the project directory, assuming the project is run from the build directory...." alt="" coords="769,81,887,108"/>
+<area shape="rect" href="classVisualizer.html#a531350c5ec8ec39867647997690fc9fb" title=" " alt="" coords="607,81,721,108"/>
+<area shape="rect" href="classVisualizer.html#a2b6436ec715468955ebb9f53b908773f" title=" " alt="" coords="435,56,559,83"/>
+<area shape="rect" href="classVisualizer.html#a26b09c3766ced9ebb8e7d2b278434d92" title=" " alt="" coords="216,5,387,32"/>
+<area shape="rect" href="main_8cpp.html#a3c04138a5bfe5d72780bb7e82a18e627" title=" " alt="" coords="274,56,329,83"/>
+<area shape="rect" href="classVisualizer.html#a2cb8ddcc81f5c0208f5113cee2d9806d" title=" " alt="" coords="5,56,168,83"/>
+</map>
+</div>
+
+</div>
+</div>
+<a id="afede3732fe3bbe3cd4b263ac2c7ea46a"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#afede3732fe3bbe3cd4b263ac2c7ea46a">&#9670;&nbsp;</a></span>operator&lt;&lt;()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::ostream&amp; operator&lt;&lt; </td>
+          <td>(</td>
+          <td class="paramtype">std::ostream &amp;&#160;</td>
+          <td class="paramname"><em>os</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="classPoint2d.html">Point2d</a> const &amp;&#160;</td>
+          <td class="paramname"><em>p</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">os</td><td>The output stream. </td></tr>
+    <tr><td class="paramname">p</td><td>The point to print.</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>The output stream. </dd></dl>
+
+<p class="definition">Definition at line <a class="el" href="utils_8cpp_source.html#l00067">67</a> of file <a class="el" href="utils_8cpp_source.html">utils.cpp</a>.</p>
 
 </div>
 </div>

@@ -65,7 +65,6 @@ $(function() {
 <div class="header">
   <div class="summary">
 <a href="#pub-methods">Public Member Functions</a> &#124;
-<a href="#pub-attribs">Public Attributes</a> &#124;
 <a href="#pri-attribs">Private Attributes</a> &#124;
 <a href="classComputation-members.html">List of all members</a>  </div>
   <div class="headertitle">
@@ -74,20 +73,11 @@ $(function() {
 <div class="contents">
 
 <p><code>#include &lt;<a class="el" href="Computation_8h_source.html">Computation.h</a>&gt;</code></p>
-<div class="dynheader">
-Collaboration diagram for Computation:</div>
-<div class="dyncontent">
-<div class="center"><img src="classComputation__coll__graph.png" border="0" usemap="#Computation_coll__map" alt="Collaboration graph"/></div>
-<map name="Computation_coll__map" id="Computation_coll__map">
-<area shape="rect" title=" " alt="" coords="5,95,112,121"/>
-<area shape="rect" href="classInstance.html" title=" " alt="" coords="20,5,97,32"/>
-</map>
-<center><span class="legend">[<a href="graph_legend.html">legend</a>]</span></center></div>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:aaa3ac078d2677e3515e1cd9653cada9b"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classComputation.html#aaa3ac078d2677e3515e1cd9653cada9b">Computation</a> (<a class="el" href="classInstance.html">Instance</a> &amp;<a class="el" href="classComputation.html#afae77c2f2c1a19a3d36f8686623bd6da">instance</a>)</td></tr>
-<tr class="separator:aaa3ac078d2677e3515e1cd9653cada9b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:afa8a0a0a3e6588dd5c8a377e5c27d0f9"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classComputation.html#afa8a0a0a3e6588dd5c8a377e5c27d0f9">Computation</a> (std::shared_ptr&lt; <a class="el" href="classInstance.html">Instance</a> &gt; <a class="el" href="classComputation.html#a479f633580e728983cc2ebf2a888a0e6">instance</a>)</td></tr>
+<tr class="separator:afa8a0a0a3e6588dd5c8a377e5c27d0f9"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aad14e9593597150e351ee5d3a9a87ebe"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classComputation.html#aad14e9593597150e351ee5d3a9a87ebe">~Computation</a> ()</td></tr>
 <tr class="separator:aad14e9593597150e351ee5d3a9a87ebe"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a5afbbb03e99cf15d4c9647ef6b44299d"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classComputation.html#a5afbbb03e99cf15d4c9647ef6b44299d">start</a> ()</td></tr>
@@ -99,24 +89,23 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:ae8a494e778c3c2f0087e187b0d0bef65"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classComputation.html#ae8a494e778c3c2f0087e187b0d0bef65">run</a> ()</td></tr>
 <tr class="separator:ae8a494e778c3c2f0087e187b0d0bef65"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
-<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-attribs"></a>
-Public Attributes</h2></td></tr>
-<tr class="memitem:afae77c2f2c1a19a3d36f8686623bd6da"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classInstance.html">Instance</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classComputation.html#afae77c2f2c1a19a3d36f8686623bd6da">instance</a></td></tr>
-<tr class="separator:afae77c2f2c1a19a3d36f8686623bd6da"><td class="memSeparator" colspan="2">&#160;</td></tr>
-</table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pri-attribs"></a>
 Private Attributes</h2></td></tr>
+<tr class="memitem:a2be82e54fb42a78b3d2d330ffce98143"><td class="memItemLeft" align="right" valign="top">std::unique_ptr&lt; <a class="el" href="classLNS.html">LNS</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classComputation.html#a2be82e54fb42a78b3d2d330ffce98143">solver</a></td></tr>
+<tr class="separator:a2be82e54fb42a78b3d2d330ffce98143"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a73090532312ed5f81ebcad2157607515"><td class="memItemLeft" align="right" valign="top">std::thread&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classComputation.html#a73090532312ed5f81ebcad2157607515">comp_thread</a></td></tr>
 <tr class="separator:a73090532312ed5f81ebcad2157607515"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a479f633580e728983cc2ebf2a888a0e6"><td class="memItemLeft" align="right" valign="top">std::shared_ptr&lt; <a class="el" href="classInstance.html">Instance</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classComputation.html#a479f633580e728983cc2ebf2a888a0e6">instance</a></td></tr>
+<tr class="separator:a479f633580e728983cc2ebf2a888a0e6"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a84bd2a347ef1e69c59b08d035473771a"><td class="memItemLeft" align="right" valign="top">std::atomic&lt; bool &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classComputation.html#a84bd2a347ef1e69c59b08d035473771a">running</a></td></tr>
 <tr class="separator:a84bd2a347ef1e69c59b08d035473771a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock">
-<p class="definition">Definition at line <a class="el" href="Computation_8h_source.html#l00013">13</a> of file <a class="el" href="Computation_8h_source.html">Computation.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="Computation_8h_source.html#l00016">16</a> of file <a class="el" href="Computation_8h_source.html">Computation.h</a>.</p>
 </div><h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
-<a id="aaa3ac078d2677e3515e1cd9653cada9b"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aaa3ac078d2677e3515e1cd9653cada9b">&#9670;&nbsp;</a></span>Computation()</h2>
+<a id="afa8a0a0a3e6588dd5c8a377e5c27d0f9"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#afa8a0a0a3e6588dd5c8a377e5c27d0f9">&#9670;&nbsp;</a></span>Computation()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -124,14 +113,14 @@ Private Attributes</h2></td></tr>
         <tr>
           <td class="memname">Computation::Computation </td>
           <td>(</td>
-          <td class="paramtype"><a class="el" href="classInstance.html">Instance</a> &amp;&#160;</td>
+          <td class="paramtype">std::shared_ptr&lt; <a class="el" href="classInstance.html">Instance</a> &gt;&#160;</td>
           <td class="paramname"><em>instance</em></td><td>)</td>
           <td></td>
         </tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="Computation_8cpp_source.html#l00012">12</a> of file <a class="el" href="Computation_8cpp_source.html">Computation.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="Computation_8cpp_source.html#l00015">15</a> of file <a class="el" href="Computation_8cpp_source.html">Computation.cpp</a>.</p>
 
 </div>
 </div>
@@ -150,7 +139,7 @@ Private Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="Computation_8cpp_source.html#l00018">18</a> of file <a class="el" href="Computation_8cpp_source.html">Computation.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="Computation_8cpp_source.html#l00024">24</a> of file <a class="el" href="Computation_8cpp_source.html">Computation.cpp</a>.</p>
 
 </div>
 </div>
@@ -170,7 +159,7 @@ Private Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="Computation_8cpp_source.html#l00037">37</a> of file <a class="el" href="Computation_8cpp_source.html">Computation.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="Computation_8cpp_source.html#l00043">43</a> of file <a class="el" href="Computation_8cpp_source.html">Computation.cpp</a>.</p>
 <div class="dynheader">
 Here is the caller graph for this function:</div>
 <div class="dyncontent">
@@ -199,7 +188,7 @@ Here is the caller graph for this function:</div>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="Computation_8cpp_source.html#l00045">45</a> of file <a class="el" href="Computation_8cpp_source.html">Computation.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="Computation_8cpp_source.html#l00048">48</a> of file <a class="el" href="Computation_8cpp_source.html">Computation.cpp</a>.</p>
 <div class="dynheader">
 Here is the caller graph for this function:</div>
 <div class="dyncontent">
@@ -228,7 +217,7 @@ Here is the caller graph for this function:</div>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="Computation_8cpp_source.html#l00024">24</a> of file <a class="el" href="Computation_8cpp_source.html">Computation.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="Computation_8cpp_source.html#l00030">30</a> of file <a class="el" href="Computation_8cpp_source.html">Computation.cpp</a>.</p>
 <div class="dynheader">
 Here is the caller graph for this function:</div>
 <div class="dyncontent">
@@ -256,7 +245,7 @@ Here is the caller graph for this function:</div>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="Computation_8cpp_source.html#l00031">31</a> of file <a class="el" href="Computation_8cpp_source.html">Computation.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="Computation_8cpp_source.html#l00037">37</a> of file <a class="el" href="Computation_8cpp_source.html">Computation.cpp</a>.</p>
 <div class="dynheader">
 Here is the caller graph for this function:</div>
 <div class="dyncontent">
@@ -290,23 +279,31 @@ Here is the caller graph for this function:</div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="Computation_8h_source.html#l00031">31</a> of file <a class="el" href="Computation_8h_source.html">Computation.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="Computation_8h_source.html#l00033">33</a> of file <a class="el" href="Computation_8h_source.html">Computation.h</a>.</p>
 
 </div>
 </div>
-<a id="afae77c2f2c1a19a3d36f8686623bd6da"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#afae77c2f2c1a19a3d36f8686623bd6da">&#9670;&nbsp;</a></span>instance</h2>
+<a id="a479f633580e728983cc2ebf2a888a0e6"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a479f633580e728983cc2ebf2a888a0e6">&#9670;&nbsp;</a></span>instance</h2>
 
 <div class="memitem">
 <div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="classInstance.html">Instance</a>&amp; Computation::instance</td>
+          <td class="memname">std::shared_ptr&lt;<a class="el" href="classInstance.html">Instance</a>&gt; Computation::instance</td>
         </tr>
       </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">private</span></span>  </td>
+  </tr>
+</table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="Computation_8h_source.html#l00016">16</a> of file <a class="el" href="Computation_8h_source.html">Computation.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="Computation_8h_source.html#l00034">34</a> of file <a class="el" href="Computation_8h_source.html">Computation.h</a>.</p>
 
 </div>
 </div>
@@ -321,6 +318,30 @@ Here is the caller graph for this function:</div>
       <table class="memname">
         <tr>
           <td class="memname">std::atomic&lt;bool&gt; Computation::running</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">private</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="Computation_8h_source.html#l00035">35</a> of file <a class="el" href="Computation_8h_source.html">Computation.h</a>.</p>
+
+</div>
+</div>
+<a id="a2be82e54fb42a78b3d2d330ffce98143"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a2be82e54fb42a78b3d2d330ffce98143">&#9670;&nbsp;</a></span>solver</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::unique_ptr&lt;<a class="el" href="classLNS.html">LNS</a>&gt; Computation::solver</td>
         </tr>
       </table>
   </td>

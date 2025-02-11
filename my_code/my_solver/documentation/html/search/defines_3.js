@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['window_5fwidth_147',['WINDOW_WIDTH',['../Visualizer_8cpp.html#a498d9f026138406895e9a34b504ac6a6',1,'Visualizer.cpp']]]
+  ['line_5fwidth_270',['LINE_WIDTH',['../Visualizer_8cpp.html#a666201b429d62c0cc1bd9f464c0fafb3',1,'Visualizer.cpp']]]
 ];

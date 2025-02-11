@@ -1,10 +1,6 @@
 var searchData=
 [
-  ['map_5fdata_124',['map_data',['../classInstance.html#afc920646fe096a8dc561a7e39c09ff9e',1,'Instance']]],
-  ['map_5ffname_125',['map_fname',['../classInstance.html#a5bc2b83cc99206f76384971376033cb8',1,'Instance']]],
-  ['map_5fheight_126',['map_height',['../classVisualizer.html#a935508c911d070aa39f186de928e8730',1,'Visualizer']]],
-  ['map_5fsize_127',['map_size',['../classInstance.html#a8c73cb4d67819cfb16d36bb92cafb0c8',1,'Instance']]],
-  ['map_5fsprite_128',['map_sprite',['../classVisualizer.html#a360114a591b91eb6fc51a67daefe37e8',1,'Visualizer']]],
-  ['map_5ftexture_129',['map_texture',['../classVisualizer.html#a6cdc2630f36722cb2b6be98676f969de',1,'Visualizer']]],
-  ['map_5fwidth_130',['map_width',['../classVisualizer.html#a56c4f3a2486215219734b3a3a89e7bcb',1,'Visualizer']]]
+  ['initialized_236',['initialized',['../classInstance.html#a667c9f85315f4a2b97abd1a1faf54e56',1,'Instance']]],
+  ['instance_237',['instance',['../classComputation.html#a479f633580e728983cc2ebf2a888a0e6',1,'Computation::instance()'],['../classSolver.html#ae9b1fd3eb740c676d07821b379fd5378',1,'Solver::instance()'],['../classVisualizer.html#a6fc946ceb4a5412c1fec24a441be065e',1,'Visualizer::instance()']]],
+  ['interval_238',['interval',['../classSIPPNode.html#a61f2157aae8e2696cc95a9e84e7235cd',1,'SIPPNode']]]
 ];

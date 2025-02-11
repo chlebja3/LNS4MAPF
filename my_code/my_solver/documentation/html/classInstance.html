@@ -66,6 +66,7 @@ $(function() {
   <div class="summary">
 <a href="#pub-methods">Public Member Functions</a> &#124;
 <a href="#pub-attribs">Public Attributes</a> &#124;
+<a href="#pri-methods">Private Member Functions</a> &#124;
 <a href="#pri-attribs">Private Attributes</a> &#124;
 <a href="classInstance-members.html">List of all members</a>  </div>
   <div class="headertitle">
@@ -74,63 +75,107 @@ $(function() {
 <div class="contents">
 
 <p><code>#include &lt;<a class="el" href="Instance_8h_source.html">Instance.h</a>&gt;</code></p>
+<div class="dynheader">
+Collaboration diagram for Instance:</div>
+<div class="dyncontent">
+<div class="center"><img src="classInstance__coll__graph.png" border="0" usemap="#Instance_coll__map" alt="Collaboration graph"/></div>
+<map name="Instance_coll__map" id="Instance_coll__map">
+<area shape="rect" title=" " alt="" coords="5,95,83,121"/>
+<area shape="rect" href="classMap.html" title=" " alt="" coords="19,5,69,32"/>
+</map>
+<center><span class="legend">[<a href="graph_legend.html">legend</a>]</span></center></div>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:a435d55c931ab7fd0f2f680dc6ae76880"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classInstance.html#a435d55c931ab7fd0f2f680dc6ae76880">Instance</a> (const std::string &amp;<a class="el" href="classInstance.html#a5bc2b83cc99206f76384971376033cb8">map_fname</a>, const std::string &amp;<a class="el" href="classInstance.html#a2cf6973652699b3b35e47b92f1dc37bc">scene_fname</a>, int <a class="el" href="classInstance.html#a654b42d2c53acb14a71b296d22a88d5c">num_of_agents</a>=0, int <a class="el" href="classInstance.html#a85167169c05b4681eb0bb457190ccef7">num_of_rows</a>=0, int <a class="el" href="classInstance.html#a878a82ee018053650427eac2213b3629">num_of_cols</a>=0)</td></tr>
-<tr class="separator:a435d55c931ab7fd0f2f680dc6ae76880"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ab904996d9bf4c1907976d8313318ecf9"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classInstance.html#ab904996d9bf4c1907976d8313318ecf9">load_map</a> ()</td></tr>
-<tr class="memdesc:ab904996d9bf4c1907976d8313318ecf9"><td class="mdescLeft">&#160;</td><td class="mdescRight">Load the map from a file specified during <a class="el" href="classInstance.html">Instance</a> initialization.  <a href="classInstance.html#ab904996d9bf4c1907976d8313318ecf9">More...</a><br /></td></tr>
-<tr class="separator:ab904996d9bf4c1907976d8313318ecf9"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a1e22966a1d1dd0162f5b27e38d9e9155"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classInstance.html#a1e22966a1d1dd0162f5b27e38d9e9155">load_scene</a> ()</td></tr>
-<tr class="separator:a1e22966a1d1dd0162f5b27e38d9e9155"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a177e628611a4e91f89029c9536fb51a0"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classInstance.html#a177e628611a4e91f89029c9536fb51a0">print_map</a> () const</td></tr>
-<tr class="separator:a177e628611a4e91f89029c9536fb51a0"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a52cdbd4d32102b64f9c712495a6cb711"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classInstance.html#a52cdbd4d32102b64f9c712495a6cb711">print_agents</a> () const</td></tr>
-<tr class="separator:a52cdbd4d32102b64f9c712495a6cb711"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aac21a51074cf6030e8843b752d9a004e"><td class="memItemLeft" align="right" valign="top">std::vector&lt; uint8_t &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classInstance.html#aac21a51074cf6030e8843b752d9a004e">get_map_data</a> () const</td></tr>
-<tr class="separator:aac21a51074cf6030e8843b752d9a004e"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ae74e417d1f4797cf2c3f75ab111f639a"><td class="memItemLeft" align="right" valign="top">std::vector&lt; std::tuple&lt; int, int &gt; &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classInstance.html#ae74e417d1f4797cf2c3f75ab111f639a">get_start_positions</a> () const</td></tr>
-<tr class="separator:ae74e417d1f4797cf2c3f75ab111f639a"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ae45ac6684628b5d591516f418c9e02eb"><td class="memItemLeft" align="right" valign="top">std::vector&lt; std::tuple&lt; int, int &gt; &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classInstance.html#ae45ac6684628b5d591516f418c9e02eb">get_goal_positions</a> () const</td></tr>
-<tr class="separator:ae45ac6684628b5d591516f418c9e02eb"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ac7ad36c82c6c0708a2e88a67c82ad9c6"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classInstance.html#ac7ad36c82c6c0708a2e88a67c82ad9c6">calculate_optimal_paths</a> ()</td></tr>
-<tr class="separator:ac7ad36c82c6c0708a2e88a67c82ad9c6"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a55d9c6657e9a997004fc0b2571f51a9e"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classInstance.html#a55d9c6657e9a997004fc0b2571f51a9e">Instance</a> (void)=default</td></tr>
+<tr class="separator:a55d9c6657e9a997004fc0b2571f51a9e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a459953bdc07d77826daec2d3bea4d95f"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classInstance.html#a459953bdc07d77826daec2d3bea4d95f">Instance</a> (const std::string &amp;<a class="el" href="classInstance.html#a5bc2b83cc99206f76384971376033cb8">map_fname</a>, const std::string &amp;<a class="el" href="classInstance.html#a2cf6973652699b3b35e47b92f1dc37bc">scene_fname</a>, int <a class="el" href="classInstance.html#a654b42d2c53acb14a71b296d22a88d5c">num_of_agents</a>=0)</td></tr>
+<tr class="separator:a459953bdc07d77826daec2d3bea4d95f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0c4d170c76daeaec3e79a3d800b15531"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classInstance.html#a0c4d170c76daeaec3e79a3d800b15531">initialize</a> (const std::string &amp;<a class="el" href="classInstance.html#a5bc2b83cc99206f76384971376033cb8">map_fname</a>, const std::string &amp;<a class="el" href="classInstance.html#a2cf6973652699b3b35e47b92f1dc37bc">scene_fname</a>, int <a class="el" href="classInstance.html#a654b42d2c53acb14a71b296d22a88d5c">num_of_agents</a>=0)</td></tr>
+<tr class="separator:a0c4d170c76daeaec3e79a3d800b15531"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad93cb436b8bf88d91dc6e7f02723c533"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classInstance.html#ad93cb436b8bf88d91dc6e7f02723c533">initialize</a> (void)</td></tr>
+<tr class="separator:ad93cb436b8bf88d91dc6e7f02723c533"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a4bdcc6b3fa14bc9d74f290cc56b7ab19"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classInstance.html#a4bdcc6b3fa14bc9d74f290cc56b7ab19">print_map</a> (void) const</td></tr>
+<tr class="separator:a4bdcc6b3fa14bc9d74f290cc56b7ab19"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a425910eb254fe2c66c1040c219dd5979"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classInstance.html#a425910eb254fe2c66c1040c219dd5979">print_agents</a> (void) const</td></tr>
+<tr class="separator:a425910eb254fe2c66c1040c219dd5979"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa550abb50d19172300480704d16111a2"><td class="memItemLeft" align="right" valign="top">const <a class="el" href="classMap.html">Map</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classInstance.html#aa550abb50d19172300480704d16111a2">get_map_data</a> (void) const</td></tr>
+<tr class="separator:aa550abb50d19172300480704d16111a2"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af6df4bf798390122c0c6a9a905a5fd3e"><td class="memItemLeft" align="right" valign="top">const std::vector&lt; <a class="el" href="classPoint2d.html">Point2d</a> &gt; &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classInstance.html#af6df4bf798390122c0c6a9a905a5fd3e">get_start_positions</a> (void) const</td></tr>
+<tr class="separator:af6df4bf798390122c0c6a9a905a5fd3e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a8a5566213e50205537fa945e2244d566"><td class="memItemLeft" align="right" valign="top">const std::vector&lt; <a class="el" href="classPoint2d.html">Point2d</a> &gt; &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classInstance.html#a8a5566213e50205537fa945e2244d566">get_goal_positions</a> (void) const</td></tr>
+<tr class="separator:a8a5566213e50205537fa945e2244d566"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad6c0c7630be570d5d57d33dcc0a3ce68"><td class="memItemLeft" align="right" valign="top">const std::vector&lt; <a class="el" href="utils_8h.html#a4b0c12fdb9bfd266c909605f8aa6e3d6">Path</a> &gt; &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classInstance.html#ad6c0c7630be570d5d57d33dcc0a3ce68">get_optimal_paths</a> (void) const</td></tr>
+<tr class="separator:ad6c0c7630be570d5d57d33dcc0a3ce68"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a06bfc2787b952c7c33f700eb71367b99"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classInstance.html#a06bfc2787b952c7c33f700eb71367b99">calculate_optimal_paths</a> (void)</td></tr>
+<tr class="separator:a06bfc2787b952c7c33f700eb71367b99"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae3bd691dd618ce7cbe48455bd32e8b2c"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classInstance.html#ae3bd691dd618ce7cbe48455bd32e8b2c">calculate_optimal_paths_parallel</a> (void)</td></tr>
+<tr class="separator:ae3bd691dd618ce7cbe48455bd32e8b2c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-attribs"></a>
 Public Attributes</h2></td></tr>
-<tr class="memitem:a878a82ee018053650427eac2213b3629"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classInstance.html#a878a82ee018053650427eac2213b3629">num_of_cols</a></td></tr>
-<tr class="separator:a878a82ee018053650427eac2213b3629"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a85167169c05b4681eb0bb457190ccef7"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classInstance.html#a85167169c05b4681eb0bb457190ccef7">num_of_rows</a></td></tr>
-<tr class="separator:a85167169c05b4681eb0bb457190ccef7"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a654b42d2c53acb14a71b296d22a88d5c"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classInstance.html#a654b42d2c53acb14a71b296d22a88d5c">num_of_agents</a></td></tr>
 <tr class="separator:a654b42d2c53acb14a71b296d22a88d5c"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a8c73cb4d67819cfb16d36bb92cafb0c8"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classInstance.html#a8c73cb4d67819cfb16d36bb92cafb0c8">map_size</a></td></tr>
-<tr class="separator:a8c73cb4d67819cfb16d36bb92cafb0c8"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pri-methods"></a>
+Private Member Functions</h2></td></tr>
+<tr class="memitem:a14834be9f7732bcf925649bd0e9ca7cb"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classInstance.html#a14834be9f7732bcf925649bd0e9ca7cb">load_map</a> (void)</td></tr>
+<tr class="memdesc:a14834be9f7732bcf925649bd0e9ca7cb"><td class="mdescLeft">&#160;</td><td class="mdescRight">Load the map from a file specified during <a class="el" href="classInstance.html">Instance</a> initialization.  <a href="classInstance.html#a14834be9f7732bcf925649bd0e9ca7cb">More...</a><br /></td></tr>
+<tr class="separator:a14834be9f7732bcf925649bd0e9ca7cb"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a98024b413d5f329fe3a938762ea4f215"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classInstance.html#a98024b413d5f329fe3a938762ea4f215">load_scene</a> (void)</td></tr>
+<tr class="separator:a98024b413d5f329fe3a938762ea4f215"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pri-attribs"></a>
 Private Attributes</h2></td></tr>
+<tr class="memitem:a667c9f85315f4a2b97abd1a1faf54e56"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classInstance.html#a667c9f85315f4a2b97abd1a1faf54e56">initialized</a> = false</td></tr>
+<tr class="separator:a667c9f85315f4a2b97abd1a1faf54e56"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a5bc2b83cc99206f76384971376033cb8"><td class="memItemLeft" align="right" valign="top">std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classInstance.html#a5bc2b83cc99206f76384971376033cb8">map_fname</a></td></tr>
 <tr class="separator:a5bc2b83cc99206f76384971376033cb8"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a2cf6973652699b3b35e47b92f1dc37bc"><td class="memItemLeft" align="right" valign="top">std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classInstance.html#a2cf6973652699b3b35e47b92f1dc37bc">scene_fname</a></td></tr>
 <tr class="separator:a2cf6973652699b3b35e47b92f1dc37bc"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a1ababe16c8724a7f50af89190a2af614"><td class="memItemLeft" align="right" valign="top">std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classInstance.html#a1ababe16c8724a7f50af89190a2af614">type</a></td></tr>
 <tr class="separator:a1ababe16c8724a7f50af89190a2af614"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:afc920646fe096a8dc561a7e39c09ff9e"><td class="memItemLeft" align="right" valign="top">std::vector&lt; uint8_t &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classInstance.html#afc920646fe096a8dc561a7e39c09ff9e">map_data</a></td></tr>
-<tr class="separator:afc920646fe096a8dc561a7e39c09ff9e"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a2b5d2484e6695fa0a93763372db2e776"><td class="memItemLeft" align="right" valign="top">std::vector&lt; std::tuple&lt; int, int &gt; &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classInstance.html#a2b5d2484e6695fa0a93763372db2e776">start_positions</a></td></tr>
-<tr class="separator:a2b5d2484e6695fa0a93763372db2e776"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a78348ccdf4ef16fc8ecb5e0f2e06b1c8"><td class="memItemLeft" align="right" valign="top">std::vector&lt; std::tuple&lt; int, int &gt; &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classInstance.html#a78348ccdf4ef16fc8ecb5e0f2e06b1c8">goal_positions</a></td></tr>
-<tr class="separator:a78348ccdf4ef16fc8ecb5e0f2e06b1c8"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a83ceb65b77aa07026ea648091adac7b7"><td class="memItemLeft" align="right" valign="top">std::vector&lt; <a class="el" href="utils_8h.html#a94d63413fe9f34adb3f980af8390ea04">Path</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classInstance.html#a83ceb65b77aa07026ea648091adac7b7">optimal_paths</a></td></tr>
+<tr class="memitem:a78791f5888bcbb3c6ab5f8e9ba6b5f53"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classMap.html">Map</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classInstance.html#a78791f5888bcbb3c6ab5f8e9ba6b5f53">map_data</a></td></tr>
+<tr class="separator:a78791f5888bcbb3c6ab5f8e9ba6b5f53"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a450b0a5f3c6a653c2d896668f15d3b11"><td class="memItemLeft" align="right" valign="top">std::vector&lt; <a class="el" href="classPoint2d.html">Point2d</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classInstance.html#a450b0a5f3c6a653c2d896668f15d3b11">start_positions</a></td></tr>
+<tr class="separator:a450b0a5f3c6a653c2d896668f15d3b11"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a5e1a25f593850e53ffb9c155cea23e27"><td class="memItemLeft" align="right" valign="top">std::vector&lt; <a class="el" href="classPoint2d.html">Point2d</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classInstance.html#a5e1a25f593850e53ffb9c155cea23e27">goal_positions</a></td></tr>
+<tr class="separator:a5e1a25f593850e53ffb9c155cea23e27"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a83ceb65b77aa07026ea648091adac7b7"><td class="memItemLeft" align="right" valign="top">std::vector&lt; <a class="el" href="utils_8h.html#a4b0c12fdb9bfd266c909605f8aa6e3d6">Path</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classInstance.html#a83ceb65b77aa07026ea648091adac7b7">optimal_paths</a></td></tr>
 <tr class="separator:a83ceb65b77aa07026ea648091adac7b7"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock">
-<p class="definition">Definition at line <a class="el" href="Instance_8h_source.html#l00013">13</a> of file <a class="el" href="Instance_8h_source.html">Instance.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="Instance_8h_source.html#l00014">14</a> of file <a class="el" href="Instance_8h_source.html">Instance.h</a>.</p>
 </div><h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
-<a id="a435d55c931ab7fd0f2f680dc6ae76880"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a435d55c931ab7fd0f2f680dc6ae76880">&#9670;&nbsp;</a></span>Instance()</h2>
+<a id="a55d9c6657e9a997004fc0b2571f51a9e"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a55d9c6657e9a997004fc0b2571f51a9e">&#9670;&nbsp;</a></span>Instance() <span class="overload">[1/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">Instance::Instance </td>
+          <td>(</td>
+          <td class="paramtype">void&#160;</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">default</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a459953bdc07d77826daec2d3bea4d95f"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a459953bdc07d77826daec2d3bea4d95f">&#9670;&nbsp;</a></span>Instance() <span class="overload">[2/2]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -151,19 +196,7 @@ Private Attributes</h2></td></tr>
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">int&#160;</td>
-          <td class="paramname"><em>num_of_agents</em> = <code>0</code>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">int&#160;</td>
-          <td class="paramname"><em>num_of_rows</em> = <code>0</code>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">int&#160;</td>
-          <td class="paramname"><em>num_of_cols</em> = <code>0</code>&#160;</td>
+          <td class="paramname"><em>num_of_agents</em> = <code>0</code>&#160;</td>
         </tr>
         <tr>
           <td></td>
@@ -173,13 +206,13 @@ Private Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="Instance_8cpp_source.html#l00017">17</a> of file <a class="el" href="Instance_8cpp_source.html">Instance.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="Instance_8cpp_source.html#l00031">31</a> of file <a class="el" href="Instance_8cpp_source.html">Instance.cpp</a>.</p>
 
 </div>
 </div>
 <h2 class="groupheader">Member Function Documentation</h2>
-<a id="ac7ad36c82c6c0708a2e88a67c82ad9c6"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ac7ad36c82c6c0708a2e88a67c82ad9c6">&#9670;&nbsp;</a></span>calculate_optimal_paths()</h2>
+<a id="a06bfc2787b952c7c33f700eb71367b99"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a06bfc2787b952c7c33f700eb71367b99">&#9670;&nbsp;</a></span>calculate_optimal_paths()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -187,161 +220,266 @@ Private Attributes</h2></td></tr>
         <tr>
           <td class="memname">void Instance::calculate_optimal_paths </td>
           <td>(</td>
+          <td class="paramtype">void&#160;</td>
           <td class="paramname"></td><td>)</td>
           <td></td>
         </tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="Instance_8cpp_source.html#l00221">221</a> of file <a class="el" href="Instance_8cpp_source.html">Instance.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="Instance_8cpp_source.html#l00223">223</a> of file <a class="el" href="Instance_8cpp_source.html">Instance.cpp</a>.</p>
 
 </div>
 </div>
-<a id="ae45ac6684628b5d591516f418c9e02eb"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ae45ac6684628b5d591516f418c9e02eb">&#9670;&nbsp;</a></span>get_goal_positions()</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">std::vector&lt; std::tuple&lt; int, int &gt; &gt; Instance::get_goal_positions </td>
-          <td>(</td>
-          <td class="paramname"></td><td>)</td>
-          <td> const</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p class="definition">Definition at line <a class="el" href="Instance_8cpp_source.html#l00216">216</a> of file <a class="el" href="Instance_8cpp_source.html">Instance.cpp</a>.</p>
-<div class="dynheader">
-Here is the caller graph for this function:</div>
-<div class="dyncontent">
-<div class="center"><img src="classInstance_ae45ac6684628b5d591516f418c9e02eb_icgraph.png" border="0" usemap="#classInstance_ae45ac6684628b5d591516f418c9e02eb_icgraph" alt=""/></div>
-<map name="classInstance_ae45ac6684628b5d591516f418c9e02eb_icgraph" id="classInstance_ae45ac6684628b5d591516f418c9e02eb_icgraph">
-<area shape="rect" title=" " alt="" coords="212,5,353,47"/>
-<area shape="rect" href="classVisualizer.html#a592257767dcd73200be84968cf779b91" title=" " alt="" coords="5,13,164,39"/>
-</map>
-</div>
-
-</div>
-</div>
-<a id="aac21a51074cf6030e8843b752d9a004e"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aac21a51074cf6030e8843b752d9a004e">&#9670;&nbsp;</a></span>get_map_data()</h2>
+<a id="ae3bd691dd618ce7cbe48455bd32e8b2c"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ae3bd691dd618ce7cbe48455bd32e8b2c">&#9670;&nbsp;</a></span>calculate_optimal_paths_parallel()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">std::vector&lt; uint8_t &gt; Instance::get_map_data </td>
+          <td class="memname">void Instance::calculate_optimal_paths_parallel </td>
           <td>(</td>
-          <td class="paramname"></td><td>)</td>
-          <td> const</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p class="definition">Definition at line <a class="el" href="Instance_8cpp_source.html#l00206">206</a> of file <a class="el" href="Instance_8cpp_source.html">Instance.cpp</a>.</p>
-<div class="dynheader">
-Here is the caller graph for this function:</div>
-<div class="dyncontent">
-<div class="center"><img src="classInstance_aac21a51074cf6030e8843b752d9a004e_icgraph.png" border="0" usemap="#classInstance_aac21a51074cf6030e8843b752d9a004e_icgraph" alt=""/></div>
-<map name="classInstance_aac21a51074cf6030e8843b752d9a004e_icgraph" id="classInstance_aac21a51074cf6030e8843b752d9a004e_icgraph">
-<area shape="rect" title=" " alt="" coords="212,5,391,32"/>
-<area shape="rect" href="classVisualizer.html#a592257767dcd73200be84968cf779b91" title=" " alt="" coords="5,5,164,32"/>
-</map>
-</div>
-
-</div>
-</div>
-<a id="ae74e417d1f4797cf2c3f75ab111f639a"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ae74e417d1f4797cf2c3f75ab111f639a">&#9670;&nbsp;</a></span>get_start_positions()</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">std::vector&lt; std::tuple&lt; int, int &gt; &gt; Instance::get_start_positions </td>
-          <td>(</td>
-          <td class="paramname"></td><td>)</td>
-          <td> const</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p class="definition">Definition at line <a class="el" href="Instance_8cpp_source.html#l00211">211</a> of file <a class="el" href="Instance_8cpp_source.html">Instance.cpp</a>.</p>
-<div class="dynheader">
-Here is the caller graph for this function:</div>
-<div class="dyncontent">
-<div class="center"><img src="classInstance_ae74e417d1f4797cf2c3f75ab111f639a_icgraph.png" border="0" usemap="#classInstance_ae74e417d1f4797cf2c3f75ab111f639a_icgraph" alt=""/></div>
-<map name="classInstance_ae74e417d1f4797cf2c3f75ab111f639a_icgraph" id="classInstance_ae74e417d1f4797cf2c3f75ab111f639a_icgraph">
-<area shape="rect" title=" " alt="" coords="212,5,355,47"/>
-<area shape="rect" href="classVisualizer.html#a592257767dcd73200be84968cf779b91" title=" " alt="" coords="5,13,164,39"/>
-</map>
-</div>
-
-</div>
-</div>
-<a id="ab904996d9bf4c1907976d8313318ecf9"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ab904996d9bf4c1907976d8313318ecf9">&#9670;&nbsp;</a></span>load_map()</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">bool Instance::load_map </td>
-          <td>(</td>
+          <td class="paramtype">void&#160;</td>
           <td class="paramname"></td><td>)</td>
           <td></td>
         </tr>
       </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="Instance_8cpp_source.html#l00236">236</a> of file <a class="el" href="Instance_8cpp_source.html">Instance.cpp</a>.</p>
+
+</div>
+</div>
+<a id="a8a5566213e50205537fa945e2244d566"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a8a5566213e50205537fa945e2244d566">&#9670;&nbsp;</a></span>get_goal_positions()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">const std::vector&lt; <a class="el" href="classPoint2d.html">Point2d</a> &gt; &amp; Instance::get_goal_positions </td>
+          <td>(</td>
+          <td class="paramtype">void&#160;</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="Instance_8cpp_source.html#l00218">218</a> of file <a class="el" href="Instance_8cpp_source.html">Instance.cpp</a>.</p>
+
+</div>
+</div>
+<a id="aa550abb50d19172300480704d16111a2"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aa550abb50d19172300480704d16111a2">&#9670;&nbsp;</a></span>get_map_data()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">const <a class="el" href="classMap.html">Map</a> &amp; Instance::get_map_data </td>
+          <td>(</td>
+          <td class="paramtype">void&#160;</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="Instance_8cpp_source.html#l00208">208</a> of file <a class="el" href="Instance_8cpp_source.html">Instance.cpp</a>.</p>
+
+</div>
+</div>
+<a id="ad6c0c7630be570d5d57d33dcc0a3ce68"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ad6c0c7630be570d5d57d33dcc0a3ce68">&#9670;&nbsp;</a></span>get_optimal_paths()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">const std::vector&lt; <a class="el" href="utils_8h.html#a4b0c12fdb9bfd266c909605f8aa6e3d6">Path</a> &gt; &amp; Instance::get_optimal_paths </td>
+          <td>(</td>
+          <td class="paramtype">void&#160;</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="Instance_8cpp_source.html#l00256">256</a> of file <a class="el" href="Instance_8cpp_source.html">Instance.cpp</a>.</p>
+
+</div>
+</div>
+<a id="af6df4bf798390122c0c6a9a905a5fd3e"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#af6df4bf798390122c0c6a9a905a5fd3e">&#9670;&nbsp;</a></span>get_start_positions()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">const std::vector&lt; <a class="el" href="classPoint2d.html">Point2d</a> &gt; &amp; Instance::get_start_positions </td>
+          <td>(</td>
+          <td class="paramtype">void&#160;</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="Instance_8cpp_source.html#l00213">213</a> of file <a class="el" href="Instance_8cpp_source.html">Instance.cpp</a>.</p>
+
+</div>
+</div>
+<a id="a0c4d170c76daeaec3e79a3d800b15531"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a0c4d170c76daeaec3e79a3d800b15531">&#9670;&nbsp;</a></span>initialize() <span class="overload">[1/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void Instance::initialize </td>
+          <td>(</td>
+          <td class="paramtype">const std::string &amp;&#160;</td>
+          <td class="paramname"><em>map_fname</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const std::string &amp;&#160;</td>
+          <td class="paramname"><em>scene_fname</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>num_of_agents</em> = <code>0</code>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="Instance_8cpp_source.html#l00037">37</a> of file <a class="el" href="Instance_8cpp_source.html">Instance.cpp</a>.</p>
+
+</div>
+</div>
+<a id="ad93cb436b8bf88d91dc6e7f02723c533"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ad93cb436b8bf88d91dc6e7f02723c533">&#9670;&nbsp;</a></span>initialize() <span class="overload">[2/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void Instance::initialize </td>
+          <td>(</td>
+          <td class="paramtype">void&#160;</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="Instance_8cpp_source.html#l00045">45</a> of file <a class="el" href="Instance_8cpp_source.html">Instance.cpp</a>.</p>
+<div class="dynheader">
+Here is the caller graph for this function:</div>
+<div class="dyncontent">
+<div class="center"><img src="classInstance_ad93cb436b8bf88d91dc6e7f02723c533_icgraph.png" border="0" usemap="#classInstance_ad93cb436b8bf88d91dc6e7f02723c533_icgraph" alt=""/></div>
+<map name="classInstance_ad93cb436b8bf88d91dc6e7f02723c533_icgraph" id="classInstance_ad93cb436b8bf88d91dc6e7f02723c533_icgraph">
+<area shape="rect" title=" " alt="" coords="195,31,336,57"/>
+<area shape="rect" href="classInstance.html#a0c4d170c76daeaec3e79a3d800b15531" title=" " alt="" coords="5,5,147,32"/>
+<area shape="rect" href="classInstance.html#a459953bdc07d77826daec2d3bea4d95f" title=" " alt="" coords="6,56,146,83"/>
+</map>
+</div>
+
+</div>
+</div>
+<a id="a14834be9f7732bcf925649bd0e9ca7cb"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a14834be9f7732bcf925649bd0e9ca7cb">&#9670;&nbsp;</a></span>load_map()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void Instance::load_map </td>
+          <td>(</td>
+          <td class="paramtype">void&#160;</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">private</span></span>  </td>
+  </tr>
+</table>
 </div><div class="memdoc">
 
 <p>Load the map from a file specified during <a class="el" href="classInstance.html">Instance</a> initialization. </p>
 <dl class="section return"><dt>Returns</dt><dd>Success of the operation </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="Instance_8cpp_source.html#l00030">30</a> of file <a class="el" href="Instance_8cpp_source.html">Instance.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="Instance_8cpp_source.html#l00051">51</a> of file <a class="el" href="Instance_8cpp_source.html">Instance.cpp</a>.</p>
 <div class="dynheader">
 Here is the caller graph for this function:</div>
 <div class="dyncontent">
-<div class="center"><img src="classInstance_ab904996d9bf4c1907976d8313318ecf9_icgraph.png" border="0" usemap="#classInstance_ab904996d9bf4c1907976d8313318ecf9_icgraph" alt=""/></div>
-<map name="classInstance_ab904996d9bf4c1907976d8313318ecf9_icgraph" id="classInstance_ab904996d9bf4c1907976d8313318ecf9_icgraph">
-<area shape="rect" title="Load the map from a file specified during Instance initialization." alt="" coords="193,5,343,32"/>
-<area shape="rect" href="classInstance.html#a435d55c931ab7fd0f2f680dc6ae76880" title=" " alt="" coords="5,5,145,32"/>
+<div class="center"><img src="classInstance_a14834be9f7732bcf925649bd0e9ca7cb_icgraph.png" border="0" usemap="#classInstance_a14834be9f7732bcf925649bd0e9ca7cb_icgraph" alt=""/></div>
+<map name="classInstance_a14834be9f7732bcf925649bd0e9ca7cb_icgraph" id="classInstance_a14834be9f7732bcf925649bd0e9ca7cb_icgraph">
+<area shape="rect" title="Load the map from a file specified during Instance initialization." alt="" coords="384,31,533,57"/>
+<area shape="rect" href="classInstance.html#ad93cb436b8bf88d91dc6e7f02723c533" title=" " alt="" coords="195,31,336,57"/>
+<area shape="rect" href="classInstance.html#a0c4d170c76daeaec3e79a3d800b15531" title=" " alt="" coords="5,5,147,32"/>
+<area shape="rect" href="classInstance.html#a459953bdc07d77826daec2d3bea4d95f" title=" " alt="" coords="6,56,146,83"/>
 </map>
 </div>
 
 </div>
 </div>
-<a id="a1e22966a1d1dd0162f5b27e38d9e9155"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a1e22966a1d1dd0162f5b27e38d9e9155">&#9670;&nbsp;</a></span>load_scene()</h2>
+<a id="a98024b413d5f329fe3a938762ea4f215"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a98024b413d5f329fe3a938762ea4f215">&#9670;&nbsp;</a></span>load_scene()</h2>
 
 <div class="memitem">
 <div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">bool Instance::load_scene </td>
+          <td class="memname">void Instance::load_scene </td>
           <td>(</td>
+          <td class="paramtype">void&#160;</td>
           <td class="paramname"></td><td>)</td>
           <td></td>
         </tr>
       </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">private</span></span>  </td>
+  </tr>
+</table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="Instance_8cpp_source.html#l00119">119</a> of file <a class="el" href="Instance_8cpp_source.html">Instance.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="Instance_8cpp_source.html#l00133">133</a> of file <a class="el" href="Instance_8cpp_source.html">Instance.cpp</a>.</p>
 <div class="dynheader">
 Here is the caller graph for this function:</div>
 <div class="dyncontent">
-<div class="center"><img src="classInstance_a1e22966a1d1dd0162f5b27e38d9e9155_icgraph.png" border="0" usemap="#classInstance_a1e22966a1d1dd0162f5b27e38d9e9155_icgraph" alt=""/></div>
-<map name="classInstance_a1e22966a1d1dd0162f5b27e38d9e9155_icgraph" id="classInstance_a1e22966a1d1dd0162f5b27e38d9e9155_icgraph">
-<area shape="rect" title=" " alt="" coords="193,5,352,32"/>
-<area shape="rect" href="classInstance.html#a435d55c931ab7fd0f2f680dc6ae76880" title=" " alt="" coords="5,5,145,32"/>
+<div class="center"><img src="classInstance_a98024b413d5f329fe3a938762ea4f215_icgraph.png" border="0" usemap="#classInstance_a98024b413d5f329fe3a938762ea4f215_icgraph" alt=""/></div>
+<map name="classInstance_a98024b413d5f329fe3a938762ea4f215_icgraph" id="classInstance_a98024b413d5f329fe3a938762ea4f215_icgraph">
+<area shape="rect" title=" " alt="" coords="384,31,543,57"/>
+<area shape="rect" href="classInstance.html#ad93cb436b8bf88d91dc6e7f02723c533" title=" " alt="" coords="195,31,336,57"/>
+<area shape="rect" href="classInstance.html#a0c4d170c76daeaec3e79a3d800b15531" title=" " alt="" coords="5,5,147,32"/>
+<area shape="rect" href="classInstance.html#a459953bdc07d77826daec2d3bea4d95f" title=" " alt="" coords="6,56,146,83"/>
 </map>
 </div>
 
 </div>
 </div>
-<a id="a52cdbd4d32102b64f9c712495a6cb711"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a52cdbd4d32102b64f9c712495a6cb711">&#9670;&nbsp;</a></span>print_agents()</h2>
+<a id="a425910eb254fe2c66c1040c219dd5979"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a425910eb254fe2c66c1040c219dd5979">&#9670;&nbsp;</a></span>print_agents()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -349,18 +487,19 @@ Here is the caller graph for this function:</div>
         <tr>
           <td class="memname">void Instance::print_agents </td>
           <td>(</td>
+          <td class="paramtype">void&#160;</td>
           <td class="paramname"></td><td>)</td>
           <td> const</td>
         </tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="Instance_8cpp_source.html#l00197">197</a> of file <a class="el" href="Instance_8cpp_source.html">Instance.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="Instance_8cpp_source.html#l00194">194</a> of file <a class="el" href="Instance_8cpp_source.html">Instance.cpp</a>.</p>
 
 </div>
 </div>
-<a id="a177e628611a4e91f89029c9536fb51a0"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a177e628611a4e91f89029c9536fb51a0">&#9670;&nbsp;</a></span>print_map()</h2>
+<a id="a4bdcc6b3fa14bc9d74f290cc56b7ab19"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a4bdcc6b3fa14bc9d74f290cc56b7ab19">&#9670;&nbsp;</a></span>print_map()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -368,19 +507,20 @@ Here is the caller graph for this function:</div>
         <tr>
           <td class="memname">void Instance::print_map </td>
           <td>(</td>
+          <td class="paramtype">void&#160;</td>
           <td class="paramname"></td><td>)</td>
           <td> const</td>
         </tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="Instance_8cpp_source.html#l00183">183</a> of file <a class="el" href="Instance_8cpp_source.html">Instance.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="Instance_8cpp_source.html#l00203">203</a> of file <a class="el" href="Instance_8cpp_source.html">Instance.cpp</a>.</p>
 
 </div>
 </div>
 <h2 class="groupheader">Member Data Documentation</h2>
-<a id="a78348ccdf4ef16fc8ecb5e0f2e06b1c8"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a78348ccdf4ef16fc8ecb5e0f2e06b1c8">&#9670;&nbsp;</a></span>goal_positions</h2>
+<a id="a5e1a25f593850e53ffb9c155cea23e27"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a5e1a25f593850e53ffb9c155cea23e27">&#9670;&nbsp;</a></span>goal_positions</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -389,7 +529,7 @@ Here is the caller graph for this function:</div>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">std::vector&lt;std::tuple&lt;int, int&gt; &gt; Instance::goal_positions</td>
+          <td class="memname">std::vector&lt;<a class="el" href="classPoint2d.html">Point2d</a>&gt; Instance::goal_positions</td>
         </tr>
       </table>
   </td>
@@ -399,12 +539,12 @@ Here is the caller graph for this function:</div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="Instance_8h_source.html#l00052">52</a> of file <a class="el" href="Instance_8h_source.html">Instance.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="Instance_8h_source.html#l00062">62</a> of file <a class="el" href="Instance_8h_source.html">Instance.h</a>.</p>
 
 </div>
 </div>
-<a id="afc920646fe096a8dc561a7e39c09ff9e"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#afc920646fe096a8dc561a7e39c09ff9e">&#9670;&nbsp;</a></span>map_data</h2>
+<a id="a667c9f85315f4a2b97abd1a1faf54e56"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a667c9f85315f4a2b97abd1a1faf54e56">&#9670;&nbsp;</a></span>initialized</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -413,7 +553,7 @@ Here is the caller graph for this function:</div>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">std::vector&lt;uint8_t&gt; Instance::map_data</td>
+          <td class="memname">bool Instance::initialized = false</td>
         </tr>
       </table>
   </td>
@@ -423,7 +563,31 @@ Here is the caller graph for this function:</div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="Instance_8h_source.html#l00050">50</a> of file <a class="el" href="Instance_8h_source.html">Instance.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="Instance_8h_source.html#l00056">56</a> of file <a class="el" href="Instance_8h_source.html">Instance.h</a>.</p>
+
+</div>
+</div>
+<a id="a78791f5888bcbb3c6ab5f8e9ba6b5f53"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a78791f5888bcbb3c6ab5f8e9ba6b5f53">&#9670;&nbsp;</a></span>map_data</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classMap.html">Map</a> Instance::map_data</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">private</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="Instance_8h_source.html#l00060">60</a> of file <a class="el" href="Instance_8h_source.html">Instance.h</a>.</p>
 
 </div>
 </div>
@@ -447,23 +611,7 @@ Here is the caller graph for this function:</div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="Instance_8h_source.html#l00047">47</a> of file <a class="el" href="Instance_8h_source.html">Instance.h</a>.</p>
-
-</div>
-</div>
-<a id="a8c73cb4d67819cfb16d36bb92cafb0c8"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a8c73cb4d67819cfb16d36bb92cafb0c8">&#9670;&nbsp;</a></span>map_size</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">int Instance::map_size</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p class="definition">Definition at line <a class="el" href="Instance_8h_source.html#l00019">19</a> of file <a class="el" href="Instance_8h_source.html">Instance.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="Instance_8h_source.html#l00057">57</a> of file <a class="el" href="Instance_8h_source.html">Instance.h</a>.</p>
 
 </div>
 </div>
@@ -475,38 +623,6 @@ Here is the caller graph for this function:</div>
       <table class="memname">
         <tr>
           <td class="memname">int Instance::num_of_agents</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p class="definition">Definition at line <a class="el" href="Instance_8h_source.html#l00018">18</a> of file <a class="el" href="Instance_8h_source.html">Instance.h</a>.</p>
-
-</div>
-</div>
-<a id="a878a82ee018053650427eac2213b3629"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a878a82ee018053650427eac2213b3629">&#9670;&nbsp;</a></span>num_of_cols</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">int Instance::num_of_cols</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p class="definition">Definition at line <a class="el" href="Instance_8h_source.html#l00016">16</a> of file <a class="el" href="Instance_8h_source.html">Instance.h</a>.</p>
-
-</div>
-</div>
-<a id="a85167169c05b4681eb0bb457190ccef7"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a85167169c05b4681eb0bb457190ccef7">&#9670;&nbsp;</a></span>num_of_rows</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">int Instance::num_of_rows</td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -525,7 +641,7 @@ Here is the caller graph for this function:</div>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">std::vector&lt;<a class="el" href="utils_8h.html#a94d63413fe9f34adb3f980af8390ea04">Path</a>&gt; Instance::optimal_paths</td>
+          <td class="memname">std::vector&lt;<a class="el" href="utils_8h.html#a4b0c12fdb9bfd266c909605f8aa6e3d6">Path</a>&gt; Instance::optimal_paths</td>
         </tr>
       </table>
   </td>
@@ -535,7 +651,7 @@ Here is the caller graph for this function:</div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="Instance_8h_source.html#l00053">53</a> of file <a class="el" href="Instance_8h_source.html">Instance.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="Instance_8h_source.html#l00063">63</a> of file <a class="el" href="Instance_8h_source.html">Instance.h</a>.</p>
 
 </div>
 </div>
@@ -559,12 +675,12 @@ Here is the caller graph for this function:</div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="Instance_8h_source.html#l00048">48</a> of file <a class="el" href="Instance_8h_source.html">Instance.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="Instance_8h_source.html#l00058">58</a> of file <a class="el" href="Instance_8h_source.html">Instance.h</a>.</p>
 
 </div>
 </div>
-<a id="a2b5d2484e6695fa0a93763372db2e776"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a2b5d2484e6695fa0a93763372db2e776">&#9670;&nbsp;</a></span>start_positions</h2>
+<a id="a450b0a5f3c6a653c2d896668f15d3b11"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a450b0a5f3c6a653c2d896668f15d3b11">&#9670;&nbsp;</a></span>start_positions</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -573,7 +689,7 @@ Here is the caller graph for this function:</div>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">std::vector&lt;std::tuple&lt;int, int&gt; &gt; Instance::start_positions</td>
+          <td class="memname">std::vector&lt;<a class="el" href="classPoint2d.html">Point2d</a>&gt; Instance::start_positions</td>
         </tr>
       </table>
   </td>
@@ -583,7 +699,7 @@ Here is the caller graph for this function:</div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="Instance_8h_source.html#l00051">51</a> of file <a class="el" href="Instance_8h_source.html">Instance.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="Instance_8h_source.html#l00061">61</a> of file <a class="el" href="Instance_8h_source.html">Instance.h</a>.</p>
 
 </div>
 </div>
@@ -607,7 +723,7 @@ Here is the caller graph for this function:</div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="Instance_8h_source.html#l00049">49</a> of file <a class="el" href="Instance_8h_source.html">Instance.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="Instance_8h_source.html#l00059">59</a> of file <a class="el" href="Instance_8h_source.html">Instance.h</a>.</p>
 
 </div>
 </div>

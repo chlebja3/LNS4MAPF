@@ -1,7 +1,6 @@
 var searchData=
 [
-  ['path_45',['Path',['../utils_8h.html#a94d63413fe9f34adb3f980af8390ea04',1,'utils.h']]],
-  ['paths_46',['paths',['../structSolution.html#af112eace99b7e64ef0d78ce6f45e30c9',1,'Solution']]],
-  ['print_5fagents_47',['print_agents',['../classInstance.html#a52cdbd4d32102b64f9c712495a6cb711',1,'Instance']]],
-  ['print_5fmap_48',['print_map',['../classInstance.html#a177e628611a4e91f89029c9536fb51a0',1,'Instance']]]
+  ['name_68',['name',['../classSolver.html#aa4a44135625afde16684f6e372082851',1,'Solver']]],
+  ['node_69',['Node',['../classNode.html',1,'Node'],['../classNode.html#ab94637d2219718f008f7c3f80bb9e08e',1,'Node::Node()']]],
+  ['num_5fof_5fagents_70',['num_of_agents',['../classInstance.html#a654b42d2c53acb14a71b296d22a88d5c',1,'Instance']]]
 ];

@@ -7,7 +7,7 @@ find_package(GTest QUIET)
 if (NOT GTest_FOUND)
   message(STATUS "Could not find googletest, fetching.")
   FetchContent_Declare(
-    googletest
+    GTest 
     GIT_REPOSITORY https://github.com/google/googletest.git
     GIT_TAG v1.15.2 # latest release
     )

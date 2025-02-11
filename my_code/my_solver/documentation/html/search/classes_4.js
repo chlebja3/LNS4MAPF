@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['visualizer_76',['Visualizer',['../classVisualizer.html',1,'']]]
+  ['instance_135',['Instance',['../classInstance.html',1,'']]]
 ];

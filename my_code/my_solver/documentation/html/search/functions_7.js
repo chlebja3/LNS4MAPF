@@ -1,5 +1,4 @@
 var searchData=
 [
-  ['print_5fagents_106',['print_agents',['../classInstance.html#a52cdbd4d32102b64f9c712495a6cb711',1,'Instance']]],
-  ['print_5fmap_107',['print_map',['../classInstance.html#a177e628611a4e91f89029c9536fb51a0',1,'Instance']]]
+  ['join_5fthread_189',['join_thread',['../classComputation.html#a13bc9058dbd9b7c6335c64876dab36d0',1,'Computation::join_thread()'],['../classVisualizer.html#a82468c4a2a9c68636c47dbcfb0d12ad0',1,'Visualizer::join_thread()']]]
 ];

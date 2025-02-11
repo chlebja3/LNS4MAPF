@@ -1,4 +1,5 @@
 var searchData=
 [
-  ['instance_123',['instance',['../classComputation.html#afae77c2f2c1a19a3d36f8686623bd6da',1,'Computation::instance()'],['../classSolver.html#af308d394dd228b6d46ffba2be85f9d41',1,'Solver::instance()']]]
+  ['h_234',['h',['../classNode.html#acb32e30013dee633f4ffe87f3e8dd177',1,'Node']]],
+  ['height_235',['height',['../classMap.html#a0546fef98caebe38385bb2e0c7a15da1',1,'Map']]]
 ];

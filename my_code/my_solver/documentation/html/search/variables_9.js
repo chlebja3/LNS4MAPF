@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['paths_136',['paths',['../structSolution.html#af112eace99b7e64ef0d78ce6f45e30c9',1,'Solution']]]
+  ['optimal_5fpaths_245',['optimal_paths',['../classInstance.html#a83ceb65b77aa07026ea648091adac7b7',1,'Instance']]]
 ];

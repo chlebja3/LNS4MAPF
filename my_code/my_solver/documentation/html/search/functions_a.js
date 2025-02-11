@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['visualizer_113',['Visualizer',['../classVisualizer.html#a592257767dcd73200be84968cf779b91',1,'Visualizer']]]
+  ['node_195',['Node',['../classNode.html#ab94637d2219718f008f7c3f80bb9e08e',1,'Node']]]
 ];

@@ -1,4 +1,5 @@
 var searchData=
 [
-  ['optimal_5fpaths_135',['optimal_paths',['../classInstance.html#a83ceb65b77aa07026ea648091adac7b7',1,'Instance']]]
+  ['name_243',['name',['../classSolver.html#aa4a44135625afde16684f6e372082851',1,'Solver']]],
+  ['num_5fof_5fagents_244',['num_of_agents',['../classInstance.html#a654b42d2c53acb14a71b296d22a88d5c',1,'Instance']]]
 ];

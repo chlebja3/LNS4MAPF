@@ -75,54 +75,67 @@ $(function() {
 <div class="line"><a name="l00002"></a><span class="lineno">    2</span>&#160;<span class="comment"> * Author: Jan Chleboun</span></div>
 <div class="line"><a name="l00003"></a><span class="lineno">    3</span>&#160;<span class="comment"> * Date: 08-01-2025</span></div>
 <div class="line"><a name="l00004"></a><span class="lineno">    4</span>&#160;<span class="comment"> * Email: chlebja3@fel.cvut.cz</span></div>
-<div class="line"><a name="l00005"></a><span class="lineno">    5</span>&#160;<span class="comment"> * Description: </span></div>
+<div class="line"><a name="l00005"></a><span class="lineno">    5</span>&#160;<span class="comment"> * Description:</span></div>
 <div class="line"><a name="l00006"></a><span class="lineno">    6</span>&#160;<span class="comment"> */</span></div>
 <div class="line"><a name="l00007"></a><span class="lineno">    7</span>&#160; </div>
 <div class="line"><a name="l00008"></a><span class="lineno">    8</span>&#160;<span class="preprocessor">#pragma once</span></div>
-<div class="line"><a name="l00009"></a><span class="lineno">    9</span>&#160;<span class="preprocessor">#include &lt;string&gt;</span></div>
-<div class="line"><a name="l00010"></a><span class="lineno">   10</span>&#160;<span class="preprocessor">#include &lt;vector&gt;</span></div>
-<div class="line"><a name="l00011"></a><span class="lineno">   11</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="Instance_8h.html">Instance.h</a>&quot;</span></div>
-<div class="line"><a name="l00012"></a><span class="lineno">   12</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="utils_8h.html">utils.h</a>&quot;</span></div>
-<div class="line"><a name="l00013"></a><span class="lineno">   13</span>&#160; </div>
-<div class="line"><a name="l00014"></a><span class="lineno"><a class="line" href="structSolution.html">   14</a></span>&#160;<span class="keyword">struct </span><a class="code" href="structSolution.html">Solution</a></div>
-<div class="line"><a name="l00015"></a><span class="lineno">   15</span>&#160;<span class="comment">// struct to store a solution of the mapf problem</span></div>
-<div class="line"><a name="l00016"></a><span class="lineno">   16</span>&#160;{</div>
-<div class="line"><a name="l00017"></a><span class="lineno"><a class="line" href="structSolution.html#a85e0f424008f65d394cc7d992a69d462">   17</a></span>&#160;  <span class="keywordtype">bool</span> <a class="code" href="structSolution.html#a85e0f424008f65d394cc7d992a69d462">feasible</a>;</div>
-<div class="line"><a name="l00018"></a><span class="lineno">   18</span>&#160; </div>
-<div class="line"><a name="l00019"></a><span class="lineno">   19</span>&#160;  <span class="comment">// paths of the agents</span></div>
-<div class="line"><a name="l00020"></a><span class="lineno"><a class="line" href="structSolution.html#af112eace99b7e64ef0d78ce6f45e30c9">   20</a></span>&#160;  std::vector&lt;Path&gt; <a class="code" href="structSolution.html#af112eace99b7e64ef0d78ce6f45e30c9">paths</a>;</div>
+<div class="line"><a name="l00009"></a><span class="lineno">    9</span>&#160;<span class="preprocessor">#include &lt;memory&gt;</span></div>
+<div class="line"><a name="l00010"></a><span class="lineno">   10</span>&#160;<span class="preprocessor">#include &lt;string&gt;</span></div>
+<div class="line"><a name="l00011"></a><span class="lineno">   11</span>&#160;<span class="preprocessor">#include &lt;vector&gt;</span></div>
+<div class="line"><a name="l00012"></a><span class="lineno">   12</span>&#160; </div>
+<div class="line"><a name="l00013"></a><span class="lineno">   13</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="Instance_8h.html">Instance.h</a>&quot;</span></div>
+<div class="line"><a name="l00014"></a><span class="lineno">   14</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="utils_8h.html">utils.h</a>&quot;</span></div>
+<div class="line"><a name="l00015"></a><span class="lineno">   15</span>&#160; </div>
+<div class="line"><a name="l00016"></a><span class="lineno"><a class="line" href="classSolution.html">   16</a></span>&#160;<span class="keyword">class </span><a class="code" href="classSolution.html">Solution</a></div>
+<div class="line"><a name="l00017"></a><span class="lineno">   17</span>&#160;<span class="comment">// struct to store a solution of the mapf problem</span></div>
+<div class="line"><a name="l00018"></a><span class="lineno">   18</span>&#160;{</div>
+<div class="line"><a name="l00019"></a><span class="lineno">   19</span>&#160;<span class="keyword">public</span>:</div>
+<div class="line"><a name="l00020"></a><span class="lineno"><a class="line" href="classSolution.html#a85e0f424008f65d394cc7d992a69d462">   20</a></span>&#160;  <span class="keywordtype">bool</span> <a class="code" href="classSolution.html#a85e0f424008f65d394cc7d992a69d462">feasible</a>;</div>
 <div class="line"><a name="l00021"></a><span class="lineno">   21</span>&#160; </div>
-<div class="line"><a name="l00022"></a><span class="lineno"><a class="line" href="structSolution.html#a2631db5798943bb7cc5cf0ab58951069">   22</a></span>&#160;  <span class="keywordtype">int</span> <a class="code" href="structSolution.html#a2631db5798943bb7cc5cf0ab58951069">cost</a>;</div>
-<div class="line"><a name="l00023"></a><span class="lineno"><a class="line" href="structSolution.html#ac1a90e57dcbd81492773be9110b72562">   23</a></span>&#160;  <span class="keywordtype">int</span> <a class="code" href="structSolution.html#ac1a90e57dcbd81492773be9110b72562">delay</a>;  <span class="comment">// cost - distance</span></div>
-<div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;};</div>
-<div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160; </div>
-<div class="line"><a name="l00026"></a><span class="lineno"><a class="line" href="classSolver.html">   26</a></span>&#160;<span class="keyword">class </span><a class="code" href="classSolver.html">Solver</a></div>
-<div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;<span class="comment">// abstract class to represent a solver for the mapf problem</span></div>
-<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;{</div>
-<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;<span class="keyword">public</span>:</div>
-<div class="line"><a name="l00030"></a><span class="lineno"><a class="line" href="classSolver.html#aa3cc0c1424c904084583322bc3a14f5f">   30</a></span>&#160;  std::string <a class="code" href="classSolver.html#aa3cc0c1424c904084583322bc3a14f5f">name</a>;</div>
-<div class="line"><a name="l00031"></a><span class="lineno"><a class="line" href="classSolver.html#af308d394dd228b6d46ffba2be85f9d41">   31</a></span>&#160;  <a class="code" href="classInstance.html">Instance</a>    <a class="code" href="classSolver.html#af308d394dd228b6d46ffba2be85f9d41">instance</a>;</div>
-<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160; </div>
-<div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;  <span class="comment">// constructor</span></div>
-<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;  <a class="code" href="classSolver.html#afc6ecb78a8aef903378822a52c0cce64">Solver</a>(<span class="keyword">const</span> std::string&amp; <a class="code" href="classSolver.html#aa3cc0c1424c904084583322bc3a14f5f">name</a>, <a class="code" href="classInstance.html">Instance</a>&amp; <a class="code" href="classSolver.html#af308d394dd228b6d46ffba2be85f9d41">instance</a>);</div>
-<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160; </div>
-<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;  <span class="comment">// pure virtual function solve</span></div>
-<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;  <span class="keyword">virtual</span> <a class="code" href="structSolution.html">Solution</a> <a class="code" href="classSolver.html#a1c9f6d159b36827caefd0f91b98e6a06">solve</a>() = 0;</div>
-<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;};</div>
+<div class="line"><a name="l00022"></a><span class="lineno">   22</span>&#160;  <span class="comment">// paths of the agents</span></div>
+<div class="line"><a name="l00023"></a><span class="lineno"><a class="line" href="classSolution.html#af112eace99b7e64ef0d78ce6f45e30c9">   23</a></span>&#160;  std::vector&lt;Path&gt; <a class="code" href="classSolution.html#af112eace99b7e64ef0d78ce6f45e30c9">paths</a>;</div>
+<div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160; </div>
+<div class="line"><a name="l00025"></a><span class="lineno"><a class="line" href="classSolution.html#a2631db5798943bb7cc5cf0ab58951069">   25</a></span>&#160;  <span class="keywordtype">int</span> <a class="code" href="classSolution.html#a2631db5798943bb7cc5cf0ab58951069">cost</a>;</div>
+<div class="line"><a name="l00026"></a><span class="lineno"><a class="line" href="classSolution.html#ac1a90e57dcbd81492773be9110b72562">   26</a></span>&#160;  <span class="keywordtype">int</span> <a class="code" href="classSolution.html#ac1a90e57dcbd81492773be9110b72562">delay</a>;  <span class="comment">// cost - distance</span></div>
+<div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160; </div>
+<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;  <span class="keywordtype">bool</span> <a class="code" href="classSolution.html#a6383372af56bfeeb693745593d933e91">is_valid</a>(std::shared_ptr&lt;Instance&gt; instance) <span class="keyword">const</span>;</div>
+<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;};</div>
+<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160; </div>
+<div class="line"><a name="l00031"></a><span class="lineno"><a class="line" href="classSolver.html">   31</a></span>&#160;<span class="keyword">class </span><a class="code" href="classSolver.html">Solver</a></div>
+<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;<span class="comment">// abstract class to represent a solver for the mapf problem</span></div>
+<div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;{</div>
+<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;<span class="keyword">public</span>:</div>
+<div class="line"><a name="l00035"></a><span class="lineno"><a class="line" href="classSolver.html#aa4a44135625afde16684f6e372082851">   35</a></span>&#160;  <span class="keyword">const</span> std::string         <a class="code" href="classSolver.html#aa4a44135625afde16684f6e372082851">name</a>;</div>
+<div class="line"><a name="l00036"></a><span class="lineno"><a class="line" href="classSolver.html#ae9b1fd3eb740c676d07821b379fd5378">   36</a></span>&#160;  std::shared_ptr&lt;Instance&gt; <a class="code" href="classSolver.html#ae9b1fd3eb740c676d07821b379fd5378">instance</a>;</div>
+<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160; </div>
+<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;  <span class="comment">// constructor</span></div>
+<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;  <a class="code" href="classSolver.html#a25ed4ecbce291f8e077c66a386d3c4d9">Solver</a>(<span class="keyword">const</span> std::string&amp; <a class="code" href="classSolver.html#aa4a44135625afde16684f6e372082851">name</a>, std::shared_ptr&lt;Instance&gt; <a class="code" href="classSolver.html#ae9b1fd3eb740c676d07821b379fd5378">instance</a>);</div>
+<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160; </div>
+<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;  <span class="comment">// virtual destructor</span></div>
+<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;  <span class="keyword">virtual</span> <a class="code" href="classSolver.html#a83ce5ff88fb25719ccfc5fc4584cece3">~Solver</a>() = <span class="keywordflow">default</span>;</div>
+<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160; </div>
+<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;  <span class="comment">// pure virtual function solve</span></div>
+<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;  <span class="keyword">virtual</span> <span class="keywordtype">void</span> <a class="code" href="classSolver.html#ad073be705a5da281c18b5f8423fda216">solve</a>() = 0;</div>
+<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160; </div>
+<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;<span class="keyword">protected</span>:</div>
+<div class="line"><a name="l00048"></a><span class="lineno"><a class="line" href="classSolver.html#aaac1eef7e7e0dbba4cb34e86110c2dc2">   48</a></span>&#160;  <a class="code" href="classSolution.html">Solution</a> <a class="code" href="classSolver.html#aaac1eef7e7e0dbba4cb34e86110c2dc2">solution</a>;  <span class="comment">// the so far best solution</span></div>
+<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;};</div>
 </div><!-- fragment --></div><!-- contents -->
-<div class="ttc" id="astructSolution_html_ac1a90e57dcbd81492773be9110b72562"><div class="ttname"><a href="structSolution.html#ac1a90e57dcbd81492773be9110b72562">Solution::delay</a></div><div class="ttdeci">int delay</div><div class="ttdef"><b>Definition:</b> <a href="Solver_8h_source.html#l00023">Solver.h:23</a></div></div>
-<div class="ttc" id="aclassSolver_html_afc6ecb78a8aef903378822a52c0cce64"><div class="ttname"><a href="classSolver.html#afc6ecb78a8aef903378822a52c0cce64">Solver::Solver</a></div><div class="ttdeci">Solver(const std::string &amp;name, Instance &amp;instance)</div></div>
-<div class="ttc" id="astructSolution_html"><div class="ttname"><a href="structSolution.html">Solution</a></div><div class="ttdef"><b>Definition:</b> <a href="Solver_8h_source.html#l00014">Solver.h:14</a></div></div>
-<div class="ttc" id="aclassInstance_html"><div class="ttname"><a href="classInstance.html">Instance</a></div><div class="ttdef"><b>Definition:</b> <a href="Instance_8h_source.html#l00013">Instance.h:13</a></div></div>
-<div class="ttc" id="astructSolution_html_af112eace99b7e64ef0d78ce6f45e30c9"><div class="ttname"><a href="structSolution.html#af112eace99b7e64ef0d78ce6f45e30c9">Solution::paths</a></div><div class="ttdeci">std::vector&lt; Path &gt; paths</div><div class="ttdef"><b>Definition:</b> <a href="Solver_8h_source.html#l00020">Solver.h:20</a></div></div>
+<div class="ttc" id="aclassSolution_html_ac1a90e57dcbd81492773be9110b72562"><div class="ttname"><a href="classSolution.html#ac1a90e57dcbd81492773be9110b72562">Solution::delay</a></div><div class="ttdeci">int delay</div><div class="ttdef"><b>Definition:</b> <a href="Solver_8h_source.html#l00026">Solver.h:26</a></div></div>
+<div class="ttc" id="aclassSolver_html_aaac1eef7e7e0dbba4cb34e86110c2dc2"><div class="ttname"><a href="classSolver.html#aaac1eef7e7e0dbba4cb34e86110c2dc2">Solver::solution</a></div><div class="ttdeci">Solution solution</div><div class="ttdef"><b>Definition:</b> <a href="Solver_8h_source.html#l00048">Solver.h:48</a></div></div>
+<div class="ttc" id="aclassSolver_html_aa4a44135625afde16684f6e372082851"><div class="ttname"><a href="classSolver.html#aa4a44135625afde16684f6e372082851">Solver::name</a></div><div class="ttdeci">const std::string name</div><div class="ttdef"><b>Definition:</b> <a href="Solver_8h_source.html#l00035">Solver.h:35</a></div></div>
+<div class="ttc" id="aclassSolution_html_a2631db5798943bb7cc5cf0ab58951069"><div class="ttname"><a href="classSolution.html#a2631db5798943bb7cc5cf0ab58951069">Solution::cost</a></div><div class="ttdeci">int cost</div><div class="ttdef"><b>Definition:</b> <a href="Solver_8h_source.html#l00025">Solver.h:25</a></div></div>
+<div class="ttc" id="aclassSolution_html"><div class="ttname"><a href="classSolution.html">Solution</a></div><div class="ttdef"><b>Definition:</b> <a href="Solver_8h_source.html#l00016">Solver.h:16</a></div></div>
 <div class="ttc" id="autils_8h_html"><div class="ttname"><a href="utils_8h.html">utils.h</a></div></div>
-<div class="ttc" id="aclassSolver_html"><div class="ttname"><a href="classSolver.html">Solver</a></div><div class="ttdef"><b>Definition:</b> <a href="Solver_8h_source.html#l00026">Solver.h:26</a></div></div>
-<div class="ttc" id="astructSolution_html_a2631db5798943bb7cc5cf0ab58951069"><div class="ttname"><a href="structSolution.html#a2631db5798943bb7cc5cf0ab58951069">Solution::cost</a></div><div class="ttdeci">int cost</div><div class="ttdef"><b>Definition:</b> <a href="Solver_8h_source.html#l00022">Solver.h:22</a></div></div>
-<div class="ttc" id="aclassSolver_html_aa3cc0c1424c904084583322bc3a14f5f"><div class="ttname"><a href="classSolver.html#aa3cc0c1424c904084583322bc3a14f5f">Solver::name</a></div><div class="ttdeci">std::string name</div><div class="ttdef"><b>Definition:</b> <a href="Solver_8h_source.html#l00030">Solver.h:30</a></div></div>
-<div class="ttc" id="aclassSolver_html_af308d394dd228b6d46ffba2be85f9d41"><div class="ttname"><a href="classSolver.html#af308d394dd228b6d46ffba2be85f9d41">Solver::instance</a></div><div class="ttdeci">Instance instance</div><div class="ttdef"><b>Definition:</b> <a href="Solver_8h_source.html#l00031">Solver.h:31</a></div></div>
-<div class="ttc" id="astructSolution_html_a85e0f424008f65d394cc7d992a69d462"><div class="ttname"><a href="structSolution.html#a85e0f424008f65d394cc7d992a69d462">Solution::feasible</a></div><div class="ttdeci">bool feasible</div><div class="ttdef"><b>Definition:</b> <a href="Solver_8h_source.html#l00017">Solver.h:17</a></div></div>
+<div class="ttc" id="aclassSolver_html"><div class="ttname"><a href="classSolver.html">Solver</a></div><div class="ttdef"><b>Definition:</b> <a href="Solver_8h_source.html#l00031">Solver.h:31</a></div></div>
+<div class="ttc" id="aclassSolver_html_ae9b1fd3eb740c676d07821b379fd5378"><div class="ttname"><a href="classSolver.html#ae9b1fd3eb740c676d07821b379fd5378">Solver::instance</a></div><div class="ttdeci">std::shared_ptr&lt; Instance &gt; instance</div><div class="ttdef"><b>Definition:</b> <a href="Solver_8h_source.html#l00036">Solver.h:36</a></div></div>
+<div class="ttc" id="aclassSolver_html_a25ed4ecbce291f8e077c66a386d3c4d9"><div class="ttname"><a href="classSolver.html#a25ed4ecbce291f8e077c66a386d3c4d9">Solver::Solver</a></div><div class="ttdeci">Solver(const std::string &amp;name, std::shared_ptr&lt; Instance &gt; instance)</div><div class="ttdef"><b>Definition:</b> <a href="Solver_8cpp_source.html#l00049">Solver.cpp:49</a></div></div>
+<div class="ttc" id="aclassSolution_html_a85e0f424008f65d394cc7d992a69d462"><div class="ttname"><a href="classSolution.html#a85e0f424008f65d394cc7d992a69d462">Solution::feasible</a></div><div class="ttdeci">bool feasible</div><div class="ttdef"><b>Definition:</b> <a href="Solver_8h_source.html#l00020">Solver.h:20</a></div></div>
+<div class="ttc" id="aclassSolver_html_ad073be705a5da281c18b5f8423fda216"><div class="ttname"><a href="classSolver.html#ad073be705a5da281c18b5f8423fda216">Solver::solve</a></div><div class="ttdeci">virtual void solve()=0</div></div>
+<div class="ttc" id="aclassSolver_html_a83ce5ff88fb25719ccfc5fc4584cece3"><div class="ttname"><a href="classSolver.html#a83ce5ff88fb25719ccfc5fc4584cece3">Solver::~Solver</a></div><div class="ttdeci">virtual ~Solver()=default</div></div>
 <div class="ttc" id="aInstance_8h_html"><div class="ttname"><a href="Instance_8h.html">Instance.h</a></div></div>
-<div class="ttc" id="aclassSolver_html_a1c9f6d159b36827caefd0f91b98e6a06"><div class="ttname"><a href="classSolver.html#a1c9f6d159b36827caefd0f91b98e6a06">Solver::solve</a></div><div class="ttdeci">virtual Solution solve()=0</div></div>
+<div class="ttc" id="aclassSolution_html_af112eace99b7e64ef0d78ce6f45e30c9"><div class="ttname"><a href="classSolution.html#af112eace99b7e64ef0d78ce6f45e30c9">Solution::paths</a></div><div class="ttdeci">std::vector&lt; Path &gt; paths</div><div class="ttdef"><b>Definition:</b> <a href="Solver_8h_source.html#l00023">Solver.h:23</a></div></div>
+<div class="ttc" id="aclassSolution_html_a6383372af56bfeeb693745593d933e91"><div class="ttname"><a href="classSolution.html#a6383372af56bfeeb693745593d933e91">Solution::is_valid</a></div><div class="ttdeci">bool is_valid(std::shared_ptr&lt; Instance &gt; instance) const</div><div class="ttdef"><b>Definition:</b> <a href="Solver_8cpp_source.html#l00010">Solver.cpp:10</a></div></div>
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
 Generated by &#160;<a href="http://www.doxygen.org/index.html">

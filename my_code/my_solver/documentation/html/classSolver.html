@@ -66,6 +66,7 @@ $(function() {
   <div class="summary">
 <a href="#pub-methods">Public Member Functions</a> &#124;
 <a href="#pub-attribs">Public Attributes</a> &#124;
+<a href="#pro-attribs">Protected Attributes</a> &#124;
 <a href="classSolver-members.html">List of all members</a>  </div>
   <div class="headertitle">
 <div class="title">Solver Class Reference<span class="mlabels"><span class="mlabel">abstract</span></span></div>  </div>
@@ -87,31 +88,38 @@ Collaboration diagram for Solver:</div>
 <div class="dyncontent">
 <div class="center"><img src="classSolver__coll__graph.png" border="0" usemap="#Solver_coll__map" alt="Collaboration graph"/></div>
 <map name="Solver_coll__map" id="Solver_coll__map">
-<area shape="rect" title=" " alt="" coords="13,95,75,121"/>
-<area shape="rect" href="classInstance.html" title=" " alt="" coords="5,5,83,32"/>
+<area shape="rect" title=" " alt="" coords="11,95,74,121"/>
+<area shape="rect" href="classSolution.html" title=" " alt="" coords="5,5,80,32"/>
 </map>
 <center><span class="legend">[<a href="graph_legend.html">legend</a>]</span></center></div>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:afc6ecb78a8aef903378822a52c0cce64"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSolver.html#afc6ecb78a8aef903378822a52c0cce64">Solver</a> (const std::string &amp;<a class="el" href="classSolver.html#aa3cc0c1424c904084583322bc3a14f5f">name</a>, <a class="el" href="classInstance.html">Instance</a> &amp;<a class="el" href="classSolver.html#af308d394dd228b6d46ffba2be85f9d41">instance</a>)</td></tr>
-<tr class="separator:afc6ecb78a8aef903378822a52c0cce64"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a1c9f6d159b36827caefd0f91b98e6a06"><td class="memItemLeft" align="right" valign="top">virtual <a class="el" href="structSolution.html">Solution</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSolver.html#a1c9f6d159b36827caefd0f91b98e6a06">solve</a> ()=0</td></tr>
-<tr class="separator:a1c9f6d159b36827caefd0f91b98e6a06"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a25ed4ecbce291f8e077c66a386d3c4d9"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSolver.html#a25ed4ecbce291f8e077c66a386d3c4d9">Solver</a> (const std::string &amp;<a class="el" href="classSolver.html#aa4a44135625afde16684f6e372082851">name</a>, std::shared_ptr&lt; <a class="el" href="classInstance.html">Instance</a> &gt; <a class="el" href="classSolver.html#ae9b1fd3eb740c676d07821b379fd5378">instance</a>)</td></tr>
+<tr class="separator:a25ed4ecbce291f8e077c66a386d3c4d9"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a83ce5ff88fb25719ccfc5fc4584cece3"><td class="memItemLeft" align="right" valign="top">virtual&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSolver.html#a83ce5ff88fb25719ccfc5fc4584cece3">~Solver</a> ()=default</td></tr>
+<tr class="separator:a83ce5ff88fb25719ccfc5fc4584cece3"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad073be705a5da281c18b5f8423fda216"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSolver.html#ad073be705a5da281c18b5f8423fda216">solve</a> ()=0</td></tr>
+<tr class="separator:ad073be705a5da281c18b5f8423fda216"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-attribs"></a>
 Public Attributes</h2></td></tr>
-<tr class="memitem:aa3cc0c1424c904084583322bc3a14f5f"><td class="memItemLeft" align="right" valign="top">std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSolver.html#aa3cc0c1424c904084583322bc3a14f5f">name</a></td></tr>
-<tr class="separator:aa3cc0c1424c904084583322bc3a14f5f"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:af308d394dd228b6d46ffba2be85f9d41"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classInstance.html">Instance</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSolver.html#af308d394dd228b6d46ffba2be85f9d41">instance</a></td></tr>
-<tr class="separator:af308d394dd228b6d46ffba2be85f9d41"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa4a44135625afde16684f6e372082851"><td class="memItemLeft" align="right" valign="top">const std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSolver.html#aa4a44135625afde16684f6e372082851">name</a></td></tr>
+<tr class="separator:aa4a44135625afde16684f6e372082851"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae9b1fd3eb740c676d07821b379fd5378"><td class="memItemLeft" align="right" valign="top">std::shared_ptr&lt; <a class="el" href="classInstance.html">Instance</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSolver.html#ae9b1fd3eb740c676d07821b379fd5378">instance</a></td></tr>
+<tr class="separator:ae9b1fd3eb740c676d07821b379fd5378"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pro-attribs"></a>
+Protected Attributes</h2></td></tr>
+<tr class="memitem:aaac1eef7e7e0dbba4cb34e86110c2dc2"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classSolution.html">Solution</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSolver.html#aaac1eef7e7e0dbba4cb34e86110c2dc2">solution</a></td></tr>
+<tr class="separator:aaac1eef7e7e0dbba4cb34e86110c2dc2"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock">
-<p class="definition">Definition at line <a class="el" href="Solver_8h_source.html#l00026">26</a> of file <a class="el" href="Solver_8h_source.html">Solver.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="Solver_8h_source.html#l00031">31</a> of file <a class="el" href="Solver_8h_source.html">Solver.h</a>.</p>
 </div><h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
-<a id="afc6ecb78a8aef903378822a52c0cce64"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#afc6ecb78a8aef903378822a52c0cce64">&#9670;&nbsp;</a></span>Solver()</h2>
+<a id="a25ed4ecbce291f8e077c66a386d3c4d9"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a25ed4ecbce291f8e077c66a386d3c4d9">&#9670;&nbsp;</a></span>Solver()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -125,7 +133,7 @@ Public Attributes</h2></td></tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype"><a class="el" href="classInstance.html">Instance</a> &amp;&#160;</td>
+          <td class="paramtype">std::shared_ptr&lt; <a class="el" href="classInstance.html">Instance</a> &gt;&#160;</td>
           <td class="paramname"><em>instance</em>&#160;</td>
         </tr>
         <tr>
@@ -136,11 +144,12 @@ Public Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
+<p class="definition">Definition at line <a class="el" href="Solver_8cpp_source.html#l00049">49</a> of file <a class="el" href="Solver_8cpp_source.html">Solver.cpp</a>.</p>
+
 </div>
 </div>
-<h2 class="groupheader">Member Function Documentation</h2>
-<a id="a1c9f6d159b36827caefd0f91b98e6a06"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a1c9f6d159b36827caefd0f91b98e6a06">&#9670;&nbsp;</a></span>solve()</h2>
+<a id="a83ce5ff88fb25719ccfc5fc4584cece3"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a83ce5ff88fb25719ccfc5fc4584cece3">&#9670;&nbsp;</a></span>~Solver()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -149,7 +158,33 @@ Public Attributes</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">virtual <a class="el" href="structSolution.html">Solution</a> Solver::solve </td>
+          <td class="memname">virtual Solver::~Solver </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">virtual</span><span class="mlabel">default</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<h2 class="groupheader">Member Function Documentation</h2>
+<a id="ad073be705a5da281c18b5f8423fda216"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ad073be705a5da281c18b5f8423fda216">&#9670;&nbsp;</a></span>solve()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">virtual void Solver::solve </td>
           <td>(</td>
           <td class="paramname"></td><td>)</td>
           <td></td>
@@ -162,43 +197,70 @@ Public Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
+<p>Implemented in <a class="el" href="classLNS.html#ab4a4826221160701ee3cf6ca93feb1f7">LNS</a>.</p>
+
 </div>
 </div>
 <h2 class="groupheader">Member Data Documentation</h2>
-<a id="af308d394dd228b6d46ffba2be85f9d41"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#af308d394dd228b6d46ffba2be85f9d41">&#9670;&nbsp;</a></span>instance</h2>
+<a id="ae9b1fd3eb740c676d07821b379fd5378"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ae9b1fd3eb740c676d07821b379fd5378">&#9670;&nbsp;</a></span>instance</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="classInstance.html">Instance</a> Solver::instance</td>
+          <td class="memname">std::shared_ptr&lt;<a class="el" href="classInstance.html">Instance</a>&gt; Solver::instance</td>
         </tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="Solver_8h_source.html#l00031">31</a> of file <a class="el" href="Solver_8h_source.html">Solver.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="Solver_8h_source.html#l00036">36</a> of file <a class="el" href="Solver_8h_source.html">Solver.h</a>.</p>
 
 </div>
 </div>
-<a id="aa3cc0c1424c904084583322bc3a14f5f"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aa3cc0c1424c904084583322bc3a14f5f">&#9670;&nbsp;</a></span>name</h2>
+<a id="aa4a44135625afde16684f6e372082851"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aa4a44135625afde16684f6e372082851">&#9670;&nbsp;</a></span>name</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">std::string Solver::name</td>
+          <td class="memname">const std::string Solver::name</td>
         </tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="Solver_8h_source.html#l00030">30</a> of file <a class="el" href="Solver_8h_source.html">Solver.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="Solver_8h_source.html#l00035">35</a> of file <a class="el" href="Solver_8h_source.html">Solver.h</a>.</p>
 
 </div>
 </div>
-<hr/>The documentation for this class was generated from the following file:<ul>
+<a id="aaac1eef7e7e0dbba4cb34e86110c2dc2"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aaac1eef7e7e0dbba4cb34e86110c2dc2">&#9670;&nbsp;</a></span>solution</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classSolution.html">Solution</a> Solver::solution</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="Solver_8h_source.html#l00048">48</a> of file <a class="el" href="Solver_8h_source.html">Solver.h</a>.</p>
+
+</div>
+</div>
+<hr/>The documentation for this class was generated from the following files:<ul>
 <li>inc/<a class="el" href="Solver_8h_source.html">Solver.h</a></li>
+<li>src/<a class="el" href="Solver_8cpp_source.html">Solver.cpp</a></li>
 </ul>
 </div><!-- contents -->
 <!-- start footer part -->

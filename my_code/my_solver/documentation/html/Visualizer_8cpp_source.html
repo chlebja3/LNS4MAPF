@@ -75,278 +75,400 @@ $(function() {
 <div class="line"><a name="l00002"></a><span class="lineno">    2</span>&#160;<span class="comment"> * Author: Jan Chleboun</span></div>
 <div class="line"><a name="l00003"></a><span class="lineno">    3</span>&#160;<span class="comment"> * Date: 08-01-2025</span></div>
 <div class="line"><a name="l00004"></a><span class="lineno">    4</span>&#160;<span class="comment"> * Email: chlebja3@fel.cvut.cz</span></div>
-<div class="line"><a name="l00005"></a><span class="lineno">    5</span>&#160;<span class="comment"> * Description: </span></div>
+<div class="line"><a name="l00005"></a><span class="lineno">    5</span>&#160;<span class="comment"> * Description:</span></div>
 <div class="line"><a name="l00006"></a><span class="lineno">    6</span>&#160;<span class="comment"> */</span></div>
 <div class="line"><a name="l00007"></a><span class="lineno">    7</span>&#160; </div>
-<div class="line"><a name="l00008"></a><span class="lineno">    8</span>&#160;<span class="preprocessor">#include &lt;SFML/Graphics.hpp&gt;</span></div>
-<div class="line"><a name="l00009"></a><span class="lineno">    9</span>&#160;<span class="preprocessor">#include &lt;SFML/Graphics/CircleShape.hpp&gt;</span></div>
-<div class="line"><a name="l00010"></a><span class="lineno">   10</span>&#160;<span class="preprocessor">#include &lt;SFML/Window/WindowStyle.hpp&gt;</span></div>
-<div class="line"><a name="l00011"></a><span class="lineno">   11</span>&#160;<span class="preprocessor">#include &lt;iostream&gt;</span></div>
-<div class="line"><a name="l00012"></a><span class="lineno">   12</span>&#160;<span class="preprocessor">#include &lt;cmath&gt;</span></div>
-<div class="line"><a name="l00013"></a><span class="lineno">   13</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="Visualizer_8h.html">Visualizer.h</a>&quot;</span></div>
-<div class="line"><a name="l00014"></a><span class="lineno">   14</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="utils_8h.html">utils.h</a>&quot;</span></div>
-<div class="line"><a name="l00015"></a><span class="lineno">   15</span>&#160; </div>
-<div class="line"><a name="l00016"></a><span class="lineno"><a class="line" href="Visualizer_8cpp.html#a498d9f026138406895e9a34b504ac6a6">   16</a></span>&#160;<span class="preprocessor">#define WINDOW_WIDTH 800</span></div>
-<div class="line"><a name="l00017"></a><span class="lineno"><a class="line" href="Visualizer_8cpp.html#a7a4127f14f16563da90eb3c836bc404f">   17</a></span>&#160;<span class="preprocessor">#define CELL_SIZE 20</span></div>
-<div class="line"><a name="l00018"></a><span class="lineno"><a class="line" href="Visualizer_8cpp.html#a83b9df0c7acc5653665d1efd14d1a65b">   18</a></span>&#160;<span class="preprocessor">#define BORDER_SIZE 1</span></div>
-<div class="line"><a name="l00019"></a><span class="lineno"><a class="line" href="Visualizer_8cpp.html#adc8dced17a7a01c522597ffe1a6740ee">   19</a></span>&#160;<span class="preprocessor">#define GOAL_VIS_THICKNESS 3</span></div>
-<div class="line"><a name="l00020"></a><span class="lineno">   20</span>&#160; </div>
-<div class="line"><a name="l00021"></a><span class="lineno"><a class="line" href="classVisualizer.html#a592257767dcd73200be84968cf779b91">   21</a></span>&#160;<a class="code" href="classVisualizer.html#a592257767dcd73200be84968cf779b91">Visualizer::Visualizer</a>(<a class="code" href="classInstance.html">Instance</a>&amp; instance)</div>
-<div class="line"><a name="l00022"></a><span class="lineno">   22</span>&#160;{</div>
-<div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160;  <a class="code" href="classVisualizer.html#a4306527f00b7f033cdc149a627efb3ce">running</a>         = <span class="keyword">false</span>;</div>
-<div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;  <a class="code" href="classVisualizer.html#a56c4f3a2486215219734b3a3a89e7bcb">map_width</a>       = instance.<a class="code" href="classInstance.html#a878a82ee018053650427eac2213b3629">num_of_cols</a>;</div>
-<div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;  <a class="code" href="classVisualizer.html#a935508c911d070aa39f186de928e8730">map_height</a>      = instance.<a class="code" href="classInstance.html#a85167169c05b4681eb0bb457190ccef7">num_of_rows</a>;</div>
-<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;  <a class="code" href="classVisualizer.html#a624f7903185db159306f19516ead258e">start_positions</a> = instance.<a class="code" href="classInstance.html#ae74e417d1f4797cf2c3f75ab111f639a">get_start_positions</a>();</div>
-<div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;  <a class="code" href="classVisualizer.html#a52b6cbb545f0e361e0f80e3bc27118af">goal_positions</a>  = instance.<a class="code" href="classInstance.html#ae45ac6684628b5d591516f418c9e02eb">get_goal_positions</a>();</div>
-<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160; </div>
-<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;  <span class="comment">// generate random colors for the agents</span></div>
-<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;  <span class="keywordflow">for</span> (<span class="keywordtype">int</span> i = 0; i &lt; (int)<a class="code" href="classVisualizer.html#a624f7903185db159306f19516ead258e">start_positions</a>.size(); i++)</div>
-<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;    {</div>
-<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;      <a class="code" href="classVisualizer.html#ad884d1fb6851f3e298ed54508cc92a5b">agents_colors</a>.push_back(<a class="code" href="utils_8h.html#acd6daa142700d7c60859e727a70ee611">generate_random_color</a>(255, 255, 255, 0.25));</div>
-<div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;    }</div>
-<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160; </div>
-<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;  <span class="comment">// create the map texture</span></div>
-<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;  <a class="code" href="classVisualizer.html#ab1d0a2d5be13b3049c5e33367b2fee2c">mapToTexture</a>(instance.<a class="code" href="classInstance.html#aac21a51074cf6030e8843b752d9a004e">get_map_data</a>(), instance.<a class="code" href="classInstance.html#a85167169c05b4681eb0bb457190ccef7">num_of_rows</a>, instance.<a class="code" href="classInstance.html#a878a82ee018053650427eac2213b3629">num_of_cols</a>);</div>
-<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;  std::cout &lt;&lt; <span class="stringliteral">&quot;Initialized visualizer.&quot;</span> &lt;&lt; std::endl;</div>
-<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;}</div>
-<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160; </div>
-<div class="line"><a name="l00040"></a><span class="lineno"><a class="line" href="classVisualizer.html#a013ec3101407fbe4805f289bc32d1265">   40</a></span>&#160;<a class="code" href="classVisualizer.html#a013ec3101407fbe4805f289bc32d1265">Visualizer::~Visualizer</a>()</div>
-<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;{</div>
-<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;  <a class="code" href="classVisualizer.html#a0de5d31b1891f82e2ae19aac7e591c70">stop</a>();</div>
-<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;  <a class="code" href="classVisualizer.html#a82468c4a2a9c68636c47dbcfb0d12ad0">join_thread</a>();</div>
-<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;}</div>
-<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160; </div>
-<div class="line"><a name="l00046"></a><span class="lineno"><a class="line" href="classVisualizer.html#a2b6436ec715468955ebb9f53b908773f">   46</a></span>&#160;<span class="keywordtype">void</span> <a class="code" href="classVisualizer.html#a2b6436ec715468955ebb9f53b908773f">Visualizer::start</a>()</div>
-<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;{</div>
-<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;  <span class="comment">// start the underlying thread</span></div>
-<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;  <a class="code" href="classVisualizer.html#ad32ce7e9950c93522f237921f0f64db6">vis_thread</a> = std::thread(&amp;<a class="code" href="classVisualizer.html#a531350c5ec8ec39867647997690fc9fb">Visualizer::run</a>, <span class="keyword">this</span>);</div>
-<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;  <a class="code" href="classVisualizer.html#a4306527f00b7f033cdc149a627efb3ce">running</a>    = <span class="keyword">true</span>;</div>
+<div class="line"><a name="l00008"></a><span class="lineno">    8</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="Visualizer_8h.html">Visualizer.h</a>&quot;</span></div>
+<div class="line"><a name="l00009"></a><span class="lineno">    9</span>&#160; </div>
+<div class="line"><a name="l00010"></a><span class="lineno">   10</span>&#160;<span class="preprocessor">#include &lt;SFML/Graphics.hpp&gt;</span></div>
+<div class="line"><a name="l00011"></a><span class="lineno">   11</span>&#160;<span class="preprocessor">#include &lt;SFML/Graphics/CircleShape.hpp&gt;</span></div>
+<div class="line"><a name="l00012"></a><span class="lineno">   12</span>&#160;<span class="preprocessor">#include &lt;SFML/Graphics/RectangleShape.hpp&gt;</span></div>
+<div class="line"><a name="l00013"></a><span class="lineno">   13</span>&#160;<span class="preprocessor">#include &lt;SFML/System/Vector2.hpp&gt;</span></div>
+<div class="line"><a name="l00014"></a><span class="lineno">   14</span>&#160;<span class="preprocessor">#include &lt;SFML/Window/WindowStyle.hpp&gt;</span></div>
+<div class="line"><a name="l00015"></a><span class="lineno">   15</span>&#160;<span class="preprocessor">#include &lt;cmath&gt;</span></div>
+<div class="line"><a name="l00016"></a><span class="lineno">   16</span>&#160;<span class="preprocessor">#include &lt;iostream&gt;</span></div>
+<div class="line"><a name="l00017"></a><span class="lineno">   17</span>&#160;<span class="preprocessor">#include &lt;memory&gt;</span></div>
+<div class="line"><a name="l00018"></a><span class="lineno">   18</span>&#160;<span class="preprocessor">#include &lt;stdexcept&gt;</span></div>
+<div class="line"><a name="l00019"></a><span class="lineno">   19</span>&#160; </div>
+<div class="line"><a name="l00020"></a><span class="lineno">   20</span>&#160;<span class="preprocessor">#include &quot;imgui-SFML.h&quot;</span></div>
+<div class="line"><a name="l00021"></a><span class="lineno">   21</span>&#160;<span class="preprocessor">#include &quot;imgui.h&quot;</span></div>
+<div class="line"><a name="l00022"></a><span class="lineno">   22</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="utils_8h.html">utils.h</a>&quot;</span></div>
+<div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160; </div>
+<div class="line"><a name="l00024"></a><span class="lineno"><a class="line" href="Visualizer_8cpp.html#a498d9f026138406895e9a34b504ac6a6">   24</a></span>&#160;<span class="preprocessor">#define WINDOW_WIDTH 800</span></div>
+<div class="line"><a name="l00025"></a><span class="lineno"><a class="line" href="Visualizer_8cpp.html#a7a4127f14f16563da90eb3c836bc404f">   25</a></span>&#160;<span class="preprocessor">#define CELL_SIZE 20</span></div>
+<div class="line"><a name="l00026"></a><span class="lineno"><a class="line" href="Visualizer_8cpp.html#a83b9df0c7acc5653665d1efd14d1a65b">   26</a></span>&#160;<span class="preprocessor">#define BORDER_SIZE 1</span></div>
+<div class="line"><a name="l00027"></a><span class="lineno"><a class="line" href="Visualizer_8cpp.html#adc8dced17a7a01c522597ffe1a6740ee">   27</a></span>&#160;<span class="preprocessor">#define GOAL_VIS_THICKNESS 3</span></div>
+<div class="line"><a name="l00028"></a><span class="lineno"><a class="line" href="Visualizer_8cpp.html#a666201b429d62c0cc1bd9f464c0fafb3">   28</a></span>&#160;<span class="preprocessor">#define LINE_WIDTH 3  // denominator od line width, so line width is 1/LINE_WIDTH * CELL_SIZE</span></div>
+<div class="line"><a name="l00029"></a><span class="lineno"><a class="line" href="Visualizer_8cpp.html#a1af5ada62e6a9082b879f52f96591d3b">   29</a></span>&#160;<span class="preprocessor">#define MENU_BAR_SIZE 46</span></div>
+<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160; </div>
+<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160; </div>
+<div class="line"><a name="l00032"></a><span class="lineno"><a class="line" href="classVisualizer.html#ab2ce0e69dcc009a7ead6df33bca1ca77">   32</a></span>&#160;<a class="code" href="classVisualizer.html#ab2ce0e69dcc009a7ead6df33bca1ca77">Visualizer::Visualizer</a>(std::shared_ptr&lt;Instance&gt; instance) : instance(instance)</div>
+<div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;{</div>
+<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;  <a class="code" href="classVisualizer.html#a4306527f00b7f033cdc149a627efb3ce">running</a> = <span class="keyword">false</span>;</div>
+<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160; </div>
+<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;  <span class="comment">// generate random colors for the agents</span></div>
+<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;  <span class="keywordflow">for</span> (<span class="keywordtype">int</span> i = 0; i &lt; (int)<a class="code" href="classVisualizer.html#a6fc946ceb4a5412c1fec24a441be065e">instance</a>-&gt;get_start_positions().size(); i++)</div>
+<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;  {</div>
+<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;    <a class="code" href="classVisualizer.html#ad884d1fb6851f3e298ed54508cc92a5b">agents_colors</a>.push_back(<a class="code" href="utils_8h.html#a85ad338ae061185e1449d3f98f987369">generate_random_color</a>(255, 255, 255, 0.25));</div>
+<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;  }</div>
+<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160; </div>
+<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;  <span class="comment">// create the map texture</span></div>
+<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;  <a class="code" href="classVisualizer.html#ab71637c0e046114f0511471ff0134d8e">mapToTexture</a>(<a class="code" href="classVisualizer.html#a6fc946ceb4a5412c1fec24a441be065e">instance</a>-&gt;get_map_data());</div>
+<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;  std::cout &lt;&lt; <span class="stringliteral">&quot;Initialized visualizer.&quot;</span> &lt;&lt; std::endl;</div>
+<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;}</div>
+<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160; </div>
+<div class="line"><a name="l00047"></a><span class="lineno"><a class="line" href="classVisualizer.html#a013ec3101407fbe4805f289bc32d1265">   47</a></span>&#160;<a class="code" href="classVisualizer.html#a013ec3101407fbe4805f289bc32d1265">Visualizer::~Visualizer</a>()</div>
+<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;{</div>
+<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;  <a class="code" href="classVisualizer.html#a0de5d31b1891f82e2ae19aac7e591c70">stop</a>();</div>
+<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;  <a class="code" href="classVisualizer.html#a82468c4a2a9c68636c47dbcfb0d12ad0">join_thread</a>();</div>
 <div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;}</div>
 <div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160; </div>
-<div class="line"><a name="l00053"></a><span class="lineno"><a class="line" href="classVisualizer.html#a0de5d31b1891f82e2ae19aac7e591c70">   53</a></span>&#160;<span class="keywordtype">void</span> <a class="code" href="classVisualizer.html#a0de5d31b1891f82e2ae19aac7e591c70">Visualizer::stop</a>()</div>
+<div class="line"><a name="l00053"></a><span class="lineno"><a class="line" href="classVisualizer.html#a2b6436ec715468955ebb9f53b908773f">   53</a></span>&#160;<span class="keywordtype">void</span> <a class="code" href="classVisualizer.html#a2b6436ec715468955ebb9f53b908773f">Visualizer::start</a>()</div>
 <div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;{</div>
-<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;  <span class="comment">// set the stop signal</span></div>
-<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;  <a class="code" href="classVisualizer.html#a4306527f00b7f033cdc149a627efb3ce">running</a> = <span class="keyword">false</span>;</div>
-<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;}</div>
-<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160; </div>
-<div class="line"><a name="l00059"></a><span class="lineno"><a class="line" href="classVisualizer.html#a82468c4a2a9c68636c47dbcfb0d12ad0">   59</a></span>&#160;<span class="keywordtype">void</span> <a class="code" href="classVisualizer.html#a82468c4a2a9c68636c47dbcfb0d12ad0">Visualizer::join_thread</a>()</div>
-<div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160;{</div>
-<div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160;  <span class="keywordflow">if</span> (<a class="code" href="classVisualizer.html#ad32ce7e9950c93522f237921f0f64db6">vis_thread</a>.joinable())</div>
-<div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160;    {</div>
-<div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160;      <a class="code" href="classVisualizer.html#ad32ce7e9950c93522f237921f0f64db6">vis_thread</a>.join();</div>
-<div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160;    }</div>
-<div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160;}</div>
-<div class="line"><a name="l00066"></a><span class="lineno">   66</span>&#160; </div>
-<div class="line"><a name="l00067"></a><span class="lineno"><a class="line" href="classVisualizer.html#a531350c5ec8ec39867647997690fc9fb">   67</a></span>&#160;<span class="keywordtype">void</span> <a class="code" href="classVisualizer.html#a531350c5ec8ec39867647997690fc9fb">Visualizer::run</a>()</div>
-<div class="line"><a name="l00068"></a><span class="lineno">   68</span>&#160;{</div>
-<div class="line"><a name="l00069"></a><span class="lineno">   69</span>&#160;  <span class="keywordtype">int</span> window_height = std::round(<a class="code" href="Visualizer_8cpp.html#a498d9f026138406895e9a34b504ac6a6">WINDOW_WIDTH</a> * (<a class="code" href="classVisualizer.html#a935508c911d070aa39f186de928e8730">map_height</a> / <a class="code" href="classVisualizer.html#a56c4f3a2486215219734b3a3a89e7bcb">map_width</a>));</div>
-<div class="line"><a name="l00070"></a><span class="lineno">   70</span>&#160; </div>
-<div class="line"><a name="l00071"></a><span class="lineno">   71</span>&#160;  <span class="comment">// turn on antialiasing</span></div>
-<div class="line"><a name="l00072"></a><span class="lineno">   72</span>&#160;  sf::ContextSettings settings;</div>
-<div class="line"><a name="l00073"></a><span class="lineno">   73</span>&#160;  settings.antialiasingLevel = 8.0;</div>
-<div class="line"><a name="l00074"></a><span class="lineno">   74</span>&#160; </div>
-<div class="line"><a name="l00075"></a><span class="lineno">   75</span>&#160;  sf::RenderWindow window(sf::VideoMode(<a class="code" href="Visualizer_8cpp.html#a498d9f026138406895e9a34b504ac6a6">WINDOW_WIDTH</a>, window_height), <span class="stringliteral">&quot;Visualization&quot;</span>, sf::Style::Default, settings);</div>
-<div class="line"><a name="l00076"></a><span class="lineno">   76</span>&#160; </div>
-<div class="line"><a name="l00077"></a><span class="lineno">   77</span>&#160;  <span class="comment">// set framerate</span></div>
-<div class="line"><a name="l00078"></a><span class="lineno">   78</span>&#160;  window.setFramerateLimit(60);</div>
-<div class="line"><a name="l00079"></a><span class="lineno">   79</span>&#160; </div>
-<div class="line"><a name="l00080"></a><span class="lineno">   80</span>&#160;  <span class="comment">// Activate the window for OpenGL rendering</span></div>
-<div class="line"><a name="l00081"></a><span class="lineno">   81</span>&#160;  window.setActive();</div>
-<div class="line"><a name="l00082"></a><span class="lineno">   82</span>&#160; </div>
-<div class="line"><a name="l00083"></a><span class="lineno">   83</span>&#160;  <span class="comment">// create a view</span></div>
-<div class="line"><a name="l00084"></a><span class="lineno">   84</span>&#160;  sf::View view(sf::FloatRect(0, 0, <a class="code" href="Visualizer_8cpp.html#a498d9f026138406895e9a34b504ac6a6">WINDOW_WIDTH</a>, window_height));</div>
+<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;  <span class="comment">// start the underlying thread</span></div>
+<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;  <a class="code" href="classVisualizer.html#ad32ce7e9950c93522f237921f0f64db6">vis_thread</a> = std::thread(&amp;<a class="code" href="classVisualizer.html#a531350c5ec8ec39867647997690fc9fb">Visualizer::run</a>, <span class="keyword">this</span>);</div>
+<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;  <a class="code" href="classVisualizer.html#a4306527f00b7f033cdc149a627efb3ce">running</a>    = <span class="keyword">true</span>;</div>
+<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;}</div>
+<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160; </div>
+<div class="line"><a name="l00060"></a><span class="lineno"><a class="line" href="classVisualizer.html#a0de5d31b1891f82e2ae19aac7e591c70">   60</a></span>&#160;<span class="keywordtype">void</span> <a class="code" href="classVisualizer.html#a0de5d31b1891f82e2ae19aac7e591c70">Visualizer::stop</a>()</div>
+<div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160;{</div>
+<div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160;  <span class="comment">// set the stop signal</span></div>
+<div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160;  <a class="code" href="classVisualizer.html#a4306527f00b7f033cdc149a627efb3ce">running</a> = <span class="keyword">false</span>;</div>
+<div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160;}</div>
+<div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160; </div>
+<div class="line"><a name="l00066"></a><span class="lineno"><a class="line" href="classVisualizer.html#a82468c4a2a9c68636c47dbcfb0d12ad0">   66</a></span>&#160;<span class="keywordtype">void</span> <a class="code" href="classVisualizer.html#a82468c4a2a9c68636c47dbcfb0d12ad0">Visualizer::join_thread</a>()</div>
+<div class="line"><a name="l00067"></a><span class="lineno">   67</span>&#160;{</div>
+<div class="line"><a name="l00068"></a><span class="lineno">   68</span>&#160;  <span class="keywordflow">if</span> (<a class="code" href="classVisualizer.html#ad32ce7e9950c93522f237921f0f64db6">vis_thread</a>.joinable())</div>
+<div class="line"><a name="l00069"></a><span class="lineno">   69</span>&#160;  {</div>
+<div class="line"><a name="l00070"></a><span class="lineno">   70</span>&#160;    <a class="code" href="classVisualizer.html#ad32ce7e9950c93522f237921f0f64db6">vis_thread</a>.join();</div>
+<div class="line"><a name="l00071"></a><span class="lineno">   71</span>&#160;  }</div>
+<div class="line"><a name="l00072"></a><span class="lineno">   72</span>&#160;}</div>
+<div class="line"><a name="l00073"></a><span class="lineno">   73</span>&#160; </div>
+<div class="line"><a name="l00074"></a><span class="lineno"><a class="line" href="classVisualizer.html#a531350c5ec8ec39867647997690fc9fb">   74</a></span>&#160;<span class="keywordtype">void</span> <a class="code" href="classVisualizer.html#a531350c5ec8ec39867647997690fc9fb">Visualizer::run</a>()</div>
+<div class="line"><a name="l00075"></a><span class="lineno">   75</span>&#160;{</div>
+<div class="line"><a name="l00076"></a><span class="lineno">   76</span>&#160;  <span class="keyword">const</span> <span class="keywordtype">int</span> map_width     = <a class="code" href="classVisualizer.html#a6fc946ceb4a5412c1fec24a441be065e">instance</a>-&gt;get_map_data().width;</div>
+<div class="line"><a name="l00077"></a><span class="lineno">   77</span>&#160;  <span class="keyword">const</span> <span class="keywordtype">int</span> map_height    = <a class="code" href="classVisualizer.html#a6fc946ceb4a5412c1fec24a441be065e">instance</a>-&gt;get_map_data().height;</div>
+<div class="line"><a name="l00078"></a><span class="lineno">   78</span>&#160;  <span class="keyword">const</span> <span class="keywordtype">int</span> window_height = (int)std::round(<a class="code" href="Visualizer_8cpp.html#a498d9f026138406895e9a34b504ac6a6">WINDOW_WIDTH</a> * ((<span class="keywordtype">double</span>)map_width / (<span class="keywordtype">double</span>)map_height)) + <a class="code" href="Visualizer_8cpp.html#a1af5ada62e6a9082b879f52f96591d3b">MENU_BAR_SIZE</a>;</div>
+<div class="line"><a name="l00079"></a><span class="lineno">   79</span>&#160;  <span class="comment">// std::cout &lt;&lt; &quot;Requested window height &quot; &lt;&lt; window_height &lt;&lt; std::endl;</span></div>
+<div class="line"><a name="l00080"></a><span class="lineno">   80</span>&#160; </div>
+<div class="line"><a name="l00081"></a><span class="lineno">   81</span>&#160;  <span class="comment">// turn on antialiasing</span></div>
+<div class="line"><a name="l00082"></a><span class="lineno">   82</span>&#160;  sf::ContextSettings settings;</div>
+<div class="line"><a name="l00083"></a><span class="lineno">   83</span>&#160;  settings.antialiasingLevel = 8.0;</div>
+<div class="line"><a name="l00084"></a><span class="lineno">   84</span>&#160; </div>
 <div class="line"><a name="l00085"></a><span class="lineno">   85</span>&#160; </div>
-<div class="line"><a name="l00086"></a><span class="lineno">   86</span>&#160;  <span class="comment">// Zoom settings</span></div>
-<div class="line"><a name="l00087"></a><span class="lineno">   87</span>&#160;  <span class="keywordtype">float</span>       zoomLevel = 1.0f;</div>
-<div class="line"><a name="l00088"></a><span class="lineno">   88</span>&#160;  <span class="keyword">const</span> <span class="keywordtype">float</span> zoomStep  = 1.1f;</div>
-<div class="line"><a name="l00089"></a><span class="lineno">   89</span>&#160; </div>
-<div class="line"><a name="l00090"></a><span class="lineno">   90</span>&#160;  <span class="keywordflow">while</span> (window.isOpen() &amp;&amp; <a class="code" href="classVisualizer.html#a4306527f00b7f033cdc149a627efb3ce">running</a>)</div>
-<div class="line"><a name="l00091"></a><span class="lineno">   91</span>&#160;    {</div>
-<div class="line"><a name="l00092"></a><span class="lineno">   92</span>&#160;      <span class="comment">// poll all events from the window</span></div>
-<div class="line"><a name="l00093"></a><span class="lineno">   93</span>&#160;      sf::Event event;</div>
-<div class="line"><a name="l00094"></a><span class="lineno">   94</span>&#160;      <span class="keywordflow">while</span> (window.pollEvent(event))</div>
-<div class="line"><a name="l00095"></a><span class="lineno">   95</span>&#160;        {</div>
-<div class="line"><a name="l00096"></a><span class="lineno">   96</span>&#160;          <span class="comment">// close event</span></div>
-<div class="line"><a name="l00097"></a><span class="lineno">   97</span>&#160;          <span class="keywordflow">if</span> (event.type == sf::Event::Closed)</div>
-<div class="line"><a name="l00098"></a><span class="lineno">   98</span>&#160;            {</div>
-<div class="line"><a name="l00099"></a><span class="lineno">   99</span>&#160;              <a class="code" href="classVisualizer.html#a4306527f00b7f033cdc149a627efb3ce">running</a> = <span class="keyword">false</span>;</div>
-<div class="line"><a name="l00100"></a><span class="lineno">  100</span>&#160;            }</div>
-<div class="line"><a name="l00101"></a><span class="lineno">  101</span>&#160;          <span class="comment">// zoom event</span></div>
-<div class="line"><a name="l00102"></a><span class="lineno">  102</span>&#160;          <span class="keywordflow">else</span> <span class="keywordflow">if</span> (event.type == sf::Event::MouseWheelScrolled)</div>
-<div class="line"><a name="l00103"></a><span class="lineno">  103</span>&#160;            {</div>
-<div class="line"><a name="l00104"></a><span class="lineno">  104</span>&#160;              <span class="keywordflow">if</span> (event.mouseWheelScroll.delta &gt; 0)</div>
-<div class="line"><a name="l00105"></a><span class="lineno">  105</span>&#160;                {</div>
-<div class="line"><a name="l00106"></a><span class="lineno">  106</span>&#160;                  view.zoom(1 / zoomStep);  <span class="comment">// Zoom in</span></div>
-<div class="line"><a name="l00107"></a><span class="lineno">  107</span>&#160;                  zoomLevel *= 1 / zoomStep;</div>
-<div class="line"><a name="l00108"></a><span class="lineno">  108</span>&#160;                }</div>
-<div class="line"><a name="l00109"></a><span class="lineno">  109</span>&#160;              <span class="keywordflow">else</span></div>
-<div class="line"><a name="l00110"></a><span class="lineno">  110</span>&#160;                {</div>
-<div class="line"><a name="l00111"></a><span class="lineno">  111</span>&#160;                  view.zoom(zoomStep);  <span class="comment">// Zoom out</span></div>
-<div class="line"><a name="l00112"></a><span class="lineno">  112</span>&#160;                  zoomLevel *= zoomStep;</div>
-<div class="line"><a name="l00113"></a><span class="lineno">  113</span>&#160;                }</div>
-<div class="line"><a name="l00114"></a><span class="lineno">  114</span>&#160;            }</div>
-<div class="line"><a name="l00115"></a><span class="lineno">  115</span>&#160;          <span class="comment">// Panning with arrow keys</span></div>
-<div class="line"><a name="l00116"></a><span class="lineno">  116</span>&#160;          <span class="keywordflow">else</span> <span class="keywordflow">if</span> (sf::Keyboard::isKeyPressed(sf::Keyboard::Left))</div>
-<div class="line"><a name="l00117"></a><span class="lineno">  117</span>&#160;            {</div>
-<div class="line"><a name="l00118"></a><span class="lineno">  118</span>&#160;              view.move(-10 * zoomLevel, 0);</div>
-<div class="line"><a name="l00119"></a><span class="lineno">  119</span>&#160;            }</div>
-<div class="line"><a name="l00120"></a><span class="lineno">  120</span>&#160;          <span class="keywordflow">else</span> <span class="keywordflow">if</span> (sf::Keyboard::isKeyPressed(sf::Keyboard::Right))</div>
-<div class="line"><a name="l00121"></a><span class="lineno">  121</span>&#160;            {</div>
-<div class="line"><a name="l00122"></a><span class="lineno">  122</span>&#160;              view.move(10 * zoomLevel, 0);</div>
-<div class="line"><a name="l00123"></a><span class="lineno">  123</span>&#160;            }</div>
-<div class="line"><a name="l00124"></a><span class="lineno">  124</span>&#160;          <span class="keywordflow">else</span> <span class="keywordflow">if</span> (sf::Keyboard::isKeyPressed(sf::Keyboard::Up))</div>
-<div class="line"><a name="l00125"></a><span class="lineno">  125</span>&#160;            {</div>
-<div class="line"><a name="l00126"></a><span class="lineno">  126</span>&#160;              view.move(0, -10 * zoomLevel);</div>
-<div class="line"><a name="l00127"></a><span class="lineno">  127</span>&#160;            }</div>
-<div class="line"><a name="l00128"></a><span class="lineno">  128</span>&#160;          <span class="keywordflow">else</span> <span class="keywordflow">if</span> (sf::Keyboard::isKeyPressed(sf::Keyboard::Down))</div>
-<div class="line"><a name="l00129"></a><span class="lineno">  129</span>&#160;            {</div>
-<div class="line"><a name="l00130"></a><span class="lineno">  130</span>&#160;              view.move(0, 10 * zoomLevel);</div>
-<div class="line"><a name="l00131"></a><span class="lineno">  131</span>&#160;            }</div>
-<div class="line"><a name="l00132"></a><span class="lineno">  132</span>&#160;        }</div>
-<div class="line"><a name="l00133"></a><span class="lineno">  133</span>&#160; </div>
-<div class="line"><a name="l00134"></a><span class="lineno">  134</span>&#160;      <span class="comment">// clear the window</span></div>
-<div class="line"><a name="l00135"></a><span class="lineno">  135</span>&#160;      window.clear(sf::Color::Black);</div>
-<div class="line"><a name="l00136"></a><span class="lineno">  136</span>&#160; </div>
-<div class="line"><a name="l00137"></a><span class="lineno">  137</span>&#160;      <span class="comment">// draw the map</span></div>
-<div class="line"><a name="l00138"></a><span class="lineno">  138</span>&#160;      window.draw(<a class="code" href="classVisualizer.html#a360114a591b91eb6fc51a67daefe37e8">map_sprite</a>);</div>
-<div class="line"><a name="l00139"></a><span class="lineno">  139</span>&#160; </div>
-<div class="line"><a name="l00140"></a><span class="lineno">  140</span>&#160;      <span class="comment">// draw the agents</span></div>
-<div class="line"><a name="l00141"></a><span class="lineno">  141</span>&#160;      <a class="code" href="classVisualizer.html#a5461ebd346832cfbc055d6c0e2cdefd1">draw_agents</a>(window);</div>
-<div class="line"><a name="l00142"></a><span class="lineno">  142</span>&#160;      <a class="code" href="classVisualizer.html#ab8c444d6c727105cbd234cfa3df11f20">draw_goals</a>(window);</div>
-<div class="line"><a name="l00143"></a><span class="lineno">  143</span>&#160; </div>
-<div class="line"><a name="l00144"></a><span class="lineno">  144</span>&#160;      <span class="comment">// set the view</span></div>
-<div class="line"><a name="l00145"></a><span class="lineno">  145</span>&#160;      window.setView(view);</div>
-<div class="line"><a name="l00146"></a><span class="lineno">  146</span>&#160; </div>
-<div class="line"><a name="l00147"></a><span class="lineno">  147</span>&#160;      <span class="comment">// display</span></div>
-<div class="line"><a name="l00148"></a><span class="lineno">  148</span>&#160;      window.display();</div>
-<div class="line"><a name="l00149"></a><span class="lineno">  149</span>&#160;    }</div>
-<div class="line"><a name="l00150"></a><span class="lineno">  150</span>&#160; </div>
-<div class="line"><a name="l00151"></a><span class="lineno">  151</span>&#160;  <span class="comment">// close the window</span></div>
-<div class="line"><a name="l00152"></a><span class="lineno">  152</span>&#160;  <span class="keywordflow">if</span> (window.isOpen())</div>
-<div class="line"><a name="l00153"></a><span class="lineno">  153</span>&#160;    window.close();</div>
-<div class="line"><a name="l00154"></a><span class="lineno">  154</span>&#160;  std::cout &lt;&lt; <span class="stringliteral">&quot;Visualizer thread ended&quot;</span> &lt;&lt; std::endl;</div>
-<div class="line"><a name="l00155"></a><span class="lineno">  155</span>&#160;}</div>
-<div class="line"><a name="l00156"></a><span class="lineno">  156</span>&#160; </div>
-<div class="line"><a name="l00157"></a><span class="lineno">  157</span>&#160;<span class="comment">// Render the map onto a texture</span></div>
-<div class="line"><a name="l00158"></a><span class="lineno"><a class="line" href="classVisualizer.html#ab1d0a2d5be13b3049c5e33367b2fee2c">  158</a></span>&#160;<span class="keywordtype">void</span> <a class="code" href="classVisualizer.html#ab1d0a2d5be13b3049c5e33367b2fee2c">Visualizer::mapToTexture</a>(<span class="keyword">const</span> std::vector&lt;std::uint8_t&gt;&amp; map_data, <span class="keywordtype">int</span> num_of_rows, <span class="keywordtype">int</span> num_of_columns)</div>
-<div class="line"><a name="l00159"></a><span class="lineno">  159</span>&#160;{</div>
-<div class="line"><a name="l00160"></a><span class="lineno">  160</span>&#160;  <span class="comment">// initialize the texture</span></div>
-<div class="line"><a name="l00161"></a><span class="lineno">  161</span>&#160;  sf::RenderTexture map_render_texture;</div>
-<div class="line"><a name="l00162"></a><span class="lineno">  162</span>&#160;  map_render_texture.create(num_of_columns * <a class="code" href="Visualizer_8cpp.html#a7a4127f14f16563da90eb3c836bc404f">CELL_SIZE</a>, num_of_rows * <a class="code" href="Visualizer_8cpp.html#a7a4127f14f16563da90eb3c836bc404f">CELL_SIZE</a>);</div>
+<div class="line"><a name="l00086"></a><span class="lineno">   86</span>&#160;  sf::RenderWindow window(sf::VideoMode(<a class="code" href="Visualizer_8cpp.html#a498d9f026138406895e9a34b504ac6a6">WINDOW_WIDTH</a>, window_height), <span class="stringliteral">&quot;Visualization&quot;</span>, sf::Style::Default, settings);</div>
+<div class="line"><a name="l00087"></a><span class="lineno">   87</span>&#160; </div>
+<div class="line"><a name="l00088"></a><span class="lineno">   88</span>&#160;  <span class="comment">// set framerate</span></div>
+<div class="line"><a name="l00089"></a><span class="lineno">   89</span>&#160;  window.setFramerateLimit(60);</div>
+<div class="line"><a name="l00090"></a><span class="lineno">   90</span>&#160; </div>
+<div class="line"><a name="l00091"></a><span class="lineno">   91</span>&#160;  <span class="keywordflow">if</span> (!ImGui::SFML::Init(window)) <span class="keywordflow">throw</span> std::runtime_error(<span class="stringliteral">&quot;Unable to initialize ImGUI.&quot;</span>);</div>
+<div class="line"><a name="l00092"></a><span class="lineno">   92</span>&#160; </div>
+<div class="line"><a name="l00093"></a><span class="lineno">   93</span>&#160;  <span class="comment">// Activate the window for OpenGL rendering</span></div>
+<div class="line"><a name="l00094"></a><span class="lineno">   94</span>&#160;  window.setActive();</div>
+<div class="line"><a name="l00095"></a><span class="lineno">   95</span>&#160; </div>
+<div class="line"><a name="l00096"></a><span class="lineno">   96</span>&#160;  <span class="comment">// create a view</span></div>
+<div class="line"><a name="l00097"></a><span class="lineno">   97</span>&#160;  sf::View view(sf::FloatRect(0, 0, <a class="code" href="Visualizer_8cpp.html#a498d9f026138406895e9a34b504ac6a6">WINDOW_WIDTH</a>, window_height));</div>
+<div class="line"><a name="l00098"></a><span class="lineno">   98</span>&#160; </div>
+<div class="line"><a name="l00099"></a><span class="lineno">   99</span>&#160;  <span class="comment">// Zoom settings</span></div>
+<div class="line"><a name="l00100"></a><span class="lineno">  100</span>&#160;  <span class="keywordtype">float</span>       zoomLevel = 1.0f;</div>
+<div class="line"><a name="l00101"></a><span class="lineno">  101</span>&#160;  <span class="keyword">const</span> <span class="keywordtype">float</span> zoomStep  = 1.1f;</div>
+<div class="line"><a name="l00102"></a><span class="lineno">  102</span>&#160; </div>
+<div class="line"><a name="l00103"></a><span class="lineno">  103</span>&#160; </div>
+<div class="line"><a name="l00104"></a><span class="lineno">  104</span>&#160;  <span class="comment">// turn on antialisasing for fonts</span></div>
+<div class="line"><a name="l00105"></a><span class="lineno">  105</span>&#160;  ImGuiIO&amp; io = ImGui::GetIO();</div>
+<div class="line"><a name="l00106"></a><span class="lineno">  106</span>&#160;  io.Fonts-&gt;Clear();  <span class="comment">// Clear old fonts</span></div>
+<div class="line"><a name="l00107"></a><span class="lineno">  107</span>&#160;  io.Fonts-&gt;AddFontFromFileTTF((<a class="code" href="utils_8h.html#a6962d5b6ad4c7ddbdd4ad3f1fcb14352">get_base_path</a>() + <span class="stringliteral">&quot;/fonts/Cousine-Regular.ttf&quot;</span>).c_str(), 20.0f);</div>
+<div class="line"><a name="l00108"></a><span class="lineno">  108</span>&#160;  <span class="comment">// io.Fonts-&gt;AddFontFromFileTTF((get_base_path() + &quot;/fonts/DroidSans.ttf&quot;).c_str(), 20.0f);</span></div>
+<div class="line"><a name="l00109"></a><span class="lineno">  109</span>&#160;  <span class="comment">// io.Fonts-&gt;TexGlyphPadding = 1;  // Improves quality</span></div>
+<div class="line"><a name="l00110"></a><span class="lineno">  110</span>&#160;  <span class="comment">// ImGui::GetIO().FontGlobalScale = 2.0f;  // Increase all UI elementsImGuiIO io = ImGui::GetIO();</span></div>
+<div class="line"><a name="l00111"></a><span class="lineno">  111</span>&#160;  <span class="comment">// ImFont* font1 = io.Fonts-&gt;AddFontFromFileTTF(&quot;../res/FFF_Tusj.ttf&quot;, 13);</span></div>
+<div class="line"><a name="l00112"></a><span class="lineno">  112</span>&#160;  <span class="keywordflow">if</span> (!ImGui::SFML::UpdateFontTexture()) std::cout &lt;&lt; <span class="stringliteral">&quot;Could not load the default font. &quot;</span> &lt;&lt; std::endl;</div>
+<div class="line"><a name="l00113"></a><span class="lineno">  113</span>&#160; </div>
+<div class="line"><a name="l00114"></a><span class="lineno">  114</span>&#160;  sf::Clock deltaClock;</div>
+<div class="line"><a name="l00115"></a><span class="lineno">  115</span>&#160;  <span class="keywordflow">while</span> (window.isOpen() &amp;&amp; <a class="code" href="classVisualizer.html#a4306527f00b7f033cdc149a627efb3ce">running</a>)</div>
+<div class="line"><a name="l00116"></a><span class="lineno">  116</span>&#160;  {</div>
+<div class="line"><a name="l00117"></a><span class="lineno">  117</span>&#160;    <span class="comment">// poll all events from the window</span></div>
+<div class="line"><a name="l00118"></a><span class="lineno">  118</span>&#160;    sf::Event event;</div>
+<div class="line"><a name="l00119"></a><span class="lineno">  119</span>&#160;    <span class="keywordflow">while</span> (window.pollEvent(event))</div>
+<div class="line"><a name="l00120"></a><span class="lineno">  120</span>&#160;    {</div>
+<div class="line"><a name="l00121"></a><span class="lineno">  121</span>&#160;      ImGui::SFML::ProcessEvent(window, event);  <span class="comment">// Send event to ImGui</span></div>
+<div class="line"><a name="l00122"></a><span class="lineno">  122</span>&#160; </div>
+<div class="line"><a name="l00123"></a><span class="lineno">  123</span>&#160;      <span class="comment">// close event</span></div>
+<div class="line"><a name="l00124"></a><span class="lineno">  124</span>&#160;      <span class="keywordflow">if</span> (event.type == sf::Event::Closed)</div>
+<div class="line"><a name="l00125"></a><span class="lineno">  125</span>&#160;      {</div>
+<div class="line"><a name="l00126"></a><span class="lineno">  126</span>&#160;        <a class="code" href="classVisualizer.html#a4306527f00b7f033cdc149a627efb3ce">running</a> = <span class="keyword">false</span>;</div>
+<div class="line"><a name="l00127"></a><span class="lineno">  127</span>&#160;      }</div>
+<div class="line"><a name="l00128"></a><span class="lineno">  128</span>&#160;      <span class="comment">// zoom event</span></div>
+<div class="line"><a name="l00129"></a><span class="lineno">  129</span>&#160;      <span class="keywordflow">else</span> <span class="keywordflow">if</span> (event.type == sf::Event::MouseWheelScrolled)</div>
+<div class="line"><a name="l00130"></a><span class="lineno">  130</span>&#160;      {</div>
+<div class="line"><a name="l00131"></a><span class="lineno">  131</span>&#160;        <span class="keywordflow">if</span> (event.mouseWheelScroll.delta &gt; 0)</div>
+<div class="line"><a name="l00132"></a><span class="lineno">  132</span>&#160;        {</div>
+<div class="line"><a name="l00133"></a><span class="lineno">  133</span>&#160;          view.zoom(1 / zoomStep);  <span class="comment">// Zoom in</span></div>
+<div class="line"><a name="l00134"></a><span class="lineno">  134</span>&#160;          zoomLevel *= 1 / zoomStep;</div>
+<div class="line"><a name="l00135"></a><span class="lineno">  135</span>&#160;        }</div>
+<div class="line"><a name="l00136"></a><span class="lineno">  136</span>&#160;        <span class="keywordflow">else</span></div>
+<div class="line"><a name="l00137"></a><span class="lineno">  137</span>&#160;        {</div>
+<div class="line"><a name="l00138"></a><span class="lineno">  138</span>&#160;          view.zoom(zoomStep);  <span class="comment">// Zoom out</span></div>
+<div class="line"><a name="l00139"></a><span class="lineno">  139</span>&#160;          zoomLevel *= zoomStep;</div>
+<div class="line"><a name="l00140"></a><span class="lineno">  140</span>&#160;        }</div>
+<div class="line"><a name="l00141"></a><span class="lineno">  141</span>&#160;      }</div>
+<div class="line"><a name="l00142"></a><span class="lineno">  142</span>&#160;      <span class="comment">// Panning with arrow keys</span></div>
+<div class="line"><a name="l00143"></a><span class="lineno">  143</span>&#160;      <span class="keywordflow">else</span> <span class="keywordflow">if</span> (sf::Keyboard::isKeyPressed(sf::Keyboard::Left))</div>
+<div class="line"><a name="l00144"></a><span class="lineno">  144</span>&#160;      {</div>
+<div class="line"><a name="l00145"></a><span class="lineno">  145</span>&#160;        view.move(-10 * zoomLevel, 0);</div>
+<div class="line"><a name="l00146"></a><span class="lineno">  146</span>&#160;      }</div>
+<div class="line"><a name="l00147"></a><span class="lineno">  147</span>&#160;      <span class="keywordflow">else</span> <span class="keywordflow">if</span> (sf::Keyboard::isKeyPressed(sf::Keyboard::Right))</div>
+<div class="line"><a name="l00148"></a><span class="lineno">  148</span>&#160;      {</div>
+<div class="line"><a name="l00149"></a><span class="lineno">  149</span>&#160;        view.move(10 * zoomLevel, 0);</div>
+<div class="line"><a name="l00150"></a><span class="lineno">  150</span>&#160;      }</div>
+<div class="line"><a name="l00151"></a><span class="lineno">  151</span>&#160;      <span class="keywordflow">else</span> <span class="keywordflow">if</span> (sf::Keyboard::isKeyPressed(sf::Keyboard::Up))</div>
+<div class="line"><a name="l00152"></a><span class="lineno">  152</span>&#160;      {</div>
+<div class="line"><a name="l00153"></a><span class="lineno">  153</span>&#160;        view.move(0, -10 * zoomLevel);</div>
+<div class="line"><a name="l00154"></a><span class="lineno">  154</span>&#160;      }</div>
+<div class="line"><a name="l00155"></a><span class="lineno">  155</span>&#160;      <span class="keywordflow">else</span> <span class="keywordflow">if</span> (sf::Keyboard::isKeyPressed(sf::Keyboard::Down))</div>
+<div class="line"><a name="l00156"></a><span class="lineno">  156</span>&#160;      {</div>
+<div class="line"><a name="l00157"></a><span class="lineno">  157</span>&#160;        view.move(0, 10 * zoomLevel);</div>
+<div class="line"><a name="l00158"></a><span class="lineno">  158</span>&#160;      }</div>
+<div class="line"><a name="l00159"></a><span class="lineno">  159</span>&#160;    }</div>
+<div class="line"><a name="l00160"></a><span class="lineno">  160</span>&#160; </div>
+<div class="line"><a name="l00161"></a><span class="lineno">  161</span>&#160;    <span class="comment">// clear the window</span></div>
+<div class="line"><a name="l00162"></a><span class="lineno">  162</span>&#160;    window.clear(sf::Color::Black);</div>
 <div class="line"><a name="l00163"></a><span class="lineno">  163</span>&#160; </div>
-<div class="line"><a name="l00164"></a><span class="lineno">  164</span>&#160;  <span class="comment">// clear the texture with a background color</span></div>
-<div class="line"><a name="l00165"></a><span class="lineno">  165</span>&#160;  map_render_texture.clear(sf::Color::White);</div>
+<div class="line"><a name="l00164"></a><span class="lineno">  164</span>&#160;    <span class="comment">// update imgui</span></div>
+<div class="line"><a name="l00165"></a><span class="lineno">  165</span>&#160;    ImGui::SFML::Update(window, deltaClock.restart());</div>
 <div class="line"><a name="l00166"></a><span class="lineno">  166</span>&#160; </div>
-<div class="line"><a name="l00167"></a><span class="lineno">  167</span>&#160;  <span class="comment">// Draw the grid onto the texture</span></div>
-<div class="line"><a name="l00168"></a><span class="lineno">  168</span>&#160;  <span class="keywordflow">for</span> (<span class="keywordtype">int</span> y = 0; y &lt; num_of_rows; y++)</div>
-<div class="line"><a name="l00169"></a><span class="lineno">  169</span>&#160;    {</div>
-<div class="line"><a name="l00170"></a><span class="lineno">  170</span>&#160;      <span class="keywordflow">for</span> (<span class="keywordtype">int</span> x = 0; x &lt; num_of_columns; x++)</div>
-<div class="line"><a name="l00171"></a><span class="lineno">  171</span>&#160;        {</div>
-<div class="line"><a name="l00172"></a><span class="lineno">  172</span>&#160;          <span class="comment">// create the cell</span></div>
-<div class="line"><a name="l00173"></a><span class="lineno">  173</span>&#160;          sf::RectangleShape cell(sf::Vector2f(<a class="code" href="Visualizer_8cpp.html#a7a4127f14f16563da90eb3c836bc404f">CELL_SIZE</a>, <a class="code" href="Visualizer_8cpp.html#a7a4127f14f16563da90eb3c836bc404f">CELL_SIZE</a>));</div>
-<div class="line"><a name="l00174"></a><span class="lineno">  174</span>&#160;          cell.setPosition(x * <a class="code" href="Visualizer_8cpp.html#a7a4127f14f16563da90eb3c836bc404f">CELL_SIZE</a>, y * <a class="code" href="Visualizer_8cpp.html#a7a4127f14f16563da90eb3c836bc404f">CELL_SIZE</a>);</div>
-<div class="line"><a name="l00175"></a><span class="lineno">  175</span>&#160;          <span class="keywordflow">if</span> ((<span class="keywordtype">int</span>)map_data[y * num_of_columns + x] == 1)</div>
-<div class="line"><a name="l00176"></a><span class="lineno">  176</span>&#160;            {</div>
-<div class="line"><a name="l00177"></a><span class="lineno">  177</span>&#160;              <span class="comment">// obstacles</span></div>
-<div class="line"><a name="l00178"></a><span class="lineno">  178</span>&#160;              cell.setFillColor(sf::Color::Black);</div>
-<div class="line"><a name="l00179"></a><span class="lineno">  179</span>&#160;            }</div>
-<div class="line"><a name="l00180"></a><span class="lineno">  180</span>&#160;          <span class="keywordflow">else</span></div>
-<div class="line"><a name="l00181"></a><span class="lineno">  181</span>&#160;            {</div>
-<div class="line"><a name="l00182"></a><span class="lineno">  182</span>&#160;              <span class="comment">// free cells</span></div>
-<div class="line"><a name="l00183"></a><span class="lineno">  183</span>&#160;              cell.setFillColor(sf::Color::White);</div>
-<div class="line"><a name="l00184"></a><span class="lineno">  184</span>&#160;            }</div>
-<div class="line"><a name="l00185"></a><span class="lineno">  185</span>&#160; </div>
-<div class="line"><a name="l00186"></a><span class="lineno">  186</span>&#160;          <span class="comment">// grid color and thickness</span></div>
-<div class="line"><a name="l00187"></a><span class="lineno">  187</span>&#160;          cell.setOutlineThickness(-<a class="code" href="Visualizer_8cpp.html#a83b9df0c7acc5653665d1efd14d1a65b">BORDER_SIZE</a>);</div>
-<div class="line"><a name="l00188"></a><span class="lineno">  188</span>&#160;          cell.setOutlineColor(sf::Color::Black);</div>
-<div class="line"><a name="l00189"></a><span class="lineno">  189</span>&#160; </div>
-<div class="line"><a name="l00190"></a><span class="lineno">  190</span>&#160;          map_render_texture.draw(cell);</div>
-<div class="line"><a name="l00191"></a><span class="lineno">  191</span>&#160;        }</div>
-<div class="line"><a name="l00192"></a><span class="lineno">  192</span>&#160;    }</div>
-<div class="line"><a name="l00193"></a><span class="lineno">  193</span>&#160; </div>
-<div class="line"><a name="l00194"></a><span class="lineno">  194</span>&#160;  <span class="comment">// Finalize the rendering</span></div>
-<div class="line"><a name="l00195"></a><span class="lineno">  195</span>&#160;  map_render_texture.display();</div>
-<div class="line"><a name="l00196"></a><span class="lineno">  196</span>&#160; </div>
-<div class="line"><a name="l00197"></a><span class="lineno">  197</span>&#160;  <span class="comment">// set the map texture</span></div>
-<div class="line"><a name="l00198"></a><span class="lineno">  198</span>&#160;  <a class="code" href="classVisualizer.html#a6cdc2630f36722cb2b6be98676f969de">map_texture</a> = map_render_texture.getTexture();</div>
-<div class="line"><a name="l00199"></a><span class="lineno">  199</span>&#160;  <span class="comment">// turn on antialiasing</span></div>
-<div class="line"><a name="l00200"></a><span class="lineno">  200</span>&#160;  <span class="comment">// map_texture.setSmooth(true);</span></div>
-<div class="line"><a name="l00201"></a><span class="lineno">  201</span>&#160;  <a class="code" href="classVisualizer.html#a360114a591b91eb6fc51a67daefe37e8">map_sprite</a> = sf::Sprite(<a class="code" href="classVisualizer.html#a6cdc2630f36722cb2b6be98676f969de">map_texture</a>);</div>
-<div class="line"><a name="l00202"></a><span class="lineno">  202</span>&#160;  <a class="code" href="classVisualizer.html#ae88184aca4b5910d14899ff3b0986656">scale</a>      = (double)<a class="code" href="Visualizer_8cpp.html#a498d9f026138406895e9a34b504ac6a6">WINDOW_WIDTH</a> / (<a class="code" href="Visualizer_8cpp.html#a7a4127f14f16563da90eb3c836bc404f">CELL_SIZE</a> * num_of_columns);</div>
-<div class="line"><a name="l00203"></a><span class="lineno">  203</span>&#160;  <a class="code" href="classVisualizer.html#a360114a591b91eb6fc51a67daefe37e8">map_sprite</a>.setScale(sf::Vector2f(<a class="code" href="classVisualizer.html#ae88184aca4b5910d14899ff3b0986656">scale</a>, <a class="code" href="classVisualizer.html#ae88184aca4b5910d14899ff3b0986656">scale</a>));</div>
-<div class="line"><a name="l00204"></a><span class="lineno">  204</span>&#160;}</div>
+<div class="line"><a name="l00167"></a><span class="lineno">  167</span>&#160;    <span class="comment">// draw the map</span></div>
+<div class="line"><a name="l00168"></a><span class="lineno">  168</span>&#160;    window.draw(<a class="code" href="classVisualizer.html#a360114a591b91eb6fc51a67daefe37e8">map_sprite</a>);</div>
+<div class="line"><a name="l00169"></a><span class="lineno">  169</span>&#160; </div>
+<div class="line"><a name="l00170"></a><span class="lineno">  170</span>&#160;    <span class="comment">// draw the optimal paths</span></div>
+<div class="line"><a name="l00171"></a><span class="lineno">  171</span>&#160;    <span class="keywordflow">for</span> (<span class="keywordtype">int</span> i = 0; i &lt; (int)<a class="code" href="classVisualizer.html#a6fc946ceb4a5412c1fec24a441be065e">instance</a>-&gt;get_optimal_paths().size(); i++)</div>
+<div class="line"><a name="l00172"></a><span class="lineno">  172</span>&#160;    {</div>
+<div class="line"><a name="l00173"></a><span class="lineno">  173</span>&#160;      <a class="code" href="classVisualizer.html#a2cb8ddcc81f5c0208f5113cee2d9806d">draw_path</a>(window, <a class="code" href="classVisualizer.html#a6fc946ceb4a5412c1fec24a441be065e">instance</a>-&gt;get_optimal_paths()[i], <a class="code" href="classVisualizer.html#ad884d1fb6851f3e298ed54508cc92a5b">agents_colors</a>[i]);</div>
+<div class="line"><a name="l00174"></a><span class="lineno">  174</span>&#160;    }</div>
+<div class="line"><a name="l00175"></a><span class="lineno">  175</span>&#160;    <span class="comment">// draw_path(window, instance-&gt;get_optimal_paths()[0], agents_colors[0]);</span></div>
+<div class="line"><a name="l00176"></a><span class="lineno">  176</span>&#160; </div>
+<div class="line"><a name="l00177"></a><span class="lineno">  177</span>&#160;    <span class="comment">// draw the agents</span></div>
+<div class="line"><a name="l00178"></a><span class="lineno">  178</span>&#160;    <a class="code" href="classVisualizer.html#a5461ebd346832cfbc055d6c0e2cdefd1">draw_agents</a>(window);</div>
+<div class="line"><a name="l00179"></a><span class="lineno">  179</span>&#160;    <a class="code" href="classVisualizer.html#ab8c444d6c727105cbd234cfa3df11f20">draw_goals</a>(window);</div>
+<div class="line"><a name="l00180"></a><span class="lineno">  180</span>&#160; </div>
+<div class="line"><a name="l00181"></a><span class="lineno">  181</span>&#160;    <span class="comment">// set the view</span></div>
+<div class="line"><a name="l00182"></a><span class="lineno">  182</span>&#160;    window.setView(view);</div>
+<div class="line"><a name="l00183"></a><span class="lineno">  183</span>&#160; </div>
+<div class="line"><a name="l00184"></a><span class="lineno">  184</span>&#160;    ImGui::PushStyleVar(ImGuiStyleVar_FramePadding, ImVec2(10, 10));       <span class="comment">// Increase padding (width, height)</span></div>
+<div class="line"><a name="l00185"></a><span class="lineno">  185</span>&#160;    ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(10, 10));      <span class="comment">// Adjust window padding</span></div>
+<div class="line"><a name="l00186"></a><span class="lineno">  186</span>&#160;    ImGui::GetStyle().WindowBorderSize        = 2.0f;                      <span class="comment">// Add border</span></div>
+<div class="line"><a name="l00187"></a><span class="lineno">  187</span>&#160;    ImGui::GetStyle().Colors[ImGuiCol_Border] = ImVec4(0.1, 0.1, 0.1, 1);  <span class="comment">// border</span></div>
+<div class="line"><a name="l00188"></a><span class="lineno">  188</span>&#160; </div>
+<div class="line"><a name="l00189"></a><span class="lineno">  189</span>&#160;    <span class="keywordflow">if</span> (ImGui::BeginMainMenuBar())</div>
+<div class="line"><a name="l00190"></a><span class="lineno">  190</span>&#160;    {</div>
+<div class="line"><a name="l00191"></a><span class="lineno">  191</span>&#160;      <span class="keywordflow">if</span> (ImGui::BeginMenu(<span class="stringliteral">&quot;Instance&quot;</span>))</div>
+<div class="line"><a name="l00192"></a><span class="lineno">  192</span>&#160;      {</div>
+<div class="line"><a name="l00193"></a><span class="lineno">  193</span>&#160;        <span class="keywordflow">if</span> (ImGui::MenuItem(<span class="stringliteral">&quot;Load map&quot;</span>)) std::cout &lt;&lt; <span class="stringliteral">&quot;Loading a map.&quot;</span> &lt;&lt; std::endl;</div>
+<div class="line"><a name="l00194"></a><span class="lineno">  194</span>&#160;        <span class="keywordflow">if</span> (ImGui::MenuItem(<span class="stringliteral">&quot;Load scene&quot;</span>)) std::cout &lt;&lt; <span class="stringliteral">&quot;Loading a scene.&quot;</span> &lt;&lt; std::endl;</div>
+<div class="line"><a name="l00195"></a><span class="lineno">  195</span>&#160;        ImGui::EndMenu();</div>
+<div class="line"><a name="l00196"></a><span class="lineno">  196</span>&#160;      }</div>
+<div class="line"><a name="l00197"></a><span class="lineno">  197</span>&#160;      <span class="keywordflow">if</span> (ImGui::BeginMenu(<span class="stringliteral">&quot;Settings&quot;</span>))</div>
+<div class="line"><a name="l00198"></a><span class="lineno">  198</span>&#160;      {</div>
+<div class="line"><a name="l00199"></a><span class="lineno">  199</span>&#160;        <span class="keywordflow">if</span> (ImGui::MenuItem(<span class="stringliteral">&quot;Algorithm settings&quot;</span>)) std::cout &lt;&lt; <span class="stringliteral">&quot;Algorithm settings.&quot;</span> &lt;&lt; std::endl;</div>
+<div class="line"><a name="l00200"></a><span class="lineno">  200</span>&#160;        ImGui::EndMenu();</div>
+<div class="line"><a name="l00201"></a><span class="lineno">  201</span>&#160;      }</div>
+<div class="line"><a name="l00202"></a><span class="lineno">  202</span>&#160;      ImVec2 menu_bar_size = ImGui::GetWindowSize();</div>
+<div class="line"><a name="l00203"></a><span class="lineno">  203</span>&#160;      <span class="comment">// set the are where the map and agents will be rendered</span></div>
+<div class="line"><a name="l00204"></a><span class="lineno">  204</span>&#160;      view.setViewport(sf::FloatRect({0.f, (float)menu_bar_size.y / (<span class="keywordtype">float</span>)window_height}, {1.0f, 1.f}));</div>
 <div class="line"><a name="l00205"></a><span class="lineno">  205</span>&#160; </div>
-<div class="line"><a name="l00206"></a><span class="lineno"><a class="line" href="classVisualizer.html#a5461ebd346832cfbc055d6c0e2cdefd1">  206</a></span>&#160;<span class="keywordtype">void</span> <a class="code" href="classVisualizer.html#a5461ebd346832cfbc055d6c0e2cdefd1">Visualizer::draw_agents</a>(sf::RenderWindow&amp; window)</div>
-<div class="line"><a name="l00207"></a><span class="lineno">  207</span>&#160;{</div>
-<div class="line"><a name="l00208"></a><span class="lineno">  208</span>&#160;  <a class="code" href="classVisualizer.html#a1b2ea0c18b6eef6fdb8d6da03bd2bc02">agents_circles</a>.clear();</div>
-<div class="line"><a name="l00209"></a><span class="lineno">  209</span>&#160;  <span class="keywordflow">for</span> (<span class="keywordtype">int</span> i = 0; i &lt; (int)<a class="code" href="classVisualizer.html#a624f7903185db159306f19516ead258e">start_positions</a>.size(); i++)</div>
-<div class="line"><a name="l00210"></a><span class="lineno">  210</span>&#160;    {</div>
-<div class="line"><a name="l00211"></a><span class="lineno">  211</span>&#160;      <span class="keywordtype">int</span> x = std::get&lt;0&gt;(<a class="code" href="classVisualizer.html#a624f7903185db159306f19516ead258e">start_positions</a>[i]);</div>
-<div class="line"><a name="l00212"></a><span class="lineno">  212</span>&#160;      <span class="keywordtype">int</span> y = std::get&lt;1&gt;(<a class="code" href="classVisualizer.html#a624f7903185db159306f19516ead258e">start_positions</a>[i]);</div>
-<div class="line"><a name="l00213"></a><span class="lineno">  213</span>&#160;      <span class="comment">// create shape</span></div>
-<div class="line"><a name="l00214"></a><span class="lineno">  214</span>&#160;      <a class="code" href="classVisualizer.html#a1b2ea0c18b6eef6fdb8d6da03bd2bc02">agents_circles</a>.push_back(sf::CircleShape((<span class="keywordtype">double</span>)(<a class="code" href="Visualizer_8cpp.html#a7a4127f14f16563da90eb3c836bc404f">CELL_SIZE</a> - 2 * <a class="code" href="Visualizer_8cpp.html#a83b9df0c7acc5653665d1efd14d1a65b">BORDER_SIZE</a>) / 2));</div>
-<div class="line"><a name="l00215"></a><span class="lineno">  215</span>&#160;      <span class="comment">// set color</span></div>
-<div class="line"><a name="l00216"></a><span class="lineno">  216</span>&#160;      <a class="code" href="classVisualizer.html#a1b2ea0c18b6eef6fdb8d6da03bd2bc02">agents_circles</a>.back().setFillColor(<a class="code" href="classVisualizer.html#ad884d1fb6851f3e298ed54508cc92a5b">agents_colors</a>[i]);</div>
-<div class="line"><a name="l00217"></a><span class="lineno">  217</span>&#160;      <span class="comment">// set position</span></div>
-<div class="line"><a name="l00218"></a><span class="lineno">  218</span>&#160;      <a class="code" href="classVisualizer.html#a1b2ea0c18b6eef6fdb8d6da03bd2bc02">agents_circles</a>.back().setPosition(x * <a class="code" href="classVisualizer.html#ae88184aca4b5910d14899ff3b0986656">scale</a> * <a class="code" href="Visualizer_8cpp.html#a7a4127f14f16563da90eb3c836bc404f">CELL_SIZE</a> + <a class="code" href="classVisualizer.html#ae88184aca4b5910d14899ff3b0986656">scale</a> * <a class="code" href="Visualizer_8cpp.html#a83b9df0c7acc5653665d1efd14d1a65b">BORDER_SIZE</a>, y * <a class="code" href="classVisualizer.html#ae88184aca4b5910d14899ff3b0986656">scale</a> * <a class="code" href="Visualizer_8cpp.html#a7a4127f14f16563da90eb3c836bc404f">CELL_SIZE</a> + <a class="code" href="classVisualizer.html#ae88184aca4b5910d14899ff3b0986656">scale</a> * <a class="code" href="Visualizer_8cpp.html#a83b9df0c7acc5653665d1efd14d1a65b">BORDER_SIZE</a>);</div>
-<div class="line"><a name="l00219"></a><span class="lineno">  219</span>&#160;      <a class="code" href="classVisualizer.html#a1b2ea0c18b6eef6fdb8d6da03bd2bc02">agents_circles</a>.back().setScale(sf::Vector2f(<a class="code" href="classVisualizer.html#ae88184aca4b5910d14899ff3b0986656">scale</a>, <a class="code" href="classVisualizer.html#ae88184aca4b5910d14899ff3b0986656">scale</a>));</div>
-<div class="line"><a name="l00220"></a><span class="lineno">  220</span>&#160;      <span class="comment">// draw the shape</span></div>
-<div class="line"><a name="l00221"></a><span class="lineno">  221</span>&#160;      window.draw(<a class="code" href="classVisualizer.html#a1b2ea0c18b6eef6fdb8d6da03bd2bc02">agents_circles</a>.back());</div>
-<div class="line"><a name="l00222"></a><span class="lineno">  222</span>&#160;    }</div>
-<div class="line"><a name="l00223"></a><span class="lineno">  223</span>&#160;}</div>
-<div class="line"><a name="l00224"></a><span class="lineno">  224</span>&#160; </div>
-<div class="line"><a name="l00225"></a><span class="lineno"><a class="line" href="classVisualizer.html#ab8c444d6c727105cbd234cfa3df11f20">  225</a></span>&#160;<span class="keywordtype">void</span> <a class="code" href="classVisualizer.html#ab8c444d6c727105cbd234cfa3df11f20">Visualizer::draw_goals</a>(sf::RenderWindow&amp; window)</div>
-<div class="line"><a name="l00226"></a><span class="lineno">  226</span>&#160;{</div>
-<div class="line"><a name="l00227"></a><span class="lineno">  227</span>&#160;  <a class="code" href="classVisualizer.html#a1b2ea0c18b6eef6fdb8d6da03bd2bc02">agents_circles</a>.clear();</div>
-<div class="line"><a name="l00228"></a><span class="lineno">  228</span>&#160;  <span class="keywordflow">for</span> (<span class="keywordtype">int</span> i = 0; i &lt; (int)<a class="code" href="classVisualizer.html#a624f7903185db159306f19516ead258e">start_positions</a>.size(); i++)</div>
-<div class="line"><a name="l00229"></a><span class="lineno">  229</span>&#160;    {</div>
-<div class="line"><a name="l00230"></a><span class="lineno">  230</span>&#160;      <span class="keywordtype">int</span> x = std::get&lt;0&gt;(<a class="code" href="classVisualizer.html#a52b6cbb545f0e361e0f80e3bc27118af">goal_positions</a>[i]);</div>
-<div class="line"><a name="l00231"></a><span class="lineno">  231</span>&#160;      <span class="keywordtype">int</span> y = std::get&lt;1&gt;(<a class="code" href="classVisualizer.html#a52b6cbb545f0e361e0f80e3bc27118af">goal_positions</a>[i]);</div>
-<div class="line"><a name="l00232"></a><span class="lineno">  232</span>&#160;      <span class="comment">// create shape</span></div>
-<div class="line"><a name="l00233"></a><span class="lineno">  233</span>&#160;      <a class="code" href="classVisualizer.html#a1b2ea0c18b6eef6fdb8d6da03bd2bc02">agents_circles</a>.push_back(sf::CircleShape((<span class="keywordtype">double</span>)(<a class="code" href="Visualizer_8cpp.html#a7a4127f14f16563da90eb3c836bc404f">CELL_SIZE</a> - 2 * <a class="code" href="Visualizer_8cpp.html#a83b9df0c7acc5653665d1efd14d1a65b">BORDER_SIZE</a>) / 2));</div>
-<div class="line"><a name="l00234"></a><span class="lineno">  234</span>&#160;      <span class="comment">// set color</span></div>
-<div class="line"><a name="l00235"></a><span class="lineno">  235</span>&#160;      <a class="code" href="classVisualizer.html#a1b2ea0c18b6eef6fdb8d6da03bd2bc02">agents_circles</a>.back().setOutlineColor(<a class="code" href="classVisualizer.html#ad884d1fb6851f3e298ed54508cc92a5b">agents_colors</a>[i]);</div>
-<div class="line"><a name="l00236"></a><span class="lineno">  236</span>&#160;      <a class="code" href="classVisualizer.html#a1b2ea0c18b6eef6fdb8d6da03bd2bc02">agents_circles</a>.back().setOutlineThickness(-<a class="code" href="Visualizer_8cpp.html#adc8dced17a7a01c522597ffe1a6740ee">GOAL_VIS_THICKNESS</a>);</div>
-<div class="line"><a name="l00237"></a><span class="lineno">  237</span>&#160;      <span class="comment">// set position</span></div>
-<div class="line"><a name="l00238"></a><span class="lineno">  238</span>&#160;      <a class="code" href="classVisualizer.html#a1b2ea0c18b6eef6fdb8d6da03bd2bc02">agents_circles</a>.back().setPosition(x * <a class="code" href="classVisualizer.html#ae88184aca4b5910d14899ff3b0986656">scale</a> * <a class="code" href="Visualizer_8cpp.html#a7a4127f14f16563da90eb3c836bc404f">CELL_SIZE</a> + <a class="code" href="classVisualizer.html#ae88184aca4b5910d14899ff3b0986656">scale</a> * <a class="code" href="Visualizer_8cpp.html#a83b9df0c7acc5653665d1efd14d1a65b">BORDER_SIZE</a>, y * <a class="code" href="classVisualizer.html#ae88184aca4b5910d14899ff3b0986656">scale</a> * <a class="code" href="Visualizer_8cpp.html#a7a4127f14f16563da90eb3c836bc404f">CELL_SIZE</a> + <a class="code" href="classVisualizer.html#ae88184aca4b5910d14899ff3b0986656">scale</a> * <a class="code" href="Visualizer_8cpp.html#a83b9df0c7acc5653665d1efd14d1a65b">BORDER_SIZE</a>);</div>
-<div class="line"><a name="l00239"></a><span class="lineno">  239</span>&#160;      <a class="code" href="classVisualizer.html#a1b2ea0c18b6eef6fdb8d6da03bd2bc02">agents_circles</a>.back().setScale(sf::Vector2f(<a class="code" href="classVisualizer.html#ae88184aca4b5910d14899ff3b0986656">scale</a>, <a class="code" href="classVisualizer.html#ae88184aca4b5910d14899ff3b0986656">scale</a>));</div>
-<div class="line"><a name="l00240"></a><span class="lineno">  240</span>&#160;      <span class="comment">// draw the shape</span></div>
-<div class="line"><a name="l00241"></a><span class="lineno">  241</span>&#160;      window.draw(<a class="code" href="classVisualizer.html#a1b2ea0c18b6eef6fdb8d6da03bd2bc02">agents_circles</a>.back());</div>
-<div class="line"><a name="l00242"></a><span class="lineno">  242</span>&#160;    }</div>
-<div class="line"><a name="l00243"></a><span class="lineno">  243</span>&#160;}</div>
+<div class="line"><a name="l00206"></a><span class="lineno">  206</span>&#160;      ImGui::EndMainMenuBar();</div>
+<div class="line"><a name="l00207"></a><span class="lineno">  207</span>&#160;    }</div>
+<div class="line"><a name="l00208"></a><span class="lineno">  208</span>&#160;    ImGui::PopStyleVar(2);  <span class="comment">// Pop both styles</span></div>
+<div class="line"><a name="l00209"></a><span class="lineno">  209</span>&#160; </div>
+<div class="line"><a name="l00210"></a><span class="lineno">  210</span>&#160;    <span class="comment">// **ImGui UI Overlay**</span></div>
+<div class="line"><a name="l00211"></a><span class="lineno">  211</span>&#160;    <span class="comment">// ImGui::SetNextWindowPos(ImVec2(0, 460));  // Position below SFML map</span></div>
+<div class="line"><a name="l00212"></a><span class="lineno">  212</span>&#160;    <span class="comment">// ImGui::SetNextWindowSize(ImVec2(800, 140));</span></div>
+<div class="line"><a name="l00213"></a><span class="lineno">  213</span>&#160;    <span class="comment">// ImGui::Begin(&quot;Control Panel&quot;, nullptr, ImGuiWindowFlags_NoResize);</span></div>
+<div class="line"><a name="l00214"></a><span class="lineno">  214</span>&#160; </div>
+<div class="line"><a name="l00215"></a><span class="lineno">  215</span>&#160;    <span class="comment">// if (ImGui::Button(&quot;Run A* Solver&quot;))</span></div>
+<div class="line"><a name="l00216"></a><span class="lineno">  216</span>&#160;    <span class="comment">//{</span></div>
+<div class="line"><a name="l00217"></a><span class="lineno">  217</span>&#160;    <span class="comment">//  std::cout &lt;&lt; &quot;Running A*...&quot; &lt;&lt; std::endl;</span></div>
+<div class="line"><a name="l00218"></a><span class="lineno">  218</span>&#160;    <span class="comment">//  // TODO: Trigger A* algorithm</span></div>
+<div class="line"><a name="l00219"></a><span class="lineno">  219</span>&#160;    <span class="comment">//}</span></div>
+<div class="line"><a name="l00220"></a><span class="lineno">  220</span>&#160; </div>
+<div class="line"><a name="l00221"></a><span class="lineno">  221</span>&#160;    <span class="comment">// if (ImGui::Button(&quot;Load Instance&quot;))</span></div>
+<div class="line"><a name="l00222"></a><span class="lineno">  222</span>&#160;    <span class="comment">//{</span></div>
+<div class="line"><a name="l00223"></a><span class="lineno">  223</span>&#160;    <span class="comment">//  std::cout &lt;&lt; &quot;Loading new instance...&quot; &lt;&lt; std::endl;</span></div>
+<div class="line"><a name="l00224"></a><span class="lineno">  224</span>&#160;    <span class="comment">//  // TODO: Load new instance</span></div>
+<div class="line"><a name="l00225"></a><span class="lineno">  225</span>&#160;    <span class="comment">//}</span></div>
+<div class="line"><a name="l00226"></a><span class="lineno">  226</span>&#160; </div>
+<div class="line"><a name="l00227"></a><span class="lineno">  227</span>&#160;    <span class="comment">// ImGui::End();</span></div>
+<div class="line"><a name="l00228"></a><span class="lineno">  228</span>&#160; </div>
+<div class="line"><a name="l00229"></a><span class="lineno">  229</span>&#160;    <span class="comment">// Render ImGui on top</span></div>
+<div class="line"><a name="l00230"></a><span class="lineno">  230</span>&#160;    ImGui::SFML::Render(window);</div>
+<div class="line"><a name="l00231"></a><span class="lineno">  231</span>&#160;    <span class="comment">// display</span></div>
+<div class="line"><a name="l00232"></a><span class="lineno">  232</span>&#160;    window.display();</div>
+<div class="line"><a name="l00233"></a><span class="lineno">  233</span>&#160;  }</div>
+<div class="line"><a name="l00234"></a><span class="lineno">  234</span>&#160; </div>
+<div class="line"><a name="l00235"></a><span class="lineno">  235</span>&#160;  <span class="comment">// close the window</span></div>
+<div class="line"><a name="l00236"></a><span class="lineno">  236</span>&#160;  <span class="keywordflow">if</span> (window.isOpen()) window.close();</div>
+<div class="line"><a name="l00237"></a><span class="lineno">  237</span>&#160;  ImGui::SFML::Shutdown();</div>
+<div class="line"><a name="l00238"></a><span class="lineno">  238</span>&#160;  std::cout &lt;&lt; <span class="stringliteral">&quot;Visualizer thread ended&quot;</span> &lt;&lt; std::endl;</div>
+<div class="line"><a name="l00239"></a><span class="lineno">  239</span>&#160;}</div>
+<div class="line"><a name="l00240"></a><span class="lineno">  240</span>&#160; </div>
+<div class="line"><a name="l00241"></a><span class="lineno">  241</span>&#160;<span class="comment">// Render the map onto a texture</span></div>
+<div class="line"><a name="l00242"></a><span class="lineno"><a class="line" href="classVisualizer.html#ab71637c0e046114f0511471ff0134d8e">  242</a></span>&#160;<span class="keywordtype">void</span> <a class="code" href="classVisualizer.html#ab71637c0e046114f0511471ff0134d8e">Visualizer::mapToTexture</a>(<span class="keyword">const</span> <a class="code" href="classMap.html">Map</a>&amp; map_data)</div>
+<div class="line"><a name="l00243"></a><span class="lineno">  243</span>&#160;{</div>
+<div class="line"><a name="l00244"></a><span class="lineno">  244</span>&#160;  <span class="comment">// initialize the texture</span></div>
+<div class="line"><a name="l00245"></a><span class="lineno">  245</span>&#160;  sf::RenderTexture map_render_texture;</div>
+<div class="line"><a name="l00246"></a><span class="lineno">  246</span>&#160;  map_render_texture.create(map_data.<a class="code" href="classMap.html#a9ecfe932ad2d2bc22492416033bdacfd">width</a> * <a class="code" href="Visualizer_8cpp.html#a7a4127f14f16563da90eb3c836bc404f">CELL_SIZE</a>, map_data.<a class="code" href="classMap.html#a0546fef98caebe38385bb2e0c7a15da1">height</a> * <a class="code" href="Visualizer_8cpp.html#a7a4127f14f16563da90eb3c836bc404f">CELL_SIZE</a>);</div>
+<div class="line"><a name="l00247"></a><span class="lineno">  247</span>&#160; </div>
+<div class="line"><a name="l00248"></a><span class="lineno">  248</span>&#160;  <span class="comment">// clear the texture with a background color</span></div>
+<div class="line"><a name="l00249"></a><span class="lineno">  249</span>&#160;  map_render_texture.clear(sf::Color::White);</div>
+<div class="line"><a name="l00250"></a><span class="lineno">  250</span>&#160; </div>
+<div class="line"><a name="l00251"></a><span class="lineno">  251</span>&#160;  <span class="comment">// Draw the grid onto the texture</span></div>
+<div class="line"><a name="l00252"></a><span class="lineno">  252</span>&#160;  <span class="keywordflow">for</span> (<span class="keywordtype">int</span> y = 0; y &lt; map_data.<a class="code" href="classMap.html#a0546fef98caebe38385bb2e0c7a15da1">height</a>; y++)</div>
+<div class="line"><a name="l00253"></a><span class="lineno">  253</span>&#160;  {</div>
+<div class="line"><a name="l00254"></a><span class="lineno">  254</span>&#160;    <span class="keywordflow">for</span> (<span class="keywordtype">int</span> x = 0; x &lt; map_data.<a class="code" href="classMap.html#a9ecfe932ad2d2bc22492416033bdacfd">width</a>; x++)</div>
+<div class="line"><a name="l00255"></a><span class="lineno">  255</span>&#160;    {</div>
+<div class="line"><a name="l00256"></a><span class="lineno">  256</span>&#160;      <span class="comment">// create the cell</span></div>
+<div class="line"><a name="l00257"></a><span class="lineno">  257</span>&#160;      sf::RectangleShape cell(sf::Vector2f(<a class="code" href="Visualizer_8cpp.html#a7a4127f14f16563da90eb3c836bc404f">CELL_SIZE</a>, <a class="code" href="Visualizer_8cpp.html#a7a4127f14f16563da90eb3c836bc404f">CELL_SIZE</a>));</div>
+<div class="line"><a name="l00258"></a><span class="lineno">  258</span>&#160;      cell.setPosition((<span class="keywordtype">float</span>)x * <a class="code" href="Visualizer_8cpp.html#a7a4127f14f16563da90eb3c836bc404f">CELL_SIZE</a>, (<span class="keywordtype">float</span>)y * <a class="code" href="Visualizer_8cpp.html#a7a4127f14f16563da90eb3c836bc404f">CELL_SIZE</a>);</div>
+<div class="line"><a name="l00259"></a><span class="lineno">  259</span>&#160;      <span class="keywordflow">if</span> ((<span class="keywordtype">int</span>)map_data.<a class="code" href="classMap.html#a338b22b5f2e52eebaaf547990c4204c2">data</a>[y * map_data.<a class="code" href="classMap.html#a9ecfe932ad2d2bc22492416033bdacfd">width</a> + x] == 1)</div>
+<div class="line"><a name="l00260"></a><span class="lineno">  260</span>&#160;      {</div>
+<div class="line"><a name="l00261"></a><span class="lineno">  261</span>&#160;        <span class="comment">// obstacles</span></div>
+<div class="line"><a name="l00262"></a><span class="lineno">  262</span>&#160;        cell.setFillColor(sf::Color::Black);</div>
+<div class="line"><a name="l00263"></a><span class="lineno">  263</span>&#160;      }</div>
+<div class="line"><a name="l00264"></a><span class="lineno">  264</span>&#160;      <span class="keywordflow">else</span></div>
+<div class="line"><a name="l00265"></a><span class="lineno">  265</span>&#160;      {</div>
+<div class="line"><a name="l00266"></a><span class="lineno">  266</span>&#160;        <span class="comment">// free cells</span></div>
+<div class="line"><a name="l00267"></a><span class="lineno">  267</span>&#160;        cell.setFillColor(sf::Color::White);</div>
+<div class="line"><a name="l00268"></a><span class="lineno">  268</span>&#160;      }</div>
+<div class="line"><a name="l00269"></a><span class="lineno">  269</span>&#160; </div>
+<div class="line"><a name="l00270"></a><span class="lineno">  270</span>&#160;      <span class="comment">// grid color and thickness</span></div>
+<div class="line"><a name="l00271"></a><span class="lineno">  271</span>&#160;      cell.setOutlineThickness(-<a class="code" href="Visualizer_8cpp.html#a83b9df0c7acc5653665d1efd14d1a65b">BORDER_SIZE</a>);</div>
+<div class="line"><a name="l00272"></a><span class="lineno">  272</span>&#160;      cell.setOutlineColor(sf::Color::Black);</div>
+<div class="line"><a name="l00273"></a><span class="lineno">  273</span>&#160; </div>
+<div class="line"><a name="l00274"></a><span class="lineno">  274</span>&#160;      map_render_texture.draw(cell);</div>
+<div class="line"><a name="l00275"></a><span class="lineno">  275</span>&#160;    }</div>
+<div class="line"><a name="l00276"></a><span class="lineno">  276</span>&#160;  }</div>
+<div class="line"><a name="l00277"></a><span class="lineno">  277</span>&#160; </div>
+<div class="line"><a name="l00278"></a><span class="lineno">  278</span>&#160;  <span class="comment">// Finalize the rendering</span></div>
+<div class="line"><a name="l00279"></a><span class="lineno">  279</span>&#160;  map_render_texture.display();</div>
+<div class="line"><a name="l00280"></a><span class="lineno">  280</span>&#160; </div>
+<div class="line"><a name="l00281"></a><span class="lineno">  281</span>&#160;  <span class="comment">// set the map texture</span></div>
+<div class="line"><a name="l00282"></a><span class="lineno">  282</span>&#160;  <a class="code" href="classVisualizer.html#a6cdc2630f36722cb2b6be98676f969de">map_texture</a> = map_render_texture.getTexture();</div>
+<div class="line"><a name="l00283"></a><span class="lineno">  283</span>&#160;  <span class="comment">// turn on antialiasing</span></div>
+<div class="line"><a name="l00284"></a><span class="lineno">  284</span>&#160;  <span class="comment">// map_texture.setSmooth(true);</span></div>
+<div class="line"><a name="l00285"></a><span class="lineno">  285</span>&#160;  <a class="code" href="classVisualizer.html#a360114a591b91eb6fc51a67daefe37e8">map_sprite</a> = sf::Sprite(<a class="code" href="classVisualizer.html#a6cdc2630f36722cb2b6be98676f969de">map_texture</a>);</div>
+<div class="line"><a name="l00286"></a><span class="lineno">  286</span>&#160;  <a class="code" href="classVisualizer.html#ae88184aca4b5910d14899ff3b0986656">scale</a>      = (double)<a class="code" href="Visualizer_8cpp.html#a498d9f026138406895e9a34b504ac6a6">WINDOW_WIDTH</a> / (<a class="code" href="Visualizer_8cpp.html#a7a4127f14f16563da90eb3c836bc404f">CELL_SIZE</a> * map_data.<a class="code" href="classMap.html#a9ecfe932ad2d2bc22492416033bdacfd">width</a>);</div>
+<div class="line"><a name="l00287"></a><span class="lineno">  287</span>&#160;  <a class="code" href="classVisualizer.html#a360114a591b91eb6fc51a67daefe37e8">map_sprite</a>.setScale(sf::Vector2f(<a class="code" href="classVisualizer.html#ae88184aca4b5910d14899ff3b0986656">scale</a>, <a class="code" href="classVisualizer.html#ae88184aca4b5910d14899ff3b0986656">scale</a>));</div>
+<div class="line"><a name="l00288"></a><span class="lineno">  288</span>&#160;}</div>
+<div class="line"><a name="l00289"></a><span class="lineno">  289</span>&#160; </div>
+<div class="line"><a name="l00290"></a><span class="lineno"><a class="line" href="classVisualizer.html#a5461ebd346832cfbc055d6c0e2cdefd1">  290</a></span>&#160;<span class="keywordtype">void</span> <a class="code" href="classVisualizer.html#a5461ebd346832cfbc055d6c0e2cdefd1">Visualizer::draw_agents</a>(sf::RenderWindow&amp; window)</div>
+<div class="line"><a name="l00291"></a><span class="lineno">  291</span>&#160;{</div>
+<div class="line"><a name="l00292"></a><span class="lineno">  292</span>&#160;  <a class="code" href="classVisualizer.html#a1b2ea0c18b6eef6fdb8d6da03bd2bc02">agents_circles</a>.clear();</div>
+<div class="line"><a name="l00293"></a><span class="lineno">  293</span>&#160;  <span class="keywordflow">for</span> (<span class="keywordtype">int</span> i = 0; i &lt; (int)<a class="code" href="classVisualizer.html#a6fc946ceb4a5412c1fec24a441be065e">instance</a>-&gt;get_start_positions().size(); i++)</div>
+<div class="line"><a name="l00294"></a><span class="lineno">  294</span>&#160;  {</div>
+<div class="line"><a name="l00295"></a><span class="lineno">  295</span>&#160;    <span class="keyword">const</span> <span class="keywordtype">int</span> x = <a class="code" href="classVisualizer.html#a6fc946ceb4a5412c1fec24a441be065e">instance</a>-&gt;get_start_positions()[i].x;</div>
+<div class="line"><a name="l00296"></a><span class="lineno">  296</span>&#160;    <span class="keyword">const</span> <span class="keywordtype">int</span> y = <a class="code" href="classVisualizer.html#a6fc946ceb4a5412c1fec24a441be065e">instance</a>-&gt;get_start_positions()[i].y;</div>
+<div class="line"><a name="l00297"></a><span class="lineno">  297</span>&#160;    <span class="comment">// create shape</span></div>
+<div class="line"><a name="l00298"></a><span class="lineno">  298</span>&#160;    <a class="code" href="classVisualizer.html#a1b2ea0c18b6eef6fdb8d6da03bd2bc02">agents_circles</a>.push_back(sf::CircleShape((<span class="keywordtype">double</span>)(<a class="code" href="Visualizer_8cpp.html#a7a4127f14f16563da90eb3c836bc404f">CELL_SIZE</a> - 2 * <a class="code" href="Visualizer_8cpp.html#a83b9df0c7acc5653665d1efd14d1a65b">BORDER_SIZE</a>) / 2));</div>
+<div class="line"><a name="l00299"></a><span class="lineno">  299</span>&#160;    <span class="comment">// set color</span></div>
+<div class="line"><a name="l00300"></a><span class="lineno">  300</span>&#160;    <a class="code" href="classVisualizer.html#a1b2ea0c18b6eef6fdb8d6da03bd2bc02">agents_circles</a>.back().setFillColor(<a class="code" href="classVisualizer.html#ad884d1fb6851f3e298ed54508cc92a5b">agents_colors</a>[i]);</div>
+<div class="line"><a name="l00301"></a><span class="lineno">  301</span>&#160;    <span class="comment">// set position</span></div>
+<div class="line"><a name="l00302"></a><span class="lineno">  302</span>&#160;    <a class="code" href="classVisualizer.html#a1b2ea0c18b6eef6fdb8d6da03bd2bc02">agents_circles</a>.back().setPosition(x * <a class="code" href="classVisualizer.html#ae88184aca4b5910d14899ff3b0986656">scale</a> * <a class="code" href="Visualizer_8cpp.html#a7a4127f14f16563da90eb3c836bc404f">CELL_SIZE</a> + <a class="code" href="classVisualizer.html#ae88184aca4b5910d14899ff3b0986656">scale</a> * <a class="code" href="Visualizer_8cpp.html#a83b9df0c7acc5653665d1efd14d1a65b">BORDER_SIZE</a>, y * <a class="code" href="classVisualizer.html#ae88184aca4b5910d14899ff3b0986656">scale</a> * <a class="code" href="Visualizer_8cpp.html#a7a4127f14f16563da90eb3c836bc404f">CELL_SIZE</a> + <a class="code" href="classVisualizer.html#ae88184aca4b5910d14899ff3b0986656">scale</a> * <a class="code" href="Visualizer_8cpp.html#a83b9df0c7acc5653665d1efd14d1a65b">BORDER_SIZE</a>);</div>
+<div class="line"><a name="l00303"></a><span class="lineno">  303</span>&#160;    <a class="code" href="classVisualizer.html#a1b2ea0c18b6eef6fdb8d6da03bd2bc02">agents_circles</a>.back().setScale(sf::Vector2f(<a class="code" href="classVisualizer.html#ae88184aca4b5910d14899ff3b0986656">scale</a>, <a class="code" href="classVisualizer.html#ae88184aca4b5910d14899ff3b0986656">scale</a>));</div>
+<div class="line"><a name="l00304"></a><span class="lineno">  304</span>&#160;    <span class="comment">// draw the shape</span></div>
+<div class="line"><a name="l00305"></a><span class="lineno">  305</span>&#160;    window.draw(<a class="code" href="classVisualizer.html#a1b2ea0c18b6eef6fdb8d6da03bd2bc02">agents_circles</a>.back());</div>
+<div class="line"><a name="l00306"></a><span class="lineno">  306</span>&#160;  }</div>
+<div class="line"><a name="l00307"></a><span class="lineno">  307</span>&#160;}</div>
+<div class="line"><a name="l00308"></a><span class="lineno">  308</span>&#160; </div>
+<div class="line"><a name="l00309"></a><span class="lineno"><a class="line" href="classVisualizer.html#ab8c444d6c727105cbd234cfa3df11f20">  309</a></span>&#160;<span class="keywordtype">void</span> <a class="code" href="classVisualizer.html#ab8c444d6c727105cbd234cfa3df11f20">Visualizer::draw_goals</a>(sf::RenderWindow&amp; window)</div>
+<div class="line"><a name="l00310"></a><span class="lineno">  310</span>&#160;{</div>
+<div class="line"><a name="l00311"></a><span class="lineno">  311</span>&#160;  <a class="code" href="classVisualizer.html#a1b2ea0c18b6eef6fdb8d6da03bd2bc02">agents_circles</a>.clear();</div>
+<div class="line"><a name="l00312"></a><span class="lineno">  312</span>&#160;  <span class="keywordflow">for</span> (<span class="keywordtype">int</span> i = 0; i &lt; (int)<a class="code" href="classVisualizer.html#a6fc946ceb4a5412c1fec24a441be065e">instance</a>-&gt;get_start_positions().size(); i++)</div>
+<div class="line"><a name="l00313"></a><span class="lineno">  313</span>&#160;  {</div>
+<div class="line"><a name="l00314"></a><span class="lineno">  314</span>&#160;    <span class="keyword">const</span> <span class="keywordtype">int</span> x = <a class="code" href="classVisualizer.html#a6fc946ceb4a5412c1fec24a441be065e">instance</a>-&gt;get_goal_positions()[i].x;</div>
+<div class="line"><a name="l00315"></a><span class="lineno">  315</span>&#160;    <span class="keyword">const</span> <span class="keywordtype">int</span> y = <a class="code" href="classVisualizer.html#a6fc946ceb4a5412c1fec24a441be065e">instance</a>-&gt;get_goal_positions()[i].y;</div>
+<div class="line"><a name="l00316"></a><span class="lineno">  316</span>&#160;    <span class="comment">// create shape</span></div>
+<div class="line"><a name="l00317"></a><span class="lineno">  317</span>&#160;    <a class="code" href="classVisualizer.html#a1b2ea0c18b6eef6fdb8d6da03bd2bc02">agents_circles</a>.push_back(sf::CircleShape((<span class="keywordtype">double</span>)(<a class="code" href="Visualizer_8cpp.html#a7a4127f14f16563da90eb3c836bc404f">CELL_SIZE</a> - 2 * <a class="code" href="Visualizer_8cpp.html#a83b9df0c7acc5653665d1efd14d1a65b">BORDER_SIZE</a>) / 2));</div>
+<div class="line"><a name="l00318"></a><span class="lineno">  318</span>&#160;    <span class="comment">// set color</span></div>
+<div class="line"><a name="l00319"></a><span class="lineno">  319</span>&#160;    <a class="code" href="classVisualizer.html#a1b2ea0c18b6eef6fdb8d6da03bd2bc02">agents_circles</a>.back().setOutlineColor(<a class="code" href="classVisualizer.html#ad884d1fb6851f3e298ed54508cc92a5b">agents_colors</a>[i]);</div>
+<div class="line"><a name="l00320"></a><span class="lineno">  320</span>&#160;    <a class="code" href="classVisualizer.html#a1b2ea0c18b6eef6fdb8d6da03bd2bc02">agents_circles</a>.back().setOutlineThickness(-<a class="code" href="Visualizer_8cpp.html#adc8dced17a7a01c522597ffe1a6740ee">GOAL_VIS_THICKNESS</a>);</div>
+<div class="line"><a name="l00321"></a><span class="lineno">  321</span>&#160;    <span class="comment">// set position</span></div>
+<div class="line"><a name="l00322"></a><span class="lineno">  322</span>&#160;    <a class="code" href="classVisualizer.html#a1b2ea0c18b6eef6fdb8d6da03bd2bc02">agents_circles</a>.back().setPosition((<span class="keywordtype">float</span>)(x * <a class="code" href="classVisualizer.html#ae88184aca4b5910d14899ff3b0986656">scale</a> * <a class="code" href="Visualizer_8cpp.html#a7a4127f14f16563da90eb3c836bc404f">CELL_SIZE</a> + <a class="code" href="classVisualizer.html#ae88184aca4b5910d14899ff3b0986656">scale</a> * <a class="code" href="Visualizer_8cpp.html#a83b9df0c7acc5653665d1efd14d1a65b">BORDER_SIZE</a>),</div>
+<div class="line"><a name="l00323"></a><span class="lineno">  323</span>&#160;                                      (<span class="keywordtype">float</span>)(y * <a class="code" href="classVisualizer.html#ae88184aca4b5910d14899ff3b0986656">scale</a> * <a class="code" href="Visualizer_8cpp.html#a7a4127f14f16563da90eb3c836bc404f">CELL_SIZE</a> + <a class="code" href="classVisualizer.html#ae88184aca4b5910d14899ff3b0986656">scale</a> * <a class="code" href="Visualizer_8cpp.html#a83b9df0c7acc5653665d1efd14d1a65b">BORDER_SIZE</a>));</div>
+<div class="line"><a name="l00324"></a><span class="lineno">  324</span>&#160;    <a class="code" href="classVisualizer.html#a1b2ea0c18b6eef6fdb8d6da03bd2bc02">agents_circles</a>.back().setScale(sf::Vector2f(<a class="code" href="classVisualizer.html#ae88184aca4b5910d14899ff3b0986656">scale</a>, <a class="code" href="classVisualizer.html#ae88184aca4b5910d14899ff3b0986656">scale</a>));</div>
+<div class="line"><a name="l00325"></a><span class="lineno">  325</span>&#160;    <span class="comment">// draw the shape</span></div>
+<div class="line"><a name="l00326"></a><span class="lineno">  326</span>&#160;    window.draw(<a class="code" href="classVisualizer.html#a1b2ea0c18b6eef6fdb8d6da03bd2bc02">agents_circles</a>.back());</div>
+<div class="line"><a name="l00327"></a><span class="lineno">  327</span>&#160;  }</div>
+<div class="line"><a name="l00328"></a><span class="lineno">  328</span>&#160;}</div>
+<div class="line"><a name="l00329"></a><span class="lineno">  329</span>&#160; </div>
+<div class="line"><a name="l00330"></a><span class="lineno"><a class="line" href="classVisualizer.html#a26b09c3766ced9ebb8e7d2b278434d92">  330</a></span>&#160;<span class="keywordtype">void</span> <a class="code" href="classVisualizer.html#a26b09c3766ced9ebb8e7d2b278434d92">Visualizer::draw_arrow</a>(sf::RenderWindow&amp; window, <span class="keyword">const</span> <a class="code" href="classPoint2d.html">Point2d</a>&amp; start, <span class="keyword">const</span> <a class="code" href="classPoint2d.html">Point2d</a>&amp; end, <span class="keyword">const</span> sf::Color&amp; color)</div>
+<div class="line"><a name="l00331"></a><span class="lineno">  331</span>&#160;{</div>
+<div class="line"><a name="l00332"></a><span class="lineno">  332</span>&#160;  <span class="keyword">const</span> <span class="keywordtype">double</span> x = (end.<a class="code" href="classPoint2d.html#a3491ec5f89149b0e91bbb91bc6f4308f">x</a> + <a class="code" href="classVisualizer.html#a2b6436ec715468955ebb9f53b908773f">start</a>.x) / 2.;</div>
+<div class="line"><a name="l00333"></a><span class="lineno">  333</span>&#160;  <span class="keyword">const</span> <span class="keywordtype">double</span> y = (end.<a class="code" href="classPoint2d.html#a2626bd0c5cce36fb441a5c1720b2c537">y</a> + <a class="code" href="classVisualizer.html#a2b6436ec715468955ebb9f53b908773f">start</a>.y) / 2.;</div>
+<div class="line"><a name="l00334"></a><span class="lineno">  334</span>&#160; </div>
+<div class="line"><a name="l00335"></a><span class="lineno">  335</span>&#160;  <span class="comment">// draw the line</span></div>
+<div class="line"><a name="l00336"></a><span class="lineno">  336</span>&#160;  sf::Vector2f       shape;</div>
+<div class="line"><a name="l00337"></a><span class="lineno">  337</span>&#160;  sf::RectangleShape line;</div>
+<div class="line"><a name="l00338"></a><span class="lineno">  338</span>&#160;  <span class="keywordflow">if</span> (<a class="code" href="classVisualizer.html#a2b6436ec715468955ebb9f53b908773f">start</a>.x == end.<a class="code" href="classPoint2d.html#a3491ec5f89149b0e91bbb91bc6f4308f">x</a>)  <span class="comment">// vertical</span></div>
+<div class="line"><a name="l00339"></a><span class="lineno">  339</span>&#160;  {</div>
+<div class="line"><a name="l00340"></a><span class="lineno">  340</span>&#160;    shape = sf::Vector2f(<a class="code" href="Visualizer_8cpp.html#a7a4127f14f16563da90eb3c836bc404f">CELL_SIZE</a> / (<span class="keywordtype">float</span>)<a class="code" href="Visualizer_8cpp.html#a666201b429d62c0cc1bd9f464c0fafb3">LINE_WIDTH</a>, <a class="code" href="Visualizer_8cpp.html#a7a4127f14f16563da90eb3c836bc404f">CELL_SIZE</a> + (<span class="keywordtype">float</span>)<a class="code" href="Visualizer_8cpp.html#a7a4127f14f16563da90eb3c836bc404f">CELL_SIZE</a> / <a class="code" href="Visualizer_8cpp.html#a666201b429d62c0cc1bd9f464c0fafb3">LINE_WIDTH</a>);</div>
+<div class="line"><a name="l00341"></a><span class="lineno">  341</span>&#160;    line  = sf::RectangleShape(shape);</div>
+<div class="line"><a name="l00342"></a><span class="lineno">  342</span>&#160;    line.setPosition((x + (<span class="keywordtype">float</span>)1 / <a class="code" href="Visualizer_8cpp.html#a666201b429d62c0cc1bd9f464c0fafb3">LINE_WIDTH</a>) * <a class="code" href="classVisualizer.html#ae88184aca4b5910d14899ff3b0986656">scale</a> * <a class="code" href="Visualizer_8cpp.html#a7a4127f14f16563da90eb3c836bc404f">CELL_SIZE</a>, (y - (<span class="keywordtype">float</span>)1 / (2 * <a class="code" href="Visualizer_8cpp.html#a666201b429d62c0cc1bd9f464c0fafb3">LINE_WIDTH</a>)) * <a class="code" href="classVisualizer.html#ae88184aca4b5910d14899ff3b0986656">scale</a> * <a class="code" href="Visualizer_8cpp.html#a7a4127f14f16563da90eb3c836bc404f">CELL_SIZE</a>);</div>
+<div class="line"><a name="l00343"></a><span class="lineno">  343</span>&#160;  }</div>
+<div class="line"><a name="l00344"></a><span class="lineno">  344</span>&#160;  <span class="keywordflow">else</span>  <span class="comment">// horizontal</span></div>
+<div class="line"><a name="l00345"></a><span class="lineno">  345</span>&#160;  {</div>
+<div class="line"><a name="l00346"></a><span class="lineno">  346</span>&#160;    shape = sf::Vector2f(<a class="code" href="Visualizer_8cpp.html#a7a4127f14f16563da90eb3c836bc404f">CELL_SIZE</a> + (<span class="keywordtype">float</span>)<a class="code" href="Visualizer_8cpp.html#a7a4127f14f16563da90eb3c836bc404f">CELL_SIZE</a> / <a class="code" href="Visualizer_8cpp.html#a666201b429d62c0cc1bd9f464c0fafb3">LINE_WIDTH</a>, <a class="code" href="Visualizer_8cpp.html#a7a4127f14f16563da90eb3c836bc404f">CELL_SIZE</a> / (<span class="keywordtype">float</span>)<a class="code" href="Visualizer_8cpp.html#a666201b429d62c0cc1bd9f464c0fafb3">LINE_WIDTH</a>);</div>
+<div class="line"><a name="l00347"></a><span class="lineno">  347</span>&#160;    line  = sf::RectangleShape(shape);</div>
+<div class="line"><a name="l00348"></a><span class="lineno">  348</span>&#160;    line.setPosition((x - (<span class="keywordtype">float</span>)1 / (2 * <a class="code" href="Visualizer_8cpp.html#a666201b429d62c0cc1bd9f464c0fafb3">LINE_WIDTH</a>)) * <a class="code" href="classVisualizer.html#ae88184aca4b5910d14899ff3b0986656">scale</a> * <a class="code" href="Visualizer_8cpp.html#a7a4127f14f16563da90eb3c836bc404f">CELL_SIZE</a>, (y + (<span class="keywordtype">float</span>)1 / <a class="code" href="Visualizer_8cpp.html#a666201b429d62c0cc1bd9f464c0fafb3">LINE_WIDTH</a>) * <a class="code" href="classVisualizer.html#ae88184aca4b5910d14899ff3b0986656">scale</a> * <a class="code" href="Visualizer_8cpp.html#a7a4127f14f16563da90eb3c836bc404f">CELL_SIZE</a>);</div>
+<div class="line"><a name="l00349"></a><span class="lineno">  349</span>&#160;  }</div>
+<div class="line"><a name="l00350"></a><span class="lineno">  350</span>&#160;  line.setScale(sf::Vector2f(<a class="code" href="classVisualizer.html#ae88184aca4b5910d14899ff3b0986656">scale</a>, <a class="code" href="classVisualizer.html#ae88184aca4b5910d14899ff3b0986656">scale</a>));</div>
+<div class="line"><a name="l00351"></a><span class="lineno">  351</span>&#160;  line.setFillColor(color);</div>
+<div class="line"><a name="l00352"></a><span class="lineno">  352</span>&#160;  window.draw(line);</div>
+<div class="line"><a name="l00353"></a><span class="lineno">  353</span>&#160;}</div>
+<div class="line"><a name="l00354"></a><span class="lineno">  354</span>&#160; </div>
+<div class="line"><a name="l00355"></a><span class="lineno"><a class="line" href="classVisualizer.html#a2cb8ddcc81f5c0208f5113cee2d9806d">  355</a></span>&#160;<span class="keywordtype">void</span> <a class="code" href="classVisualizer.html#a2cb8ddcc81f5c0208f5113cee2d9806d">Visualizer::draw_path</a>(sf::RenderWindow&amp; window, <span class="keyword">const</span> <a class="code" href="utils_8h.html#a4b0c12fdb9bfd266c909605f8aa6e3d6">Path</a>&amp; path, <span class="keyword">const</span> sf::Color&amp; color)</div>
+<div class="line"><a name="l00356"></a><span class="lineno">  356</span>&#160;{</div>
+<div class="line"><a name="l00357"></a><span class="lineno">  357</span>&#160;  <span class="keywordflow">for</span> (<span class="keywordtype">int</span> i = 1; i &lt; (int)path.size(); i++)</div>
+<div class="line"><a name="l00358"></a><span class="lineno">  358</span>&#160;  {</div>
+<div class="line"><a name="l00359"></a><span class="lineno">  359</span>&#160;    <a class="code" href="classVisualizer.html#a26b09c3766ced9ebb8e7d2b278434d92">draw_arrow</a>(window, path[i - 1], path[i], color);</div>
+<div class="line"><a name="l00360"></a><span class="lineno">  360</span>&#160;  }</div>
+<div class="line"><a name="l00361"></a><span class="lineno">  361</span>&#160;}</div>
 </div><!-- fragment --></div><!-- contents -->
-<div class="ttc" id="aclassVisualizer_html_ab8c444d6c727105cbd234cfa3df11f20"><div class="ttname"><a href="classVisualizer.html#ab8c444d6c727105cbd234cfa3df11f20">Visualizer::draw_goals</a></div><div class="ttdeci">void draw_goals(sf::RenderWindow &amp;window)</div><div class="ttdef"><b>Definition:</b> <a href="Visualizer_8cpp_source.html#l00225">Visualizer.cpp:225</a></div></div>
-<div class="ttc" id="aclassVisualizer_html_a4306527f00b7f033cdc149a627efb3ce"><div class="ttname"><a href="classVisualizer.html#a4306527f00b7f033cdc149a627efb3ce">Visualizer::running</a></div><div class="ttdeci">std::atomic&lt; bool &gt; running</div><div class="ttdef"><b>Definition:</b> <a href="Visualizer_8h_source.html#l00039">Visualizer.h:39</a></div></div>
-<div class="ttc" id="aclassVisualizer_html_a82468c4a2a9c68636c47dbcfb0d12ad0"><div class="ttname"><a href="classVisualizer.html#a82468c4a2a9c68636c47dbcfb0d12ad0">Visualizer::join_thread</a></div><div class="ttdeci">void join_thread()</div><div class="ttdef"><b>Definition:</b> <a href="Visualizer_8cpp_source.html#l00059">Visualizer.cpp:59</a></div></div>
-<div class="ttc" id="aclassVisualizer_html_a0de5d31b1891f82e2ae19aac7e591c70"><div class="ttname"><a href="classVisualizer.html#a0de5d31b1891f82e2ae19aac7e591c70">Visualizer::stop</a></div><div class="ttdeci">void stop()</div><div class="ttdef"><b>Definition:</b> <a href="Visualizer_8cpp_source.html#l00053">Visualizer.cpp:53</a></div></div>
+<div class="ttc" id="aclassPoint2d_html_a2626bd0c5cce36fb441a5c1720b2c537"><div class="ttname"><a href="classPoint2d.html#a2626bd0c5cce36fb441a5c1720b2c537">Point2d::y</a></div><div class="ttdeci">int y</div><div class="ttdef"><b>Definition:</b> <a href="utils_8h_source.html#l00029">utils.h:29</a></div></div>
+<div class="ttc" id="aclassVisualizer_html_ab8c444d6c727105cbd234cfa3df11f20"><div class="ttname"><a href="classVisualizer.html#ab8c444d6c727105cbd234cfa3df11f20">Visualizer::draw_goals</a></div><div class="ttdeci">void draw_goals(sf::RenderWindow &amp;window)</div><div class="ttdef"><b>Definition:</b> <a href="Visualizer_8cpp_source.html#l00309">Visualizer.cpp:309</a></div></div>
+<div class="ttc" id="aclassVisualizer_html_a4306527f00b7f033cdc149a627efb3ce"><div class="ttname"><a href="classVisualizer.html#a4306527f00b7f033cdc149a627efb3ce">Visualizer::running</a></div><div class="ttdeci">std::atomic&lt; bool &gt; running</div><div class="ttdef"><b>Definition:</b> <a href="Visualizer_8h_source.html#l00042">Visualizer.h:42</a></div></div>
+<div class="ttc" id="aclassVisualizer_html_a82468c4a2a9c68636c47dbcfb0d12ad0"><div class="ttname"><a href="classVisualizer.html#a82468c4a2a9c68636c47dbcfb0d12ad0">Visualizer::join_thread</a></div><div class="ttdeci">void join_thread()</div><div class="ttdef"><b>Definition:</b> <a href="Visualizer_8cpp_source.html#l00066">Visualizer.cpp:66</a></div></div>
+<div class="ttc" id="aclassVisualizer_html_a0de5d31b1891f82e2ae19aac7e591c70"><div class="ttname"><a href="classVisualizer.html#a0de5d31b1891f82e2ae19aac7e591c70">Visualizer::stop</a></div><div class="ttdeci">void stop()</div><div class="ttdef"><b>Definition:</b> <a href="Visualizer_8cpp_source.html#l00060">Visualizer.cpp:60</a></div></div>
+<div class="ttc" id="aclassVisualizer_html_ab2ce0e69dcc009a7ead6df33bca1ca77"><div class="ttname"><a href="classVisualizer.html#ab2ce0e69dcc009a7ead6df33bca1ca77">Visualizer::Visualizer</a></div><div class="ttdeci">Visualizer(std::shared_ptr&lt; Instance &gt; instance)</div><div class="ttdef"><b>Definition:</b> <a href="Visualizer_8cpp_source.html#l00032">Visualizer.cpp:32</a></div></div>
 <div class="ttc" id="aclassVisualizer_html_ae88184aca4b5910d14899ff3b0986656"><div class="ttname"><a href="classVisualizer.html#ae88184aca4b5910d14899ff3b0986656">Visualizer::scale</a></div><div class="ttdeci">double scale</div><div class="ttdef"><b>Definition:</b> <a href="Visualizer_8h_source.html#l00050">Visualizer.h:50</a></div></div>
 <div class="ttc" id="aclassVisualizer_html_a6cdc2630f36722cb2b6be98676f969de"><div class="ttname"><a href="classVisualizer.html#a6cdc2630f36722cb2b6be98676f969de">Visualizer::map_texture</a></div><div class="ttdeci">sf::Texture map_texture</div><div class="ttdef"><b>Definition:</b> <a href="Visualizer_8h_source.html#l00046">Visualizer.h:46</a></div></div>
-<div class="ttc" id="aclassInstance_html"><div class="ttname"><a href="classInstance.html">Instance</a></div><div class="ttdef"><b>Definition:</b> <a href="Instance_8h_source.html#l00013">Instance.h:13</a></div></div>
-<div class="ttc" id="aVisualizer_8cpp_html_a83b9df0c7acc5653665d1efd14d1a65b"><div class="ttname"><a href="Visualizer_8cpp.html#a83b9df0c7acc5653665d1efd14d1a65b">BORDER_SIZE</a></div><div class="ttdeci">#define BORDER_SIZE</div><div class="ttdef"><b>Definition:</b> <a href="Visualizer_8cpp_source.html#l00018">Visualizer.cpp:18</a></div></div>
-<div class="ttc" id="aclassVisualizer_html_ab1d0a2d5be13b3049c5e33367b2fee2c"><div class="ttname"><a href="classVisualizer.html#ab1d0a2d5be13b3049c5e33367b2fee2c">Visualizer::mapToTexture</a></div><div class="ttdeci">void mapToTexture(const std::vector&lt; std::uint8_t &gt; &amp;map_data, int num_of_rows, int num_of_columns)</div><div class="ttdef"><b>Definition:</b> <a href="Visualizer_8cpp_source.html#l00158">Visualizer.cpp:158</a></div></div>
-<div class="ttc" id="aclassVisualizer_html_a5461ebd346832cfbc055d6c0e2cdefd1"><div class="ttname"><a href="classVisualizer.html#a5461ebd346832cfbc055d6c0e2cdefd1">Visualizer::draw_agents</a></div><div class="ttdeci">void draw_agents(sf::RenderWindow &amp;window)</div><div class="ttdef"><b>Definition:</b> <a href="Visualizer_8cpp_source.html#l00206">Visualizer.cpp:206</a></div></div>
+<div class="ttc" id="aVisualizer_8cpp_html_a83b9df0c7acc5653665d1efd14d1a65b"><div class="ttname"><a href="Visualizer_8cpp.html#a83b9df0c7acc5653665d1efd14d1a65b">BORDER_SIZE</a></div><div class="ttdeci">#define BORDER_SIZE</div><div class="ttdef"><b>Definition:</b> <a href="Visualizer_8cpp_source.html#l00026">Visualizer.cpp:26</a></div></div>
+<div class="ttc" id="aclassVisualizer_html_a5461ebd346832cfbc055d6c0e2cdefd1"><div class="ttname"><a href="classVisualizer.html#a5461ebd346832cfbc055d6c0e2cdefd1">Visualizer::draw_agents</a></div><div class="ttdeci">void draw_agents(sf::RenderWindow &amp;window)</div><div class="ttdef"><b>Definition:</b> <a href="Visualizer_8cpp_source.html#l00290">Visualizer.cpp:290</a></div></div>
 <div class="ttc" id="autils_8h_html"><div class="ttname"><a href="utils_8h.html">utils.h</a></div></div>
-<div class="ttc" id="aclassVisualizer_html_a2b6436ec715468955ebb9f53b908773f"><div class="ttname"><a href="classVisualizer.html#a2b6436ec715468955ebb9f53b908773f">Visualizer::start</a></div><div class="ttdeci">void start()</div><div class="ttdef"><b>Definition:</b> <a href="Visualizer_8cpp_source.html#l00046">Visualizer.cpp:46</a></div></div>
-<div class="ttc" id="aclassVisualizer_html_a935508c911d070aa39f186de928e8730"><div class="ttname"><a href="classVisualizer.html#a935508c911d070aa39f186de928e8730">Visualizer::map_height</a></div><div class="ttdeci">int map_height</div><div class="ttdef"><b>Definition:</b> <a href="Visualizer_8h_source.html#l00041">Visualizer.h:41</a></div></div>
-<div class="ttc" id="aclassInstance_html_a85167169c05b4681eb0bb457190ccef7"><div class="ttname"><a href="classInstance.html#a85167169c05b4681eb0bb457190ccef7">Instance::num_of_rows</a></div><div class="ttdeci">int num_of_rows</div><div class="ttdef"><b>Definition:</b> <a href="Instance_8h_source.html#l00017">Instance.h:17</a></div></div>
-<div class="ttc" id="autils_8h_html_acd6daa142700d7c60859e727a70ee611"><div class="ttname"><a href="utils_8h.html#acd6daa142700d7c60859e727a70ee611">generate_random_color</a></div><div class="ttdeci">sf::Color generate_random_color(int mix_r, int mix_g, int mix_b, double mix_ratio=0.5)</div><div class="ttdoc">Generate a random color. To make the color palette look more visually pleasing, mix the random color ...</div><div class="ttdef"><b>Definition:</b> <a href="utils_8cpp_source.html#l00021">utils.cpp:21</a></div></div>
-<div class="ttc" id="aclassVisualizer_html_ad32ce7e9950c93522f237921f0f64db6"><div class="ttname"><a href="classVisualizer.html#ad32ce7e9950c93522f237921f0f64db6">Visualizer::vis_thread</a></div><div class="ttdeci">std::thread vis_thread</div><div class="ttdef"><b>Definition:</b> <a href="Visualizer_8h_source.html#l00038">Visualizer.h:38</a></div></div>
-<div class="ttc" id="aVisualizer_8cpp_html_a498d9f026138406895e9a34b504ac6a6"><div class="ttname"><a href="Visualizer_8cpp.html#a498d9f026138406895e9a34b504ac6a6">WINDOW_WIDTH</a></div><div class="ttdeci">#define WINDOW_WIDTH</div><div class="ttdef"><b>Definition:</b> <a href="Visualizer_8cpp_source.html#l00016">Visualizer.cpp:16</a></div></div>
-<div class="ttc" id="aclassInstance_html_aac21a51074cf6030e8843b752d9a004e"><div class="ttname"><a href="classInstance.html#aac21a51074cf6030e8843b752d9a004e">Instance::get_map_data</a></div><div class="ttdeci">std::vector&lt; uint8_t &gt; get_map_data() const</div><div class="ttdef"><b>Definition:</b> <a href="Instance_8cpp_source.html#l00206">Instance.cpp:206</a></div></div>
-<div class="ttc" id="aclassVisualizer_html_a52b6cbb545f0e361e0f80e3bc27118af"><div class="ttname"><a href="classVisualizer.html#a52b6cbb545f0e361e0f80e3bc27118af">Visualizer::goal_positions</a></div><div class="ttdeci">std::vector&lt; std::tuple&lt; int, int &gt; &gt; goal_positions</div><div class="ttdef"><b>Definition:</b> <a href="Visualizer_8h_source.html#l00043">Visualizer.h:43</a></div></div>
-<div class="ttc" id="aclassVisualizer_html_a624f7903185db159306f19516ead258e"><div class="ttname"><a href="classVisualizer.html#a624f7903185db159306f19516ead258e">Visualizer::start_positions</a></div><div class="ttdeci">std::vector&lt; std::tuple&lt; int, int &gt; &gt; start_positions</div><div class="ttdef"><b>Definition:</b> <a href="Visualizer_8h_source.html#l00042">Visualizer.h:42</a></div></div>
-<div class="ttc" id="aclassInstance_html_a878a82ee018053650427eac2213b3629"><div class="ttname"><a href="classInstance.html#a878a82ee018053650427eac2213b3629">Instance::num_of_cols</a></div><div class="ttdeci">int num_of_cols</div><div class="ttdef"><b>Definition:</b> <a href="Instance_8h_source.html#l00016">Instance.h:16</a></div></div>
+<div class="ttc" id="aclassVisualizer_html_a2b6436ec715468955ebb9f53b908773f"><div class="ttname"><a href="classVisualizer.html#a2b6436ec715468955ebb9f53b908773f">Visualizer::start</a></div><div class="ttdeci">void start()</div><div class="ttdef"><b>Definition:</b> <a href="Visualizer_8cpp_source.html#l00053">Visualizer.cpp:53</a></div></div>
+<div class="ttc" id="aclassVisualizer_html_a2cb8ddcc81f5c0208f5113cee2d9806d"><div class="ttname"><a href="classVisualizer.html#a2cb8ddcc81f5c0208f5113cee2d9806d">Visualizer::draw_path</a></div><div class="ttdeci">void draw_path(sf::RenderWindow &amp;window, const Path &amp;path, const sf::Color &amp;color)</div><div class="ttdef"><b>Definition:</b> <a href="Visualizer_8cpp_source.html#l00355">Visualizer.cpp:355</a></div></div>
+<div class="ttc" id="aVisualizer_8cpp_html_a666201b429d62c0cc1bd9f464c0fafb3"><div class="ttname"><a href="Visualizer_8cpp.html#a666201b429d62c0cc1bd9f464c0fafb3">LINE_WIDTH</a></div><div class="ttdeci">#define LINE_WIDTH</div><div class="ttdef"><b>Definition:</b> <a href="Visualizer_8cpp_source.html#l00028">Visualizer.cpp:28</a></div></div>
+<div class="ttc" id="autils_8h_html_a4b0c12fdb9bfd266c909605f8aa6e3d6"><div class="ttname"><a href="utils_8h.html#a4b0c12fdb9bfd266c909605f8aa6e3d6">Path</a></div><div class="ttdeci">std::vector&lt; Point2d &gt; Path</div><div class="ttdef"><b>Definition:</b> <a href="utils_8h_source.html#l00111">utils.h:111</a></div></div>
+<div class="ttc" id="aclassMap_html_a9ecfe932ad2d2bc22492416033bdacfd"><div class="ttname"><a href="classMap.html#a9ecfe932ad2d2bc22492416033bdacfd">Map::width</a></div><div class="ttdeci">int width</div><div class="ttdef"><b>Definition:</b> <a href="utils_8h_source.html#l00091">utils.h:91</a></div></div>
+<div class="ttc" id="aclassVisualizer_html_a26b09c3766ced9ebb8e7d2b278434d92"><div class="ttname"><a href="classVisualizer.html#a26b09c3766ced9ebb8e7d2b278434d92">Visualizer::draw_arrow</a></div><div class="ttdeci">void draw_arrow(sf::RenderWindow &amp;window, const Point2d &amp;start, const Point2d &amp;end, const sf::Color &amp;color)</div><div class="ttdef"><b>Definition:</b> <a href="Visualizer_8cpp_source.html#l00330">Visualizer.cpp:330</a></div></div>
+<div class="ttc" id="aclassVisualizer_html_a6fc946ceb4a5412c1fec24a441be065e"><div class="ttname"><a href="classVisualizer.html#a6fc946ceb4a5412c1fec24a441be065e">Visualizer::instance</a></div><div class="ttdeci">std::shared_ptr&lt; Instance &gt; instance</div><div class="ttdef"><b>Definition:</b> <a href="Visualizer_8h_source.html#l00043">Visualizer.h:43</a></div></div>
+<div class="ttc" id="aclassMap_html_a0546fef98caebe38385bb2e0c7a15da1"><div class="ttname"><a href="classMap.html#a0546fef98caebe38385bb2e0c7a15da1">Map::height</a></div><div class="ttdeci">int height</div><div class="ttdef"><b>Definition:</b> <a href="utils_8h_source.html#l00092">utils.h:92</a></div></div>
+<div class="ttc" id="autils_8h_html_a85ad338ae061185e1449d3f98f987369"><div class="ttname"><a href="utils_8h.html#a85ad338ae061185e1449d3f98f987369">generate_random_color</a></div><div class="ttdeci">sf::Color generate_random_color(const int mix_r, const int mix_g, const int mix_b, const double mix_ratio=0.5)</div><div class="ttdoc">Generate a random color. To make the color palette look more visually pleasing, the random color is m...</div><div class="ttdef"><b>Definition:</b> <a href="utils_8cpp_source.html#l00088">utils.cpp:88</a></div></div>
+<div class="ttc" id="aclassVisualizer_html_ad32ce7e9950c93522f237921f0f64db6"><div class="ttname"><a href="classVisualizer.html#ad32ce7e9950c93522f237921f0f64db6">Visualizer::vis_thread</a></div><div class="ttdeci">std::thread vis_thread</div><div class="ttdef"><b>Definition:</b> <a href="Visualizer_8h_source.html#l00041">Visualizer.h:41</a></div></div>
+<div class="ttc" id="aVisualizer_8cpp_html_a498d9f026138406895e9a34b504ac6a6"><div class="ttname"><a href="Visualizer_8cpp.html#a498d9f026138406895e9a34b504ac6a6">WINDOW_WIDTH</a></div><div class="ttdeci">#define WINDOW_WIDTH</div><div class="ttdef"><b>Definition:</b> <a href="Visualizer_8cpp_source.html#l00024">Visualizer.cpp:24</a></div></div>
+<div class="ttc" id="aclassMap_html"><div class="ttname"><a href="classMap.html">Map</a></div><div class="ttdef"><b>Definition:</b> <a href="utils_8h_source.html#l00088">utils.h:88</a></div></div>
 <div class="ttc" id="aVisualizer_8h_html"><div class="ttname"><a href="Visualizer_8h.html">Visualizer.h</a></div></div>
-<div class="ttc" id="aclassVisualizer_html_a592257767dcd73200be84968cf779b91"><div class="ttname"><a href="classVisualizer.html#a592257767dcd73200be84968cf779b91">Visualizer::Visualizer</a></div><div class="ttdeci">Visualizer(Instance &amp;instance)</div><div class="ttdef"><b>Definition:</b> <a href="Visualizer_8cpp_source.html#l00021">Visualizer.cpp:21</a></div></div>
-<div class="ttc" id="aclassVisualizer_html_a013ec3101407fbe4805f289bc32d1265"><div class="ttname"><a href="classVisualizer.html#a013ec3101407fbe4805f289bc32d1265">Visualizer::~Visualizer</a></div><div class="ttdeci">~Visualizer()</div><div class="ttdef"><b>Definition:</b> <a href="Visualizer_8cpp_source.html#l00040">Visualizer.cpp:40</a></div></div>
-<div class="ttc" id="aclassVisualizer_html_a531350c5ec8ec39867647997690fc9fb"><div class="ttname"><a href="classVisualizer.html#a531350c5ec8ec39867647997690fc9fb">Visualizer::run</a></div><div class="ttdeci">void run()</div><div class="ttdef"><b>Definition:</b> <a href="Visualizer_8cpp_source.html#l00067">Visualizer.cpp:67</a></div></div>
-<div class="ttc" id="aclassInstance_html_ae74e417d1f4797cf2c3f75ab111f639a"><div class="ttname"><a href="classInstance.html#ae74e417d1f4797cf2c3f75ab111f639a">Instance::get_start_positions</a></div><div class="ttdeci">std::vector&lt; std::tuple&lt; int, int &gt; &gt; get_start_positions() const</div><div class="ttdef"><b>Definition:</b> <a href="Instance_8cpp_source.html#l00211">Instance.cpp:211</a></div></div>
+<div class="ttc" id="aclassVisualizer_html_a013ec3101407fbe4805f289bc32d1265"><div class="ttname"><a href="classVisualizer.html#a013ec3101407fbe4805f289bc32d1265">Visualizer::~Visualizer</a></div><div class="ttdeci">~Visualizer()</div><div class="ttdef"><b>Definition:</b> <a href="Visualizer_8cpp_source.html#l00047">Visualizer.cpp:47</a></div></div>
+<div class="ttc" id="aclassPoint2d_html"><div class="ttname"><a href="classPoint2d.html">Point2d</a></div><div class="ttdef"><b>Definition:</b> <a href="utils_8h_source.html#l00026">utils.h:26</a></div></div>
+<div class="ttc" id="aclassVisualizer_html_a531350c5ec8ec39867647997690fc9fb"><div class="ttname"><a href="classVisualizer.html#a531350c5ec8ec39867647997690fc9fb">Visualizer::run</a></div><div class="ttdeci">void run()</div><div class="ttdef"><b>Definition:</b> <a href="Visualizer_8cpp_source.html#l00074">Visualizer.cpp:74</a></div></div>
 <div class="ttc" id="aclassVisualizer_html_ad884d1fb6851f3e298ed54508cc92a5b"><div class="ttname"><a href="classVisualizer.html#ad884d1fb6851f3e298ed54508cc92a5b">Visualizer::agents_colors</a></div><div class="ttdeci">std::vector&lt; sf::Color &gt; agents_colors</div><div class="ttdef"><b>Definition:</b> <a href="Visualizer_8h_source.html#l00049">Visualizer.h:49</a></div></div>
-<div class="ttc" id="aclassVisualizer_html_a56c4f3a2486215219734b3a3a89e7bcb"><div class="ttname"><a href="classVisualizer.html#a56c4f3a2486215219734b3a3a89e7bcb">Visualizer::map_width</a></div><div class="ttdeci">int map_width</div><div class="ttdef"><b>Definition:</b> <a href="Visualizer_8h_source.html#l00040">Visualizer.h:40</a></div></div>
-<div class="ttc" id="aVisualizer_8cpp_html_adc8dced17a7a01c522597ffe1a6740ee"><div class="ttname"><a href="Visualizer_8cpp.html#adc8dced17a7a01c522597ffe1a6740ee">GOAL_VIS_THICKNESS</a></div><div class="ttdeci">#define GOAL_VIS_THICKNESS</div><div class="ttdef"><b>Definition:</b> <a href="Visualizer_8cpp_source.html#l00019">Visualizer.cpp:19</a></div></div>
-<div class="ttc" id="aclassInstance_html_ae45ac6684628b5d591516f418c9e02eb"><div class="ttname"><a href="classInstance.html#ae45ac6684628b5d591516f418c9e02eb">Instance::get_goal_positions</a></div><div class="ttdeci">std::vector&lt; std::tuple&lt; int, int &gt; &gt; get_goal_positions() const</div><div class="ttdef"><b>Definition:</b> <a href="Instance_8cpp_source.html#l00216">Instance.cpp:216</a></div></div>
+<div class="ttc" id="aclassMap_html_a338b22b5f2e52eebaaf547990c4204c2"><div class="ttname"><a href="classMap.html#a338b22b5f2e52eebaaf547990c4204c2">Map::data</a></div><div class="ttdeci">std::vector&lt; uint8_t &gt; data</div><div class="ttdef"><b>Definition:</b> <a href="utils_8h_source.html#l00093">utils.h:93</a></div></div>
+<div class="ttc" id="aVisualizer_8cpp_html_a1af5ada62e6a9082b879f52f96591d3b"><div class="ttname"><a href="Visualizer_8cpp.html#a1af5ada62e6a9082b879f52f96591d3b">MENU_BAR_SIZE</a></div><div class="ttdeci">#define MENU_BAR_SIZE</div><div class="ttdef"><b>Definition:</b> <a href="Visualizer_8cpp_source.html#l00029">Visualizer.cpp:29</a></div></div>
+<div class="ttc" id="aVisualizer_8cpp_html_adc8dced17a7a01c522597ffe1a6740ee"><div class="ttname"><a href="Visualizer_8cpp.html#adc8dced17a7a01c522597ffe1a6740ee">GOAL_VIS_THICKNESS</a></div><div class="ttdeci">#define GOAL_VIS_THICKNESS</div><div class="ttdef"><b>Definition:</b> <a href="Visualizer_8cpp_source.html#l00027">Visualizer.cpp:27</a></div></div>
 <div class="ttc" id="aclassVisualizer_html_a1b2ea0c18b6eef6fdb8d6da03bd2bc02"><div class="ttname"><a href="classVisualizer.html#a1b2ea0c18b6eef6fdb8d6da03bd2bc02">Visualizer::agents_circles</a></div><div class="ttdeci">std::vector&lt; sf::CircleShape &gt; agents_circles</div><div class="ttdef"><b>Definition:</b> <a href="Visualizer_8h_source.html#l00048">Visualizer.h:48</a></div></div>
-<div class="ttc" id="aVisualizer_8cpp_html_a7a4127f14f16563da90eb3c836bc404f"><div class="ttname"><a href="Visualizer_8cpp.html#a7a4127f14f16563da90eb3c836bc404f">CELL_SIZE</a></div><div class="ttdeci">#define CELL_SIZE</div><div class="ttdef"><b>Definition:</b> <a href="Visualizer_8cpp_source.html#l00017">Visualizer.cpp:17</a></div></div>
+<div class="ttc" id="autils_8h_html_a6962d5b6ad4c7ddbdd4ad3f1fcb14352"><div class="ttname"><a href="utils_8h.html#a6962d5b6ad4c7ddbdd4ad3f1fcb14352">get_base_path</a></div><div class="ttdeci">std::string get_base_path()</div><div class="ttdoc">Get the path to the project directory, assuming the project is run from the build directory....</div><div class="ttdef"><b>Definition:</b> <a href="utils_8cpp_source.html#l00097">utils.cpp:97</a></div></div>
+<div class="ttc" id="aVisualizer_8cpp_html_a7a4127f14f16563da90eb3c836bc404f"><div class="ttname"><a href="Visualizer_8cpp.html#a7a4127f14f16563da90eb3c836bc404f">CELL_SIZE</a></div><div class="ttdeci">#define CELL_SIZE</div><div class="ttdef"><b>Definition:</b> <a href="Visualizer_8cpp_source.html#l00025">Visualizer.cpp:25</a></div></div>
+<div class="ttc" id="aclassVisualizer_html_ab71637c0e046114f0511471ff0134d8e"><div class="ttname"><a href="classVisualizer.html#ab71637c0e046114f0511471ff0134d8e">Visualizer::mapToTexture</a></div><div class="ttdeci">void mapToTexture(const Map &amp;map_data)</div><div class="ttdef"><b>Definition:</b> <a href="Visualizer_8cpp_source.html#l00242">Visualizer.cpp:242</a></div></div>
+<div class="ttc" id="aclassPoint2d_html_a3491ec5f89149b0e91bbb91bc6f4308f"><div class="ttname"><a href="classPoint2d.html#a3491ec5f89149b0e91bbb91bc6f4308f">Point2d::x</a></div><div class="ttdeci">int x</div><div class="ttdef"><b>Definition:</b> <a href="utils_8h_source.html#l00029">utils.h:29</a></div></div>
 <div class="ttc" id="aclassVisualizer_html_a360114a591b91eb6fc51a67daefe37e8"><div class="ttname"><a href="classVisualizer.html#a360114a591b91eb6fc51a67daefe37e8">Visualizer::map_sprite</a></div><div class="ttdeci">sf::Sprite map_sprite</div><div class="ttdef"><b>Definition:</b> <a href="Visualizer_8h_source.html#l00047">Visualizer.h:47</a></div></div>
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>

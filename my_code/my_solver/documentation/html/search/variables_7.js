@@ -1,7 +1,7 @@
 var searchData=
 [
-  ['name_131',['name',['../classSolver.html#aa3cc0c1424c904084583322bc3a14f5f',1,'Solver']]],
-  ['num_5fof_5fagents_132',['num_of_agents',['../classInstance.html#a654b42d2c53acb14a71b296d22a88d5c',1,'Instance']]],
-  ['num_5fof_5fcols_133',['num_of_cols',['../classInstance.html#a878a82ee018053650427eac2213b3629',1,'Instance']]],
-  ['num_5fof_5frows_134',['num_of_rows',['../classInstance.html#a85167169c05b4681eb0bb457190ccef7',1,'Instance']]]
+  ['map_5fdata_239',['map_data',['../classInstance.html#a78791f5888bcbb3c6ab5f8e9ba6b5f53',1,'Instance::map_data()'],['../classSIPP.html#af10f214f9cbd063536d3238fc45a7392',1,'SIPP::map_data()']]],
+  ['map_5ffname_240',['map_fname',['../classInstance.html#a5bc2b83cc99206f76384971376033cb8',1,'Instance']]],
+  ['map_5fsprite_241',['map_sprite',['../classVisualizer.html#a360114a591b91eb6fc51a67daefe37e8',1,'Visualizer']]],
+  ['map_5ftexture_242',['map_texture',['../classVisualizer.html#a6cdc2630f36722cb2b6be98676f969de',1,'Visualizer']]]
 ];

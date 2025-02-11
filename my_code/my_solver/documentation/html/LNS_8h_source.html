@@ -75,23 +75,45 @@ $(function() {
 <div class="line"><a name="l00002"></a><span class="lineno">    2</span>&#160;<span class="comment"> * Author: Jan Chleboun</span></div>
 <div class="line"><a name="l00003"></a><span class="lineno">    3</span>&#160;<span class="comment"> * Date: 08-01-2025</span></div>
 <div class="line"><a name="l00004"></a><span class="lineno">    4</span>&#160;<span class="comment"> * Email: chlebja3@fel.cvut.cz</span></div>
-<div class="line"><a name="l00005"></a><span class="lineno">    5</span>&#160;<span class="comment"> * Description: </span></div>
+<div class="line"><a name="l00005"></a><span class="lineno">    5</span>&#160;<span class="comment"> * Description:</span></div>
 <div class="line"><a name="l00006"></a><span class="lineno">    6</span>&#160;<span class="comment"> */</span></div>
 <div class="line"><a name="l00007"></a><span class="lineno">    7</span>&#160; </div>
 <div class="line"><a name="l00008"></a><span class="lineno">    8</span>&#160;<span class="preprocessor">#pragma once</span></div>
-<div class="line"><a name="l00009"></a><span class="lineno">    9</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="Solver_8h.html">Solver.h</a>&quot;</span></div>
-<div class="line"><a name="l00010"></a><span class="lineno">   10</span>&#160; </div>
-<div class="line"><a name="l00011"></a><span class="lineno"><a class="line" href="classLNS.html">   11</a></span>&#160;<span class="keyword">class </span><a class="code" href="classLNS.html">LNS</a> : <span class="keyword">public</span> <a class="code" href="classSolver.html">Solver</a></div>
-<div class="line"><a name="l00012"></a><span class="lineno">   12</span>&#160;{</div>
-<div class="line"><a name="l00013"></a><span class="lineno">   13</span>&#160;  <span class="comment">// constructor</span></div>
-<div class="line"><a name="l00014"></a><span class="lineno">   14</span>&#160;  <a class="code" href="classLNS.html#a67fce555f7a328ba338593a5e9ac9ffd">LNS</a>();</div>
-<div class="line"><a name="l00015"></a><span class="lineno">   15</span>&#160; </div>
-<div class="line"><a name="l00016"></a><span class="lineno">   16</span>&#160;};</div>
+<div class="line"><a name="l00009"></a><span class="lineno">    9</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="SIPP_8h.html">SIPP.h</a>&quot;</span></div>
+<div class="line"><a name="l00010"></a><span class="lineno">   10</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="Solver_8h.html">Solver.h</a>&quot;</span></div>
+<div class="line"><a name="l00011"></a><span class="lineno">   11</span>&#160; </div>
+<div class="line"><a name="l00012"></a><span class="lineno"><a class="line" href="classLNS.html">   12</a></span>&#160;<span class="keyword">class </span><a class="code" href="classLNS.html">LNS</a> : <span class="keyword">public</span> <a class="code" href="classSolver.html">Solver</a></div>
+<div class="line"><a name="l00013"></a><span class="lineno">   13</span>&#160;{</div>
+<div class="line"><a name="l00014"></a><span class="lineno">   14</span>&#160;<span class="keyword">public</span>:</div>
+<div class="line"><a name="l00015"></a><span class="lineno">   15</span>&#160;  <span class="comment">// constructor</span></div>
+<div class="line"><a name="l00016"></a><span class="lineno">   16</span>&#160;  <a class="code" href="classLNS.html#a58d602859ed1ebd958f5ae9a115768f0">LNS</a>(std::shared_ptr&lt;Instance&gt; <a class="code" href="classSolver.html#ae9b1fd3eb740c676d07821b379fd5378">instance</a>);</div>
+<div class="line"><a name="l00017"></a><span class="lineno">   17</span>&#160; </div>
+<div class="line"><a name="l00018"></a><span class="lineno">   18</span>&#160;  <span class="comment">// Destructor</span></div>
+<div class="line"><a name="l00019"></a><span class="lineno">   19</span>&#160;  <a class="code" href="classLNS.html#ac83d4e6e4e1bc164c49e4eae36035364">~LNS</a>() = <span class="keywordflow">default</span>;</div>
+<div class="line"><a name="l00020"></a><span class="lineno">   20</span>&#160; </div>
+<div class="line"><a name="l00021"></a><span class="lineno">   21</span>&#160;  <span class="comment">// solve method</span></div>
+<div class="line"><a name="l00022"></a><span class="lineno">   22</span>&#160;  <span class="keywordtype">void</span> <a class="code" href="classLNS.html#ab4a4826221160701ee3cf6ca93feb1f7">solve</a>() <span class="keyword">override</span>;</div>
+<div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160; </div>
+<div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;  <span class="keywordtype">void</span> <a class="code" href="classLNS.html#a290efe4a8ed01de2c3c646ab661e7b18">find_initial_solution</a>();</div>
+<div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160; </div>
+<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;<span class="keyword">private</span>:</div>
+<div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;  <a class="code" href="classSolution.html">Solution</a>              <a class="code" href="classLNS.html#aa069b8461751ab59f9e86885bb7a510a">PrioritizedPlanning</a>();</div>
+<div class="line"><a name="l00028"></a><span class="lineno"><a class="line" href="classLNS.html#a8378a9145deb56139e5de070bff49631">   28</a></span>&#160;  std::unique_ptr&lt;SIPP&gt; <a class="code" href="classLNS.html#a8378a9145deb56139e5de070bff49631">planner</a>;</div>
+<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;};</div>
+<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160; </div>
 </div><!-- fragment --></div><!-- contents -->
+<div class="ttc" id="aclassLNS_html_aa069b8461751ab59f9e86885bb7a510a"><div class="ttname"><a href="classLNS.html#aa069b8461751ab59f9e86885bb7a510a">LNS::PrioritizedPlanning</a></div><div class="ttdeci">Solution PrioritizedPlanning()</div><div class="ttdef"><b>Definition:</b> <a href="LNS_8cpp_source.html#l00033">LNS.cpp:33</a></div></div>
+<div class="ttc" id="aclassLNS_html_a290efe4a8ed01de2c3c646ab661e7b18"><div class="ttname"><a href="classLNS.html#a290efe4a8ed01de2c3c646ab661e7b18">LNS::find_initial_solution</a></div><div class="ttdeci">void find_initial_solution()</div><div class="ttdef"><b>Definition:</b> <a href="LNS_8cpp_source.html#l00027">LNS.cpp:27</a></div></div>
 <div class="ttc" id="aSolver_8h_html"><div class="ttname"><a href="Solver_8h.html">Solver.h</a></div></div>
-<div class="ttc" id="aclassSolver_html"><div class="ttname"><a href="classSolver.html">Solver</a></div><div class="ttdef"><b>Definition:</b> <a href="Solver_8h_source.html#l00026">Solver.h:26</a></div></div>
-<div class="ttc" id="aclassLNS_html_a67fce555f7a328ba338593a5e9ac9ffd"><div class="ttname"><a href="classLNS.html#a67fce555f7a328ba338593a5e9ac9ffd">LNS::LNS</a></div><div class="ttdeci">LNS()</div></div>
-<div class="ttc" id="aclassLNS_html"><div class="ttname"><a href="classLNS.html">LNS</a></div><div class="ttdef"><b>Definition:</b> <a href="LNS_8h_source.html#l00011">LNS.h:11</a></div></div>
+<div class="ttc" id="aclassSolution_html"><div class="ttname"><a href="classSolution.html">Solution</a></div><div class="ttdef"><b>Definition:</b> <a href="Solver_8h_source.html#l00016">Solver.h:16</a></div></div>
+<div class="ttc" id="aSIPP_8h_html"><div class="ttname"><a href="SIPP_8h.html">SIPP.h</a></div></div>
+<div class="ttc" id="aclassLNS_html_ab4a4826221160701ee3cf6ca93feb1f7"><div class="ttname"><a href="classLNS.html#ab4a4826221160701ee3cf6ca93feb1f7">LNS::solve</a></div><div class="ttdeci">void solve() override</div><div class="ttdef"><b>Definition:</b> <a href="LNS_8cpp_source.html#l00019">LNS.cpp:19</a></div></div>
+<div class="ttc" id="aclassSolver_html"><div class="ttname"><a href="classSolver.html">Solver</a></div><div class="ttdef"><b>Definition:</b> <a href="Solver_8h_source.html#l00031">Solver.h:31</a></div></div>
+<div class="ttc" id="aclassLNS_html_a58d602859ed1ebd958f5ae9a115768f0"><div class="ttname"><a href="classLNS.html#a58d602859ed1ebd958f5ae9a115768f0">LNS::LNS</a></div><div class="ttdeci">LNS(std::shared_ptr&lt; Instance &gt; instance)</div><div class="ttdef"><b>Definition:</b> <a href="LNS_8cpp_source.html#l00013">LNS.cpp:13</a></div></div>
+<div class="ttc" id="aclassSolver_html_ae9b1fd3eb740c676d07821b379fd5378"><div class="ttname"><a href="classSolver.html#ae9b1fd3eb740c676d07821b379fd5378">Solver::instance</a></div><div class="ttdeci">std::shared_ptr&lt; Instance &gt; instance</div><div class="ttdef"><b>Definition:</b> <a href="Solver_8h_source.html#l00036">Solver.h:36</a></div></div>
+<div class="ttc" id="aclassLNS_html_ac83d4e6e4e1bc164c49e4eae36035364"><div class="ttname"><a href="classLNS.html#ac83d4e6e4e1bc164c49e4eae36035364">LNS::~LNS</a></div><div class="ttdeci">~LNS()=default</div></div>
+<div class="ttc" id="aclassLNS_html_a8378a9145deb56139e5de070bff49631"><div class="ttname"><a href="classLNS.html#a8378a9145deb56139e5de070bff49631">LNS::planner</a></div><div class="ttdeci">std::unique_ptr&lt; SIPP &gt; planner</div><div class="ttdef"><b>Definition:</b> <a href="LNS_8h_source.html#l00028">LNS.h:28</a></div></div>
+<div class="ttc" id="aclassLNS_html"><div class="ttname"><a href="classLNS.html">LNS</a></div><div class="ttdef"><b>Definition:</b> <a href="LNS_8h_source.html#l00012">LNS.h:12</a></div></div>
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
 Generated by &#160;<a href="http://www.doxygen.org/index.html">

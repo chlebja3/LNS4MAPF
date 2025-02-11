@@ -1,5 +1,5 @@
 <map id="LNS" name="LNS">
-<area shape="rect" id="node1" title=" " alt="" coords="21,171,67,197"/>
-<area shape="rect" id="node2" href="$classSolver.html" title=" " alt="" coords="13,95,75,121"/>
-<area shape="rect" id="node3" href="$classInstance.html" title=" " alt="" coords="5,5,83,32"/>
+<area shape="rect" id="node1" title=" " alt="" coords="19,171,66,197"/>
+<area shape="rect" id="node2" href="$classSolver.html" title=" " alt="" coords="11,95,74,121"/>
+<area shape="rect" id="node3" href="$classSolution.html" title=" " alt="" coords="5,5,80,32"/>
 </map>

@@ -1,7 +1,9 @@
 var searchData=
 [
-  ['name_40',['name',['../classSolver.html#aa3cc0c1424c904084583322bc3a14f5f',1,'Solver']]],
-  ['num_5fof_5fagents_41',['num_of_agents',['../classInstance.html#a654b42d2c53acb14a71b296d22a88d5c',1,'Instance']]],
-  ['num_5fof_5fcols_42',['num_of_cols',['../classInstance.html#a878a82ee018053650427eac2213b3629',1,'Instance']]],
-  ['num_5fof_5frows_43',['num_of_rows',['../classInstance.html#a85167169c05b4681eb0bb457190ccef7',1,'Instance']]]
+  ['line_5fwidth_53',['LINE_WIDTH',['../Visualizer_8cpp.html#a666201b429d62c0cc1bd9f464c0fafb3',1,'Visualizer.cpp']]],
+  ['lns_54',['LNS',['../classLNS.html',1,'LNS'],['../classLNS.html#a58d602859ed1ebd958f5ae9a115768f0',1,'LNS::LNS()']]],
+  ['lns_2ecpp_55',['LNS.cpp',['../LNS_8cpp.html',1,'']]],
+  ['lns_2eh_56',['LNS.h',['../LNS_8h.html',1,'']]],
+  ['load_5fmap_57',['load_map',['../classInstance.html#a14834be9f7732bcf925649bd0e9ca7cb',1,'Instance']]],
+  ['load_5fscene_58',['load_scene',['../classInstance.html#a98024b413d5f329fe3a938762ea4f215',1,'Instance']]]
 ];
