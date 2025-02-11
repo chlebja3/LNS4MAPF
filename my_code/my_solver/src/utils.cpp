@@ -7,6 +7,7 @@
 
 #include <utils.h>
 
+#include <array>
 #include <cmath>
 #include <filesystem>
 
