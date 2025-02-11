@@ -13,9 +13,10 @@
 #include "Instance.h"
 #include "utils.h"
 
-struct Solution
+class Solution
 // struct to store a solution of the mapf problem
 {
+public:
   bool feasible;
 
   // paths of the agents
@@ -23,6 +24,8 @@ struct Solution
 
   int cost;
   int delay;  // cost - distance
+
+  bool is_valid(std::shared_ptr<Instance> instance) const;
 };
 
 class Solver
