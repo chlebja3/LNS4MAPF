@@ -3,6 +3,7 @@ This project is a multi-agent pathfinding (MAPF) solver with interactive visuali
 
 # Dependencies
 SFML 2.5.1
+
 Boost 1.71.0
 
 # Build
@@ -44,6 +45,8 @@ or
 # License
 MIT
 
-
+# Author
+Jan Chleboun (2025)
+email: chlebja3@fel.cvut.cz
 
 
