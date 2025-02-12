@@ -1,3 +1,3 @@
 cd "$(dirname "$0")"
 cd ..
-./build/tests/simple_tests --gtest_color=yes
+./build/tests/unit_tests --gtest_color=yes

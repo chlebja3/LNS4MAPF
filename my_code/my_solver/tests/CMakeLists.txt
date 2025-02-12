@@ -26,15 +26,22 @@ FetchContent_Declare(
 FetchContent_MakeAvailable(benchmark)
 endif()
 
+file(GLOB SOURCES "src/*.cpp" )
+# remove benchmark sources from the list
+list(REMOVE_ITEM SOURCES "${CMAKE_CURRENT_SOURCE_DIR}/src/benchmark_tests.cpp")
+
 # Create a unit test executable
-add_executable(simple_tests simple_tests.cpp utils_tests.cpp astar_tests.cpp)
+add_executable(unit_tests ${SOURCES})
+
+# add includes 
+include_directories("inc")
 
 # Link GoogleTest and the MAPF library
-target_link_libraries(simple_tests PRIVATE MAPF_lib GTest::GTest GTest::Main gmock)
+target_link_libraries(unit_tests PRIVATE MAPF_lib GTest::GTest GTest::Main gmock)
 
 # Create a benchmark tests
-add_executable(benchmark_tests benchmark_tests.cpp)
+add_executable(benchmark_tests src/benchmark_tests.cpp src/test_utils.cpp)
 target_link_libraries(benchmark_tests PRIVATE MAPF_lib benchmark::benchmark benchmark::benchmark_main)
 
 # Enable CTest integration
-add_test(NAME simple_tests COMMAND simple_tests)
+add_test(NAME unit_tests COMMAND unit_tests)

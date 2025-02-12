@@ -18,6 +18,7 @@
 
 void Map::print(void) const
 {
+  std::cout << "Map size: " << width << "x" << height << std::endl;
   for (int i = 0; i < (int)data.size(); i++)
   {
     std::cout << (int)data[i];
@@ -113,11 +114,15 @@ void Instance::load_map(void)
         }
         // check whether the number of cells in this row is consistent with num_of_columns
         if (map_data.data.size() % num_of_cols != 0)
-        { throw std::runtime_error("Inconsistent number of symbols in a row in the map description."); }
+        {
+          throw std::runtime_error("Inconsistent number of symbols in a row in the map description.");
+        }
       }
       // check whether the number of lines is consistent with num_of_rows
       if ((int)map_data.data.size() != num_of_cols * num_of_rows)
-      { throw std::runtime_error("Inconsistent number of rows in the map description."); }
+      {
+        throw std::runtime_error("Inconsistent number of rows in the map description.");
+      }
     }
   }
 
@@ -250,7 +255,10 @@ void Instance::calculate_optimal_paths_parallel(void)
   }
 
   // wait for the paths and save them
-  for (int i = 0; i < num_of_agents; i++) { optimal_paths.push_back(futures[i].get()); }
+  for (int i = 0; i < num_of_agents; i++)
+  {
+    optimal_paths.push_back(futures[i].get());
+  }
 }
 
 const std::vector<Path>& Instance::get_optimal_paths(void) const
