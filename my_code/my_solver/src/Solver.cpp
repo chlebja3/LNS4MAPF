@@ -7,6 +7,8 @@
 
 #include "Solver.h"
 
+#include <unordered_set>
+
 bool Solution::is_valid(std::shared_ptr<Instance> instance) const
 {
   // check that each agent has a path
@@ -16,31 +18,48 @@ bool Solution::is_valid(std::shared_ptr<Instance> instance) const
   int T_max = 0;
   for (int i = 0; i < (int)paths.size(); i++)
   {
-    // remember the length of the longest path
-    if ((int)paths[i].size() > T_max) T_max = paths[i].size();
+    // check that no path has length 0
+    if (paths[i].empty()) return false;
 
     // check that the path starts in the start position
     if (!(paths[i].front() == instance->get_start_positions()[i])) return false;
 
     // check that the path ends in the goal position
     if (!(paths[i].back() == instance->get_goal_positions()[i])) return false;
+
+    // remember the length of the longest path
+    if ((int)paths[i].size() > T_max) T_max = paths[i].size();
   }
 
   // now check that there are no collisions or invalid points
   for (int t = 0; t < T_max; t++)
   {
+    // create reservation set for each time step to check for dynamic coliisions
+    std::unordered_set<Point2d, Point2d::hash_point> occupied;
+
     for (int i = 0; i < (int)paths.size(); i++)
     {
-      // no need to check paths that are already finished at time t
-      if (t > (int)paths[i].size()) continue;
+      int       idx          = t;
+      const int cur_path_len = (int)paths[i].size();
+
+      // paths that are already finished at time t
+      if (t > cur_path_len)
+      {
+        // stay at the last point
+        idx = cur_path_len - 1;
+      }
 
       // check the path does not leave the map
-      if (!instance->get_map_data().is_in(paths[i][t])) return false;
+      if (!instance->get_map_data().is_in(paths[i][idx])) return false;
 
       // check collisions with static obstacles
-      if (instance->get_map_data().index(paths[i][t]) != 0) return false;
+      if (instance->get_map_data().index(paths[i][idx]) != 0) return false;
 
-      // TODO check collisions with dynamic obstacles
+      // check collisions with dynamic obstacles
+      if (occupied.find(paths[i][idx]) != occupied.end()) return false;
+
+      // add the point to the reservation set
+      occupied.insert(paths[i][idx]);
     }
   }
   return true;

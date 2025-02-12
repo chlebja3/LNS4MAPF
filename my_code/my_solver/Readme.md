@@ -7,6 +7,7 @@ SFML 2.5.1
 Boost 1.71.0
 
 For tests and benchmarks (should be fetched automatically by CMake if not installed):
+
 google-test 1.10.0
 
 google benchmark 1.5.0-4build1
@@ -24,7 +25,7 @@ cmake ..
 cmake --build .
 ```
 
-To build without unit and benchmark tests, specify the BUILD_TESTS flag (default is ON):
+To build without unit and benchmark tests, specify the ENABLE_TESTS flag (default is ON):
 ```
 cmake -ENABLE_TESTS=OFF ..
 ```
