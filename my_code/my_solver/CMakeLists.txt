@@ -50,7 +50,7 @@ set(CMAKE_USE_PTHREADS_INIT 1)
 set(THREADS_PREFER_PTHREAD_FLAG ON)
 
 # Find Boost
-find_package(Boost REQUIRED COMPONENTS program_options system filesystem)
+find_package(Boost REQUIRED COMPONENTS program_options system filesystem regex)
 
 # Find Eigen3 for PIBT
 find_package (Eigen3 REQUIRED NO_MODULE)
@@ -76,7 +76,7 @@ target_include_directories(MAPF_lib PRIVATE "third_party_libraries/imgui" "third
 
 # link the libraries
 target_link_libraries(MAPF_lib ${Boost_LIBRARIES} Eigen3::Eigen sfml-graphics sfml-window sfml-system OpenGL::GL)
-target_link_libraries(simple_MAPF_solver MAPF_lib sfml-graphics sfml-window sfml-system OpenGL::GL )
+target_link_libraries(simple_MAPF_solver ${Boost_LIBRARIES} MAPF_lib sfml-graphics sfml-window sfml-system OpenGL::GL )
 
 # Add subdirectory for tests
 if (${ENABLE_TESTS})

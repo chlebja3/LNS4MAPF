@@ -7,6 +7,8 @@
 
 #include "Solver.h"
 
+#include <boost/algorithm/string_regex.hpp>
+#include <fstream>
 #include <iostream>
 #include <unordered_set>
 
@@ -96,5 +98,104 @@ bool Solution::is_valid(std::shared_ptr<Instance> instance) const
   // TODO chack that the agents respect the move limits
   return true;
 }
+
+void Solution::load(const std::string& filename)
+{
+  // open the solution file
+  std::ifstream sol_file(filename.c_str());
+
+  // check if the file is open
+  if (!sol_file.is_open())
+  {
+    throw std::runtime_error("Cannot open file '" + filename + "'");
+  }
+
+  // read agents one by one
+  std::string line;
+  int         expected_agent_num = 0;
+
+  while (getline(sol_file, line))
+  {
+    // find the agent number
+    size_t idx = line.find("Agent ");
+    if (idx == std::string::npos)
+    {
+      throw std::runtime_error("Cannot find agent number in line '" + line + "'");
+    }
+
+    size_t idx2 = line.find(":");
+    if (idx == std::string::npos)
+    {
+      throw std::runtime_error("Cannot find : in line '" + line + "'");
+    }
+
+    // get the agent number
+    int agent_num;
+    try
+    {
+      agent_num = std::stoi(line.substr(idx + 6, idx2 - idx - 6));
+    }
+    catch (const std::exception& e)
+    {
+      throw std::runtime_error("Cannot convert agent number in line '" + line + "'");
+    }
+
+    // check that the agent number is correct
+    if (agent_num != expected_agent_num)
+    {
+      throw std::runtime_error("Unexpected agent number in line '" + line + "'");
+    }
+    else
+      expected_agent_num++;
+
+    // split the line
+    std::vector<std::string> split_line;
+    boost::algorithm::split_regex(split_line, line.substr(idx2 + 1), boost::regex("->"));
+
+    // read the path
+    Path path;
+    for (const std::string& point_str : split_line)
+    {
+      // remove the leading and trailing spaces
+      std::string point_str_trimmed = boost::algorithm::trim_copy(point_str);
+
+      // find the opening bracket of the point
+      size_t idx = point_str_trimmed.find("(");
+      if (idx == std::string::npos)
+      {
+        throw std::runtime_error("Cannot find '(' in point '" + point_str + "'");
+      }
+
+      // find the closing bracket of the point
+      size_t idx2 = point_str_trimmed.find(")");
+      if (idx2 == std::string::npos)
+      {
+        throw std::runtime_error("Cannot find ')' in point '" + point_str + "'");
+      }
+
+      // get the coordinates
+      int x, y;
+      try
+      {
+        x = std::stoi(point_str_trimmed.substr(idx + 1, idx2 - idx - 1));
+        y = std::stoi(point_str_trimmed.substr(idx2 + 1));
+      }
+      catch (const std::exception& e)
+      {
+        throw std::runtime_error("Cannot convert coordinates in line '" + point_str_trimmed + "'");
+      }
+
+      // add the point to the path
+      path.push_back(Point2d(x, y));
+    }
+    // add the path to the solution
+    paths.push_back(path);
+  }
+
+
+  // close the file
+  sol_file.close();
+}
+
 
 Solver::Solver(const std::string& name, std::shared_ptr<Instance> instance) : name(name), instance(instance){};

@@ -26,6 +26,7 @@ public:
   int delay;  // cost - distance
 
   bool is_valid(std::shared_ptr<Instance> instance) const;
+  void load(const std::string& filename);
 };
 
 class Solver

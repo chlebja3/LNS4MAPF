@@ -56,7 +56,7 @@ void Instance::load_map(void)
   std::ifstream map_file(map_fname.c_str());
 
   // check if the open was successful
-  if (!map_file.is_open()) throw std::runtime_error("Could not open map file.");
+  if (!map_file.is_open()) throw std::runtime_error("Cannot open file '" + map_fname + "'");
 
   // read the file line by line
   std::string line;
@@ -77,7 +77,7 @@ void Instance::load_map(void)
       {
         num_of_rows = stoi(split_line[1]);
       }
-      catch (std::exception& e)
+      catch (const std::exception& e)
       {
         throw std::runtime_error("Unable to read the number of rows.");
       }
@@ -88,7 +88,7 @@ void Instance::load_map(void)
       {
         num_of_cols = stoi(split_line[1]);
       }
-      catch (std::exception& e)
+      catch (const std::exception& e)
       {
         throw std::runtime_error("Unable to read the number of rows.");
       }
@@ -178,7 +178,7 @@ void Instance::load_scene(void)
       goal_positions.emplace_back(goal_x, goal_y);
       loaded_agents++;
     }
-    catch (std::exception& e)
+    catch (const std::exception& e)
     {
       throw std::runtime_error("Could not read start and goal positions: '" + (std::string)e.what() + "'");
     }
