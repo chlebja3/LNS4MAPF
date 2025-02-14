@@ -49,16 +49,16 @@ TEST(SolutionTest, LoadSolutionByLNS)
   EXPECT_EQ(sol.paths.size(), 500);
 
   // check start of first path
-  EXPECT_EQ(sol.paths[0][0], Point2d(174, 61));
+  EXPECT_EQ(sol.paths[0][0], Point2d(61, 174));
 
   // check end of first path
-  EXPECT_EQ(sol.paths[0].back(), Point2d(100, 132));
+  EXPECT_EQ(sol.paths[0].back(), Point2d(132, 100));
 
   // check start of last path
-  EXPECT_EQ(sol.paths[499][0], Point2d(190, 207));
+  EXPECT_EQ(sol.paths[499][0], Point2d(207, 190));
 
   // check end of last path
-  EXPECT_EQ(sol.paths[499].back(), Point2d(175, 179));
+  EXPECT_EQ(sol.paths[499].back(), Point2d(179, 175));
 }
 
 // Test validity check
@@ -257,8 +257,12 @@ TEST(SolutionTest, LargeInstanceValid)
   // load instance
   std::string     base_path = get_base_path_tests();  // path to my_solver
   std::shared_ptr instance =
-      std::make_shared<Instance>(base_path + "/tests/test_maps/den_520d.map", base_path + "/tests/test_scen/den520d-random-0.scen", 500);
+      std::make_shared<Instance>(base_path + "/tests/test_maps/den520d.map", base_path + "/tests/test_scen/den520d-random-0.scen", 500);
 
   // load solution by MAPF-LNS
+  Solution sol;
+  sol.load(base_path + "/tests/test_solutions/den520d_scen0_500agents.sol");
+
+  EXPECT_TRUE(sol.is_valid(instance));
 }
 

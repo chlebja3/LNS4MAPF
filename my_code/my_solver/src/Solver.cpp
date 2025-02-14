@@ -51,7 +51,7 @@ bool Solution::is_valid(std::shared_ptr<Instance> instance) const
   }
   std::cout << "Max length of path: " << T_max << std::endl;
 
-  // now check that there are no collisions or invalid points
+  // now check that there are no collisions or invalid points or invalid moves
   for (int t = 0; t < T_max; t++)
   {
     // create reservation set for each time step to check for dynamic coliisions
@@ -67,6 +67,16 @@ bool Solution::is_valid(std::shared_ptr<Instance> instance) const
       {
         // stay at the last point
         idx = cur_path_len - 1;
+      }
+
+      // check if the move is valid
+      if (idx > 0)
+      {
+        if (abs(paths[i][idx].x - paths[i][idx - 1].x) + abs(paths[i][idx].y - paths[i][idx - 1].y) > 1)
+        {
+          // std::cout << "Invalid move." << std::endl;
+          return false;
+        }
       }
 
       // check the path does not leave the map
@@ -188,8 +198,9 @@ void Solution::load(const std::string& filename)
       int x, y;
       try
       {
-        x = std::stoi(point_str_trimmed.substr(idx + 1, idx_comma - 1));
-        y = std::stoi(point_str_trimmed.substr(idx_comma + 1, idx2 - idx_comma - 1));
+        // load in format (y,x)
+        y = std::stoi(point_str_trimmed.substr(idx + 1, idx_comma - 1));
+        x = std::stoi(point_str_trimmed.substr(idx_comma + 1, idx2 - idx_comma - 1));
       }
       catch (const std::exception& e)
       {
