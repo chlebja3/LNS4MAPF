@@ -13,7 +13,7 @@
 #include "utils.h"
 
 // Test solution loading
-TEST(SolutionTest, LoadSolution)
+TEST(SolutionTest, LoadSolutionDummy)
 {
   // load solution
   std::string base_path = get_base_path_tests();  // path to my_solver
@@ -27,15 +27,38 @@ TEST(SolutionTest, LoadSolution)
   EXPECT_EQ(sol.paths[1].size(), 5);
   // check that paths are correct
   EXPECT_EQ(sol.paths[0][0], Point2d(0, 0));
-  EXPECT_EQ(sol.paths[0][1], Point2d(1, 0));
-  EXPECT_EQ(sol.paths[0][2], Point2d(2, 0));
-  EXPECT_EQ(sol.paths[0][3], Point2d(2, 1));
+  EXPECT_EQ(sol.paths[0][1], Point2d(0, 1));
+  EXPECT_EQ(sol.paths[0][2], Point2d(0, 2));
+  EXPECT_EQ(sol.paths[0][3], Point2d(1, 2));
   EXPECT_EQ(sol.paths[0][4], Point2d(2, 2));
   EXPECT_EQ(sol.paths[1][0], Point2d(2, 2));
-  EXPECT_EQ(sol.paths[1][1], Point2d(1, 2));
-  EXPECT_EQ(sol.paths[1][2], Point2d(0, 2));
-  EXPECT_EQ(sol.paths[1][3], Point2d(0, 1));
+  EXPECT_EQ(sol.paths[1][1], Point2d(2, 1));
+  EXPECT_EQ(sol.paths[1][2], Point2d(2, 0));
+  EXPECT_EQ(sol.paths[1][3], Point2d(1, 0));
   EXPECT_EQ(sol.paths[1][4], Point2d(0, 0));
+}
+
+TEST(SolutionTest, LoadSolutionByLNS)
+{
+  // load solution
+  std::string base_path = get_base_path_tests();  // path to my_solver
+  Solution    sol;
+  sol.load(base_path + "/tests/test_solutions/den520d_scen0_500agents.sol");
+
+  // check that all agents have paths
+  EXPECT_EQ(sol.paths.size(), 500);
+
+  // check start of first path
+  EXPECT_EQ(sol.paths[0][0], Point2d(174, 61));
+
+  // check end of first path
+  EXPECT_EQ(sol.paths[0].back(), Point2d(100, 132));
+
+  // check start of last path
+  EXPECT_EQ(sol.paths[499][0], Point2d(190, 207));
+
+  // check end of last path
+  EXPECT_EQ(sol.paths[499].back(), Point2d(175, 179));
 }
 
 // Test validity check

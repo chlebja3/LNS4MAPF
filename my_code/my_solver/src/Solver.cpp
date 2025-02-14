@@ -116,6 +116,9 @@ void Solution::load(const std::string& filename)
 
   while (getline(sol_file, line))
   {
+    // remove leading and trailing spaces
+    line = boost::algorithm::trim_copy(line);
+
     // find the agent number
     size_t idx = line.find("Agent ");
     if (idx == std::string::npos)
@@ -156,6 +159,7 @@ void Solution::load(const std::string& filename)
     Path path;
     for (const std::string& point_str : split_line)
     {
+      if (point_str.empty()) continue;
       // remove the leading and trailing spaces
       std::string point_str_trimmed = boost::algorithm::trim_copy(point_str);
 
@@ -173,16 +177,25 @@ void Solution::load(const std::string& filename)
         throw std::runtime_error("Cannot find ')' in point '" + point_str + "'");
       }
 
+      // find ,
+      size_t idx_comma = point_str_trimmed.find(",");
+      if (idx_comma == std::string::npos)
+      {
+        throw std::runtime_error("Cannot find ',' in point '" + point_str + "'");
+      }
+
       // get the coordinates
       int x, y;
       try
       {
-        x = std::stoi(point_str_trimmed.substr(idx + 1, idx2 - idx - 1));
-        y = std::stoi(point_str_trimmed.substr(idx2 + 1));
+        x = std::stoi(point_str_trimmed.substr(idx + 1, idx_comma - 1));
+        y = std::stoi(point_str_trimmed.substr(idx_comma + 1, idx2 - idx_comma - 1));
       }
       catch (const std::exception& e)
       {
-        throw std::runtime_error("Cannot convert coordinates in line '" + point_str_trimmed + "'");
+        throw std::runtime_error("Cannot convert coordinates in line '" + point_str_trimmed +
+                                 "', x: " + point_str_trimmed.substr(idx + 1, idx_comma - 1) +
+                                 ", y: " + point_str_trimmed.substr(idx_comma + 1, idx2 - idx_comma - 1));
       }
 
       // add the point to the path
