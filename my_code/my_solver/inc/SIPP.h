@@ -7,17 +7,20 @@
 #pragma once
 #include <utils.h>
 
+#include "ConstraintTable.h"
+
 class SIPP
 {
 public:
   // constructor
-  SIPP(const Map& map_data);
+  SIPP(const Map& map_data, const ConstraintTable& constraint_table);
 
   // destructor
   ~SIPP() = default;
 
-  Path plan(const Point2d& start, const Point2d& goal, const Map& map_data);
+  Path plan(const Point2d& start, const Point2d& goal);
 
 private:
-  const Map& map_data;
+  const Map&      map_data;
+  ConstraintTable constraint_table;
 };

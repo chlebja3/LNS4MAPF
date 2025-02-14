@@ -85,6 +85,19 @@ public:
   };
 };
 
+
+class TimeInterval
+{
+public:
+  int t_min, t_max;
+
+  TimeInterval(const int t_min, const int t_max);
+
+  bool         operator==(const TimeInterval& other) const;
+  TimeInterval operator+(const int x) const;
+};
+
+
 class Map
 {
 public:

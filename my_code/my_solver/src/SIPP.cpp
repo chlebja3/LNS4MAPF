@@ -2,7 +2,8 @@
  * Author: Jan Chleboun
  * Date: 09-02-2025
  * Email: chlebja3@fel.cvut.cz
- * Description:
+ * Description: Implementation of the SIPP algorithm for path planning in a grid map. The algorithm is based on the A* search algorithm, but
+ * searches also in the time dimension. To reduce dimensionality of the space, the time is discretized into intervals.
  */
 
 #include "SIPP.h"
@@ -11,19 +12,12 @@
 
 #include <memory>
 #include <queue>
+#include <unordered_set>
 
-SIPP::SIPP(const Map& map_data) : map_data(map_data){};
+#include "utils.h"
 
-class TimeInterval
-{
-public:
-  int t_min, t_max;
+SIPP::SIPP(const Map& map_data, const ConstraintTable& constraint_table) : map_data(map_data), constraint_table(constraint_table){};
 
-  bool operator==(const TimeInterval& other) const
-  {
-    return t_min == other.t_min && t_max == other.t_max;
-  }
-};
 
 class SIPPNode : public Node
 {
@@ -32,10 +26,11 @@ public:
   TimeInterval              interval;
   std::shared_ptr<SIPPNode> parent;
 
-  SIPPNode(const int x, const int y, const double g, const double h, const std::shared_ptr<SIPPNode> parent)
-      : Node(g, h), position(Point2d(x, y)), parent(parent){};
-  SIPPNode(const Point2d& position, const double g, const double h, const std::shared_ptr<SIPPNode> parent)
-      : Node(g, h), position(position), parent(parent){};
+  SIPPNode(const int x, const int y, const int time_min, const int time_max, const double g, const double h,
+           const std::shared_ptr<SIPPNode> parent)
+      : Node(g, h), position(Point2d(x, y)), interval(TimeInterval(time_min, time_max)), parent(parent){};
+  SIPPNode(const Point2d& position, const TimeInterval& interval, const double g, const double h, const std::shared_ptr<SIPPNode> parent)
+      : Node(g, h), position(position), interval(interval), parent(parent){};
 
   bool operator==(const SIPPNode& other) const
   {
@@ -82,11 +77,12 @@ public:
 namespace sipp
 {
 typedef std::priority_queue<std::shared_ptr<SIPPNode>, std::vector<std::shared_ptr<SIPPNode>>, SIPPNode::compare_node_ptrs> PriorityQueue;
+typedef std::unordered_set<Point2d, Point2d::hash_point> UnorderedSet;  // TODO this must store Points and TimeIntervals
 
 Path extract_path(const std::shared_ptr<SIPPNode>& final_node);
 }  // namespace sipp
 
-Path SIPP::plan(const Point2d& start, const Point2d& goal, const Map& map_data)
+Path SIPP::plan(const Point2d& start, const Point2d& goal)
 {
   // check whether start and goal inside the map
   if (!map_data.is_in(start) || !map_data.is_in(goal)) return Path();
@@ -100,8 +96,14 @@ Path SIPP::plan(const Point2d& start, const Point2d& goal, const Map& map_data)
   // calculate the heuristic
   double h = std::hypot(goal.x - start.x, goal.y - start.y);
 
+  // retrieve the first safe interval
+  TimeInterval time_interval_start = constraint_table.get_safe_interval(start, 0);
+
   // create the start node
-  open_list.push(std::make_shared<SIPPNode>(start.x, start.y, 0, h, nullptr));
+  open_list.push(std::make_shared<SIPPNode>(start, time_interval_start, 0, h, nullptr));
+
+  // create known nodes database
+  sipp::UnorderedSet known;
 
   // main loop
   while (!open_list.empty())
@@ -110,18 +112,42 @@ Path SIPP::plan(const Point2d& start, const Point2d& goal, const Map& map_data)
     std::shared_ptr<SIPPNode> current = std::move(open_list.top());
     open_list.pop();
 
-    // check whether node is in known set
+    // check whether node is in known set TODO also interval
+    if (known.find(current->position) != known.end()) continue;
 
-    // check whether goal is reached
+
+    // check whether goal is reached and that the goal will not be obstructed in future
     if (current->position == goal)
     {
       // extract the path
       return sipp::extract_path(current);
     }
 
-    // add to known nodes
+    // add to known nodes TODO also interval
+    known.insert(current->position);
 
     // expand current node
+    std::vector<Point2d> neighbors = map_data.find_neighbors(current->position);
+    for (Point2d& neighbor : neighbors)
+    {
+      // calculate the heuristic
+      double h = std::hypot(goal.x - neighbor.x, goal.y - neighbor.y);
+
+      // retrieve the safe intervals for the neighbor
+      std::vector<TimeInterval> time_intervals = constraint_table.get_safe_intervals(neighbor, current->interval + 1);
+
+      for (const TimeInterval& interval : time_intervals)
+      {
+        // if the earliest reachable time of the neighbor is greater than maximum time of the current node + travel time, then the neighbor
+        // is not reachable without collision
+        if (interval.t_min > current->interval.t_max + 1) continue;
+
+        // check whether known
+
+        // add to the open list
+        open_list.push(std::make_shared<SIPPNode>(neighbor, interval, current->g + 1, h, current));
+      }
+    }
   }
   return Path();
 }

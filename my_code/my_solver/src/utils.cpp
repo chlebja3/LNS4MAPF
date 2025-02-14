@@ -54,6 +54,19 @@ size_t Point2d::hash_point::operator()(const Point2d& p) const
   return std::hash<int>()(p.x) ^ (std::hash<int>()(p.y) << 1);
 }
 
+
+TimeInterval::TimeInterval(const int t_min, const int t_max) : t_min(t_min), t_max(t_max){};
+
+bool TimeInterval::operator==(const TimeInterval& other) const
+{
+  return t_min == other.t_min && t_max == other.t_max;
+}
+
+TimeInterval TimeInterval::operator+(const int x) const
+{
+  return TimeInterval(t_min + x, t_max + x);
+}
+
 bool Map::is_in(const Point2d& p) const
 {
   return !(p.x < 0 || p.x >= width || p.y < 0 || p.y >= height);
