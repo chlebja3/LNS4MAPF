@@ -97,6 +97,22 @@ public:
   TimeInterval operator+(const int x) const;
 };
 
+class TimePoint
+{
+public:
+  Point2d      position;
+  TimeInterval interval;
+
+  TimePoint(const int x, const int y, const int t_min, const int t_max);
+  TimePoint(const Point2d& position, const TimeInterval& interval);
+
+  struct hash_time_point
+  {
+    size_t operator()(const TimePoint& p) const;
+  };
+
+  bool operator==(const TimePoint& other) const;
+};
 
 class Map
 {

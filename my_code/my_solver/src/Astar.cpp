@@ -49,23 +49,6 @@ public:
       }
     }
   };
-
-  struct hash_node_ptrs  // unused
-  {
-    size_t operator()(const std::shared_ptr<AstarNode>& node) const
-    {
-      // hash x and y, bit shift to break the symmetry (x, y) wont have the same hash as (y, x) and xor to finalize
-      return std::hash<int>()(node->position.x) ^ (std::hash<int>()(node->position.y) << 1);
-    }
-  };
-
-  struct equal_node_ptrs  // unused
-  {
-    bool operator()(const std::shared_ptr<AstarNode>& n1, const std::shared_ptr<AstarNode>& n2) const
-    {
-      return *n1 == *n2;
-    }
-  };
 };
 
 

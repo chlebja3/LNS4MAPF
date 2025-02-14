@@ -67,6 +67,22 @@ TimeInterval TimeInterval::operator+(const int x) const
   return TimeInterval(t_min + x, t_max + x);
 }
 
+
+TimePoint::TimePoint(const int x, const int y, const int t_min, const int t_max) : position(Point2d(x, y)), interval(t_min, t_max){};
+TimePoint::TimePoint(const Point2d& position, const TimeInterval& interval) : position(position), interval(interval){};
+
+bool TimePoint::operator==(const TimePoint& other) const
+{
+  return position == other.position && interval == other.interval;
+}
+
+size_t TimePoint::hash_time_point::operator()(const TimePoint& p) const
+{
+  // hash x, y, tmin, tmax, bit shift to break the symmetry and xor to finalize
+  return std::hash<int>()(p.position.x) ^ (std::hash<int>()(p.position.y) << 1) ^ (std::hash<int>()(p.interval.t_min) << 2) ^
+         (std::hash<int>()(p.interval.t_max) << 3);
+}
+
 bool Map::is_in(const Point2d& p) const
 {
   return !(p.x < 0 || p.x >= width || p.y < 0 || p.y >= height);
