@@ -17,7 +17,7 @@ bool Solution::is_valid(std::shared_ptr<Instance> instance) const
   // check that each agent has a path
   if (instance->num_of_agents != (int)paths.size())
   {
-    std::cout << "Agent without a path." << std::endl;
+    // std::cout << "Agent without a path." << std::endl;
     return false;
   }
 
@@ -28,28 +28,28 @@ bool Solution::is_valid(std::shared_ptr<Instance> instance) const
     // check that no path has length 0
     if (paths[i].empty())
     {
-      std::cout << "Empty path." << std::endl;
+      // std::cout << "Empty path." << std::endl;
       return false;
     }
 
     // check that the path starts in the start position
     if (!(paths[i].front() == instance->get_start_positions()[i]))
     {
-      std::cout << "Path does not start in the start position." << std::endl;
+      // std::cout << "Path does not start in the start position." << std::endl;
       return false;
     }
 
     // check that the path ends in the goal position
     if (!(paths[i].back() == instance->get_goal_positions()[i]))
     {
-      std::cout << "Path does not end in the goal position." << std::endl;
+      // std::cout << "Path does not end in the goal position." << std::endl;
       return false;
     }
 
     // remember the length of the longest path
     if ((int)paths[i].size() > T_max) T_max = paths[i].size();
   }
-  std::cout << "Max length of path: " << T_max << std::endl;
+  //  std::cout << "Max length of path: " << T_max << std::endl;
 
   // now check that there are no collisions or invalid points or invalid moves
   for (int t = 0; t < T_max; t++)
@@ -69,9 +69,9 @@ bool Solution::is_valid(std::shared_ptr<Instance> instance) const
         idx = cur_path_len - 1;
       }
 
-      // check if the move is valid
       if (idx > 0)
       {
+        // check if the move is valid
         if (abs(paths[i][idx].x - paths[i][idx - 1].x) + abs(paths[i][idx].y - paths[i][idx - 1].y) > 1)
         {
           // std::cout << "Invalid move." << std::endl;
@@ -104,8 +104,29 @@ bool Solution::is_valid(std::shared_ptr<Instance> instance) const
       occupied.insert(paths[i][idx]);
     }
   }
-  // TODO check that the agents do not swap edges
-  // TODO chack that the agents respect the move limits
+
+  // check that the agents do not swap edges
+  for (int i = 0; i < (int)paths.size(); i++)
+  {
+    for (int j = i + 1; j < (int)paths.size(); j++)
+    {
+      for (int t = 1; t < T_max; t++)
+      {
+        const int cur_path_len_i = (int)paths[i].size();
+        const int cur_path_len_j = (int)paths[j].size();
+
+        // paths that are already finished at time t
+        if (t >= cur_path_len_i || t >= cur_path_len_j) continue;
+
+        if (paths[i][t] == paths[j][t - 1] && paths[i][t - 1] == paths[j][t])
+        {
+          // std::cout << "Agents swap edges." << std::endl;
+          return false;
+        }
+      }
+    }
+  }
+
   return true;
 }
 
