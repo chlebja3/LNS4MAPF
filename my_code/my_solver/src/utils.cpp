@@ -93,6 +93,12 @@ uint8_t Map::index(const Point2d& point) const
   if (!is_in(point)) return -1;
   return data[point.y * width + point.x];
 }
+
+int Map::position_to_index(const Point2d& p) const
+{
+  return p.y * width + p.x;
+}
+
 std::ostream& operator<<(std::ostream& os, Point2d const& p)
 {
   return os << "(" << p.x << "," << p.y << ")";

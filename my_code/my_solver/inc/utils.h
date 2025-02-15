@@ -7,7 +7,11 @@
 
 #pragma once
 #include <SFML/Graphics.hpp>
+#include <cassert>
 #include <vector>
+
+// Use (void) to silence unused warnings.
+#define assertm(exp, msg) assert((void(msg), exp))
 
 class Node
 {
@@ -114,6 +118,8 @@ public:
   bool operator==(const TimePoint& other) const;
 };
 
+typedef std::vector<TimePoint> TimePointPath;
+
 class Map
 {
 public:
@@ -124,6 +130,7 @@ public:
   void    print() const;
   bool    is_in(const Point2d& point) const;
   uint8_t index(const Point2d& point) const;
+  int     position_to_index(const Point2d& p) const;
 
 
   /**
