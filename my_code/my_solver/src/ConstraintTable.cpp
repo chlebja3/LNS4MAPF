@@ -13,13 +13,14 @@
 
 ConstraintTable::ConstraintTable(std::shared_ptr<Instance> instance) : instance(instance)
 {
-  std::cout << "Initialized Constraint table." << std::endl;
+  // initialize the constraint vectors TODO static obstacles dont need constraint vectors
+  const int num_constraints = instance->get_map_data().width * instance->get_map_data().height;
+  constraints               = std::vector<std::list<TimeInterval>>(num_constraints, std::list<TimeInterval>());
 };
 
 
 void ConstraintTable::add_constraint(const TimePoint& timepoint)
 {
-  std::cout << "Trying to add a constraint.";
   // check the position is valid
   assertm(instance->get_map_data().is_in(timepoint.position), "Invalid position.");
 
@@ -29,6 +30,9 @@ void ConstraintTable::add_constraint(const TimePoint& timepoint)
   // check, that the index is valid
   assertm(idx >= 0 && idx < instance->get_map_data().width * instance->get_map_data().height, "Invalid index.");
 
+  // check that there are enough constraints
+  assertm(idx < constraints.size(), "Not enough constraints.");
+
   std::list<TimeInterval>& cur_TI_list = constraints[idx];
 
   // insert the time interval to the given list
@@ -36,6 +40,7 @@ void ConstraintTable::add_constraint(const TimePoint& timepoint)
   {
     // insert to an empty list
     cur_TI_list.push_back(timepoint.interval);
+    return;
   }
   else
   {
@@ -43,12 +48,15 @@ void ConstraintTable::add_constraint(const TimePoint& timepoint)
     // find where to insert the interval
     for (auto it = cur_TI_list.cbegin(); it != cur_TI_list.cend(); it++)
     {
+      // check that the intervals do not have any overlap
+
+      assertm(!overlap(*it, timepoint.interval), "Cannot add overlapping constraints.");
 
       // insert before the first interval that starts later
       if (it->t_min > timepoint.interval.t_min)
       {
         // check that there is no overlap
-        assertm(timepoint.interval.t_max < it->t_min, "Cannot add overlapping constraints.");
+        // assertm(timepoint.interval.t_max < it->t_min, "Cannot add overlapping constraints.");
         cur_TI_list.insert(it, timepoint.interval);
         inserted = true;
         break;

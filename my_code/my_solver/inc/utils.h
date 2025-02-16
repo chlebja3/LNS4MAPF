@@ -99,7 +99,10 @@ public:
 
   bool         operator==(const TimeInterval& other) const;
   TimeInterval operator+(const int x) const;
+               operator std::string() const;
 };
+
+bool overlap(const TimeInterval& i1, const TimeInterval& i2);
 
 class TimePoint
 {

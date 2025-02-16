@@ -67,6 +67,18 @@ TimeInterval TimeInterval::operator+(const int x) const
   return TimeInterval(t_min + x, t_max + x);
 }
 
+TimeInterval::operator std::string() const
+{
+  return "(" + std::to_string(t_min) + "," + std::to_string(t_max) + ")";
+}
+
+bool overlap(const TimeInterval& i1, const TimeInterval& i2)
+{
+  if (i1.t_max < i2.t_min || i2.t_max < i1.t_min)
+    return false;
+  else
+    return true;
+}
 
 TimePoint::TimePoint(const int x, const int y, const int t_min, const int t_max) : position(Point2d(x, y)), interval(t_min, t_max){};
 TimePoint::TimePoint(const Point2d& position, const TimeInterval& interval) : position(position), interval(interval){};

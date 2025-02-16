@@ -28,7 +28,6 @@ protected:
     instance =
         std::make_shared<Instance>(base_path + "/tests/test_maps/dummy_3_3.map", base_path + "/tests/test_scen/dummy_3_3_scen_1.scen", 1);
     table = std::make_unique<ConstraintTable>(instance);
-    std::cout << "table pointer: " << table.get() << std::endl;
   }
 
   void TearDown() override
@@ -40,11 +39,9 @@ protected:
 // Test 1: Adding a single constraint and checking if it is stored correctly
 TEST_F(ConstraintTableTest, SingleConstraint)
 {
-  std::cout << "Starting SingleConstraint test" << std::endl;
   TimePoint tp({1, 2}, {3, 5});  // Position (1,2) with time interval [3,5]
-  std::cout << "table pointer: " << table.get() << std::endl;
+                                 //
   table->add_constraint(tp);
-  std::cout << "Constraint added" << std::endl;
 
   // test that the first safe interval is right
   TimeInterval first_si = table->get_first_safe_interval({1, 2});
@@ -112,10 +109,20 @@ TEST_F(ConstraintTableTest, DynamicAddRemove)
   EXPECT_EQ(safe_intervals[1], TimeInterval(9, INT_MAX));
 }
 
-// Test 6: Constraint removal when no constraint exists
+// Test 6: Constraint removal from empty table
+TEST_F(ConstraintTableTest, RemoveFromEmptyTable)
+{
+  TimePoint tp({1, 1}, {3, 6});
+  // expect assert death
+  ASSERT_DEATH(table->remove_constraint(tp), "Trying to remove interval from an empty list.");
+}
+
+// Test 7: Constraint removal when no constraint exists
 TEST_F(ConstraintTableTest, RemoveNonExistentConstraint)
 {
   TimePoint tp({1, 1}, {3, 6});
+  // add a dummy constraint to prevent assertion failure removing from empty table
+  table->add_constraint(TimePoint({1, 1}, {0, 2}));
   try
   {
     table->remove_constraint(tp);
@@ -131,7 +138,7 @@ TEST_F(ConstraintTableTest, RemoveNonExistentConstraint)
   }
 }
 
-// Test 7: Adding a constraint that is already present (should cause assert death)
+// Test 8: Adding a constraint that is already present (should cause assert death)
 TEST_F(ConstraintTableTest, AddExistingConstraint)
 {
   TimePoint tp({1, 1}, {3, 6});
@@ -139,10 +146,10 @@ TEST_F(ConstraintTableTest, AddExistingConstraint)
   ASSERT_DEATH(table->add_constraint(tp), "Cannot add overlapping constraints.");
 }
 
-// Test 8: Adding a path that forms constraints, test whether edge constraints are added
+// Test 9: Adding a path that forms constraints, test whether edge constraints are added
 TEST_F(ConstraintTableTest, AddPathConstraints)
 {
-  std::vector<TimePoint> path1 = {TimePoint({1, 1}, {0, 2}), TimePoint({1, 2}, {3, 4}), TimePoint({1, 3}, {5, 6})};
+  std::vector<TimePoint> path1 = {TimePoint({1, 1}, {0, 2}), TimePoint({1, 2}, {3, 4}), TimePoint({2, 2}, {5, 6})};
   table->add_constraints(path1);
   std::vector<TimePoint> path2 = {TimePoint({2, 1}, {0, 5}), TimePoint({1, 1}, {6, 8}), TimePoint({1, 2}, {9, 10})};
   table->add_constraints(path2);

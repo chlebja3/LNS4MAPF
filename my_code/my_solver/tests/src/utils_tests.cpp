@@ -5,8 +5,8 @@
  * Description:
  */
 
+#include <gmock/gmock.h>
 #include <gtest/gtest.h>
-#include <gmock/gmock.h> 
 
 // Include the header where Point2d is declared
 #include "utils.h"
@@ -177,22 +177,20 @@ Map create_test_map()
   Map my_map;
   my_map.width  = 3;
   my_map.height = 3;
-  my_map.data   = {
-    0, 1, 0, 
-    0, 0, 1, 
-    1, 0, 1};
+  my_map.data   = {0, 1, 0, 0, 0, 1, 1, 0, 1};
   return my_map;
 }
-}
+}  // namespace UTILS_TEST
 
 // Test Case: Center Position (Now Order-Independent)
-TEST(FindNeighborsTest, CenterPosition) {
-    Map my_map = UTILS_TEST::create_test_map();
-    Point2d pos(1, 1);
+TEST(FindNeighborsTest, CenterPosition)
+{
+  Map     my_map = UTILS_TEST::create_test_map();
+  Point2d pos(1, 1);
 
-    std::vector<Point2d> neighbors = my_map.find_neighbors(pos);
+  std::vector<Point2d> neighbors = my_map.find_neighbors(pos);
 
-    EXPECT_THAT(neighbors, ::testing::UnorderedElementsAre(Point2d(1, 2), Point2d(0, 1)));
+  EXPECT_THAT(neighbors, ::testing::UnorderedElementsAre(Point2d(1, 2), Point2d(0, 1)));
 }
 
 // Test Case: Corner Position (Top-Left)
@@ -220,13 +218,14 @@ TEST(FindNeighborsTest, BottomRightCorner)
 }
 
 // Test Case: Left Edge (Now Order-Independent)
-TEST(FindNeighborsTest, LeftEdge) {
-    Map my_map = UTILS_TEST::create_test_map();
-    Point2d pos(0, 1);
+TEST(FindNeighborsTest, LeftEdge)
+{
+  Map     my_map = UTILS_TEST::create_test_map();
+  Point2d pos(0, 1);
 
-    std::vector<Point2d> neighbors = my_map.find_neighbors(pos);
+  std::vector<Point2d> neighbors = my_map.find_neighbors(pos);
 
-    EXPECT_THAT(neighbors, ::testing::UnorderedElementsAre(Point2d(0, 0), Point2d(1, 1)));
+  EXPECT_THAT(neighbors, ::testing::UnorderedElementsAre(Point2d(0, 0), Point2d(1, 1)));
 }
 
 // Test Case: Out-of-Bounds Position
@@ -265,16 +264,72 @@ TEST(FindNeighborsTest, LargeMapEdge)
 
   EXPECT_THAT(neighbors, ::testing::UnorderedElementsAre(Point2d(98, 99), Point2d(99, 98)));
 }
+
+// test detection of overlap of time intervals
+// Test Case: No overlap
+TEST(TimeIntervalIntersectionTest, NoOverlap)
+{
+  TimeInterval i1(0, 1);
+  TimeInterval i2(2, 3);
+  EXPECT_FALSE(overlap(i1, i2)) << "Intervals should not intersect.";
+}
+
+// Test Case: Overlap
+TEST(TimeIntervalIntersectionTest, Overlap)
+{
+  TimeInterval i1(0, 2);
+  TimeInterval i2(1, 3);
+  EXPECT_TRUE(overlap(i1, i2)) << "Intervals should intersect.";
+  EXPECT_TRUE(overlap(i2, i1)) << "Intervals should intersect.";
+}
+
+// Test Case: One Interval Inside Another
+TEST(TimeIntervalIntersectionTest, Inside)
+{
+  TimeInterval i1(0, 4);
+  TimeInterval i2(1, 3);
+  EXPECT_TRUE(overlap(i1, i2)) << "Intervals should intersect.";
+  EXPECT_TRUE(overlap(i2, i1)) << "Intervals should intersect.";
+}
+
+// Test Case: One Interval Touching Another
+TEST(TimeIntervalIntersectionTest, Touching)
+{
+  TimeInterval i1(0, 1);
+  TimeInterval i2(1, 2);
+  EXPECT_TRUE(overlap(i1, i2)) << "Intervals should intersect.";
+  EXPECT_TRUE(overlap(i2, i1)) << "Intervals should intersect.";
+}
+
+// Test Case: same interval
+TEST(TimeIntervalIntersectionTest, SameInterval)
+{
+  TimeInterval i1(0, 1);
+  EXPECT_TRUE(overlap(i1, i1)) << "Intervals should intersect.";
+}
+
+// Test Case: intervals of length 1
+TEST(TimeIntervalIntersectionTest, LengthOne)
+{
+  TimeInterval i1(1, 1);
+  TimeInterval i2(2, 2);
+  EXPECT_FALSE(overlap(i1, i2)) << "Intervals should not intersect.";
+  EXPECT_FALSE(overlap(i2, i1)) << "Intervals should not intersect.";
+}
+
+
 // Color Generation test
+
+// // Test intersection finding
 // generate 100 random colors and check, whether they are valid (just a simple test to test the  unit test environment)
 TEST(ColorGeneration, ValueCheck)
 {
   for (int i = 0; i < 100; i++)
-    {
-      sf::Color col = generate_random_color(255, 255, 255, 0.25);
-      EXPECT_TRUE(inRange(col.r, 0, 255)) << "Invalid value in red channel.";
-      EXPECT_TRUE(inRange(col.g, 0, 255)) << "Invalid value in green channel.";
-      EXPECT_TRUE(inRange(col.b, 0, 255)) << "Invalid value in blue channel.";
-      EXPECT_TRUE(inRange(col.a, 0, 255)) << "Invalid value in alpha channel.";
-    }
+  {
+    sf::Color col = generate_random_color(255, 255, 255, 0.25);
+    EXPECT_TRUE(inRange(col.r, 0, 255)) << "Invalid value in red channel.";
+    EXPECT_TRUE(inRange(col.g, 0, 255)) << "Invalid value in green channel.";
+    EXPECT_TRUE(inRange(col.b, 0, 255)) << "Invalid value in blue channel.";
+    EXPECT_TRUE(inRange(col.a, 0, 255)) << "Invalid value in alpha channel.";
+  }
 }
