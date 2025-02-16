@@ -7,6 +7,8 @@
 
 #include "ConstraintTable.h"
 
+#include <limits.h>
+
 ConstraintTable::ConstraintTable(std::shared_ptr<Instance> instance) : instance(instance){};
 
 
@@ -91,10 +93,123 @@ void ConstraintTable::remove_constraints(const TimePointPath& path)
   for (auto const& constraint : path) remove_constraint(constraint);
 }
 
-TimeInterval ConstraintTable::get_safe_interval(const Point2d& position, const int time)
+TimeInterval ConstraintTable::get_first_safe_interval(const Point2d& position)
 {
+  // check the position is valid
+  assertm(instance->get_map_data().is_in(timepoint.position), "Invalid position.");
+
+  // find the index of the position
+  int idx = instance->get_map_data().position_to_index(position);
+
+  // check, that the index is valid
+  assertm(idx >= 0 && idx < instance->get_map_data().width * instance->get_map_data().height, "Invalid index.");
+
+  std::list<TimeInterval>& cur_TI_list = constraints[idx];
+
+  // if there are no constraints, return the whole interval
+  if (cur_TI_list.empty()) return TimeInterval(0, INT_MAX);
+
+  // check that time 0 is not obstructed
+  assertm(cur_TI_list.begin()->t_min > 0, "Location obstructed from time 0.");
+
+  // return the time until first constraint
+  return TimeInterval(0, cur_TI_list.begin()->t_min - 1);
 }
 
-std::vector<TimeInterval> get_safe_intervals(const Point2d& position, const TimeInterval& time_interval)
+TimeInterval ConstraintTable::get_safe_interval(const Point2d& position, const Point2d& from, const int time)
 {
+  // check the position is valid
+  assertm(instance->get_map_data().is_in(timepoint.position), "Invalid position.");
+
+  // find the index of the position
+  int idx = instance->get_map_data().position_to_index(position);
+
+  // check, that the index is valid
+  assertm(idx >= 0 && idx < instance->get_map_data().width * instance->get_map_data().height, "Invalid index.");
+
+  std::list<TimeInterval>& cur_TI_list = constraints[idx];
+
+  // if there are no constraints, return the whole interval
+  if (cur_TI_list.empty()) return TimeInterval(time, INT_MAX);
+
+  // find the closest safe interval
+
+  // in this varaible there will be stored the earliest unobstructed time after 'time'
+  int earliest_unobstructed_time = time;
+
+  for (auto it = cur_TI_list.cbegin(); it != cur_TI_list.cend(); it++)
+  {
+    // there is no constraint in the requested time
+    if (it->t_min > earliest_unobstructed_time)
+    {
+      return TimeInterval(earliest_unobstructed_time, it->t_min - 1);
+    }
+
+    // there is a constraint, increase the earliest unobstructed time estimate
+    if (it->t_max >= earliest_unobstructed_time)
+    {
+      earliest_unobstructed_time = it->t_max + 1;
+    }
+  }
+  // TODO incorporate also edge obstacles to this
+
+  // if there is no constraint after time, return the whole interval
+  return TimeInterval(earliest_unobstructed_time, INT_MAX);
+}
+
+std::vector<TimeInterval> ConstraintTable::get_safe_intervals(const Point2d& position, const Point2d& from,
+                                                              const TimeInterval& time_interval)
+{
+  // check the position is valid
+  assertm(instance->get_map_data().is_in(timepoint.position), "Invalid position.");
+
+  // find the index of the position
+  int idx = instance->get_map_data().position_to_index(position);
+
+  // check, that the index is valid
+  assertm(idx >= 0 && idx < instance->get_map_data().width * instance->get_map_data().height, "Invalid index.");
+
+  std::list<TimeInterval>& cur_TI_list = constraints[idx];
+
+  // if there are no constraints, return the whole interval
+  if (cur_TI_list.empty()) return {TimeInterval(time_interval.t_min, INT_MAX)};
+
+  // find the closest safe interval
+
+  // in this varaible there will be stored the earliest unobstructed time after 'time'
+  int earliest_unobstructed_time = time_interval.t_min;
+
+  // in this vector, the possible safe intervals will be stored
+  std::vector<TimeInterval> intervals;
+
+  for (auto it = cur_TI_list.cbegin(); it != cur_TI_list.cend(); it++)
+  {
+    // there is some time between earliest unobstracted and next obstacle
+    if (it->t_min > earliest_unobstructed_time)
+    {
+      // add the interval to the safe intervals
+      intervals.emplace_back(earliest_unobstructed_time, it->t_min - 1);
+
+      // check whether there might be any remaining safe interval in the given time interval
+      if (it->t_max + 1 > time_interval.t_max) return intervals;
+
+      // shift the earliest unobstructed time and continue with the next interval
+      earliest_unobstructed_time = it->t_max + 1;
+      continue;
+    }
+
+    // there is a constraint, increase the earliest unobstructed time estimate
+    if (it->t_max >= earliest_unobstructed_time)
+    {
+      earliest_unobstructed_time = it->t_max + 1;
+    }
+
+    // check whether there might be any remaining safe interval in the given time interval
+    if (earliest_unobstructed_time > time_interval.t_max) return intervals;
+  }
+  // TODO incorporate also edge obstacles to this
+
+  // if there is no constraint after the time_interval end, add the interval from earliest_unobstructed_time to infinity.
+  intervals.emplace_back(earliest_unobstructed_time, INT_MAX);
+  return intervals;
 }

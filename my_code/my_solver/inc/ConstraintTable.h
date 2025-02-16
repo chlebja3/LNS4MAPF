@@ -21,8 +21,9 @@ public:
   void                      add_constraints(const TimePointPath& path);
   void                      remove_constraint(const TimePoint& timepoint);
   void                      remove_constraints(const TimePointPath& path);
-  TimeInterval              get_safe_interval(const Point2d& position, const int time);
-  std::vector<TimeInterval> get_safe_intervals(const Point2d& position, const TimeInterval& time_interval);
+  TimeInterval              get_first_safe_interval(const Point2d& position);
+  TimeInterval              get_safe_interval(const Point2d& position, const Point2d& from, const int time);
+  std::vector<TimeInterval> get_safe_intervals(const Point2d& position, const Point2d& from, const TimeInterval& time_interval);
 
 private:
   // structure to store the constraints for each position
