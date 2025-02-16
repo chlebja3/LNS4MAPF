@@ -12,6 +12,8 @@
 class SIPP
 {
 public:
+  ConstraintTable constraint_table;
+
   // constructor
   SIPP(const std::shared_ptr<Instance> instance);
   SIPP(const Map& map_data, const ConstraintTable& constraint_table);
@@ -19,9 +21,8 @@ public:
   // destructor
   ~SIPP() = default;
 
-  Path plan(const Point2d& start, const Point2d& goal);
+  TimePointPath plan(const Point2d& start, const Point2d& goal);
 
 private:
-  const Map&      map_data;
-  ConstraintTable constraint_table;
+  const Map& map_data;
 };

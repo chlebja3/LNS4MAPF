@@ -67,16 +67,16 @@ namespace sipp
 typedef std::priority_queue<std::shared_ptr<SIPPNode>, std::vector<std::shared_ptr<SIPPNode>>, SIPPNode::compare_node_ptrs> PriorityQueue;
 typedef std::unordered_set<TimePoint, TimePoint::hash_time_point>                                                           UnorderedSet;
 
-Path extract_path(const std::shared_ptr<SIPPNode>& final_node);
+TimePointPath extract_path(const std::shared_ptr<SIPPNode>& final_node);
 }  // namespace sipp
 
-Path SIPP::plan(const Point2d& start, const Point2d& goal)
+TimePointPath SIPP::plan(const Point2d& start, const Point2d& goal)
 {
   // check whether start and goal inside the map
-  if (!map_data.is_in(start) || !map_data.is_in(goal)) return Path();
+  if (!map_data.is_in(start) || !map_data.is_in(goal)) return TimePointPath();
 
   // check whether start and goal not obstructed
-  if (map_data.index(start) == 1 || map_data.index(goal) == 1) return Path();
+  if (map_data.index(start) == 1 || map_data.index(goal) == 1) return TimePointPath();
 
   // create openlist
   sipp::PriorityQueue open_list;
@@ -141,17 +141,16 @@ Path SIPP::plan(const Point2d& start, const Point2d& goal)
       }
     }
   }
-  return Path();
+  return TimePointPath();
 }
 
-Path sipp::extract_path(const std::shared_ptr<SIPPNode>& final_node)
+TimePointPath sipp::extract_path(const std::shared_ptr<SIPPNode>& final_node)
 {
-  Path                      path;
+  TimePointPath             path;
   std::shared_ptr<SIPPNode> curr = final_node;
   while (curr != nullptr)
   {
-    // TODO push as many times as the interval length
-    path.push_back(curr->time_point.position);
+    path.push_back(curr->time_point);
     curr = curr->parent;
   }
   std::reverse(path.begin(), path.end());

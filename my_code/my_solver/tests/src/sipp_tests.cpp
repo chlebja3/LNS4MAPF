@@ -10,9 +10,12 @@
 
 #include "ConstraintTable.h"
 #include "Instance.h"
+#include "SIPP.h"
 #include "test_utils.h"
 
-// Constraint Table tests
+/**
+ * @brief Class for testing the ConstraintTable class
+ */
 class ConstraintTableTest : public ::testing::Test
 {
 protected:
@@ -36,6 +39,7 @@ protected:
   }
 };
 
+// Constraint Table tests
 // Test 1: Adding a single constraint and checking if it is stored correctly
 TEST_F(ConstraintTableTest, SingleConstraint)
 {
@@ -171,3 +175,185 @@ TEST_F(ConstraintTableTest, AddPathConstraints)
   EXPECT_EQ(safe_intervals[1], TimeInterval(10, INT_MAX));
 }
 
+// SIPP tests
+
+// **Test 1: Basic pathfinding in an empty map**
+TEST(SIPPTest, BasicPathEmptyMap)
+{
+  // load instance
+  std::string               base_path = get_base_path_tests();  // path to my_solver
+  std::shared_ptr<Instance> instance =
+      std::make_shared<Instance>(base_path + "/tests/test_maps/empty_5_5.map", base_path + "/tests/test_scen/empty_5_5_scen_1.scen", 1);
+
+  // create SIPP
+  SIPP sipp(instance);
+
+  // from (0,0) to (4,4)
+  Point2d       start = instance->get_start_positions()[0];
+  Point2d       goal  = instance->get_goal_positions()[0];
+  TimePointPath path  = sipp.plan(start, goal);
+
+  ASSERT_EQ(path.size(), 9) << "SIPP failed to find a basic path!";
+  EXPECT_EQ(path.front().position, start) << "Path does not start at the correct point!";
+  EXPECT_EQ(path.back().position, goal) << "Path does not end at the correct point!";
+}
+
+// **Test 2: Pathfinding with static obstacles**
+TEST(SIPPTest, StaticObstacleAvoidance)
+{
+  // load instance
+  std::string               base_path = get_base_path_tests();  // path to my_solver
+  std::shared_ptr<Instance> instance =
+      std::make_shared<Instance>(base_path + "/tests/test_maps/wall_5_5.map", base_path + "/tests/test_scen/wall_5_5_scen_1.scen", 1);
+
+  // create SIPP
+  SIPP sipp(instance);
+
+  // from (4,0) to (0,4)
+  Point2d       start = instance->get_start_positions()[0];
+  Point2d       goal  = instance->get_goal_positions()[0];
+  TimePointPath path  = sipp.plan(start, goal);
+
+  // check that the path size is correct
+  ASSERT_EQ(path.size(), 9) << "SIPP failed to find a path around obstacles!";
+
+  // check that the path starts and end at the correct points
+  EXPECT_EQ(path.front().position, start) << "Path does not start at the correct point!";
+  EXPECT_EQ(path.back().position, goal) << "Path does not end at the correct point!";
+
+  // check that no obstacles are in the path
+  for (const auto& tp : path)
+  {
+    EXPECT_TRUE(instance->get_map_data().index(tp.position) == 0) << "Path goes through an obstacle!";
+  }
+}
+
+// **Test 3: Handling of time constraints (SIPP-specific test)**
+TEST(SIPPTest, TimeConstraintHandling)
+{
+  // load instance
+  std::string               base_path = get_base_path_tests();  // path to my_solver
+  std::shared_ptr<Instance> instance =
+      std::make_shared<Instance>(base_path + "/tests/test_maps/empty_5_5.map", base_path + "/tests/test_scen/empty_5_5_scen_1.scen", 1);
+
+  // create SIPP
+  SIPP sipp(instance);
+
+  // from (0,0) to (4,4)
+  Point2d start = instance->get_start_positions()[0];
+  Point2d goal  = instance->get_goal_positions()[0];
+
+  TimePointPath path = sipp.plan(start, goal);
+
+  // Create a wall from time constraints
+  for (int i = 0; i < 5; i++)
+  {
+    if (i == 2) continue;  // passage through (2,2)
+    sipp.constraint_table.add_constraint(TimePoint({i, 2}, {0, 20}));
+  }
+
+  ASSERT_EQ(path.size(), 9) << "Path length invalid!";
+
+  // check that the path does not go through the blocked area
+  for (const auto& tp : path)
+  {
+    if (tp.position.y == 2)
+    {
+      EXPECT_TRUE(tp.position.x == 2) << "Path goes through a blocked area!";
+    }
+  }
+
+  // check the completion time of the path
+  EXPECT_EQ(path.back().interval.t_min, 9) << "Path does not complete in the expected time!";
+}
+
+// **Test 4: Start and goal are the same (Trivial case)**
+TEST(SIPPTest, TrivialStartGoal)
+{
+  // load instance
+  std::string               base_path = get_base_path_tests();  // path to my_solver
+  std::shared_ptr<Instance> instance =
+      std::make_shared<Instance>(base_path + "/tests/test_maps/empty_5_5.map", base_path + "/tests/test_scen/empty_5_5_scen_1.scen", 1);
+
+  // create SIPP
+  SIPP sipp(instance);
+
+  Point2d start = Point2d(0, 0);
+
+  TimePointPath path = sipp.plan(start, start);
+
+  ASSERT_EQ(path.size(), 1) << "SIPP should return a single-point path!";
+  EXPECT_EQ(path.front().position, start) << "Path should start and end at the same point!";
+}
+
+// **Test 5: No possible path due to obstacles**
+TEST(SIPPTest, NoPathPossible)
+{
+  // load instance
+  std::string               base_path = get_base_path_tests();  // path to my_solver
+  std::shared_ptr<Instance> instance =
+      std::make_shared<Instance>(base_path + "/tests/test_maps/biparted_5_5.map", base_path + "/tests/test_scen/empty_5_5_scen_1.scen", 1);
+
+  // create SIPP
+  SIPP sipp(instance);
+
+  // from (0,0) to (4,4)
+  Point2d start = instance->get_start_positions()[0];
+  Point2d goal  = instance->get_goal_positions()[0];
+
+  TimePointPath path = sipp.plan(start, goal);
+
+  ASSERT_TRUE(path.empty()) << "SIPP should return an empty path when no path exists!";
+}
+
+// **Test 6: No path due to time constraints**
+TEST(SIPPTest, NoPathDueToTimeConstraints)
+{
+  // load instance
+  std::string               base_path = get_base_path_tests();  // path to my_solver
+  std::shared_ptr<Instance> instance =
+      std::make_shared<Instance>(base_path + "/tests/test_maps/empty_5_5.map", base_path + "/tests/test_scen/empty_5_5_scen_1.scen", 1);
+
+  // create SIPP
+  SIPP sipp(instance);
+
+  // from (0,0) to (4,4)
+  Point2d start = instance->get_start_positions()[0];
+  Point2d goal  = instance->get_goal_positions()[0];
+
+  // Add constraints that make it impossible to leave start until time 10
+  sipp.constraint_table.add_constraint(TimePoint({1, 0}, {0, 10}));
+  sipp.constraint_table.add_constraint(TimePoint({0, 1}, {0, 10}));
+
+  // add constraints that make it impossible to reach the goal from time 10 to 20
+  sipp.constraint_table.add_constraint(TimePoint({3, 4}, {10, 20}));
+  sipp.constraint_table.add_constraint(TimePoint({4, 3}, {10, 20}));
+
+  // plan path
+  TimePointPath path = sipp.plan(start, goal);
+
+  // check that path was found
+  ASSERT_FALSE(path.empty()) << "SIPP returned no path!";
+
+  // check that the path does not leave the start until time 10
+  for (const auto& tp : path)
+  {
+    if (tp.position == Point2d(1, 0) || tp.position == Point2d(0, 1))
+    {
+      EXPECT_TRUE(tp.interval.t_min > 10) << "Path leaves start before time 10!";
+    }
+  }
+
+  // check that the path does not reach the goal before time 21
+  for (const auto& tp : path)
+  {
+    if (tp.position == goal)
+    {
+      EXPECT_TRUE(tp.interval.t_min > 20) << "Path reaches goal before or at time 20!";
+    }
+  }
+}
+
+// TODO test that SIPP plans the same path as A* when no constraints are present
+
+// TODO test that SIPP takes into account the edge constraints
