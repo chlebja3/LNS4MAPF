@@ -6,6 +6,7 @@
  */
 
 #pragma once
+#include <iostream>
 #include <list>
 #include <memory>
 #include <vector>
@@ -17,6 +18,10 @@ class ConstraintTable
 {
 public:
   ConstraintTable(std::shared_ptr<Instance> instance);
+  ~ConstraintTable()
+  {
+    std::cout << "Calling destructor of CT. " << std::endl;
+  };
   void                      add_constraint(const TimePoint& timepoint);
   void                      add_constraints(const TimePointPath& path);
   void                      remove_constraint(const TimePoint& timepoint);

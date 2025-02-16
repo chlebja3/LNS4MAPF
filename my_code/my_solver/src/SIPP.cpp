@@ -15,7 +15,7 @@
 #include <unordered_set>
 
 #include "utils.h"
-
+SIPP::SIPP(const std::shared_ptr<Instance> instance) : map_data(instance->get_map_data()), constraint_table(ConstraintTable(instance)){};
 SIPP::SIPP(const Map& map_data, const ConstraintTable& constraint_table) : map_data(map_data), constraint_table(constraint_table){};
 
 
@@ -85,7 +85,7 @@ Path SIPP::plan(const Point2d& start, const Point2d& goal)
   double h = std::hypot(goal.x - start.x, goal.y - start.y);
 
   // retrieve the first safe interval
-  TimeInterval time_interval_start = constraint_table.get_safe_interval(start, 0);
+  TimeInterval time_interval_start = constraint_table.get_first_safe_interval(start);
 
   // create the start node
   open_list.push(std::make_shared<SIPPNode>(start, time_interval_start, 0, h, nullptr));
@@ -122,7 +122,8 @@ Path SIPP::plan(const Point2d& start, const Point2d& goal)
       double h = std::hypot(goal.x - neighbor.x, goal.y - neighbor.y);
 
       // retrieve the safe intervals for the neighbor
-      std::vector<TimeInterval> time_intervals = constraint_table.get_safe_intervals(neighbor, current->time_point.interval + 1);
+      std::vector<TimeInterval> time_intervals =
+          constraint_table.get_safe_intervals(neighbor, current->time_point.position, current->time_point.interval + 1);
 
       for (const TimeInterval& interval : time_intervals)
       {

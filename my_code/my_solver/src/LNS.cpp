@@ -10,10 +10,12 @@
 #include <numeric>
 #include <random>
 
+#include "SIPP.h"
+
 LNS::LNS(std::shared_ptr<Instance> instance) : Solver("LNS", instance)
 {
   // SIPP's lifetime can not be longer than LNS's lifetime, because then map_data might be deleted before SIPP
-  planner = std::make_unique<SIPP>(instance->get_map_data());
+  planner = std::make_unique<SIPP>(instance);
 };
 
 void LNS::solve()

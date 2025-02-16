@@ -13,6 +13,7 @@ class SIPP
 {
 public:
   // constructor
+  SIPP(const std::shared_ptr<Instance> instance);
   SIPP(const Map& map_data, const ConstraintTable& constraint_table);
 
   // destructor

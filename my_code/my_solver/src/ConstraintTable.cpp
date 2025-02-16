@@ -9,11 +9,17 @@
 
 #include <limits.h>
 
-ConstraintTable::ConstraintTable(std::shared_ptr<Instance> instance) : instance(instance){};
+#include <iostream>
+
+ConstraintTable::ConstraintTable(std::shared_ptr<Instance> instance) : instance(instance)
+{
+  std::cout << "Initialized Constraint table." << std::endl;
+};
 
 
 void ConstraintTable::add_constraint(const TimePoint& timepoint)
 {
+  std::cout << "Trying to add a constraint.";
   // check the position is valid
   assertm(instance->get_map_data().is_in(timepoint.position), "Invalid position.");
 
@@ -42,7 +48,7 @@ void ConstraintTable::add_constraint(const TimePoint& timepoint)
       if (it->t_min > timepoint.interval.t_min)
       {
         // check that there is no overlap
-        assertm(timepoint.interval.t_max < it->t_min, "Cannot add overlapping constraints");
+        assertm(timepoint.interval.t_max < it->t_min, "Cannot add overlapping constraints.");
         cur_TI_list.insert(it, timepoint.interval);
         inserted = true;
         break;
@@ -96,7 +102,7 @@ void ConstraintTable::remove_constraints(const TimePointPath& path)
 TimeInterval ConstraintTable::get_first_safe_interval(const Point2d& position)
 {
   // check the position is valid
-  assertm(instance->get_map_data().is_in(timepoint.position), "Invalid position.");
+  assertm(instance->get_map_data().is_in(position), "Invalid position.");
 
   // find the index of the position
   int idx = instance->get_map_data().position_to_index(position);
@@ -119,7 +125,7 @@ TimeInterval ConstraintTable::get_first_safe_interval(const Point2d& position)
 TimeInterval ConstraintTable::get_safe_interval(const Point2d& position, const Point2d& from, const int time)
 {
   // check the position is valid
-  assertm(instance->get_map_data().is_in(timepoint.position), "Invalid position.");
+  assertm(instance->get_map_data().is_in(position), "Invalid position.");
 
   // find the index of the position
   int idx = instance->get_map_data().position_to_index(position);
@@ -161,7 +167,7 @@ std::vector<TimeInterval> ConstraintTable::get_safe_intervals(const Point2d& pos
                                                               const TimeInterval& time_interval)
 {
   // check the position is valid
-  assertm(instance->get_map_data().is_in(timepoint.position), "Invalid position.");
+  assertm(instance->get_map_data().is_in(position), "Invalid position.");
 
   // find the index of the position
   int idx = instance->get_map_data().position_to_index(position);
