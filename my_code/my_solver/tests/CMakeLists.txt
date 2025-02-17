@@ -2,7 +2,7 @@ set(CMAKE_PREFIX_PATH "/usr/local")
 include(FetchContent)
 
 # Find GoogleTest
-find_package(GTest QUIET)
+find_package(GTest)
 # fetch google test if not installed globally
 if (NOT GTest_FOUND)
   message(STATUS "Could not find googletest, fetching.")
@@ -11,11 +11,11 @@ if (NOT GTest_FOUND)
     GIT_REPOSITORY https://github.com/google/googletest.git
     GIT_TAG v1.15.2 # latest release
     )
-FetchContent_MakeAvailable(googletest)
+    FetchContent_MakeAvailable(GTest)
 endif()
 
 # Find GoogleBenchmark
-find_package(benchmark QUIET)
+find_package(benchmark)
 if (NOT benchmark_FOUND)
 message(STATUS "Could not find google benchmark, fetching.")
 FetchContent_Declare(
@@ -37,7 +37,7 @@ add_executable(unit_tests ${SOURCES})
 include_directories("inc")
 
 # Link GoogleTest and the MAPF library
-target_link_libraries(unit_tests PRIVATE MAPF_lib GTest::GTest GTest::Main gmock)
+target_link_libraries(unit_tests PRIVATE MAPF_lib GTest::gtest_main gmock)
 
 # Create a benchmark tests
 add_executable(benchmark_tests src/benchmark_tests.cpp src/test_utils.cpp)
