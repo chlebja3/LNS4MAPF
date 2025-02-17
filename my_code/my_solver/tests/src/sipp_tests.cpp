@@ -184,11 +184,22 @@ TEST_F(ConstraintTableTest, AddPathConstraints)
   EXPECT_EQ(safe_intervals[1], TimeInterval(9, INT_MAX));
 
   // test second edge conflict
-  safe_intervals = table->get_safe_intervals({1, 1}, {1, 2}, {5, 10});
-  EXPECT_EQ(safe_intervals.size(), 2) << "Expected two safe intervals.";
+  safe_intervals = table->get_safe_intervals({1, 1}, {1, 2}, {5, 9});
+  EXPECT_EQ(safe_intervals.size(), 1) << "Expected only one safe interval.";
   EXPECT_EQ(safe_intervals[0], TimeInterval(5, 5));
-  EXPECT_EQ(safe_intervals[1], TimeInterval(10, INT_MAX));
 }
+
+// check assert death when the safe interval of from position is not right, because, there will be an edge conflict
+TEST_F(ConstraintTableTest, WrongSafeIntervalFromPosition)
+{
+  std::vector<TimePoint> path1 = {TimePoint({1, 1}, {0, 1}), TimePoint({1, 2}, {2, 4})};
+  table->add_constraints(path1);
+
+  // expect assert death
+  ASSERT_DEATH(table->get_safe_intervals({1, 1}, {1, 2}, {0, 3}), "Invalid time interval, the from position will be in edge collision.");
+}
+
+// TODO test that wrong safe interval and edge conflicts are resolved correctly also when there are more constraints in the list
 
 // SIPP tests
 

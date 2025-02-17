@@ -9,10 +9,28 @@
 #include <iostream>
 #include <list>
 #include <memory>
+#include <unordered_set>
 #include <vector>
 
 #include "Instance.h"
 #include "utils.h"
+
+class EdgeCollision
+{
+public:
+  Point2d from;
+  Point2d to;
+  int     t;
+
+  EdgeCollision(const Point2d& from, const Point2d& to, const int t);
+
+  bool operator==(const EdgeCollision& other) const;
+
+  struct hash_edge_collision
+  {
+    size_t operator()(const EdgeCollision& c) const;
+  };
+};
 
 class ConstraintTable
 {
@@ -29,7 +47,7 @@ public:
   int                       get_last_constraint_end(void);
 
 private:
-  // structure to store the constraints for each position
-  std::vector<std::list<TimeInterval>> constraints;
-  std::shared_ptr<Instance>            instance;
+  std::vector<std::list<TimeInterval>>                                  constraints;       // constraints for each position
+  std::unordered_set<EdgeCollision, EdgeCollision::hash_edge_collision> edge_constraints;  // constraints for edges
+  std::shared_ptr<Instance>                                             instance;
 };
