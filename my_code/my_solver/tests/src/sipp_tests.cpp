@@ -354,6 +354,90 @@ TEST(SIPPTest, NoPathDueToTimeConstraints)
   }
 }
 
+// **Test 7: Start outside of the map**
+TEST(SIPPTest, StartOutsideMap)
+{
+  // load instance
+  std::string               base_path = get_base_path_tests();  // path to my_solver
+  std::shared_ptr<Instance> instance =
+      std::make_shared<Instance>(base_path + "/tests/test_maps/empty_3_3.map", base_path + "/tests/test_scen/dummy_3_3_scen_1.scen", 1);
+
+  // create SIPP
+  SIPP sipp(instance);
+
+  Point2d start = Point2d(3, 1);
+  Point2d goal  = instance->get_goal_positions()[0];
+
+  TimePointPath path = sipp.plan(start, goal);
+
+  ASSERT_TRUE(path.empty()) << "SIPP should return an empty path when start is outside the map!";
+}
+
+// **Test 8: Goal outside of the map**
+TEST(SIPPTest, GoalOutsideMap)
+{
+  // load instance
+  std::string               base_path = get_base_path_tests();  // path to my_solver
+  std::shared_ptr<Instance> instance =
+      std::make_shared<Instance>(base_path + "/tests/test_maps/empty_3_3.map", base_path + "/tests/test_scen/dummy_3_3_scen_1.scen", 1);
+
+  // create SIPP
+  SIPP sipp(instance);
+
+  Point2d start = instance->get_start_positions()[0];
+  Point2d goal  = Point2d(-1, 0);
+
+  TimePointPath path = sipp.plan(start, goal);
+
+  ASSERT_TRUE(path.empty()) << "SIPP should return an empty path when goal is outside the map!";
+}
+
+// **Test 9: static obstacle at the goal**
+TEST(SIPPTest, StaticObstacleAtGoal)
+{
+  // load instance
+  std::string               base_path = get_base_path_tests();  // path to my_solver
+  std::shared_ptr<Instance> instance =
+      std::make_shared<Instance>(base_path + "/tests/test_maps/wall_5_5.map", base_path + "/tests/test_scen/wall_5_5_scen_1.scen", 1);
+
+  // create SIPP
+  SIPP sipp(instance);
+
+  Point2d start = Point2d(1, 2);
+  Point2d goal  = Point2d(2, 1);
+
+  TimePointPath path = sipp.plan(start, goal);
+
+  ASSERT_TRUE(path.empty()) << "SIPP should return an empty path when goal is blocked!";
+}
+
+// **Test 10: dynamic obstacle at the goal after time of possible arrival**
+TEST(SIPPTest, DynamicObstacleAtGoal)
+{
+  // load instance
+  std::string               base_path = get_base_path_tests();  // path to my_solver
+  std::shared_ptr<Instance> instance =
+      std::make_shared<Instance>(base_path + "/tests/test_maps/empty_5_5.map", base_path + "/tests/test_scen/empty_5_5_scen_1.scen", 1);
+
+  // create SIPP
+  SIPP sipp(instance);
+
+  // from (0,0) to (4,4)
+  Point2d start = instance->get_start_positions()[0];
+  Point2d goal  = instance->get_goal_positions()[0];
+
+  // add a constraint that blocks the goal after time 20
+  sipp.constraint_table.add_constraint(TimePoint(goal, {20, 30}));
+
+  TimePointPath path = sipp.plan(start, goal);
+
+  // the path should be found
+  ASSERT_FALSE(path.empty()) << "SIPP should find a path when the goal is blocked after possible arrival time!";
+
+  // check that the path reaches the goal at time 31
+  EXPECT_EQ(path.back().interval.t_min, 31) << "Path does not reach the goal at the expected time!";
+}
+
 // TODO test that SIPP plans the same path as A* when no constraints are present
 
 // TODO test that SIPP takes into account the edge constraints
