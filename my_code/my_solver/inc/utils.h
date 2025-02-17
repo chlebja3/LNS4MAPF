@@ -124,7 +124,6 @@ public:
   bool operator==(const TimePoint& other) const;
 };
 
-typedef std::vector<TimePoint> TimePointPath;
 
 class Map
 {
@@ -150,7 +149,10 @@ public:
 };
 
 // define a path as a vectors of (int, int) tuples
-typedef std::vector<Point2d> Path;
+typedef std::vector<Point2d>   Path;
+typedef std::vector<TimePoint> TimePointPath;
+
+Path timepointpath_to_path(const TimePointPath& path);
 
 /**
  * @brief Generate a random color. To make the color palette look more visually pleasing, the random color is mixed with (mix_r, mix_g,

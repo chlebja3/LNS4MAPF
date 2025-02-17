@@ -138,6 +138,20 @@ std::vector<Point2d> Map::find_neighbors(const Point2d& point) const
   return ret;
 }
 
+
+Path timepointpath_to_path(const TimePointPath& tp_path)
+{
+  Path path;
+  for (const TimePoint& tp : tp_path)
+  {
+    // calculate how many copies to insert
+    int N = tp.interval.t_max - tp.interval.t_min + 1;
+    // insert N copies to the end of the vector
+    path.resize(path.size() + N, tp.position);
+  }
+  return path;
+}
+
 // based on https://stackoverflow.com/questions/43044/algorithm-to-randomly-generate-an-aesthetically-pleasing-color-palette
 sf::Color generate_random_color(const int mix_r, const int mix_g, const int mix_b, const double mix_ratio)
 {
