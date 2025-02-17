@@ -453,6 +453,35 @@ TEST(SIPPTest, DynamicObstacleAtGoal)
   EXPECT_EQ(path.back().interval.t_min, 31) << "Path does not reach the goal at the expected time!";
 }
 
+// test that SIPP takes into account the edge constraints
+// **Test 11: Edge constraints at the goal
+TEST(SIPPTest, EdgeConstraintsAtGoal)
+{
+  // load instance
+  std::string               base_path = get_base_path_tests();  // path to my_solver
+  std::shared_ptr<Instance> instance =
+      std::make_shared<Instance>(base_path + "/tests/test_maps/dummy_3_3.map", base_path + "/tests/test_scen/dummy_3_3_scen_2.scen", 1);
+
+  // create SIPP
+  SIPP sipp(instance);
+
+  // from (2, 0) to (2, 1)
+  Point2d start = instance->get_start_positions()[0];
+  Point2d goal  = instance->get_goal_positions()[0];
+
+  // add edge constraints at the goal so that the agent has to go around
+  sipp.constraint_table.add_constraints({TimePoint({2, 1}, {0, 0}), TimePoint({2, 0}, {1, 1})});
+
+  TimePointPath path = sipp.plan(start, goal);
+
+  // check that the path has the right length
+  ASSERT_EQ(path.size(), 8) << "SIPP should find a path.";
+
+  // check that the path is correct
+  EXPECT_EQ(path,
+            TimePointPath({TimePoint({2, 0}, {0, 0}), TimePoint({1, 0}, {1, 1}), TimePoint({0, 0}, {2, 2}), TimePoint({0, 1}, {3, 3}),
+                           TimePoint({0, 2}, {4, 4}), TimePoint({1, 2}, {5, 5}), TimePoint({2, 2}, {6, 6}), TimePoint({2, 1}, {7, 7})}));
+}
+
 // TODO test that SIPP plans the same path as A* when no constraints are present
 
-// TODO test that SIPP takes into account the edge constraints
