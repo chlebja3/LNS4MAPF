@@ -189,8 +189,8 @@ TEST_F(ConstraintTableTest, AddPathConstraints)
   EXPECT_EQ(safe_intervals[0], TimeInterval(5, 5));
 }
 
-// check assert death when the safe interval of from position is not right, because, there will be an edge conflict
-TEST_F(ConstraintTableTest, WrongSafeIntervalFromPosition)
+// Test 10: check assert death when the safe interval, because, there will be an edge conflict
+TEST_F(ConstraintTableTest, WrongSafeInterval)
 {
   std::vector<TimePoint> path1 = {TimePoint({1, 1}, {0, 1}), TimePoint({1, 2}, {2, 4})};
   table->add_constraints(path1);
@@ -199,7 +199,28 @@ TEST_F(ConstraintTableTest, WrongSafeIntervalFromPosition)
   ASSERT_DEATH(table->get_safe_intervals({1, 1}, {1, 2}, {0, 3}), "Invalid time interval, the from position will be in edge collision.");
 }
 
-// TODO test that wrong safe interval and edge conflicts are resolved correctly also when there are more constraints in the list
+// Test 11: check assert death when the safe interval of to position is not right and there are more constraints in the list
+TEST_F(ConstraintTableTest, WrongSafeIntervalMoreConstraints)
+{
+  std::vector<TimePoint> path1 = {TimePoint({1, 1}, {0, 1}), TimePoint({1, 2}, {2, 4}), TimePoint({1, 1}, {5, 6}),
+                                  TimePoint({1, 2}, {7, 8}), TimePoint({1, 1}, {9, 10})};
+  table->add_constraints(path1);
+
+  // expect assert death
+  ASSERT_DEATH(table->get_safe_intervals({1, 1}, {1, 2}, {0, 3}), "Invalid time interval, the from position will be in edge collision.");
+}
+
+// Test 12 check that the edge conflict is resolved correctly when there are more constraints in the list
+TEST_F(ConstraintTableTest, EdgeConflictMoreConstraints)
+{
+  std::vector<TimePoint> path1 = {TimePoint({1, 1}, {0, 1}), TimePoint({1, 2}, {2, 4}), TimePoint({1, 1}, {5, 6}),
+                                  TimePoint({1, 2}, {7, 8}), TimePoint({1, 1}, {9, 10})};
+  table->add_constraints(path1);
+
+  // test going to 1, 1 from a position with edge conflict in time 0 - 2
+  std::vector<TimeInterval> safe_intervals = table->get_safe_intervals({1, 1}, {1, 2}, {0, 2});
+  EXPECT_EQ(safe_intervals.size(), 0) << "Expected no safe intervals due to edge conflict.";
+}
 
 // SIPP tests
 
@@ -481,7 +502,10 @@ TEST(SIPPTest, EdgeConstraintsAtGoal)
   Point2d goal  = instance->get_goal_positions()[0];
 
   // add edge constraints at the goal so that the agent has to go around
-  sipp.constraint_table.add_constraints({TimePoint({2, 1}, {0, 0}), TimePoint({2, 0}, {1, 1})});
+  sipp.constraint_table.add_constraints({TimePoint({2, 1}, {0, 0}), TimePoint({2, 0}, {1, 1}), TimePoint({1, 0}, {2, 2}),
+                                         TimePoint({0, 0}, {3, 3}), TimePoint({0, 1}, {4, 4}), TimePoint({0, 2}, {5, 5}),
+                                         TimePoint({1, 2}, {6, 6}), TimePoint({2, 2}, {7, 7})});
+
 
   TimePointPath path = sipp.plan(start, goal);
 
@@ -489,9 +513,9 @@ TEST(SIPPTest, EdgeConstraintsAtGoal)
   ASSERT_EQ(path.size(), 8) << "SIPP should find a path.";
 
   // check that the path is correct
-  EXPECT_EQ(path,
-            TimePointPath({TimePoint({2, 0}, {0, 0}), TimePoint({1, 0}, {1, 1}), TimePoint({0, 0}, {2, 2}), TimePoint({0, 1}, {3, 3}),
-                           TimePoint({0, 2}, {4, 4}), TimePoint({1, 2}, {5, 5}), TimePoint({2, 2}, {6, 6}), TimePoint({2, 1}, {7, 7})}));
+  EXPECT_EQ(path, TimePointPath({TimePoint({2, 0}, {0, 0}), TimePoint({1, 0}, {1, 1}), TimePoint({0, 0}, {2, 2}), TimePoint({0, 1}, {3, 3}),
+                                 TimePoint({0, 2}, {4, 4}), TimePoint({1, 2}, {5, 5}), TimePoint({2, 2}, {6, 6}),
+                                 TimePoint({2, 1}, {7, INT_MAX})}));
 }
 
 // TODO test that SIPP plans the same path as A* when no constraints are present
