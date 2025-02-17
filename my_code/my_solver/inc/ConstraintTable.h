@@ -26,6 +26,7 @@ public:
   TimeInterval              get_first_safe_interval(const Point2d& position);
   TimeInterval              get_safe_interval(const Point2d& position, const Point2d& from, const int time);
   std::vector<TimeInterval> get_safe_intervals(const Point2d& position, const Point2d& from, const TimeInterval& time_interval);
+  int                       get_last_constraint_end(void);
 
 private:
   // structure to store the constraints for each position

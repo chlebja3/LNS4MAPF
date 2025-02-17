@@ -8,6 +8,7 @@
 
 #include "SIPP.h"
 
+#include <limits.h>
 #include <math.h>
 
 #include <memory>
@@ -15,6 +16,7 @@
 #include <unordered_set>
 
 #include "utils.h"
+
 SIPP::SIPP(const std::shared_ptr<Instance> instance) : map_data(instance->get_map_data()), constraint_table(ConstraintTable(instance)){};
 SIPP::SIPP(const Map& map_data, const ConstraintTable& constraint_table) : map_data(map_data), constraint_table(constraint_table){};
 
@@ -78,6 +80,11 @@ TimePointPath SIPP::plan(const Point2d& start, const Point2d& goal)
   // check whether start and goal not obstructed
   if (map_data.index(start) == 1 || map_data.index(goal) == 1) return TimePointPath();
 
+  // estimate the maximum time the goal can be reached (after all dynamic constraints disappear, the path can be maximally width*height
+  // long)
+  int max_time = constraint_table.get_last_constraint_end() + map_data.height * map_data.width;
+  // std::cout << "Max time: " << max_time << std::endl;
+
   // create openlist
   sipp::PriorityQueue open_list;
 
@@ -100,13 +107,16 @@ TimePointPath SIPP::plan(const Point2d& start, const Point2d& goal)
     std::shared_ptr<SIPPNode> current = std::move(open_list.top());
     open_list.pop();
 
+    // std::cout << current->time_point.position << ", " << current->time_point.interval << std::endl;
+
     // check whether node is in known set
     if (known.find(current->time_point) != known.end()) continue;
 
 
-    // check whether goal is reached and that the goal will not be obstructed in future
+    // check whether goal is reached and TODO that the goal will not be obstructed in future
     if (current->time_point.position == goal)
     {
+      // std::cout << "Goal reached." << std::endl;
       // extract the path
       return sipp::extract_path(current);
     }
@@ -118,26 +128,39 @@ TimePointPath SIPP::plan(const Point2d& start, const Point2d& goal)
     std::vector<Point2d> neighbors = map_data.find_neighbors(current->time_point.position);
     for (Point2d& neighbor : neighbors)
     {
+      // std::cout << "Neighbor: " << neighbor << std::endl;
       // calculate the heuristic
       double h = std::hypot(goal.x - neighbor.x, goal.y - neighbor.y);
 
+      // calculate the time interval for the neighbor
+      TimeInterval next_ti = current->time_point.interval;
+      if (next_ti.t_max == INT_MAX)
+        next_ti.t_min += 1;  // increase only t_min, otherwise overflow would happen
+      else
+        next_ti = next_ti + 1;  // increase both t_min and t_max
+
       // retrieve the safe intervals for the neighbor
-      std::vector<TimeInterval> time_intervals =
-          constraint_table.get_safe_intervals(neighbor, current->time_point.position, current->time_point.interval + 1);
+      std::vector<TimeInterval> time_intervals = constraint_table.get_safe_intervals(neighbor, current->time_point.position, next_ti);
 
       for (const TimeInterval& interval : time_intervals)
       {
+        // skip intervals that start later then the maximum time to reach the goal
+        if (interval.t_min > max_time) continue;
+
+        // std::cout << "interval:" << interval << std::endl;
         // if the earliest reachable time of the neighbor is greater than maximum time of the current node + travel time, then the neighbor
         // is not reachable without collision
-        if (interval.t_min > current->time_point.interval.t_max + 1) continue;
+        if (current->time_point.interval.t_max != INT_MAX && interval.t_min > current->time_point.interval.t_max + 1) continue;
 
         TimePoint neighbor_time_point(neighbor, interval);
 
         // check whether known
         if (known.find(neighbor_time_point) != known.end()) continue;
 
+        assertm(neighbor_time_point.interval.t_min > current->time_point.interval.t_min, "Invalid interval.");
+
         // add to the open list
-        open_list.push(std::make_shared<SIPPNode>(neighbor_time_point, current->g + 1, h, current));
+        open_list.push(std::make_shared<SIPPNode>(neighbor_time_point, neighbor_time_point.interval.t_min, h, current));
       }
     }
   }

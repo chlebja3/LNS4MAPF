@@ -97,9 +97,10 @@ public:
 
   TimeInterval(const int t_min, const int t_max);
 
-  bool         operator==(const TimeInterval& other) const;
-  TimeInterval operator+(const int x) const;
-               operator std::string() const;
+  bool                 operator==(const TimeInterval& other) const;
+  TimeInterval         operator+(const int x) const;
+                       operator std::string() const;
+  friend std::ostream& operator<<(std::ostream& os, TimeInterval const& p);
 };
 
 bool overlap(const TimeInterval& i1, const TimeInterval& i2);

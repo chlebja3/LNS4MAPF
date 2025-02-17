@@ -47,6 +47,9 @@ TEST_F(ConstraintTableTest, SingleConstraint)
                                  //
   table->add_constraint(tp);
 
+  // test that the last constraint end is right
+  EXPECT_EQ(table->get_last_constraint_end(), 5);
+
   // test that the first safe interval is right
   TimeInterval first_si = table->get_first_safe_interval({1, 2});
   EXPECT_EQ(first_si, TimeInterval(0, 2));
@@ -75,6 +78,9 @@ TEST_F(ConstraintTableTest, MultipleSingleConstraints)
   table->add_constraint(TimePoint({1, 2}, {6, 7}));
   table->add_constraint(TimePoint({1, 2}, {10, 15}));
 
+  // test that the last constraint end is right
+  EXPECT_EQ(table->get_last_constraint_end(), 15);
+
   std::vector<TimeInterval> safe_intervals = table->get_safe_intervals({1, 2}, {0, 0}, {0, 20});
   ASSERT_EQ(safe_intervals.size(), 3) << "Expected three safe intervals after adding multiple constraints!";
   EXPECT_EQ(safe_intervals[0], TimeInterval(0, 1));
@@ -88,6 +94,9 @@ TEST_F(ConstraintTableTest, RemoveConstraint)
   TimePoint tp({1, 2}, {3, 5});
   table->add_constraint(tp);
   table->remove_constraint(tp);
+
+  // test that the last constraint end is right
+  EXPECT_EQ(table->get_last_constraint_end(), 0);
 
   TimeInterval first_si = table->get_first_safe_interval({1, 2});
   EXPECT_TRUE(first_si.t_min == 0 && first_si.t_max == INT_MAX);
@@ -106,6 +115,9 @@ TEST_F(ConstraintTableTest, DynamicAddRemove)
   table->add_constraint(TimePoint({1, 1}, {2, 4}));
   table->add_constraint(TimePoint({1, 1}, {6, 8}));
   table->remove_constraint(TimePoint({1, 1}, {2, 4}));
+
+  // test that the last constraint end is right
+  EXPECT_EQ(table->get_last_constraint_end(), 8);
 
   std::vector<TimeInterval> safe_intervals = table->get_safe_intervals({1, 1}, {0, 0}, {0, 10});
   ASSERT_EQ(safe_intervals.size(), 2) << "Expected two safe intervals after removal.";
@@ -157,6 +169,9 @@ TEST_F(ConstraintTableTest, AddPathConstraints)
   table->add_constraints(path1);
   std::vector<TimePoint> path2 = {TimePoint({2, 1}, {0, 5}), TimePoint({1, 1}, {6, 8}), TimePoint({1, 2}, {9, 10})};
   table->add_constraints(path2);
+
+  // test that the last constraint end is right
+  EXPECT_EQ(table->get_last_constraint_end(), 10);
 
   // test first edge conflict
   std::vector<TimeInterval> safe_intervals = table->get_safe_intervals({1, 1}, {1, 2}, {0, 3});
@@ -243,14 +258,14 @@ TEST(SIPPTest, TimeConstraintHandling)
   Point2d start = instance->get_start_positions()[0];
   Point2d goal  = instance->get_goal_positions()[0];
 
-  TimePointPath path = sipp.plan(start, goal);
-
   // Create a wall from time constraints
   for (int i = 0; i < 5; i++)
   {
     if (i == 2) continue;  // passage through (2,2)
     sipp.constraint_table.add_constraint(TimePoint({i, 2}, {0, 20}));
   }
+
+  TimePointPath path = sipp.plan(start, goal);
 
   ASSERT_EQ(path.size(), 9) << "Path length invalid!";
 
@@ -259,12 +274,12 @@ TEST(SIPPTest, TimeConstraintHandling)
   {
     if (tp.position.y == 2)
     {
-      EXPECT_TRUE(tp.position.x == 2) << "Path goes through a blocked area!";
+      EXPECT_EQ(tp.position.x, 2) << "Path goes through a blocked area!";
     }
   }
 
   // check the completion time of the path
-  EXPECT_EQ(path.back().interval.t_min, 9) << "Path does not complete in the expected time!";
+  EXPECT_EQ(path.back().interval.t_min, 8) << "Path does not complete in the expected time!";
 }
 
 // **Test 4: Start and goal are the same (Trivial case)**

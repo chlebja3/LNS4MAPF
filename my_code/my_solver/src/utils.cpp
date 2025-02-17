@@ -111,9 +111,16 @@ int Map::position_to_index(const Point2d& p) const
   return p.y * width + p.x;
 }
 
+// functions to print Point2d and TimeInterval
+
 std::ostream& operator<<(std::ostream& os, Point2d const& p)
 {
   return os << "(" << p.x << "," << p.y << ")";
+}
+
+std::ostream& operator<<(std::ostream& os, TimeInterval const& i)
+{
+  return os << "(" << i.t_min << "," << i.t_max << ")";
 }
 
 std::vector<Point2d> Map::find_neighbors(const Point2d& point) const

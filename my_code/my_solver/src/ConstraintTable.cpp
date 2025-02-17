@@ -227,3 +227,13 @@ std::vector<TimeInterval> ConstraintTable::get_safe_intervals(const Point2d& pos
   intervals.emplace_back(earliest_unobstructed_time, INT_MAX);
   return intervals;
 }
+
+int ConstraintTable::get_last_constraint_end(void)
+{
+  int last_constraint_end = 0;
+  for (int i = 0; i < (int)constraints.size(); i++)
+  {
+    if (constraints[i].size() > 0) last_constraint_end = std::max(last_constraint_end, constraints[i].back().t_max);
+  }
+  return last_constraint_end;
+}
