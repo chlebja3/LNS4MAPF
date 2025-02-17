@@ -17,6 +17,8 @@
 
 #include "utils.h"
 
+#define MOVE_TIME 1  // time to move to the next cell
+
 SIPP::SIPP(const std::shared_ptr<Instance> instance) : map_data(instance->get_map_data()), constraint_table(ConstraintTable(instance)){};
 SIPP::SIPP(const Map& map_data, const ConstraintTable& constraint_table) : map_data(map_data), constraint_table(constraint_table){};
 
@@ -68,6 +70,7 @@ namespace sipp
 {
 typedef std::priority_queue<std::shared_ptr<SIPPNode>, std::vector<std::shared_ptr<SIPPNode>>, SIPPNode::compare_node_ptrs> PriorityQueue;
 typedef std::unordered_set<TimePoint, TimePoint::hash_time_point>                                                           UnorderedSet;
+TimeInterval neighbor_time_interval(TimeInterval& i);
 
 TimePointPath extract_path(const std::shared_ptr<SIPPNode>& final_node);
 }  // namespace sipp
@@ -113,10 +116,9 @@ TimePointPath SIPP::plan(const Point2d& start, const Point2d& goal)
     if (known.find(current->time_point) != known.end()) continue;
 
 
-    // check whether goal is reached and TODO that the goal will not be obstructed in future
-    if (current->time_point.position == goal)
+    // check whether goal position is reached and that there will be no more dynamic constraints at the goal location
+    if (current->time_point.position == goal && current->time_point.interval.t_max == INT_MAX)
     {
-      // std::cout << "Goal reached." << std::endl;
       // extract the path
       return sipp::extract_path(current);
     }
@@ -132,15 +134,9 @@ TimePointPath SIPP::plan(const Point2d& start, const Point2d& goal)
       // calculate the heuristic
       double h = std::hypot(goal.x - neighbor.x, goal.y - neighbor.y);
 
-      // calculate the time interval for the neighbor
-      TimeInterval next_ti = current->time_point.interval;
-      if (next_ti.t_max == INT_MAX)
-        next_ti.t_min += 1;  // increase only t_min, otherwise overflow would happen
-      else
-        next_ti = next_ti + 1;  // increase both t_min and t_max
-
       // retrieve the safe intervals for the neighbor
-      std::vector<TimeInterval> time_intervals = constraint_table.get_safe_intervals(neighbor, current->time_point.position, next_ti);
+      std::vector<TimeInterval> time_intervals = constraint_table.get_safe_intervals(
+          neighbor, current->time_point.position, sipp::neighbor_time_interval(current->time_point.interval));
 
       for (const TimeInterval& interval : time_intervals)
       {
@@ -178,4 +174,14 @@ TimePointPath sipp::extract_path(const std::shared_ptr<SIPPNode>& final_node)
   }
   std::reverse(path.begin(), path.end());
   return path;
+}
+
+TimeInterval sipp::neighbor_time_interval(TimeInterval& i)
+{
+  TimeInterval next_ti = i;
+  if (next_ti.t_max == INT_MAX)
+    next_ti.t_min += MOVE_TIME;  // increase only t_min, otherwise overflow would happen
+  else
+    next_ti = next_ti + MOVE_TIME;  // increase both t_min and t_max
+  return next_ti;
 }
