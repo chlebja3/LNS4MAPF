@@ -69,8 +69,9 @@ namespace sipp
 {
 typedef std::priority_queue<SIPPNode const*, std::vector<SIPPNode const*>, SIPPNode::compare_node_ptrs> PriorityQueue;
 typedef std::unordered_set<TimePoint, TimePoint::hash_time_point>                                       UnorderedSet;
-TimeInterval neighbor_time_interval(const TimeInterval& i);
+typedef std::unordered_map<Point2d, int, Point2d::hash_point>                                           UnorderedMap;
 
+TimeInterval  neighbor_time_interval(const TimeInterval& i);
 TimePointPath extract_path(SIPPNode const* const final_node);
 }  // namespace sipp
 
@@ -105,7 +106,7 @@ TimePointPath SIPP::plan(const Point2d& start, const Point2d& goal)
   open_list.push(node_list.back().get());
 
   // create known nodes database
-  sipp::UnorderedSet known;
+  sipp::UnorderedMap known;
 
   // main loop
   while (!open_list.empty())
@@ -116,8 +117,10 @@ TimePointPath SIPP::plan(const Point2d& start, const Point2d& goal)
 
     // std::cout << current->time_point.position << ", " << current->time_point.interval << std::endl;
 
-    // check whether node is in known set
-    if (known.find(current->time_point) != known.end()) continue;
+    // check whether node was expanded already (same position and tmax higher then current tmin)
+    if (known.find(current->time_point.position) != known.end() &&
+        current->time_point.interval.t_min <= known[current->time_point.position])
+      continue;
 
 
     // check whether goal position is reached and that there will be no more dynamic constraints at the goal location
@@ -128,7 +131,7 @@ TimePointPath SIPP::plan(const Point2d& start, const Point2d& goal)
     }
 
     // add to known nodes
-    known.insert(current->time_point);
+    known[current->time_point.position] = current->time_point.interval.t_max;
 
     // expand current node
     std::vector<Point2d> neighbors = map_data.find_neighbors(current->time_point.position);
@@ -152,11 +155,10 @@ TimePointPath SIPP::plan(const Point2d& start, const Point2d& goal)
         // is not reachable without collision
         if (current->time_point.interval.t_max != INT_MAX && interval.t_min > current->time_point.interval.t_max + 1) continue;
 
-        TimePoint neighbor_time_point(neighbor, interval);
-
         // check whether known
-        if (known.find(neighbor_time_point) != known.end()) continue;
+        if (known.find(neighbor) != known.end() && interval.t_min <= known[neighbor]) continue;
 
+        TimePoint neighbor_time_point(neighbor, interval);
         assertm(neighbor_time_point.interval.t_min > current->time_point.interval.t_min, "Invalid interval.");
 
         // add to the node list
