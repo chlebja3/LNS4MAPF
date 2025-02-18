@@ -34,7 +34,8 @@ void LNS::find_initial_solution()
 
 Solution LNS::PrioritizedPlanning()
 {
-  Solution  sol;
+  Solution sol;
+  sol.paths.resize(instance.num_of_agents, Path());
   const int agent_num = instance.num_of_agents;
 
   // create a sequence from 0 to agent_num
@@ -62,6 +63,15 @@ Solution LNS::PrioritizedPlanning()
     // plan path for agent
     TimePointPath tp_path = planner->plan(instance.get_start_positions()[agent_id], instance.get_goal_positions()[agent_id]);
 
+    // print the path
+    // std::cout << "Path for agent " << agent_id << ": " << std::endl;
+    // for (const auto& tp : tp_path)
+    // {
+    //   std::cout << "{" << tp.position << ", " << tp.interval << "}"
+    //             << " ";
+    // }
+    // std::cout << std::endl;
+
     // check validity
     if (tp_path.empty())
     {
@@ -73,8 +83,7 @@ Solution LNS::PrioritizedPlanning()
     planner->constraint_table.add_constraints(tp_path);
 
     // convert to Path and add to the solution
-    sol.paths.push_back(timepointpath_to_path(tp_path));
+    sol.paths[agent_id] = timepointpath_to_path(tp_path);
   }
-  std::cout << "Successfully planned all agents." << std::endl;
   return sol;
 }

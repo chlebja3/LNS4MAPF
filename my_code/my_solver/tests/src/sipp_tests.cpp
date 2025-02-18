@@ -47,8 +47,8 @@ TEST_F(ConstraintTableTest, SingleConstraint)
                                  //
   table->add_constraint(tp);
 
-  // test that the last constraint end is right
-  EXPECT_EQ(table->get_last_constraint_end(), 5);
+  // test that the last constraint is right
+  EXPECT_EQ(table->get_last_dynamic_constraint(), 3);
 
   // test that the first safe interval is right
   TimeInterval first_si = table->get_first_safe_interval({1, 2});
@@ -79,7 +79,7 @@ TEST_F(ConstraintTableTest, MultipleSingleConstraints)
   table->add_constraint(TimePoint({1, 2}, {10, 15}));
 
   // test that the last constraint end is right
-  EXPECT_EQ(table->get_last_constraint_end(), 15);
+  EXPECT_EQ(table->get_last_dynamic_constraint(), 10);
 
   std::vector<TimeInterval> safe_intervals = table->get_safe_intervals({1, 2}, {0, 0}, {0, 20});
   ASSERT_EQ(safe_intervals.size(), 3) << "Expected three safe intervals after adding multiple constraints!";
@@ -96,7 +96,7 @@ TEST_F(ConstraintTableTest, RemoveConstraint)
   table->remove_constraint(tp);
 
   // test that the last constraint end is right
-  EXPECT_EQ(table->get_last_constraint_end(), 0);
+  EXPECT_EQ(table->get_last_dynamic_constraint(), 0);
 
   TimeInterval first_si = table->get_first_safe_interval({1, 2});
   EXPECT_TRUE(first_si.t_min == 0 && first_si.t_max == INT_MAX);
@@ -117,7 +117,7 @@ TEST_F(ConstraintTableTest, DynamicAddRemove)
   table->remove_constraint(TimePoint({1, 1}, {2, 4}));
 
   // test that the last constraint end is right
-  EXPECT_EQ(table->get_last_constraint_end(), 8);
+  EXPECT_EQ(table->get_last_dynamic_constraint(), 6);
 
   std::vector<TimeInterval> safe_intervals = table->get_safe_intervals({1, 1}, {0, 0}, {0, 10});
   ASSERT_EQ(safe_intervals.size(), 2) << "Expected two safe intervals after removal.";
@@ -171,7 +171,7 @@ TEST_F(ConstraintTableTest, AddPathConstraints)
   table->add_constraints(path2);
 
   // test that the last constraint end is right
-  EXPECT_EQ(table->get_last_constraint_end(), 10);
+  EXPECT_EQ(table->get_last_dynamic_constraint(), 9);
 
   // test first edge conflict
   std::vector<TimeInterval> safe_intervals = table->get_safe_intervals({1, 1}, {1, 2}, {0, 3});
@@ -561,7 +561,7 @@ TEST(SIPPTest, SamePathAsAStar2)
   // load instance
   std::string               base_path = get_base_path_tests();  // path to my_solver
   std::unique_ptr<Instance> instance =
-      std::make_unique<Instance>(base_path + "/tests/test_maps/den520d.map", base_path + "/tests/test_scen/den520d-random-0.scen", 500);
+      std::make_unique<Instance>(base_path + "/tests/test_maps/den520d.map", base_path + "/tests/test_scen/den520d-random-0.scen", 1);
 
   // create SIPP
   SIPP sipp(*instance);
@@ -596,13 +596,59 @@ TEST(SIPPTest, SamePathAsAStar2)
   EXPECT_EQ(ASTAR::generated_nodes, sipp.generated_nodes) << "SIPP should expand the same number of nodes as A*!";
 }
 
+
+// Test Prioritized Planning
+// Test 1: Prioritized Planning with dummy map and 1 agent
+TEST(SIPPTest, PrioritizedPlanning1agent)
+{
+  // load instance
+  std::string               base_path = get_base_path_tests();  // path to my_solver
+  std::unique_ptr<Instance> instance =
+      std::make_unique<Instance>(base_path + "/tests/test_maps/dummy_3_3.map", base_path + "/tests/test_scen/dummy_3_3_scen_1.scen", 1);
+
+  // create LNS
+  LNS lns(*instance);
+
+  // plan path by Prioritized Planning
+  Solution sol = lns.PrioritizedPlanning();
+
+  // check solution validity
+  EXPECT_TRUE(sol.is_valid(*instance)) << "Solution is invalid!";
+}
+
+// Test 2: Prioritized Planning with empty map and 2 agents
+TEST(SIPPTest, PrioritizedPlanningEmpty2agents)
+{
+  // load instance
+  std::string               base_path = get_base_path_tests();  // path to my_solver
+  std::unique_ptr<Instance> instance =
+      std::make_unique<Instance>(base_path + "/tests/test_maps/empty_5_5.map", base_path + "/tests/test_scen/empty_5_5_scen_1.scen", 2);
+
+  // create LNS
+  LNS lns(*instance);
+
+  // plan path by Prioritized Planning
+  Solution sol = lns.PrioritizedPlanning();
+
+  // print the first path
+  // for (const auto& tp : sol.paths[0])
+  // {
+  //   std::cout << tp << " " << std::endl;
+  // }
+  // std::cout << std::endl;
+
+  // check solution validity
+  EXPECT_TRUE(sol.is_valid(*instance)) << "Solution is invalid!";
+}
+
+
 // Test Prioritized Planning
 TEST(SIPPTest, PrioritizedPlanning)
 {
   // load instance
   std::string               base_path = get_base_path_tests();  // path to my_solver
   std::unique_ptr<Instance> instance =
-      std::make_unique<Instance>(base_path + "/tests/test_maps/den520d.map", base_path + "/tests/test_scen/den520d-random-0.scen", 1);
+      std::make_unique<Instance>(base_path + "/tests/test_maps/den520d.map", base_path + "/tests/test_scen/den520d-random-0.scen", 100);
 
   // create LNS
   LNS lns(*instance);

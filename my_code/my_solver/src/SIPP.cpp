@@ -85,7 +85,7 @@ TimePointPath SIPP::plan(const Point2d& start, const Point2d& goal)
 
   // estimate the maximum time the goal can be reached (after all dynamic constraints disappear, the path can go through all free cells
   // in the worst case)
-  int max_time = constraint_table.get_last_constraint_end() + map_data.free_cells;
+  int max_time = std::max(INT_MAX, constraint_table.get_last_dynamic_constraint() + map_data.free_cells);
   // std::cout << "Max time: " << max_time << std::endl;
 
   // create openlist
@@ -148,10 +148,11 @@ TimePointPath SIPP::plan(const Point2d& start, const Point2d& goal)
 
       for (const TimeInterval& interval : time_intervals)
       {
+        // std::cout << "interval:" << interval << std::endl;
+
         // skip intervals that start later then the maximum time to reach the goal
         if (interval.t_min > max_time) continue;
 
-        // std::cout << "interval:" << interval << std::endl;
         // if the earliest reachable time of the neighbor is greater than maximum time of the current node + travel time, then the neighbor
         // is not reachable without collision
         if (current->time_point.interval.t_max != INT_MAX && interval.t_min > current->time_point.interval.t_max + 1) continue;
@@ -178,9 +179,19 @@ TimePointPath sipp::extract_path(SIPPNode const* const final_node)
 {
   TimePointPath   path;
   SIPPNode const* curr = final_node;
+  SIPPNode const* prev = nullptr;
   while (curr != nullptr)
   {
-    path.push_back(curr->time_point);
+    if (prev == nullptr)  // push the whole last interval
+    {
+      path.push_back(curr->time_point);
+    }
+    else  // push only the occupied part of other intervals
+    {
+      path.push_back(
+          TimePoint(curr->time_point.position, TimeInterval(curr->time_point.interval.t_min, prev->time_point.interval.t_min - 1)));
+    }
+    prev = curr;
     curr = curr->parent;
   }
   std::reverse(path.begin(), path.end());

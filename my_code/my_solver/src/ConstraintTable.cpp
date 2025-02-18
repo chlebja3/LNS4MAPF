@@ -219,6 +219,8 @@ TimeInterval ConstraintTable::get_safe_interval(const Point2d& position, const P
     // there is a point constraint, increase the earliest unobstructed time estimate to the end of the constraint + 1
     if (it->t_max >= earliest_unobstructed_time)
     {
+      // check whether the constraint is forever
+      if (it->t_max == INT_MAX) return TimeInterval(-1, -1);
       earliest_unobstructed_time = it->t_max + 1;
     }
   }
@@ -241,6 +243,9 @@ std::vector<TimeInterval> ConstraintTable::get_safe_intervals(const Point2d& pos
 {
   // check the position is valid
   assertm(instance.get_map_data().is_in(position), "Invalid position.");
+
+  // check the time interval is valid
+  assertm(time_interval.t_min >= 0 && time_interval.t_max >= time_interval.t_min, "Invalid time interval.");
 
   // find the index of the position
   int idx = instance.get_map_data().position_to_index(position);
@@ -288,16 +293,19 @@ std::vector<TimeInterval> ConstraintTable::get_safe_intervals(const Point2d& pos
       }
 
       // check whether there might be any remaining safe interval in the given time interval
-      if (it->t_max + 1 > time_interval.t_max) return intervals;
+      if (it->t_max == INT_MAX || it->t_max + 1 > time_interval.t_max) return intervals;
 
       // shift the earliest unobstructed time and continue with the next interval
       earliest_unobstructed_time = it->t_max + 1;
       continue;
     }
 
-    // there is a constraint, increase the earliest unobstructed time estimate
     if (it->t_max >= earliest_unobstructed_time)
     {
+      // if the constraint obstructs the position forever, there can not be any more safe intervals
+      if (it->t_max == INT_MAX) return intervals;
+
+      // there is a constraint, increase the earliest unobstructed time estimate
       earliest_unobstructed_time = it->t_max + 1;
     }
 
@@ -325,12 +333,12 @@ std::vector<TimeInterval> ConstraintTable::get_safe_intervals(const Point2d& pos
   return intervals;
 }
 
-int ConstraintTable::get_last_constraint_end(void)
+int ConstraintTable::get_last_dynamic_constraint(void)
 {
-  int last_constraint_end = 0;
+  int last_dynamic_constraint = 0;
   for (int i = 0; i < (int)constraints.size(); i++)
   {
-    if (constraints[i].size() > 0) last_constraint_end = std::max(last_constraint_end, constraints[i].back().t_max);
+    if (constraints[i].size() > 0) last_dynamic_constraint = std::max(last_dynamic_constraint, constraints[i].back().t_min);
   }
-  return last_constraint_end;
+  return last_dynamic_constraint;
 }
