@@ -15,12 +15,19 @@
 Path timepointpath_to_path_resize(const TimePointPath& tp_path)
 {
   Path path;
-  for (const TimePoint& tp : tp_path)
+  for (auto it = tp_path.begin(); it != tp_path.end(); it++)
   {
-    // calculate how many copies to insert
-    int N = tp.interval.t_max - tp.interval.t_min + 1;
+    // for last element add the position only once, as it is obvious that the agent stays in the last position forever
+    int N = 1;
+
+    // find the start of the next time interval
+    if (it != std::prev(tp_path.end()))
+    {
+      N = std::next(it)->interval.t_min - it->interval.t_min;
+    }
+
     // insert N copies to the end of the vector
-    path.resize(path.size() + N, tp.position);
+    path.resize(path.size() + N, it->position);
   }
   return path;
 }
@@ -28,12 +35,19 @@ Path timepointpath_to_path_resize(const TimePointPath& tp_path)
 Path timepointpath_to_path_insert(const TimePointPath& tp_path)
 {
   Path path;
-  for (const TimePoint& tp : tp_path)
+  for (auto it = tp_path.begin(); it != tp_path.end(); it++)
   {
-    // calculate how many copies to insert
-    int N = tp.interval.t_max - tp.interval.t_min + 1;
+    // for last element add the position only once, as it is obvious that the agent stays in the last position forever
+    int N = 1;
+
+    // find the start of the next time interval
+    if (it != std::prev(tp_path.end()))
+    {
+      N = std::next(it)->interval.t_min - it->interval.t_min;
+    }
+
     // insert N copies to the end of the vector
-    path.insert(path.end(), N, tp.position);
+    path.insert(path.end(), N, it->position);
   }
   return path;
 }
@@ -41,17 +55,22 @@ Path timepointpath_to_path_insert(const TimePointPath& tp_path)
 Path timepointpath_to_path_pushback(const TimePointPath& tp_path)
 {
   Path path;
-  int  N = 0;
-  // calculate the vector size
-  for (const TimePoint& tp : tp_path)
+  for (auto it = tp_path.begin(); it != tp_path.end(); it++)
   {
-    // calculate how many copies to insert
-    N = tp.interval.t_max - tp.interval.t_min + 1;
+    // for last element add the position only once, as it is obvious that the agent stays in the last position forever
+    int N = 1;
+
+    // find the start of the next time interval
+    if (it != std::prev(tp_path.end()))
+    {
+      N = std::next(it)->interval.t_min - it->interval.t_min;
+    }
+
     // insert N copies to the end of the vector
     path.reserve(path.size() + N);
     for (int i = 0; i < N; i++)
     {
-      path.push_back(tp.position);
+      path.push_back(it->position);
     }
   }
   return path;
@@ -60,17 +79,22 @@ Path timepointpath_to_path_pushback(const TimePointPath& tp_path)
 Path timepointpath_to_path_emplaceback(const TimePointPath& tp_path)
 {
   Path path;
-  int  N = 0;
-  // calculate the vector size
-  for (const TimePoint& tp : tp_path)
+  for (auto it = tp_path.begin(); it != tp_path.end(); it++)
   {
-    // calculate how many copies to insert
-    N = tp.interval.t_max - tp.interval.t_min + 1;
+    // for last element add the position only once, as it is obvious that the agent stays in the last position forever
+    int N = 1;
+
+    // find the start of the next time interval
+    if (it != std::prev(tp_path.end()))
+    {
+      N = std::next(it)->interval.t_min - it->interval.t_min;
+    }
+
     // insert N copies to the end of the vector
     path.reserve(path.size() + N);
     for (int i = 0; i < N; i++)
     {
-      path.emplace_back(tp.position.x, tp.position.y);
+      path.emplace_back(it->position.x, it->position.y);
     }
   }
   return path;

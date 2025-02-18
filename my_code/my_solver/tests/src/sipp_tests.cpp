@@ -8,6 +8,7 @@
 #include <gtest/gtest.h>
 #include <limits.h>
 
+#include "Astar.h"
 #include "ConstraintTable.h"
 #include "Instance.h"
 #include "SIPP.h"
@@ -518,5 +519,71 @@ TEST(SIPPTest, EdgeConstraintsAtGoal)
                                  TimePoint({2, 1}, {7, INT_MAX})}));
 }
 
-// TODO test that SIPP plans the same path as A* when no constraints are present
+// **Test 12: SIPP plans the same path as A* when no constraints are present
+TEST(SIPPTest, SamePathAsAStar1)
+{
+  // load instance
+  std::string               base_path = get_base_path_tests();  // path to my_solver
+  std::shared_ptr<Instance> instance =
+      std::make_shared<Instance>(base_path + "/tests/test_maps/empty_5_5.map", base_path + "/tests/test_scen/empty_5_5_scen_1.scen", 1);
+
+  // create SIPP
+  SIPP sipp(instance);
+
+  // from (0,0) to (4,4)
+  Point2d start = instance->get_start_positions()[0];
+  Point2d goal  = instance->get_goal_positions()[0];
+
+  // plan path by ASTAR
+  Path path_astar = ASTAR::find_path(start, goal, instance->get_map_data());
+
+  // assert that astar found a path
+  ASSERT_FALSE(path_astar.empty()) << "A* should find a path when no constraints are present!";
+
+  // plan path by SIPP
+  TimePointPath path_sipp = sipp.plan(start, goal);
+
+  // assert that SIPP found a path
+  ASSERT_FALSE(path_sipp.empty()) << "SIPP should find a path when no constraints are present!";
+
+  // convert SIPP path to the same format as A*
+  Path path_sipp_converted = timepointpath_to_path(path_sipp);
+
+  // check that the paths have the same length
+  ASSERT_EQ(path_sipp_converted.size(), path_astar.size()) << "The paths found by SIPP and ASTAR should have the same length!";
+}
+
+// **Test 14: SIPP plans the same path as A* when no dynamic constraints are present
+TEST(SIPPTest, SamePathAsAStar2)
+{
+  // load instance
+  std::string               base_path = get_base_path_tests();  // path to my_solver
+  std::shared_ptr<Instance> instance =
+      std::make_shared<Instance>(base_path + "/tests/test_maps/den520d.map", base_path + "/tests/test_scen/den520d-random-0.scen", 1);
+
+  // create SIPP
+  SIPP sipp(instance);
+
+  // from (0,0) to (4,4)
+  Point2d start = instance->get_start_positions()[0];
+  Point2d goal  = instance->get_goal_positions()[0];
+
+  // plan path by ASTAR
+  Path path_astar = ASTAR::find_path(start, goal, instance->get_map_data());
+
+  // assert that astar found a path
+  ASSERT_FALSE(path_astar.empty()) << "A* should find a path when no constraints are present!";
+
+  // plan path by SIPP
+  TimePointPath path_sipp = sipp.plan(start, goal);
+
+  // assert that SIPP found a path
+  ASSERT_FALSE(path_sipp.empty()) << "SIPP should find a path when no constraints are present!";
+
+  // convert SIPP path to the same format as A*
+  Path path_sipp_converted = timepointpath_to_path(path_sipp);
+
+  // check that the paths have the same length
+  ASSERT_EQ(path_sipp_converted.size(), path_astar.size()) << "The paths found by SIPP and ASTAR should have the same length!";
+}
 

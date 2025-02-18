@@ -43,6 +43,16 @@ std::vector<int> fill_vector_resize(const int n)
   return vec;
 }
 
+std::vector<int> fill_vector_initialize(const int n)
+{
+  std::vector<int> vec(n, 0);
+  for (int i = 0; i < n; i++)
+  {
+    vec[i] = rand();
+  }
+  return vec;
+}
+
 // benchmark push_back
 static void BM_fill_vector_pushback(benchmark::State& state)
 {
@@ -72,4 +82,15 @@ static void BM_fill_vector_resize(benchmark::State& state)
   }
 }
 BENCHMARK(BM_fill_vector_resize)->Range(100, 100000)->RangeMultiplier(10);
+
+// benchmark init
+static void BM_fill_vector_initialize(benchmark::State& state)
+{
+  for (auto _ : state)
+  {
+    std::vector<int> v = fill_vector_initialize(state.range(0));
+  }
+}
+BENCHMARK(BM_fill_vector_initialize)->Range(100, 100000)->RangeMultiplier(10);
+
 BENCHMARK_MAIN();

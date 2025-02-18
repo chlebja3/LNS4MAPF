@@ -138,16 +138,22 @@ std::vector<Point2d> Map::find_neighbors(const Point2d& point) const
   return ret;
 }
 
-
 Path timepointpath_to_path(const TimePointPath& tp_path)
 {
   Path path;
-  for (const TimePoint& tp : tp_path)
+  for (auto it = tp_path.begin(); it != tp_path.end(); it++)
   {
-    // calculate how many copies to insert
-    int N = tp.interval.t_max - tp.interval.t_min + 1;
+    // for last element add the position only once, as it is obvious that the agent stays in the last position forever
+    int N = 1;
+
+    // find the start of the next time interval
+    if (it != std::prev(tp_path.end()))
+    {
+      N = std::next(it)->interval.t_min - it->interval.t_min;
+    }
+
     // insert N copies to the end of the vector
-    path.resize(path.size() + N, tp.position);
+    path.resize(path.size() + N, it->position);
   }
   return path;
 }

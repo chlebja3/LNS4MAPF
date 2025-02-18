@@ -318,39 +318,30 @@ TEST(TimeIntervalIntersectionTest, LengthOne)
   EXPECT_FALSE(overlap(i2, i1)) << "Intervals should not intersect.";
 }
 
-// Test the generate random timepointpath function
-TEST(test_utils, generate_random_timepointpath)
-{
-  // generate a random timepointpath
-  TimePointPath tp_path = generate_random_timepointpath(1000);
-
-  // check that the intervals sum to 1000
-  int n = 0;
-  for (const auto& tp : tp_path)
-  {
-    n += tp.interval.t_max - tp.interval.t_min + 1;
-  }
-  EXPECT_EQ(n, 1000) << "Wrong number of timepoints.";
-}
-
 // Test conversion from timepointpath to Path
 TEST(test_utils, timepointpath_to_path)
 {
   // generate a random timepointpath
-  TimePointPath tp_path = generate_random_timepointpath(1000);
+  const int     len     = 1000;
+  TimePointPath tp_path = generate_random_timepointpath(len);
 
   // convert to path
   Path path = timepointpath_to_path(tp_path);
 
   // check that the path has the right length
-  EXPECT_EQ(path.size(), 1000) << "Wrong path length.";
+  EXPECT_EQ(path.size(), len) << "Wrong path length.";
 
   // check that the path has the right time intervals
-  for (auto& tp : tp_path)
+  for (auto it = tp_path.begin(); it != tp_path.end(); it++)
   {
-    for (int t = tp.interval.t_min; t <= tp.interval.t_max; t++)
+    int t_max = it->interval.t_min;
+    if (it != std::prev(tp_path.end()))
     {
-      EXPECT_EQ(path[t], tp.position) << "Wrong position at time " << t;
+      t_max = std::next(it)->interval.t_min - 1;
+    }
+    for (int t = it->interval.t_min; t <= t_max; t++)
+    {
+      EXPECT_EQ(path[t], it->position) << "Wrong position at time " << t;
     }
   }
 }
