@@ -57,6 +57,24 @@ Path timepointpath_to_path_pushback(const TimePointPath& tp_path)
   return path;
 }
 
+Path timepointpath_to_path_emplaceback(const TimePointPath& tp_path)
+{
+  Path path;
+  int  N = 0;
+  // calculate the vector size
+  for (const TimePoint& tp : tp_path)
+  {
+    // calculate how many copies to insert
+    N = tp.interval.t_max - tp.interval.t_min + 1;
+    // insert N copies to the end of the vector
+    path.reserve(path.size() + N);
+    for (int i = 0; i < N; i++)
+    {
+      path.emplace_back(tp.position.x, tp.position.y);
+    }
+  }
+  return path;
+}
 
 // Helper function for benchmarking
 template <typename Func>
@@ -76,6 +94,13 @@ static void BM_TPPathtoPathPushback(benchmark::State& state)
   BenchmarkFunction(state, timepointpath_to_path_pushback);
 }
 BENCHMARK(BM_TPPathtoPathPushback)->Range(100, 100000)->RangeMultiplier(10);
+
+// benchmark emplace_back
+static void BM_TPPathtoPathEmplaceback(benchmark::State& state)
+{
+  BenchmarkFunction(state, timepointpath_to_path_emplaceback);
+}
+BENCHMARK(BM_TPPathtoPathEmplaceback)->Range(100, 100000)->RangeMultiplier(10);
 
 // benchmark resize
 static void BM_TPPathtoPathResize(benchmark::State& state)
