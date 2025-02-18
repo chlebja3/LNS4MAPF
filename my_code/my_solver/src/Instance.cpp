@@ -40,7 +40,6 @@ void Instance::load_map(void)
 {
   // reset the map data
   Map new_map;
-  std::cout << "Initialized map data" << std::endl;
   int num_of_cols, num_of_rows = 0;
   // open the map file
   std::ifstream map_file(map_fname.c_str());
@@ -131,7 +130,6 @@ void Instance::load_map(void)
   new_map.width  = num_of_cols;
 
   map_data = std::move(new_map);
-  std::cout << "The map is:" << std::endl;
 }
 
 void Instance::load_scene(void)

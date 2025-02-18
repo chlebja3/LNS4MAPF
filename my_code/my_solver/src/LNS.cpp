@@ -34,23 +34,47 @@ void LNS::find_initial_solution()
 
 Solution LNS::PrioritizedPlanning()
 {
+  Solution  sol;
   const int agent_num = instance.num_of_agents;
 
   // create a sequence from 0 to agent_num
   std::vector<int> priorities(agent_num);
-  std::iota(priorities.begin(), priorities.end(), 1);
+  std::iota(priorities.begin(), priorities.end(), 0);
+
+  /*// print priorities
+  std::cout << "Priorities: ";
+  for (int i = 0; i < agent_num; i++)
+  {
+    std::cout << priorities[i] << " ";
+  }
+  */
 
   // shuffle the sequence to get random priorities
   std::random_shuffle(priorities.begin(), priorities.end());
-
-  // initialize path table
 
   // plan path for each agent according to its priority
   for (int i = 0; i < agent_num; i++)
   {
     // get agent with priority i
     int agent_id = priorities[i];
+    // std::cout << "planning agent: " << agent_id << std::endl;
 
     // plan path for agent
+    TimePointPath tp_path = planner->plan(instance.get_start_positions()[agent_id], instance.get_goal_positions()[agent_id]);
+
+    // check validity
+    if (tp_path.empty())
+    {
+      std::cout << "Unable to find initial solution by prioritized planning. " << std::endl;
+      return sol;
+    }
+
+    // update the constraint table
+    planner->constraint_table.add_constraints(tp_path);
+
+    // convert to Path and add to the solution
+    sol.paths.push_back(timepointpath_to_path(tp_path));
   }
+  std::cout << "Successfully planned all agents." << std::endl;
+  return sol;
 }

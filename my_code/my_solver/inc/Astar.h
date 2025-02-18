@@ -21,5 +21,7 @@ namespace ASTAR
  * @return The path from the start to the goal.
  */
 Path find_path(const Point2d& start, const Point2d& goal, const Map& map_data);
+
+extern int generated_nodes;
 }  // namespace ASTAR
 

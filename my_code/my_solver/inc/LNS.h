@@ -21,10 +21,10 @@ public:
   // solve method
   void solve() override;
 
-  void find_initial_solution();
+  void     find_initial_solution();
+  Solution PrioritizedPlanning();
 
 private:
-  Solution              PrioritizedPlanning();
   std::unique_ptr<SIPP> planner;
 };
 

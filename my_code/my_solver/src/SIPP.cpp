@@ -104,6 +104,7 @@ TimePointPath SIPP::plan(const Point2d& start, const Point2d& goal)
   // create the start node
   node_list.push_back(std::make_unique<SIPPNode>(start, time_interval_start, 0, h, nullptr));
   open_list.push(node_list.back().get());
+  generated_nodes++;
 
   // create known nodes database
   sipp::UnorderedMap known;
@@ -166,6 +167,7 @@ TimePointPath SIPP::plan(const Point2d& start, const Point2d& goal)
 
         // add to the open list
         open_list.push(node_list.back().get());
+        generated_nodes++;
       }
     }
   }

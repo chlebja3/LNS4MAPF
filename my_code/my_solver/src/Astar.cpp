@@ -14,6 +14,7 @@
 #include <queue>
 #include <unordered_set>
 
+int ASTAR::generated_nodes = 0;
 
 class AstarNode : public Node
 {
@@ -62,6 +63,7 @@ Path extract_path(AstarNode const* const final_node);
 
 Path ASTAR::find_path(const Point2d& start, const Point2d& goal, const Map& map_data)
 {
+  generated_nodes = 0;
   Path path;
 
   // check whether start and goal inside the map
@@ -86,6 +88,8 @@ Path ASTAR::find_path(const Point2d& start, const Point2d& goal, const Map& map_
 
   // add the start node to the priority queue
   open_list.push(node_list.back().get());
+  ASTAR::generated_nodes++;
+  std::cout << ASTAR::generated_nodes << std::endl;
 
   // create known nodes database
   ASTAR::UnorderedSet known;
@@ -123,6 +127,7 @@ Path ASTAR::find_path(const Point2d& start, const Point2d& goal, const Map& map_
 
       // add to the open list
       open_list.push(node_list.back().get());
+      ASTAR::generated_nodes++;
     }
   }
 

@@ -11,6 +11,7 @@
 #include "Astar.h"
 #include "ConstraintTable.h"
 #include "Instance.h"
+#include "LNS.h"
 #include "SIPP.h"
 #include "test_utils.h"
 
@@ -25,7 +26,6 @@ protected:
 
   void SetUp() override
   {
-    std::cout << "Setting up ConstraintTableTest" << std::endl;
     // load instance
     std::string base_path = get_base_path_tests();  // path to my_solver
 
@@ -36,7 +36,6 @@ protected:
 
   void TearDown() override
   {
-    std::cout << "Tearing down ConstraintTableTest" << std::endl;
   }
 };
 
@@ -550,7 +549,10 @@ TEST(SIPPTest, SamePathAsAStar1)
   Path path_sipp_converted = timepointpath_to_path(path_sipp);
 
   // check that the paths have the same length
-  ASSERT_EQ(path_sipp_converted.size(), path_astar.size()) << "The paths found by SIPP and ASTAR should have the same length!";
+  EXPECT_EQ(path_sipp_converted.size(), path_astar.size()) << "The paths found by SIPP and ASTAR should have the same length!";
+
+  // check whether both algorithms expanded the same number of nodes
+  EXPECT_EQ(ASTAR::generated_nodes, sipp.generated_nodes) << "SIPP should expand the same number of nodes as A*!";
 }
 
 // **Test 14: SIPP plans the same path as A* when no dynamic constraints are present
@@ -559,7 +561,7 @@ TEST(SIPPTest, SamePathAsAStar2)
   // load instance
   std::string               base_path = get_base_path_tests();  // path to my_solver
   std::unique_ptr<Instance> instance =
-      std::make_unique<Instance>(base_path + "/tests/test_maps/den520d.map", base_path + "/tests/test_scen/den520d-random-0.scen", 1);
+      std::make_unique<Instance>(base_path + "/tests/test_maps/den520d.map", base_path + "/tests/test_scen/den520d-random-0.scen", 500);
 
   // create SIPP
   SIPP sipp(*instance);
@@ -584,6 +586,31 @@ TEST(SIPPTest, SamePathAsAStar2)
   Path path_sipp_converted = timepointpath_to_path(path_sipp);
 
   // check that the paths have the same length
-  ASSERT_EQ(path_sipp_converted.size(), path_astar.size()) << "The paths found by SIPP and ASTAR should have the same length!";
+  EXPECT_EQ(path_sipp_converted.size(), path_astar.size()) << "The paths found by SIPP and ASTAR should have the same length!";
+
+
+  // std::cout << "SIPP expanded " << sipp.generated_nodes << " nodes." << std::endl;
+  // std::cout << "A* expanded " << ASTAR::generated_nodes << " nodes." << std::endl;
+
+  // check whether both algorithms expanded the same number of nodes
+  EXPECT_EQ(ASTAR::generated_nodes, sipp.generated_nodes) << "SIPP should expand the same number of nodes as A*!";
+}
+
+// Test Prioritized Planning
+TEST(SIPPTest, PrioritizedPlanning)
+{
+  // load instance
+  std::string               base_path = get_base_path_tests();  // path to my_solver
+  std::unique_ptr<Instance> instance =
+      std::make_unique<Instance>(base_path + "/tests/test_maps/den520d.map", base_path + "/tests/test_scen/den520d-random-0.scen", 1);
+
+  // create LNS
+  LNS lns(*instance);
+
+  // plan path by Prioritized Planning
+  Solution sol = lns.PrioritizedPlanning();
+
+  // check solution validity
+  EXPECT_TRUE(sol.is_valid(*instance)) << "Solution is invalid!";
 }
 

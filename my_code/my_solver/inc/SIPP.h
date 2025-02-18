@@ -13,6 +13,7 @@ class SIPP
 {
 public:
   ConstraintTable constraint_table;
+  int             generated_nodes = 0;
 
   // constructor
   SIPP(const Instance& instance);
