@@ -26,19 +26,18 @@ SIPP::SIPP(const Map& map_data, const ConstraintTable& constraint_table) : const
 class SIPPNode : public Node
 {
 public:
-  TimePoint                 time_point;
-  std::shared_ptr<SIPPNode> parent;
+  TimePoint       time_point;
+  SIPPNode const* parent;
 
 
   // constructors
-  SIPPNode(const int x, const int y, const int time_min, const int time_max, const double g, const double h,
-           const std::shared_ptr<SIPPNode> parent)
+  SIPPNode(const int x, const int y, const int time_min, const int time_max, const double g, const double h, SIPPNode const* const parent)
       : Node(g, h), time_point(TimePoint(x, y, time_min, time_max)), parent(parent){};
 
-  SIPPNode(const Point2d& position, const TimeInterval& interval, const double g, const double h, const std::shared_ptr<SIPPNode> parent)
+  SIPPNode(const Point2d& position, const TimeInterval& interval, const double g, const double h, SIPPNode const* const parent)
       : Node(g, h), time_point(position, interval), parent(parent){};
 
-  SIPPNode(const TimePoint& time_point, const double g, const double h, const std::shared_ptr<SIPPNode> parent)
+  SIPPNode(const TimePoint& time_point, const double g, const double h, SIPPNode const* const parent)
       : Node(g, h), time_point(time_point), parent(parent){};
 
   bool operator==(const SIPPNode& other) const
@@ -48,7 +47,7 @@ public:
 
   struct compare_node_ptrs
   {
-    bool operator()(const std::shared_ptr<SIPPNode> n1, const std::shared_ptr<SIPPNode> n2) const
+    bool operator()(SIPPNode const* n1, SIPPNode const* n2) const
     {
       // compare f
       if (n1->f < n2->f)
@@ -68,11 +67,11 @@ public:
 
 namespace sipp
 {
-typedef std::priority_queue<std::shared_ptr<SIPPNode>, std::vector<std::shared_ptr<SIPPNode>>, SIPPNode::compare_node_ptrs> PriorityQueue;
-typedef std::unordered_set<TimePoint, TimePoint::hash_time_point>                                                           UnorderedSet;
-TimeInterval neighbor_time_interval(TimeInterval& i);
+typedef std::priority_queue<SIPPNode const*, std::vector<SIPPNode const*>, SIPPNode::compare_node_ptrs> PriorityQueue;
+typedef std::unordered_set<TimePoint, TimePoint::hash_time_point>                                       UnorderedSet;
+TimeInterval neighbor_time_interval(const TimeInterval& i);
 
-TimePointPath extract_path(const std::shared_ptr<SIPPNode>& final_node);
+TimePointPath extract_path(SIPPNode const* const final_node);
 }  // namespace sipp
 
 TimePointPath SIPP::plan(const Point2d& start, const Point2d& goal)
@@ -91,14 +90,19 @@ TimePointPath SIPP::plan(const Point2d& start, const Point2d& goal)
   // create openlist
   sipp::PriorityQueue open_list;
 
-  // calculate the heuristic
+  // create a vector to store all nodes so that they dont go out of scope
+  std::vector<std::unique_ptr<SIPPNode>> node_list = {};
+  node_list.reserve(map_data.width * map_data.height);
+
+  // calculate the heuristic of the start node
   double h = std::hypot(goal.x - start.x, goal.y - start.y);
 
   // retrieve the first safe interval
   TimeInterval time_interval_start = constraint_table.get_first_safe_interval(start);
 
   // create the start node
-  open_list.push(std::make_shared<SIPPNode>(start, time_interval_start, 0, h, nullptr));
+  node_list.push_back(std::make_unique<SIPPNode>(start, time_interval_start, 0, h, nullptr));
+  open_list.push(node_list.back().get());
 
   // create known nodes database
   sipp::UnorderedSet known;
@@ -107,7 +111,7 @@ TimePointPath SIPP::plan(const Point2d& start, const Point2d& goal)
   while (!open_list.empty())
   {
     // pop the node to be processed
-    std::shared_ptr<SIPPNode> current = std::move(open_list.top());
+    SIPPNode const* const current = std::move(open_list.top());
     open_list.pop();
 
     // std::cout << current->time_point.position << ", " << current->time_point.interval << std::endl;
@@ -155,18 +159,21 @@ TimePointPath SIPP::plan(const Point2d& start, const Point2d& goal)
 
         assertm(neighbor_time_point.interval.t_min > current->time_point.interval.t_min, "Invalid interval.");
 
+        // add to the node list
+        node_list.push_back(std::make_unique<SIPPNode>(neighbor_time_point, neighbor_time_point.interval.t_min, h, current));
+
         // add to the open list
-        open_list.push(std::make_shared<SIPPNode>(neighbor_time_point, neighbor_time_point.interval.t_min, h, current));
+        open_list.push(node_list.back().get());
       }
     }
   }
   return TimePointPath();
 }
 
-TimePointPath sipp::extract_path(const std::shared_ptr<SIPPNode>& final_node)
+TimePointPath sipp::extract_path(SIPPNode const* const final_node)
 {
-  TimePointPath             path;
-  std::shared_ptr<SIPPNode> curr = final_node;
+  TimePointPath   path;
+  SIPPNode const* curr = final_node;
   while (curr != nullptr)
   {
     path.push_back(curr->time_point);
@@ -176,7 +183,7 @@ TimePointPath sipp::extract_path(const std::shared_ptr<SIPPNode>& final_node)
   return path;
 }
 
-TimeInterval sipp::neighbor_time_interval(TimeInterval& i)
+TimeInterval sipp::neighbor_time_interval(const TimeInterval& i)
 {
   TimeInterval next_ti = i;
   if (next_ti.t_max == INT_MAX)
