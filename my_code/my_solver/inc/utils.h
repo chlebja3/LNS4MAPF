@@ -128,10 +128,12 @@ public:
 class Map
 {
 public:
-  int                  width  = 0;
-  int                  height = 0;
+  int                  width      = 0;
+  int                  height     = 0;
+  int                  free_cells = 0;
   std::vector<uint8_t> data;
 
+  Map() = default;
   void    print() const;
   bool    is_in(const Point2d& point) const;
   uint8_t index(const Point2d& point) const;

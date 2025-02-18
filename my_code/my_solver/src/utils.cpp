@@ -10,6 +10,7 @@
 #include <array>
 #include <cmath>
 #include <filesystem>
+#include <iostream>
 
 Node::Node(const double g, const double h) : g(g), h(h), f(g + h){};
 
@@ -136,6 +137,20 @@ std::vector<Point2d> Map::find_neighbors(const Point2d& point) const
     ret.push_back(neigh);
   }
   return ret;
+}
+
+void Map::print(void) const
+{
+  std::cout << "Map size: " << width << "x" << height << std::endl;
+  assertm(width * height > 0, "Invalid map size.");
+  for (int i = 0; i < (int)data.size(); i++)
+  {
+    std::cout << (int)data[i];
+    if (i % width == height - 1)
+      std::cout << std::endl;
+    else
+      std::cout << " ";
+  }
 }
 
 Path timepointpath_to_path(const TimePointPath& tp_path)

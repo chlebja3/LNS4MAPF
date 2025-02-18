@@ -82,9 +82,9 @@ TimePointPath SIPP::plan(const Point2d& start, const Point2d& goal)
   // check whether start and goal not obstructed
   if (map_data.index(start) == 1 || map_data.index(goal) == 1) return TimePointPath();
 
-  // estimate the maximum time the goal can be reached (after all dynamic constraints disappear, the path can be maximally width*height
-  // long)
-  int max_time = constraint_table.get_last_constraint_end() + map_data.height * map_data.width;
+  // estimate the maximum time the goal can be reached (after all dynamic constraints disappear, the path can go through all free cells
+  // in the worst case)
+  int max_time = constraint_table.get_last_constraint_end() + map_data.free_cells;
   // std::cout << "Max time: " << max_time << std::endl;
 
   // create openlist

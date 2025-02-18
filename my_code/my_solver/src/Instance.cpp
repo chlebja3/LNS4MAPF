@@ -16,19 +16,6 @@
 
 #include "Astar.h"
 
-void Map::print(void) const
-{
-  std::cout << "Map size: " << width << "x" << height << std::endl;
-  for (int i = 0; i < (int)data.size(); i++)
-  {
-    std::cout << (int)data[i];
-    if (i % width == height - 1)
-      std::cout << std::endl;
-    else
-      std::cout << " ";
-  }
-}
-
 Instance::Instance(const std::string& map_fname, const std::string& scene_fname, int num_of_agents)
     : num_of_agents(num_of_agents), map_fname(map_fname), scene_fname(scene_fname)
 {
@@ -51,6 +38,9 @@ void Instance::initialize()
 
 void Instance::load_map(void)
 {
+  // reset the map data
+  Map new_map;
+  std::cout << "Initialized map data" << std::endl;
   int num_of_cols, num_of_rows = 0;
   // open the map file
   std::ifstream map_file(map_fname.c_str());
@@ -100,11 +90,15 @@ void Instance::load_map(void)
         for (int i = 0; i < (int)line.size(); i++)
         {
           // treat . as free cell
-          if (line[i] == '.') map_data.data.push_back(0);
+          if (line[i] == '.')
+          {
+            new_map.data.push_back(0);
+            new_map.free_cells++;
+          }
           // treat @, T as obstacle
           else if (line[i] == '@' || line[i] == 'T')
           {
-            map_data.data.push_back(1);
+            new_map.data.push_back(1);
           }
           // report all other symbols as unknown
           else
@@ -113,13 +107,13 @@ void Instance::load_map(void)
           }
         }
         // check whether the number of cells in this row is consistent with num_of_columns
-        if (map_data.data.size() % num_of_cols != 0)
+        if (new_map.data.size() % num_of_cols != 0)
         {
           throw std::runtime_error("Inconsistent number of symbols in a row in the map description.");
         }
       }
       // check whether the number of lines is consistent with num_of_rows
-      if ((int)map_data.data.size() != num_of_cols * num_of_rows)
+      if ((int)new_map.data.size() != num_of_cols * num_of_rows)
       {
         throw std::runtime_error("Inconsistent number of rows in the map description.");
       }
@@ -131,8 +125,13 @@ void Instance::load_map(void)
 
   // close the map file
   map_file.close();
-  map_data.width  = num_of_cols;
-  map_data.height = num_of_rows;
+
+  // assign the size of the map
+  new_map.height = num_of_rows;
+  new_map.width  = num_of_cols;
+
+  map_data = std::move(new_map);
+  std::cout << "The map is:" << std::endl;
 }
 
 void Instance::load_scene(void)
