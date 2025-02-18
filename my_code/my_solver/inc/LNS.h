@@ -13,7 +13,7 @@ class LNS : public Solver
 {
 public:
   // constructor
-  LNS(std::shared_ptr<Instance> instance);
+  LNS(const Instance& instance);
 
   // Destructor
   ~LNS() = default;

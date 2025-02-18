@@ -12,7 +12,7 @@
 
 #include "LNS.h"
 
-Computation::Computation(std::shared_ptr<Instance> instance) : instance(instance)
+Computation::Computation(const Instance& instance) : instance(instance)
 {
   std::cout << "Initialized computation." << std::endl;
   running = false;
@@ -42,7 +42,10 @@ void Computation::stop()
 
 void Computation::join_thread()
 {
-  if (comp_thread.joinable()) { comp_thread.join(); }
+  if (comp_thread.joinable())
+  {
+    comp_thread.join();
+  }
 }
 
 void Computation::run()

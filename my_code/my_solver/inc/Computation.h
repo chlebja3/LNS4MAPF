@@ -17,7 +17,7 @@ class Computation
 {
 public:
   // constructor and destructor
-  Computation(std::shared_ptr<Instance> instance);
+  Computation(const Instance& instance);
   ~Computation();
 
   // manage the underlying thread
@@ -29,8 +29,8 @@ public:
   void run();
 
 private:
-  std::unique_ptr<LNS>      solver;
-  std::thread               comp_thread;
-  std::shared_ptr<Instance> instance;
-  std::atomic<bool>         running;
+  std::unique_ptr<LNS> solver;
+  std::thread          comp_thread;
+  const Instance&      instance;
+  std::atomic<bool>    running;
 };

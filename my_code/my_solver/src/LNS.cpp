@@ -12,7 +12,7 @@
 
 #include "SIPP.h"
 
-LNS::LNS(std::shared_ptr<Instance> instance) : Solver("LNS", instance)
+LNS::LNS(const Instance& instance) : Solver("LNS", instance)
 {
   // SIPP's lifetime can not be longer than LNS's lifetime, because then map_data might be deleted before SIPP
   planner = std::make_unique<SIPP>(instance);
@@ -34,7 +34,7 @@ void LNS::find_initial_solution()
 
 Solution LNS::PrioritizedPlanning()
 {
-  const int agent_num = instance->num_of_agents;
+  const int agent_num = instance.num_of_agents;
 
   // create a sequence from 0 to agent_num
   std::vector<int> priorities(agent_num);

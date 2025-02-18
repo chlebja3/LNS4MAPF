@@ -20,7 +20,7 @@
 class ConstraintTableTest : public ::testing::Test
 {
 protected:
-  std::shared_ptr<Instance>        instance;
+  std::unique_ptr<Instance>        instance;
   std::unique_ptr<ConstraintTable> table;
 
   void SetUp() override
@@ -30,8 +30,8 @@ protected:
     std::string base_path = get_base_path_tests();  // path to my_solver
 
     instance =
-        std::make_shared<Instance>(base_path + "/tests/test_maps/dummy_3_3.map", base_path + "/tests/test_scen/dummy_3_3_scen_1.scen", 1);
-    table = std::make_unique<ConstraintTable>(instance);
+        std::make_unique<Instance>(base_path + "/tests/test_maps/dummy_3_3.map", base_path + "/tests/test_scen/dummy_3_3_scen_1.scen", 1);
+    table = std::make_unique<ConstraintTable>(*instance);
   }
 
   void TearDown() override
@@ -230,11 +230,11 @@ TEST(SIPPTest, BasicPathEmptyMap)
 {
   // load instance
   std::string               base_path = get_base_path_tests();  // path to my_solver
-  std::shared_ptr<Instance> instance =
-      std::make_shared<Instance>(base_path + "/tests/test_maps/empty_5_5.map", base_path + "/tests/test_scen/empty_5_5_scen_1.scen", 1);
+  std::unique_ptr<Instance> instance =
+      std::make_unique<Instance>(base_path + "/tests/test_maps/empty_5_5.map", base_path + "/tests/test_scen/empty_5_5_scen_1.scen", 1);
 
   // create SIPP
-  SIPP sipp(instance);
+  SIPP sipp(*instance);
 
   // from (0,0) to (4,4)
   Point2d       start = instance->get_start_positions()[0];
@@ -251,11 +251,11 @@ TEST(SIPPTest, StaticObstacleAvoidance)
 {
   // load instance
   std::string               base_path = get_base_path_tests();  // path to my_solver
-  std::shared_ptr<Instance> instance =
-      std::make_shared<Instance>(base_path + "/tests/test_maps/wall_5_5.map", base_path + "/tests/test_scen/wall_5_5_scen_1.scen", 1);
+  std::unique_ptr<Instance> instance =
+      std::make_unique<Instance>(base_path + "/tests/test_maps/wall_5_5.map", base_path + "/tests/test_scen/wall_5_5_scen_1.scen", 1);
 
   // create SIPP
-  SIPP sipp(instance);
+  SIPP sipp(*instance);
 
   // from (4,0) to (0,4)
   Point2d       start = instance->get_start_positions()[0];
@@ -281,11 +281,11 @@ TEST(SIPPTest, TimeConstraintHandling)
 {
   // load instance
   std::string               base_path = get_base_path_tests();  // path to my_solver
-  std::shared_ptr<Instance> instance =
-      std::make_shared<Instance>(base_path + "/tests/test_maps/empty_5_5.map", base_path + "/tests/test_scen/empty_5_5_scen_1.scen", 1);
+  std::unique_ptr<Instance> instance =
+      std::make_unique<Instance>(base_path + "/tests/test_maps/empty_5_5.map", base_path + "/tests/test_scen/empty_5_5_scen_1.scen", 1);
 
   // create SIPP
-  SIPP sipp(instance);
+  SIPP sipp(*instance);
 
   // from (0,0) to (4,4)
   Point2d start = instance->get_start_positions()[0];
@@ -320,11 +320,11 @@ TEST(SIPPTest, TrivialStartGoal)
 {
   // load instance
   std::string               base_path = get_base_path_tests();  // path to my_solver
-  std::shared_ptr<Instance> instance =
-      std::make_shared<Instance>(base_path + "/tests/test_maps/empty_5_5.map", base_path + "/tests/test_scen/empty_5_5_scen_1.scen", 1);
+  std::unique_ptr<Instance> instance =
+      std::make_unique<Instance>(base_path + "/tests/test_maps/empty_5_5.map", base_path + "/tests/test_scen/empty_5_5_scen_1.scen", 1);
 
   // create SIPP
-  SIPP sipp(instance);
+  SIPP sipp(*instance);
 
   Point2d start = Point2d(0, 0);
 
@@ -339,11 +339,11 @@ TEST(SIPPTest, NoPathPossible)
 {
   // load instance
   std::string               base_path = get_base_path_tests();  // path to my_solver
-  std::shared_ptr<Instance> instance =
-      std::make_shared<Instance>(base_path + "/tests/test_maps/biparted_5_5.map", base_path + "/tests/test_scen/empty_5_5_scen_1.scen", 1);
+  std::unique_ptr<Instance> instance =
+      std::make_unique<Instance>(base_path + "/tests/test_maps/biparted_5_5.map", base_path + "/tests/test_scen/empty_5_5_scen_1.scen", 1);
 
   // create SIPP
-  SIPP sipp(instance);
+  SIPP sipp(*instance);
 
   // from (0,0) to (4,4)
   Point2d start = instance->get_start_positions()[0];
@@ -359,11 +359,11 @@ TEST(SIPPTest, NoPathDueToTimeConstraints)
 {
   // load instance
   std::string               base_path = get_base_path_tests();  // path to my_solver
-  std::shared_ptr<Instance> instance =
-      std::make_shared<Instance>(base_path + "/tests/test_maps/empty_5_5.map", base_path + "/tests/test_scen/empty_5_5_scen_1.scen", 1);
+  std::unique_ptr<Instance> instance =
+      std::make_unique<Instance>(base_path + "/tests/test_maps/empty_5_5.map", base_path + "/tests/test_scen/empty_5_5_scen_1.scen", 1);
 
   // create SIPP
-  SIPP sipp(instance);
+  SIPP sipp(*instance);
 
   // from (0,0) to (4,4)
   Point2d start = instance->get_start_positions()[0];
@@ -407,11 +407,11 @@ TEST(SIPPTest, StartOutsideMap)
 {
   // load instance
   std::string               base_path = get_base_path_tests();  // path to my_solver
-  std::shared_ptr<Instance> instance =
-      std::make_shared<Instance>(base_path + "/tests/test_maps/empty_3_3.map", base_path + "/tests/test_scen/dummy_3_3_scen_1.scen", 1);
+  std::unique_ptr<Instance> instance =
+      std::make_unique<Instance>(base_path + "/tests/test_maps/empty_3_3.map", base_path + "/tests/test_scen/dummy_3_3_scen_1.scen", 1);
 
   // create SIPP
-  SIPP sipp(instance);
+  SIPP sipp(*instance);
 
   Point2d start = Point2d(3, 1);
   Point2d goal  = instance->get_goal_positions()[0];
@@ -426,11 +426,11 @@ TEST(SIPPTest, GoalOutsideMap)
 {
   // load instance
   std::string               base_path = get_base_path_tests();  // path to my_solver
-  std::shared_ptr<Instance> instance =
-      std::make_shared<Instance>(base_path + "/tests/test_maps/empty_3_3.map", base_path + "/tests/test_scen/dummy_3_3_scen_1.scen", 1);
+  std::unique_ptr<Instance> instance =
+      std::make_unique<Instance>(base_path + "/tests/test_maps/empty_3_3.map", base_path + "/tests/test_scen/dummy_3_3_scen_1.scen", 1);
 
   // create SIPP
-  SIPP sipp(instance);
+  SIPP sipp(*instance);
 
   Point2d start = instance->get_start_positions()[0];
   Point2d goal  = Point2d(-1, 0);
@@ -445,11 +445,11 @@ TEST(SIPPTest, StaticObstacleAtGoal)
 {
   // load instance
   std::string               base_path = get_base_path_tests();  // path to my_solver
-  std::shared_ptr<Instance> instance =
-      std::make_shared<Instance>(base_path + "/tests/test_maps/wall_5_5.map", base_path + "/tests/test_scen/wall_5_5_scen_1.scen", 1);
+  std::unique_ptr<Instance> instance =
+      std::make_unique<Instance>(base_path + "/tests/test_maps/wall_5_5.map", base_path + "/tests/test_scen/wall_5_5_scen_1.scen", 1);
 
   // create SIPP
-  SIPP sipp(instance);
+  SIPP sipp(*instance);
 
   Point2d start = Point2d(1, 2);
   Point2d goal  = Point2d(2, 1);
@@ -464,11 +464,11 @@ TEST(SIPPTest, DynamicObstacleAtGoal)
 {
   // load instance
   std::string               base_path = get_base_path_tests();  // path to my_solver
-  std::shared_ptr<Instance> instance =
-      std::make_shared<Instance>(base_path + "/tests/test_maps/empty_5_5.map", base_path + "/tests/test_scen/empty_5_5_scen_1.scen", 1);
+  std::unique_ptr<Instance> instance =
+      std::make_unique<Instance>(base_path + "/tests/test_maps/empty_5_5.map", base_path + "/tests/test_scen/empty_5_5_scen_1.scen", 1);
 
   // create SIPP
-  SIPP sipp(instance);
+  SIPP sipp(*instance);
 
   // from (0,0) to (4,4)
   Point2d start = instance->get_start_positions()[0];
@@ -492,11 +492,11 @@ TEST(SIPPTest, EdgeConstraintsAtGoal)
 {
   // load instance
   std::string               base_path = get_base_path_tests();  // path to my_solver
-  std::shared_ptr<Instance> instance =
-      std::make_shared<Instance>(base_path + "/tests/test_maps/dummy_3_3.map", base_path + "/tests/test_scen/dummy_3_3_scen_2.scen", 1);
+  std::unique_ptr<Instance> instance =
+      std::make_unique<Instance>(base_path + "/tests/test_maps/dummy_3_3.map", base_path + "/tests/test_scen/dummy_3_3_scen_2.scen", 1);
 
   // create SIPP
-  SIPP sipp(instance);
+  SIPP sipp(*instance);
 
   // from (2, 0) to (2, 1)
   Point2d start = instance->get_start_positions()[0];
@@ -524,11 +524,11 @@ TEST(SIPPTest, SamePathAsAStar1)
 {
   // load instance
   std::string               base_path = get_base_path_tests();  // path to my_solver
-  std::shared_ptr<Instance> instance =
-      std::make_shared<Instance>(base_path + "/tests/test_maps/empty_5_5.map", base_path + "/tests/test_scen/empty_5_5_scen_1.scen", 1);
+  std::unique_ptr<Instance> instance =
+      std::make_unique<Instance>(base_path + "/tests/test_maps/empty_5_5.map", base_path + "/tests/test_scen/empty_5_5_scen_1.scen", 1);
 
   // create SIPP
-  SIPP sipp(instance);
+  SIPP sipp(*instance);
 
   // from (0,0) to (4,4)
   Point2d start = instance->get_start_positions()[0];
@@ -558,11 +558,11 @@ TEST(SIPPTest, SamePathAsAStar2)
 {
   // load instance
   std::string               base_path = get_base_path_tests();  // path to my_solver
-  std::shared_ptr<Instance> instance =
-      std::make_shared<Instance>(base_path + "/tests/test_maps/den520d.map", base_path + "/tests/test_scen/den520d-random-0.scen", 1);
+  std::unique_ptr<Instance> instance =
+      std::make_unique<Instance>(base_path + "/tests/test_maps/den520d.map", base_path + "/tests/test_scen/den520d-random-0.scen", 1);
 
   // create SIPP
-  SIPP sipp(instance);
+  SIPP sipp(*instance);
 
   // from (0,0) to (4,4)
   Point2d start = instance->get_start_positions()[0];

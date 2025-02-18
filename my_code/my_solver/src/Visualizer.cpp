@@ -29,18 +29,18 @@
 #define MENU_BAR_SIZE 46
 
 
-Visualizer::Visualizer(std::shared_ptr<Instance> instance) : instance(instance)
+Visualizer::Visualizer(const Instance& instance) : instance(instance)
 {
   running = false;
 
   // generate random colors for the agents
-  for (int i = 0; i < (int)instance->get_start_positions().size(); i++)
+  for (int i = 0; i < (int)instance.get_start_positions().size(); i++)
   {
     agents_colors.push_back(generate_random_color(255, 255, 255, 0.25));
   }
 
   // create the map texture
-  mapToTexture(instance->get_map_data());
+  mapToTexture(instance.get_map_data());
   std::cout << "Initialized visualizer." << std::endl;
 }
 
@@ -73,8 +73,8 @@ void Visualizer::join_thread()
 
 void Visualizer::run()
 {
-  const int map_width     = instance->get_map_data().width;
-  const int map_height    = instance->get_map_data().height;
+  const int map_width     = instance.get_map_data().width;
+  const int map_height    = instance.get_map_data().height;
   const int window_height = (int)std::round(WINDOW_WIDTH * ((double)map_width / (double)map_height)) + MENU_BAR_SIZE;
   // std::cout << "Requested window height " << window_height << std::endl;
 
@@ -168,11 +168,11 @@ void Visualizer::run()
     window.draw(map_sprite);
 
     // draw the optimal paths
-    for (int i = 0; i < (int)instance->get_optimal_paths().size(); i++)
+    for (int i = 0; i < (int)instance.get_optimal_paths().size(); i++)
     {
-      draw_path(window, instance->get_optimal_paths()[i], agents_colors[i]);
+      draw_path(window, instance.get_optimal_paths()[i], agents_colors[i]);
     }
-    // draw_path(window, instance->get_optimal_paths()[0], agents_colors[0]);
+    // draw_path(window, instance.get_optimal_paths()[0], agents_colors[0]);
 
     // draw the agents
     draw_agents(window);
@@ -290,10 +290,10 @@ void Visualizer::mapToTexture(const Map& map_data)
 void Visualizer::draw_agents(sf::RenderWindow& window)
 {
   agents_circles.clear();
-  for (int i = 0; i < (int)instance->get_start_positions().size(); i++)
+  for (int i = 0; i < (int)instance.get_start_positions().size(); i++)
   {
-    const int x = instance->get_start_positions()[i].x;
-    const int y = instance->get_start_positions()[i].y;
+    const int x = instance.get_start_positions()[i].x;
+    const int y = instance.get_start_positions()[i].y;
     // create shape
     agents_circles.push_back(sf::CircleShape((double)(CELL_SIZE - 2 * BORDER_SIZE) / 2));
     // set color
@@ -309,10 +309,10 @@ void Visualizer::draw_agents(sf::RenderWindow& window)
 void Visualizer::draw_goals(sf::RenderWindow& window)
 {
   agents_circles.clear();
-  for (int i = 0; i < (int)instance->get_start_positions().size(); i++)
+  for (int i = 0; i < (int)instance.get_start_positions().size(); i++)
   {
-    const int x = instance->get_goal_positions()[i].x;
-    const int y = instance->get_goal_positions()[i].y;
+    const int x = instance.get_goal_positions()[i].x;
+    const int y = instance.get_goal_positions()[i].y;
     // create shape
     agents_circles.push_back(sf::CircleShape((double)(CELL_SIZE - 2 * BORDER_SIZE) / 2));
     // set color

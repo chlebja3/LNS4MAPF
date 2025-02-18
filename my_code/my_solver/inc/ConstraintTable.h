@@ -35,7 +35,7 @@ public:
 class ConstraintTable
 {
 public:
-  ConstraintTable(std::shared_ptr<Instance> instance);
+  ConstraintTable(const Instance& instance);
 
   void                      add_constraint(const TimePoint& timepoint);
   void                      add_constraints(const TimePointPath& path);
@@ -49,5 +49,5 @@ public:
 private:
   std::vector<std::list<TimeInterval>>                                  constraints;       // constraints for each position
   std::unordered_set<EdgeCollision, EdgeCollision::hash_edge_collision> edge_constraints;  // constraints for edges
-  std::shared_ptr<Instance>                                             instance;
+  const Instance&                                                       instance;
 };

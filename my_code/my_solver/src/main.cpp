@@ -51,7 +51,7 @@ int main(int argc, char** argv)
   bool        GUI        = vm["GUI"].as<bool>();
 
   // create the instance
-  std::shared_ptr<Instance> instance = std::make_shared<Instance>(map_name, scene_name, agent_num);
+  std::unique_ptr<Instance> instance = std::make_unique<Instance>(map_name, scene_name, agent_num);
 
   // calculate the optimal paths neglecting the other agents
   instance->calculate_optimal_paths_parallel();
@@ -63,7 +63,7 @@ int main(int argc, char** argv)
 
 
   // create the computation object
-  Computation computation(instance);
+  Computation computation(*instance);
 
   // start the computation thread
   computation.start();
@@ -71,7 +71,7 @@ int main(int argc, char** argv)
   // create the visualization object
   if (GUI)
   {
-    Visualizer visualizer(instance);
+    Visualizer visualizer(*instance);
     visualizer.start();
     // wait for the visualization thread to finish
     visualizer.join_thread();

@@ -32,10 +32,10 @@ size_t EdgeCollision::hash_edge_collision::operator()(const EdgeCollision& c) co
   return seed;
 }
 
-ConstraintTable::ConstraintTable(std::shared_ptr<Instance> instance) : instance(instance)
+ConstraintTable::ConstraintTable(const Instance& instance) : instance(instance)
 {
   // initialize the constraint vectors TODO static obstacles dont need constraint vectors
-  const int num_constraints = instance->get_map_data().width * instance->get_map_data().height;
+  const int num_constraints = instance.get_map_data().width * instance.get_map_data().height;
   constraints               = std::vector<std::list<TimeInterval>>(num_constraints, std::list<TimeInterval>());
 }
 
@@ -43,13 +43,13 @@ ConstraintTable::ConstraintTable(std::shared_ptr<Instance> instance) : instance(
 void ConstraintTable::add_constraint(const TimePoint& timepoint)
 {
   // check the position is valid
-  assertm(instance->get_map_data().is_in(timepoint.position), "Invalid position.");
+  assertm(instance.get_map_data().is_in(timepoint.position), "Invalid position.");
 
   // find the index of the position
-  int idx = instance->get_map_data().position_to_index(timepoint.position);
+  int idx = instance.get_map_data().position_to_index(timepoint.position);
 
   // check, that the index is valid
-  assertm(idx >= 0 && idx < instance->get_map_data().width * instance->get_map_data().height, "Invalid index.");
+  assertm(idx >= 0 && idx < instance.get_map_data().width * instance.get_map_data().height, "Invalid index.");
 
   // check that there are enough constraints
   assertm(idx < constraints.size(), "Not enough constraints.");
@@ -92,13 +92,13 @@ void ConstraintTable::add_constraint(const TimePoint& timepoint)
 void ConstraintTable::remove_constraint(const TimePoint& timepoint)
 {
   // check the position is valid
-  assertm(instance->get_map_data().is_in(timepoint.position), "Invalid position.");
+  assertm(instance.get_map_data().is_in(timepoint.position), "Invalid position.");
 
   // find the index of the position
-  int idx = instance->get_map_data().position_to_index(timepoint.position);
+  int idx = instance.get_map_data().position_to_index(timepoint.position);
 
   // check, that the index is valid
-  assertm(idx >= 0 && idx < instance->get_map_data().width * instance->get_map_data().height, "Invalid index.");
+  assertm(idx >= 0 && idx < instance.get_map_data().width * instance.get_map_data().height, "Invalid index.");
 
   std::list<TimeInterval>& cur_TI_list = constraints[idx];
 
@@ -155,13 +155,13 @@ void ConstraintTable::remove_constraints(const TimePointPath& path)
 TimeInterval ConstraintTable::get_first_safe_interval(const Point2d& position)
 {
   // check the position is valid
-  assertm(instance->get_map_data().is_in(position), "Invalid position.");
+  assertm(instance.get_map_data().is_in(position), "Invalid position.");
 
   // find the index of the position
-  int idx = instance->get_map_data().position_to_index(position);
+  int idx = instance.get_map_data().position_to_index(position);
 
   // check, that the index is valid
-  assertm(idx >= 0 && idx < instance->get_map_data().width * instance->get_map_data().height, "Invalid index.");
+  assertm(idx >= 0 && idx < instance.get_map_data().width * instance.get_map_data().height, "Invalid index.");
 
   std::list<TimeInterval>& cur_TI_list = constraints[idx];
 
@@ -179,13 +179,13 @@ TimeInterval ConstraintTable::get_first_safe_interval(const Point2d& position)
 TimeInterval ConstraintTable::get_safe_interval(const Point2d& position, const Point2d& from, const int time)
 {
   // check the position is valid
-  assertm(instance->get_map_data().is_in(position), "Invalid position.");
+  assertm(instance.get_map_data().is_in(position), "Invalid position.");
 
   // find the index of the position
-  int idx = instance->get_map_data().position_to_index(position);
+  int idx = instance.get_map_data().position_to_index(position);
 
   // check, that the index is valid
-  assertm(idx >= 0 && idx < instance->get_map_data().width * instance->get_map_data().height, "Invalid index.");
+  assertm(idx >= 0 && idx < instance.get_map_data().width * instance.get_map_data().height, "Invalid index.");
 
   std::list<TimeInterval>& cur_TI_list = constraints[idx];
 
@@ -240,13 +240,13 @@ std::vector<TimeInterval> ConstraintTable::get_safe_intervals(const Point2d& pos
                                                               const TimeInterval& time_interval)
 {
   // check the position is valid
-  assertm(instance->get_map_data().is_in(position), "Invalid position.");
+  assertm(instance.get_map_data().is_in(position), "Invalid position.");
 
   // find the index of the position
-  int idx = instance->get_map_data().position_to_index(position);
+  int idx = instance.get_map_data().position_to_index(position);
 
   // check, that the index is valid
-  assertm(idx >= 0 && idx < instance->get_map_data().width * instance->get_map_data().height, "Invalid index.");
+  assertm(idx >= 0 && idx < instance.get_map_data().width * instance.get_map_data().height, "Invalid index.");
 
   std::list<TimeInterval>& cur_TI_list = constraints[idx];
 

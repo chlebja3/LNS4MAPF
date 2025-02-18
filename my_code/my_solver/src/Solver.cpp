@@ -12,10 +12,10 @@
 #include <iostream>
 #include <unordered_set>
 
-bool Solution::is_valid(std::shared_ptr<Instance> instance) const
+bool Solution::is_valid(const Instance& instance) const
 {
   // check that each agent has a path
-  if (instance->num_of_agents != (int)paths.size())
+  if (instance.num_of_agents != (int)paths.size())
   {
     // std::cout << "Agent without a path." << std::endl;
     return false;
@@ -33,14 +33,14 @@ bool Solution::is_valid(std::shared_ptr<Instance> instance) const
     }
 
     // check that the path starts in the start position
-    if (!(paths[i].front() == instance->get_start_positions()[i]))
+    if (!(paths[i].front() == instance.get_start_positions()[i]))
     {
       // std::cout << "Path does not start in the start position." << std::endl;
       return false;
     }
 
     // check that the path ends in the goal position
-    if (!(paths[i].back() == instance->get_goal_positions()[i]))
+    if (!(paths[i].back() == instance.get_goal_positions()[i]))
     {
       // std::cout << "Path does not end in the goal position." << std::endl;
       return false;
@@ -80,14 +80,14 @@ bool Solution::is_valid(std::shared_ptr<Instance> instance) const
       }
 
       // check the path does not leave the map
-      if (!instance->get_map_data().is_in(paths[i][idx]))
+      if (!instance.get_map_data().is_in(paths[i][idx]))
       {
         // std::cout << "Path leaves the map in point " << paths[i][idx] << std::endl;
         return false;
       }
 
       // check collisions with static obstacles
-      if (instance->get_map_data().index(paths[i][idx]) != 0)
+      if (instance.get_map_data().index(paths[i][idx]) != 0)
       {
         // std::cout << "Collision with static obstacle." << std::endl;
         return false;
@@ -243,4 +243,4 @@ void Solution::load(const std::string& filename)
 }
 
 
-Solver::Solver(const std::string& name, std::shared_ptr<Instance> instance) : name(name), instance(instance){};
+Solver::Solver(const std::string& name, const Instance& instance) : name(name), instance(instance){};

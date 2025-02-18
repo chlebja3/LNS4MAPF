@@ -19,8 +19,8 @@
 
 #define MOVE_TIME 1  // time to move to the next cell
 
-SIPP::SIPP(const std::shared_ptr<Instance> instance) : map_data(instance->get_map_data()), constraint_table(ConstraintTable(instance)){};
-SIPP::SIPP(const Map& map_data, const ConstraintTable& constraint_table) : map_data(map_data), constraint_table(constraint_table){};
+SIPP::SIPP(const Instance& instance) : constraint_table(ConstraintTable(instance)), map_data(instance.get_map_data()){};
+SIPP::SIPP(const Map& map_data, const ConstraintTable& constraint_table) : constraint_table(constraint_table), map_data(map_data){};
 
 
 class SIPPNode : public Node
