@@ -318,8 +318,30 @@ TEST(TimeIntervalIntersectionTest, LengthOne)
   EXPECT_FALSE(overlap(i2, i1)) << "Intervals should not intersect.";
 }
 
+
+// Test conversion from timepointpath to Path simple
+TEST(test_utils, timepointpath_to_path_simple)
+{
+  // generate a simple timepointpath
+  TimePointPath tp_path;
+  tp_path.push_back({{0, 1}, {0, 10}});
+  tp_path.push_back({{0, 2}, {3, 6}});
+  tp_path.push_back({{1, 2}, {6, 6}});
+  tp_path.push_back({{2, 2}, {7, INT_MAX}});
+
+  // convert to path
+  Path path          = timepointpath_to_path(tp_path);
+  Path expected_path = {{0, 1}, {0, 1}, {0, 1}, {0, 2}, {0, 2}, {0, 2}, {1, 2}, {2, 2}};
+
+  // check that the path has the right length
+  EXPECT_EQ(path.size(), expected_path.size()) << "Wrong path length.";
+
+  // check that the path has the right time intervals
+  EXPECT_EQ(path, expected_path) << "Wrong path.";
+}
+
 // Test conversion from timepointpath to Path
-TEST(test_utils, timepointpath_to_path)
+TEST(test_utils, timepointpath_to_path_random)
 {
   // generate a random timepointpath
   const int     len     = 1000;
@@ -345,6 +367,7 @@ TEST(test_utils, timepointpath_to_path)
     }
   }
 }
+
 
 // Color Generation test
 
