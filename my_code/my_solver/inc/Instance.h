@@ -22,6 +22,7 @@ public:
 
   void initialize(const std::string& map_fname, const std::string& scene_fname, int num_of_agents = 0);
   void initialize(void);
+  bool is_initialized(void) const;
 
   // function to print the map
   void print_map(void) const;
@@ -40,6 +41,10 @@ public:
   // function to calculate the optimal paths ignoring the other agents
   void calculate_optimal_paths(void);
   void calculate_optimal_paths_parallel(void);
+
+  void   calculate_heuristics(void);
+  int    get_heuristic_manhattan(const int agent_num, const Point2d& pos) const;
+  double get_heuristic_euclidean(const int agent_num, const Point2d& pos) const;
 
 
 private:
@@ -61,5 +66,9 @@ private:
   std::vector<Point2d> start_positions;
   std::vector<Point2d> goal_positions;
   std::vector<Path>    optimal_paths;
+
+  // heuristics
+  std::vector<std::vector<int>>    heuristic_manhattan;
+  std::vector<std::vector<double>> heuristic_euclidean;
 };
 

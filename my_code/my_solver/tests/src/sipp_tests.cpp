@@ -125,8 +125,12 @@ TEST_F(ConstraintTableTest, DynamicAddRemove)
   EXPECT_EQ(safe_intervals[1], TimeInterval(9, INT_MAX));
 }
 
-// Test 6: Constraint removal from empty table
+// Test 6: Constraint removal from empty table if in debug mode
+#ifdef NDEBUG
+TEST_F(ConstraintTableTest, DISABLED_RemoveFromEmptyTable)
+#else
 TEST_F(ConstraintTableTest, RemoveFromEmptyTable)
+#endif
 {
   TimePoint tp({1, 1}, {3, 6});
   // expect assert death
@@ -155,7 +159,11 @@ TEST_F(ConstraintTableTest, RemoveNonExistentConstraint)
 }
 
 // Test 8: Adding a constraint that is already present (should cause assert death)
+#ifdef NDEBUG
+TEST_F(ConstraintTableTest, DISABLED_AddExistingConstraint)
+#else
 TEST_F(ConstraintTableTest, AddExistingConstraint)
+#endif
 {
   TimePoint tp({1, 1}, {3, 6});
   table->add_constraint(tp);
@@ -190,7 +198,11 @@ TEST_F(ConstraintTableTest, AddPathConstraints)
 }
 
 // Test 10: check assert death when the safe interval, because, there will be an edge conflict
+#ifdef NDEBUG
+TEST_F(ConstraintTableTest, DISABLED_WrongSafeInterval)
+#else
 TEST_F(ConstraintTableTest, WrongSafeInterval)
+#endif
 {
   std::vector<TimePoint> path1 = {TimePoint({1, 1}, {0, 1}), TimePoint({1, 2}, {2, 4})};
   table->add_constraints(path1);
@@ -200,7 +212,11 @@ TEST_F(ConstraintTableTest, WrongSafeInterval)
 }
 
 // Test 11: check assert death when the safe interval of to position is not right and there are more constraints in the list
+#ifdef NDEBUG
+TEST_F(ConstraintTableTest, DISABLED_WrongSafeIntervalMoreConstraints)
+#else
 TEST_F(ConstraintTableTest, WrongSafeIntervalMoreConstraints)
+#endif
 {
   std::vector<TimePoint> path1 = {TimePoint({1, 1}, {0, 1}), TimePoint({1, 2}, {2, 4}), TimePoint({1, 1}, {5, 6}),
                                   TimePoint({1, 2}, {7, 8}), TimePoint({1, 1}, {9, 10})};
@@ -534,7 +550,7 @@ TEST(SIPPTest, SamePathAsAStar1)
   Point2d goal  = instance->get_goal_positions()[0];
 
   // plan path by ASTAR
-  Path path_astar = ASTAR::find_path(start, goal, instance->get_map_data());
+  Path path_astar = ASTAR::find_path(0, *instance);
 
   // assert that astar found a path
   ASSERT_FALSE(path_astar.empty()) << "A* should find a path when no constraints are present!";
@@ -571,7 +587,7 @@ TEST(SIPPTest, SamePathAsAStar2)
   Point2d goal  = instance->get_goal_positions()[0];
 
   // plan path by ASTAR
-  Path path_astar = ASTAR::find_path(start, goal, instance->get_map_data());
+  Path path_astar = ASTAR::find_path(0, *instance);
 
   // assert that astar found a path
   ASSERT_FALSE(path_astar.empty()) << "A* should find a path when no constraints are present!";

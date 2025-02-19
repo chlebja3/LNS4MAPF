@@ -61,19 +61,23 @@ typedef std::unordered_set<Point2d, Point2d::hash_point>                        
 Path extract_path(AstarNode const* const final_node);
 }  // namespace ASTAR
 
-Path ASTAR::find_path(const Point2d& start, const Point2d& goal, const Map& map_data)
+Path ASTAR::find_path(const int agent_num, const Instance& instance)
 {
-  generated_nodes = 0;
+  const Map&     map_data = instance.get_map_data();
+  const Point2d& start    = instance.get_start_positions()[agent_num];
+  const Point2d& goal     = instance.get_goal_positions()[agent_num];
+  generated_nodes         = 0;
+
   Path path;
 
   // check whether start and goal inside the map
-  if (!map_data.is_in(start) || !map_data.is_in(goal)) return path;
+  assertm(map_data.is_in(start) || map_data.is_in(goal), "Start or goal outside the map.");
 
   // check whether start and goal not obstructed
-  if (map_data.index(start) == 1 && map_data.index(goal) == 1) return path;
+  assertm(map_data.index(start) == 0 && map_data.index(goal) == 0, "Start or goal obstructed.");
 
   // calculate the heuristic
-  double h = std::hypot(goal.x - start.x, goal.y - start.y);
+  const double h = instance.get_heuristic_euclidean(agent_num, start);
 
   // create frontier - possible datastructures priority_queue, ordered set and pairing heap, TODO try all of them
   ASTAR::PriorityQueue open_list;
@@ -89,7 +93,7 @@ Path ASTAR::find_path(const Point2d& start, const Point2d& goal, const Map& map_
   // add the start node to the priority queue
   open_list.push(node_list.back().get());
   ASTAR::generated_nodes++;
-  std::cout << ASTAR::generated_nodes << std::endl;
+  // std::cout << ASTAR::generated_nodes << std::endl;
 
   // create known nodes database
   ASTAR::UnorderedSet known;
@@ -121,7 +125,7 @@ Path ASTAR::find_path(const Point2d& start, const Point2d& goal, const Map& map_
       // check whether neighbor already known
       if (known.find(neighbor) != known.end()) continue;
 
-      double h = std::hypot(goal.x - neighbor.x, goal.y - neighbor.y);
+      const double h = instance.get_heuristic_euclidean(agent_num, neighbor);
       // add to the node list
       node_list.push_back(std::make_unique<AstarNode>(neighbor, current->g + 1, h, current));
 

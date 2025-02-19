@@ -27,13 +27,20 @@ void Instance::initialize(const std::string& map_fname_, const std::string& scen
   map_fname     = map_fname_;
   scene_fname   = scene_fname_;
   num_of_agents = num_of_agents_;
-  return initialize();
+  initialize();
 }
 
 void Instance::initialize()
 {
   load_map();
   load_scene();
+  calculate_heuristics();
+  initialized = true;
+}
+
+bool Instance::is_initialized(void) const
+{
+  return initialized;
 }
 
 void Instance::load_map(void)
@@ -230,7 +237,7 @@ void Instance::calculate_optimal_paths(void)
   for (int i = 0; i < num_of_agents; i++)
   {
     // find the optimal path for each agent not considering other agents
-    Path p = ASTAR::find_path(start_positions[i], goal_positions[i], map_data);
+    Path p = ASTAR::find_path(i, *this);
     optimal_paths.push_back(p);
   }
 }
@@ -247,8 +254,7 @@ void Instance::calculate_optimal_paths_parallel(void)
   // calculate asynchronously the paths
   for (int i = 0; i < num_of_agents; i++)
   {
-    futures.push_back(
-        std::async(std::launch::async, [this, i]() { return ASTAR::find_path(start_positions[i], goal_positions[i], map_data); }));
+    futures.push_back(std::async(std::launch::async, [this, i]() { return ASTAR::find_path(i, *this); }));
   }
 
   // wait for the paths and save them
@@ -262,3 +268,48 @@ const std::vector<Path>& Instance::get_optimal_paths(void) const
 {
   return optimal_paths;
 }
+
+
+void Instance::calculate_heuristics(void)
+{
+
+  // check map validity
+  assertm(map_data.width * map_data.height > 0, "Invalid map.");
+  assertm(map_data.data.size() == map_data.width * map_data.height, "Map size invalid");
+  assertm(free_cells > 0 && free_cells <= data.size(), "Invalid free cell count.");
+
+  // preallocate vectors for the heuristics
+  const std::vector<int>    manhattan_initializer(map_data.width * map_data.height, 0);
+  const std::vector<double> euclidean_initializer(map_data.width * map_data.height, 0.0);
+  heuristic_manhattan.resize(num_of_agents, manhattan_initializer);
+  heuristic_euclidean.resize(num_of_agents, euclidean_initializer);
+
+
+  // fill the vectors
+  for (int i = 0; i < num_of_agents; i++)  // iterate over agents
+  {
+    const Point2d& goal = goal_positions[i];
+    for (int y = 0; y < map_data.height; y++)  // iterate over all positions
+    {
+      for (int x = 0; x < map_data.width; x++)
+      {
+        heuristic_manhattan[i][y * map_data.width + x] = abs(goal.x - x) + abs(goal.y - y);
+        heuristic_euclidean[i][y * map_data.width + x] = std::hypot(goal.x - x, goal.y - y);
+      }
+    }
+  }
+};
+
+int Instance::get_heuristic_manhattan(const int agent_num, const Point2d& pos) const
+{
+
+  assertm(agent_num >= 0 && agent_num < heuristic_manhattan.size(), "Agent number out of range of the heuristic vector.");
+  assertm(map_data.is_in(pos), "Trying to index a point that is not in the map.");
+  return heuristic_manhattan[agent_num][pos.y * map_data.width + pos.x];
+};
+double Instance::get_heuristic_euclidean(const int agent_num, const Point2d& pos) const
+{
+  assertm(agent_num >= 0 && agent_num < heuristic_euclidean.size(), "Agent number out of range of the heuristic vector.");
+  assertm(map_data.is_in(pos), "Trying to index a point that is not in the map.");
+  return heuristic_euclidean[agent_num][pos.y * map_data.width + pos.x];
+};

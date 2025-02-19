@@ -52,5 +52,9 @@ target_link_libraries(path_conv_bm PRIVATE MAPF_lib benchmark::benchmark benchma
 add_executable(vector_operations_bm src/benchmarks/vector_operations_bm.cpp src/test_utils.cpp)
 target_link_libraries(vector_operations_bm PRIVATE MAPF_lib benchmark::benchmark benchmark::benchmark_main)
 
+# Create benchmark for SIPP
+add_executable(sipp_bm src/benchmarks/sipp_bm.cpp src/test_utils.cpp)
+target_link_libraries(sipp_bm PRIVATE MAPF_lib benchmark::benchmark benchmark::benchmark_main)
+
 # Enable CTest integration
 add_test(NAME unit_tests COMMAND unit_tests)

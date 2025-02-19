@@ -103,7 +103,7 @@ bool Map::is_in(const Point2d& p) const
 
 uint8_t Map::index(const Point2d& point) const
 {
-  if (!is_in(point)) return -1;
+  assertm(is_in(point), "Trying to index a point that is not in the map.");
   return data[point.y * width + point.x];
 }
 
