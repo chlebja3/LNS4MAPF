@@ -17,13 +17,12 @@ public:
 
   // constructor
   SIPP(const Instance& instance);
-  SIPP(const Map& map_data, const ConstraintTable& constraint_table);
 
   // destructor
   ~SIPP() = default;
 
-  TimePointPath plan(const Point2d& start, const Point2d& goal);
+  TimePointPath plan(const int agent_num);
 
 private:
-  const Map& map_data;
+  const Instance& instance;
 };

@@ -61,7 +61,7 @@ Solution LNS::PrioritizedPlanning()
     // std::cout << "planning agent: " << agent_id << std::endl;
 
     // plan path for agent
-    TimePointPath tp_path = planner->plan(instance.get_start_positions()[agent_id], instance.get_goal_positions()[agent_id]);
+    TimePointPath tp_path = planner->plan(agent_id);
 
     // print the path
     // std::cout << "Path for agent " << agent_id << ": " << std::endl;

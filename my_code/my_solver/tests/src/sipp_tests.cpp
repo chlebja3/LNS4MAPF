@@ -254,7 +254,7 @@ TEST(SIPPTest, BasicPathEmptyMap)
   // from (0,0) to (4,4)
   Point2d       start = instance->get_start_positions()[0];
   Point2d       goal  = instance->get_goal_positions()[0];
-  TimePointPath path  = sipp.plan(start, goal);
+  TimePointPath path  = sipp.plan(0);
 
   ASSERT_EQ(path.size(), 9) << "SIPP failed to find a basic path!";
   EXPECT_EQ(path.front().position, start) << "Path does not start at the correct point!";
@@ -275,7 +275,7 @@ TEST(SIPPTest, StaticObstacleAvoidance)
   // from (4,0) to (0,4)
   Point2d       start = instance->get_start_positions()[0];
   Point2d       goal  = instance->get_goal_positions()[0];
-  TimePointPath path  = sipp.plan(start, goal);
+  TimePointPath path  = sipp.plan(0);
 
   // check that the path size is correct
   ASSERT_EQ(path.size(), 9) << "SIPP failed to find a path around obstacles!";
@@ -313,7 +313,7 @@ TEST(SIPPTest, TimeConstraintHandling)
     sipp.constraint_table.add_constraint(TimePoint({i, 2}, {0, 20}));
   }
 
-  TimePointPath path = sipp.plan(start, goal);
+  TimePointPath path = sipp.plan(0);
 
   ASSERT_EQ(path.size(), 9) << "Path length invalid!";
 
@@ -328,25 +328,6 @@ TEST(SIPPTest, TimeConstraintHandling)
 
   // check the completion time of the path
   EXPECT_EQ(path.back().interval.t_min, 8) << "Path does not complete in the expected time!";
-}
-
-// **Test 4: Start and goal are the same (Trivial case)**
-TEST(SIPPTest, TrivialStartGoal)
-{
-  // load instance
-  std::string               base_path = get_base_path_tests();  // path to my_solver
-  std::unique_ptr<Instance> instance =
-      std::make_unique<Instance>(base_path + "/tests/test_maps/empty_5_5.map", base_path + "/tests/test_scen/empty_5_5_scen_1.scen", 1);
-
-  // create SIPP
-  SIPP sipp(*instance);
-
-  Point2d start = Point2d(0, 0);
-
-  TimePointPath path = sipp.plan(start, start);
-
-  ASSERT_EQ(path.size(), 1) << "SIPP should return a single-point path!";
-  EXPECT_EQ(path.front().position, start) << "Path should start and end at the same point!";
 }
 
 // **Test 5: No possible path due to obstacles**
@@ -364,7 +345,7 @@ TEST(SIPPTest, NoPathPossible)
   Point2d start = instance->get_start_positions()[0];
   Point2d goal  = instance->get_goal_positions()[0];
 
-  TimePointPath path = sipp.plan(start, goal);
+  TimePointPath path = sipp.plan(0);
 
   ASSERT_TRUE(path.empty()) << "SIPP should return an empty path when no path exists!";
 }
@@ -393,7 +374,7 @@ TEST(SIPPTest, NoPathDueToTimeConstraints)
   sipp.constraint_table.add_constraint(TimePoint({4, 3}, {10, 20}));
 
   // plan path
-  TimePointPath path = sipp.plan(start, goal);
+  TimePointPath path = sipp.plan(0);
 
   // check that path was found
   ASSERT_FALSE(path.empty()) << "SIPP returned no path!";
@@ -417,63 +398,6 @@ TEST(SIPPTest, NoPathDueToTimeConstraints)
   }
 }
 
-// **Test 7: Start outside of the map**
-TEST(SIPPTest, StartOutsideMap)
-{
-  // load instance
-  std::string               base_path = get_base_path_tests();  // path to my_solver
-  std::unique_ptr<Instance> instance =
-      std::make_unique<Instance>(base_path + "/tests/test_maps/empty_3_3.map", base_path + "/tests/test_scen/dummy_3_3_scen_1.scen", 1);
-
-  // create SIPP
-  SIPP sipp(*instance);
-
-  Point2d start = Point2d(3, 1);
-  Point2d goal  = instance->get_goal_positions()[0];
-
-  TimePointPath path = sipp.plan(start, goal);
-
-  ASSERT_TRUE(path.empty()) << "SIPP should return an empty path when start is outside the map!";
-}
-
-// **Test 8: Goal outside of the map**
-TEST(SIPPTest, GoalOutsideMap)
-{
-  // load instance
-  std::string               base_path = get_base_path_tests();  // path to my_solver
-  std::unique_ptr<Instance> instance =
-      std::make_unique<Instance>(base_path + "/tests/test_maps/empty_3_3.map", base_path + "/tests/test_scen/dummy_3_3_scen_1.scen", 1);
-
-  // create SIPP
-  SIPP sipp(*instance);
-
-  Point2d start = instance->get_start_positions()[0];
-  Point2d goal  = Point2d(-1, 0);
-
-  TimePointPath path = sipp.plan(start, goal);
-
-  ASSERT_TRUE(path.empty()) << "SIPP should return an empty path when goal is outside the map!";
-}
-
-// **Test 9: static obstacle at the goal**
-TEST(SIPPTest, StaticObstacleAtGoal)
-{
-  // load instance
-  std::string               base_path = get_base_path_tests();  // path to my_solver
-  std::unique_ptr<Instance> instance =
-      std::make_unique<Instance>(base_path + "/tests/test_maps/wall_5_5.map", base_path + "/tests/test_scen/wall_5_5_scen_1.scen", 1);
-
-  // create SIPP
-  SIPP sipp(*instance);
-
-  Point2d start = Point2d(1, 2);
-  Point2d goal  = Point2d(2, 1);
-
-  TimePointPath path = sipp.plan(start, goal);
-
-  ASSERT_TRUE(path.empty()) << "SIPP should return an empty path when goal is blocked!";
-}
-
 // **Test 10: dynamic obstacle at the goal after time of possible arrival**
 TEST(SIPPTest, DynamicObstacleAtGoal)
 {
@@ -492,7 +416,7 @@ TEST(SIPPTest, DynamicObstacleAtGoal)
   // add a constraint that blocks the goal after time 20
   sipp.constraint_table.add_constraint(TimePoint(goal, {20, 30}));
 
-  TimePointPath path = sipp.plan(start, goal);
+  TimePointPath path = sipp.plan(0);
 
   // the path should be found
   ASSERT_FALSE(path.empty()) << "SIPP should find a path when the goal is blocked after possible arrival time!";
@@ -523,7 +447,7 @@ TEST(SIPPTest, EdgeConstraintsAtGoal)
                                          TimePoint({1, 2}, {6, 6}), TimePoint({2, 2}, {7, 7})});
 
 
-  TimePointPath path = sipp.plan(start, goal);
+  TimePointPath path = sipp.plan(0);
 
   // check that the path has the right length
   ASSERT_EQ(path.size(), 8) << "SIPP should find a path.";
@@ -556,7 +480,7 @@ TEST(SIPPTest, SamePathAsAStar1)
   ASSERT_FALSE(path_astar.empty()) << "A* should find a path when no constraints are present!";
 
   // plan path by SIPP
-  TimePointPath path_sipp = sipp.plan(start, goal);
+  TimePointPath path_sipp = sipp.plan(0);
 
   // assert that SIPP found a path
   ASSERT_FALSE(path_sipp.empty()) << "SIPP should find a path when no constraints are present!";
@@ -593,7 +517,7 @@ TEST(SIPPTest, SamePathAsAStar2)
   ASSERT_FALSE(path_astar.empty()) << "A* should find a path when no constraints are present!";
 
   // plan path by SIPP
-  TimePointPath path_sipp = sipp.plan(start, goal);
+  TimePointPath path_sipp = sipp.plan(0);
 
   // assert that SIPP found a path
   ASSERT_FALSE(path_sipp.empty()) << "SIPP should find a path when no constraints are present!";

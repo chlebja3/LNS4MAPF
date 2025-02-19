@@ -19,8 +19,7 @@
 
 #define MOVE_TIME 1  // time to move to the next cell
 
-SIPP::SIPP(const Instance& instance) : constraint_table(ConstraintTable(instance)), map_data(instance.get_map_data()){};
-SIPP::SIPP(const Map& map_data, const ConstraintTable& constraint_table) : constraint_table(constraint_table), map_data(map_data){};
+SIPP::SIPP(const Instance& instance) : constraint_table(ConstraintTable(instance)), instance(instance){};
 
 
 class SIPPNode : public Node
@@ -75,13 +74,17 @@ TimeInterval  neighbor_time_interval(const TimeInterval& i);
 TimePointPath extract_path(SIPPNode const* const final_node);
 }  // namespace sipp
 
-TimePointPath SIPP::plan(const Point2d& start, const Point2d& goal)
+TimePointPath SIPP::plan(const int agent_num)
 {
+  const Map&     map_data = instance.get_map_data();
+  const Point2d& start    = instance.get_start_positions()[agent_num];
+  const Point2d& goal     = instance.get_goal_positions()[agent_num];
+
   // check whether start and goal inside the map
-  if (!map_data.is_in(start) || !map_data.is_in(goal)) return TimePointPath();
+  assertm(map_data.is_in(start) && map_data.is_in(goal), "Start or goal outside the map.");
 
   // check whether start and goal not obstructed
-  if (map_data.index(start) == 1 || map_data.index(goal) == 1) return TimePointPath();
+  assertm(map_data.index(start) == 0 && map_data.index(goal) == 0, "Start or goal obstructed.");
 
   // estimate the maximum time the goal can be reached (after all dynamic constraints disappear, the path can go through all free cells
   // in the worst case)
@@ -96,7 +99,7 @@ TimePointPath SIPP::plan(const Point2d& start, const Point2d& goal)
   node_list.reserve(map_data.width * map_data.height);
 
   // calculate the heuristic of the start node
-  double h = std::hypot(goal.x - start.x, goal.y - start.y);
+  const double h = instance.get_heuristic_euclidean(agent_num, start);
 
   // retrieve the first safe interval
   TimeInterval time_interval_start = constraint_table.get_first_safe_interval(start);

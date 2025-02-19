@@ -276,7 +276,7 @@ void Instance::calculate_heuristics(void)
   // check map validity
   assertm(map_data.width * map_data.height > 0, "Invalid map.");
   assertm(map_data.data.size() == map_data.width * map_data.height, "Map size invalid");
-  assertm(free_cells > 0 && free_cells <= data.size(), "Invalid free cell count.");
+  assertm(map_data.free_cells > 0 && map_data.free_cells <= map_data.data.size(), "Invalid free cell count.");
 
   // preallocate vectors for the heuristics
   const std::vector<int>    manhattan_initializer(map_data.width * map_data.height, 0);

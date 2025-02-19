@@ -71,7 +71,7 @@ Path ASTAR::find_path(const int agent_num, const Instance& instance)
   Path path;
 
   // check whether start and goal inside the map
-  assertm(map_data.is_in(start) || map_data.is_in(goal), "Start or goal outside the map.");
+  assertm(map_data.is_in(start) && map_data.is_in(goal), "Start or goal outside the map.");
 
   // check whether start and goal not obstructed
   assertm(map_data.index(start) == 0 && map_data.index(goal) == 0, "Start or goal obstructed.");
