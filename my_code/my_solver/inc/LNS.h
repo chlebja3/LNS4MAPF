@@ -16,13 +16,15 @@ public:
   LNS(const Instance& instance);
 
   // Destructor
-  ~LNS() = default;
+  ~LNS(void) = default;
 
   // solve method
-  void solve() override;
+  void solve(void) override;
 
-  void     find_initial_solution();
-  Solution PrioritizedPlanning();
+  void     find_initial_solution(void);
+  Solution PrioritizedPlanning(void);
+
+  int get_num_of_generated_nodes(void) const;
 
 private:
   std::unique_ptr<SIPP> planner;

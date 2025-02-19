@@ -51,12 +51,21 @@ void Computation::join_thread()
 void Computation::run()
 {
   int i = 0;
-  while (running)
-  {
-    std::cout << "Computation thread running" << std::endl;
-    i++;
-    if (i >= 1) running = false;
-    std::this_thread::sleep_for(std::chrono::seconds(3));
-  }
+
+  // initialize LNS
+  std::unique_ptr<LNS> lns = std::make_unique<LNS>(instance);
+
+  // get the initial solution
+  lns->find_initial_solution();
+
+  std::cout << "Initial solution found, number of nodes: " << lns->get_num_of_generated_nodes() << std::endl;
+
+  // while (running)
+  // {
+  //   std::cout << "Computation thread running" << std::endl;
+  //   i++;
+  //   if (i >= 1) running = false;
+  //   std::this_thread::sleep_for(std::chrono::seconds(3));
+  // }
   std::cout << "Computation thread ended" << std::endl;
 }

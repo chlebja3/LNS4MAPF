@@ -87,3 +87,8 @@ Solution LNS::PrioritizedPlanning()
   }
   return sol;
 }
+
+int LNS::get_num_of_generated_nodes(void) const
+{
+  return planner->generated_nodes;
+}

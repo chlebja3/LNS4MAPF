@@ -99,7 +99,8 @@ TimePointPath SIPP::plan(const int agent_num)
   node_list.reserve(map_data.width * map_data.height);
 
   // calculate the heuristic of the start node
-  const double h = instance.get_heuristic_euclidean(agent_num, start);
+  // const double h = instance.get_heuristic_euclidean(agent_num, start);
+  const double h = instance.get_heuristic_manhattan(agent_num, start);
 
   // retrieve the first safe interval
   TimeInterval time_interval_start = constraint_table.get_first_safe_interval(start);
@@ -143,7 +144,8 @@ TimePointPath SIPP::plan(const int agent_num)
     {
       // std::cout << "Neighbor: " << neighbor << std::endl;
       // calculate the heuristic
-      double h = std::hypot(goal.x - neighbor.x, goal.y - neighbor.y);
+      // const double h = instance.get_heuristic_euclidean(agent_num, neighbor);
+      const double h = instance.get_heuristic_manhattan(agent_num, neighbor);
 
       // retrieve the safe intervals for the neighbor
       std::vector<TimeInterval> time_intervals = constraint_table.get_safe_intervals(
