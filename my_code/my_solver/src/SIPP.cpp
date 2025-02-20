@@ -15,14 +15,15 @@
 
 #include "utils.h"
 
-#define MOVE_TIME 1  // time to move to the next cell
+#define MOVE_TIME 1               // time to move to the next cell
+#define NODE_POOL_MERGE_SIZE 500  // merge the extra list with the node pool vector only of there are more elements in the list
 
 using namespace sipp;
 
 SIPP::SIPP(const Instance& instance)
     : constraint_table(ConstraintTable(instance)),
       instance(instance),
-      node_pool(NodePool(instance.get_map_data().width * instance.get_map_data().height)){};
+      node_pool(NodePool(5 * instance.get_map_data().width * instance.get_map_data().height)){};
 
 
 SIPPNode::SIPPNode(const int x, const int y, const int time_min, const int time_max, const double g, const double h,
@@ -83,13 +84,14 @@ SIPPNode* NodePool::add_node(SIPPNode node)
 
 void NodePool::merge_extra(void)
 {
-  if (extra.size() > 0)
+  if (extra.size() > NODE_POOL_MERGE_SIZE)
   {
     // merge the list with the vector
     // be careful, this invalidates all pointers to the nodes in the node pool
     pool.insert(pool.end(), std::move_iterator{extra.begin()}, std::move_iterator{extra.end()});
     extra.clear();
   }
+  // reset the node counter
   end = 0;
 }
 

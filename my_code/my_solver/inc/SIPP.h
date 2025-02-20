@@ -7,6 +7,8 @@
 #pragma once
 #include <utils.h>
 
+// #include <boost/heap/pairing_heap.hpp>
+// #include <boost/heap/priority_queue.hpp>
 #include <queue>
 #include <unordered_set>
 
@@ -52,8 +54,10 @@ private:
 
 
 typedef std::priority_queue<SIPPNode const*, std::vector<SIPPNode const*>, SIPPNode::compare_node_ptrs> PriorityQueue;
-typedef std::unordered_set<TimePoint, TimePoint::hash_time_point>                                       UnorderedSet;
-typedef std::unordered_map<Point2d, int, Point2d::hash_point>                                           UnorderedMap;
+// typedef boost::heap::priority_queue<SIPPNode const*, boost::heap::compare<SIPPNode::compare_node_ptrs>> PriorityQueue;
+// typedef boost::heap::pairing_heap<SIPPNode const*, boost::heap::compare<SIPPNode::compare_node_ptrs>> PriorityQueue;
+typedef std::unordered_set<TimePoint, TimePoint::hash_time_point> UnorderedSet;
+typedef std::unordered_map<Point2d, int, Point2d::hash_point>     UnorderedMap;
 
 TimeInterval  neighbor_time_interval(const TimeInterval& i);
 TimePointPath extract_path(SIPPNode const* const final_node);

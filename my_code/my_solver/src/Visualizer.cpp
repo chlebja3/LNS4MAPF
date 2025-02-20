@@ -41,7 +41,18 @@ Visualizer::Visualizer(const Instance& instance) : instance(instance)
 
   // create the map texture
   mapToTexture(instance.get_map_data());
-  std::cout << "Initialized visualizer." << std::endl;
+
+  // generate the circles that represent agents and their goals
+  update_agent_circles(instance.get_start_positions());
+  update_goal_circles(instance.get_goal_positions());
+
+  std::cout << "Instance initialized: " << instance.is_initialized() << std::endl;
+  // generate the paths
+  for (int i = 0; i < (int)instance.get_optimal_paths().size(); i++)
+  {
+    update_path(i, instance.get_optimal_paths()[i]);
+  }
+  std::cout << "Visualizer initialized. " << std::endl;
 }
 
 Visualizer::~Visualizer()
@@ -168,15 +179,12 @@ void Visualizer::run()
     window.draw(map_sprite);
 
     // draw the optimal paths
-    for (int i = 0; i < (int)instance.get_optimal_paths().size(); i++)
-    {
-      draw_path(window, instance.get_optimal_paths()[i], agents_colors[i]);
-    }
+    draw_paths(window);
     // draw_path(window, instance.get_optimal_paths()[0], agents_colors[0]);
 
     // draw the agents
-    draw_agents(window);
-    draw_goals(window);
+    // draw_agents(window);
+    // draw_goals(window);
 
     // set the view
     window.setView(view);
@@ -286,44 +294,75 @@ void Visualizer::mapToTexture(const Map& map_data)
   scale      = (double)WINDOW_WIDTH / (CELL_SIZE * map_data.width);
   map_sprite.setScale(sf::Vector2f(scale, scale));
 }
+void Visualizer::update_agent_circles(const std::vector<Point2d>& positions)
+{
+  assertm(positions.size() == instance.num_of_agents, "Wrong number of agent positions.");
+
+  // initialize the vector
+  if (agents_circles.size() != positions.size())
+  {
+    agents_circles.clear();
+    agents_circles.resize(positions.size(), sf::CircleShape(0));
+  }
+
+  // assign the correct circles
+  for (int i = 0; i < (int)positions.size(); i++)
+  {
+    const int x = positions[i].x;
+    const int y = positions[i].y;
+    // create shape
+    agents_circles[i] = sf::CircleShape((double)(CELL_SIZE - 2 * BORDER_SIZE) / 2);
+    // set color
+    agents_circles[i].setFillColor(agents_colors[i]);
+    // set position
+    agents_circles[i].setPosition(x * scale * CELL_SIZE + scale * BORDER_SIZE, y * scale * CELL_SIZE + scale * BORDER_SIZE);
+    agents_circles[i].setScale(sf::Vector2f(scale, scale));
+  }
+}
 
 void Visualizer::draw_agents(sf::RenderWindow& window)
 {
-  agents_circles.clear();
-  for (int i = 0; i < (int)instance.get_start_positions().size(); i++)
+  assertm(agents_circles.size() > 0, "Trying to draw empty agent vector.");
+  for (const auto& it : agents_circles)
   {
-    const int x = instance.get_start_positions()[i].x;
-    const int y = instance.get_start_positions()[i].y;
-    // create shape
-    agents_circles.push_back(sf::CircleShape((double)(CELL_SIZE - 2 * BORDER_SIZE) / 2));
-    // set color
-    agents_circles.back().setFillColor(agents_colors[i]);
-    // set position
-    agents_circles.back().setPosition(x * scale * CELL_SIZE + scale * BORDER_SIZE, y * scale * CELL_SIZE + scale * BORDER_SIZE);
-    agents_circles.back().setScale(sf::Vector2f(scale, scale));
     // draw the shape
-    window.draw(agents_circles.back());
+    window.draw(it);
+  }
+}
+
+void Visualizer::update_goal_circles(const std::vector<Point2d>& positions)
+{
+  assertm(positions.size() == instance.num_of_agents, "Wrong number of agent positions.");
+
+  // initialize the vector
+  if (goal_circles.size() != positions.size())
+  {
+    goal_circles.clear();
+    goal_circles.resize(positions.size(), sf::CircleShape(0));
+  }
+
+  // assign the correct circles
+  for (int i = 0; i < (int)positions.size(); i++)
+  {
+    const int x = positions[i].x;
+    const int y = positions[i].y;
+    // create shape
+    goal_circles[i] = sf::CircleShape((double)(CELL_SIZE - 2 * BORDER_SIZE) / 2);
+    // set color
+    goal_circles[i].setFillColor(agents_colors[i]);
+    // set position
+    goal_circles[i].setPosition(x * scale * CELL_SIZE + scale * BORDER_SIZE, y * scale * CELL_SIZE + scale * BORDER_SIZE);
+    goal_circles[i].setScale(sf::Vector2f(scale, scale));
   }
 }
 
 void Visualizer::draw_goals(sf::RenderWindow& window)
 {
-  agents_circles.clear();
-  for (int i = 0; i < (int)instance.get_start_positions().size(); i++)
+  assertm(goal_circles.size() > 0, "Trying to draw empty goal vector.");
+  for (const auto& it : goal_circles)
   {
-    const int x = instance.get_goal_positions()[i].x;
-    const int y = instance.get_goal_positions()[i].y;
-    // create shape
-    agents_circles.push_back(sf::CircleShape((double)(CELL_SIZE - 2 * BORDER_SIZE) / 2));
-    // set color
-    agents_circles.back().setOutlineColor(agents_colors[i]);
-    agents_circles.back().setOutlineThickness(-GOAL_VIS_THICKNESS);
-    // set position
-    agents_circles.back().setPosition((float)(x * scale * CELL_SIZE + scale * BORDER_SIZE),
-                                      (float)(y * scale * CELL_SIZE + scale * BORDER_SIZE));
-    agents_circles.back().setScale(sf::Vector2f(scale, scale));
     // draw the shape
-    window.draw(agents_circles.back());
+    window.draw(it);
   }
 }
 
@@ -358,4 +397,87 @@ void Visualizer::draw_path(sf::RenderWindow& window, const Path& path, const sf:
   {
     draw_arrow(window, path[i - 1], path[i], color);
   }
+}
+
+void Visualizer::update_path(const int agent_num, const Path& path)
+{
+  std::cout << "Updating path: " << agent_num << std::endl;
+  assertm(agent_num >= 0 && agent_num < agents_colors.size() && agent_num < instance.num_of_agents, "Invalid agent number.");
+  if (agent_num >= (int)agents_paths.size())
+  {
+    agents_paths.resize(agent_num + 1);
+  }
+  const sf::Color color = agents_colors[agent_num];
+  sf::VertexArray path_vis(sf::Quads);
+  if (path.size() >= 2)
+  {
+    auto segment_start = path.cbegin();
+    auto segment_end   = path.cbegin();
+    bool horizontal    = false;
+
+    // merge contiguous segments
+    for (int i = 1; i < (int)path.size() + 1; i++)
+    {
+      if (segment_start == segment_end)  // segment of length 0
+      {
+        segment_end++;
+        horizontal = segment_start->y == segment_end->y;
+        continue;
+      }
+      // skip repeating points
+      if (i < (int)path.size() && path[i] == *segment_end) continue;
+
+      // check whether segment continuous (trick with checking if i == path.size() is used to prevent out of bounds)
+      bool curr_horizontal = i == (int)path.size() || path[i].y == segment_end->y;
+      if (i != (int)path.size() && horizontal == curr_horizontal)  // both horizontal or both vertical (for last segment skip)
+      {
+        // extend the end of the segment
+        segment_end++;
+        continue;
+      }
+      else
+      {
+        int min_x, min_y, max_x, max_y;
+        min_x = std::min(segment_start->x, segment_end->x);
+        min_y = std::min(segment_start->y, segment_end->y);
+        max_x = std::max(segment_start->x, segment_end->x);
+        max_y = std::max(segment_start->y, segment_end->y);
+        sf::Vector2f left_upper =
+            sf::Vector2f(rescale(min_x + 0.5 - (double)1 / (2 * LINE_WIDTH)), rescale(min_y + 0.5 - (double)1 / (2 * LINE_WIDTH)));
+        sf::Vector2f right_upper =
+            sf::Vector2f(rescale(max_x + 0.5 + (double)1 / (2 * LINE_WIDTH)), rescale(min_y + 0.5 - (double)1 / (2 * LINE_WIDTH)));
+        sf::Vector2f right_lower =
+            sf::Vector2f(rescale(max_x + 0.5 + (double)1 / (2 * LINE_WIDTH)), rescale(max_y + 0.5 + (double)1 / (2 * LINE_WIDTH)));
+        sf::Vector2f left_lower =
+            sf::Vector2f(rescale(min_x + 0.5 - (double)1 / (2 * LINE_WIDTH)), rescale(max_y + 0.5 + (double)1 / (2 * LINE_WIDTH)));
+
+        // add previous segment
+        path_vis.append(sf::Vertex(left_upper, color));
+        path_vis.append(sf::Vertex(right_upper, color));
+        path_vis.append(sf::Vertex(right_lower, color));
+        path_vis.append(sf::Vertex(left_lower, color));
+
+
+        // start a new segment
+        segment_start = segment_end;
+        segment_end++;
+        horizontal = segment_start->y == segment_end->y;
+      }
+    }
+  }
+  assertm(agent_num < agents_paths.size(), "Agent_num must be bigger than the size of the paths vector.");
+  agents_paths[agent_num] = path_vis;
+}
+
+void Visualizer::draw_paths(sf::RenderWindow& window)
+{
+  for (auto& it : agents_paths)
+  {
+    window.draw(it);
+  }
+}
+
+double Visualizer::rescale(double x)
+{
+  return x * scale * CELL_SIZE;
 }

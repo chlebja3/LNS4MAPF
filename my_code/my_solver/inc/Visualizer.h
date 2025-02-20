@@ -32,12 +32,19 @@ public:
   // create a texture from the map
   void mapToTexture(const Map& map_data);
 
+  void update_agent_circles(const std::vector<Point2d>& positions);
+  void update_goal_circles(const std::vector<Point2d>& positions);
+  void update_path(const int agent_num, const Path& path);
+
+
 private:
   // draw the agents
   void              draw_agents(sf::RenderWindow& window);
   void              draw_goals(sf::RenderWindow& window);
   void              draw_path(sf::RenderWindow& window, const Path& path, const sf::Color& color);
+  void              draw_paths(sf::RenderWindow& window);
   void              draw_arrow(sf::RenderWindow& window, const Point2d& start, const Point2d& end, const sf::Color& color);
+  double            rescale(double x);
   std::thread       vis_thread;  // the underlying thread
   std::atomic<bool> running;     // indicator whether the thread should be running
   const Instance&   instance;
@@ -46,6 +53,8 @@ private:
   sf::Texture                  map_texture;  // the map texture
   sf::Sprite                   map_sprite;   // the sprite that represents the map
   std::vector<sf::CircleShape> agents_circles;
+  std::vector<sf::CircleShape> goal_circles;
   std::vector<sf::Color>       agents_colors;
+  std::vector<sf::VertexArray> agents_paths;
   double                       scale;
 };
