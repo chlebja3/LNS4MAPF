@@ -12,12 +12,13 @@
 
 #include "Instance.h"
 #include "LNS.h"
+#include "SharedData.h"
 
 class Computation
 {
 public:
   // constructor and destructor
-  Computation(const Instance& instance);
+  Computation(const Instance& instance, SharedData& shared_data);
   ~Computation();
 
   // manage the underlying thread
@@ -32,5 +33,6 @@ private:
   std::unique_ptr<LNS> solver;
   std::thread          comp_thread;
   const Instance&      instance;
+  SharedData&          shared_data;
   std::atomic<bool>    running;
 };

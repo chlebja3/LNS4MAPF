@@ -11,6 +11,7 @@
 
 #include "Computation.h"
 #include "Instance.h"
+#include "SharedData.h"
 #include "Visualizer.h"
 
 // create program options namespace
@@ -61,9 +62,11 @@ int main(int argc, char** argv)
   // instance.print_map();
   // instance->print_agents();
 
+  // create the shared datastructure
+  std::unique_ptr<SharedData> shared_data = std::make_unique<SharedData>();
 
   // create the computation object
-  Computation computation(*instance);
+  Computation computation(*instance, *shared_data);
 
   // start the computation thread
   computation.start();
@@ -71,7 +74,7 @@ int main(int argc, char** argv)
   // create the visualization object
   if (GUI)
   {
-    Visualizer visualizer(*instance);
+    Visualizer visualizer(*instance, *shared_data);
     visualizer.start();
     // wait for the visualization thread to finish
     visualizer.join_thread();

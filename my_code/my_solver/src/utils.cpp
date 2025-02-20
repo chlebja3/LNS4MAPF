@@ -12,6 +12,9 @@
 #include <filesystem>
 #include <iostream>
 
+#define MIN_BRIGHTNESS 20
+#define MAX_BRIGHTNESS 230
+
 Node::Node(const double g, const double h) : g(g), h(h), f(g + h){};
 
 bool Node::operator>(const Node& other)
@@ -55,6 +58,14 @@ size_t Point2d::hash_point::operator()(const Point2d& p) const
   return std::hash<int>()(p.x) ^ (std::hash<int>()(p.y) << 1);
 }
 
+enum Direction find_direction(const Point2d& start, const Point2d& end)
+{
+  if (start.x > end.x) return Direction::LEFT;
+  if (start.y > end.y) return Direction::UP;
+  if (start.y < end.y) return Direction::DOWN;
+  if (start.x < end.x) return Direction::RIGHT;
+  return Direction::NONE;
+}
 
 TimeInterval::TimeInterval(const int t_min, const int t_max) : t_min(t_min), t_max(t_max){};
 
@@ -176,10 +187,17 @@ Path timepointpath_to_path(const TimePointPath& tp_path)
 // based on https://stackoverflow.com/questions/43044/algorithm-to-randomly-generate-an-aesthetically-pleasing-color-palette
 sf::Color generate_random_color(const int mix_r, const int mix_g, const int mix_b, const double mix_ratio)
 {
-  const int r = (int)std::round((std::rand() % 256) * (1 - mix_ratio) + mix_r * mix_ratio);
-  const int g = (int)std::round((std::rand() % 256) * (1 - mix_ratio) + mix_g * mix_ratio);
-  const int b = (int)std::round((std::rand() % 256) * (1 - mix_ratio) + mix_b * mix_ratio);
-  return sf::Color(r, g, b);
+  while (true)
+  {
+    const int r = (int)std::round((std::rand() % 256) * (1 - mix_ratio) + mix_r * mix_ratio);
+    const int g = (int)std::round((std::rand() % 256) * (1 - mix_ratio) + mix_g * mix_ratio);
+    const int b = (int)std::round((std::rand() % 256) * (1 - mix_ratio) + mix_b * mix_ratio);
+    // make sure the color is not too similar to black or white
+    if (MIN_BRIGHTNESS <= (r + g + b) / 3 && (r + g + b) / 3 <= MAX_BRIGHTNESS)
+    {
+      return sf::Color(r, g, b);
+    }
+  }
 }
 
 // Function to get the directory of the running executable

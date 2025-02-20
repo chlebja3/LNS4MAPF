@@ -46,16 +46,18 @@ TEST(AStarTest, StartEqualsGoal)
 }
 
 // Test Case: No Path Possible (Blocked Goal)
+#ifdef NDEBUG
+TEST(AStarTest, DISABLED_NoPathPossible)
+#else
 TEST(AStarTest, NoPathPossible)
+#endif
 {
   // load instance
   std::string               base_path = get_base_path_tests();  // path to my_solver
   std::unique_ptr<Instance> instance =
       std::make_unique<Instance>(base_path + "/tests/test_maps/corner_5_5.map", base_path + "/tests/test_scen/corner_5_5_scen_1.scen", 3);
 
-  Path path = ASTAR::find_path(2, *instance);
-
-  EXPECT_TRUE(path.empty());  // No path should be returned
+  ASSERT_DEATH(ASTAR::find_path(2, *instance), "Start or goal obstructed.");
 }
 
 // Test Case: Complex Path with Obstacles

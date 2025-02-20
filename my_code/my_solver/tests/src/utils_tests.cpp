@@ -368,6 +368,47 @@ TEST(test_utils, timepointpath_to_path_random)
   }
 }
 
+// Test find_direction
+TEST(test_utils, DirectionRight)
+{
+  Point2d p1(0, 0);
+  Point2d p2(1, 0);
+
+  EXPECT_EQ(find_direction(p1, p2), Direction::RIGHT) << "Wrong direction.";
+}
+
+TEST(test_utils, DirectionLeft)
+{
+  Point2d p1(1, 3);
+  Point2d p2(0, 3);
+
+  EXPECT_EQ(find_direction(p1, p2), Direction::LEFT) << "Wrong direction.";
+}
+
+TEST(test_utils, DirectionUp)
+{
+  Point2d p1(1, 1);
+  Point2d p2(1, 0);
+
+  EXPECT_EQ(find_direction(p1, p2), Direction::UP) << "Wrong direction.";
+}
+
+TEST(test_utils, DirectionDown)
+{
+  Point2d p1(2, 1);
+  Point2d p2(2, 2);
+
+  EXPECT_EQ(find_direction(p1, p2), Direction::DOWN) << "Wrong direction.";
+}
+
+TEST(test_utils, DirectionNone)
+{
+  Point2d p1(1, 1);
+  Point2d p2(1, 1);
+
+  EXPECT_EQ(find_direction(p1, p2), Direction::NONE) << "Wrong direction.";
+}
+
 
 // Color Generation test
 

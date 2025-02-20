@@ -12,7 +12,7 @@
 
 #include "LNS.h"
 
-Computation::Computation(const Instance& instance) : instance(instance)
+Computation::Computation(const Instance& instance, SharedData& shared_data) : instance(instance), shared_data(shared_data)
 {
   std::cout << "Initialized computation." << std::endl;
   running = false;
@@ -57,6 +57,8 @@ void Computation::run()
 
   // get the initial solution
   lns->find_initial_solution();
+
+  shared_data.update_paths(lns->solution.paths);
 
   std::cout << "Initial solution found, number of nodes: " << lns->get_num_of_generated_nodes() << std::endl;
 

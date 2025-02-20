@@ -29,10 +29,8 @@
 #define MENU_BAR_SIZE 46
 
 
-Visualizer::Visualizer(const Instance& instance) : instance(instance)
+Visualizer::Visualizer(const Instance& instance, SharedData& shared_data) : instance(instance), shared_data(shared_data)
 {
-  running = false;
-
   // generate random colors for the agents
   for (int i = 0; i < (int)instance.get_start_positions().size(); i++)
   {
@@ -48,10 +46,10 @@ Visualizer::Visualizer(const Instance& instance) : instance(instance)
 
   std::cout << "Instance initialized: " << instance.is_initialized() << std::endl;
   // generate the paths
-  for (int i = 0; i < (int)instance.get_optimal_paths().size(); i++)
-  {
-    update_path(i, instance.get_optimal_paths()[i]);
-  }
+  // for (int i = 0; i < (int)instance.get_optimal_paths().size(); i++)
+  // {
+  //   update_path(i, instance.get_optimal_paths()[i]);
+  // }
   std::cout << "Visualizer initialized. " << std::endl;
 }
 
@@ -64,8 +62,8 @@ Visualizer::~Visualizer()
 void Visualizer::start()
 {
   // start the underlying thread
-  vis_thread = std::thread(&Visualizer::run, this);
   running    = true;
+  vis_thread = std::thread(&Visualizer::run, this);
 }
 
 void Visualizer::stop()
@@ -125,6 +123,19 @@ void Visualizer::run()
   sf::Clock deltaClock;
   while (window.isOpen() && running)
   {
+    // check whether new paths arrived
+    if (shared_data.are_new_paths.load(std::memory_order_acquire))
+    {
+      std::vector<Path> new_paths = shared_data.consume_paths();
+      assertm(instance.num_of_agents == new_paths.size(), "Number of paths should be the same as the number of agents.");
+
+      // construct the path visualizations
+      for (int i = 0; i < instance.num_of_agents; i++)
+      {
+        update_path(i, new_paths[i]);
+      }
+    }
+
     // poll all events from the window
     sf::Event event;
     while (window.pollEvent(event))
@@ -180,11 +191,10 @@ void Visualizer::run()
 
     // draw the optimal paths
     draw_paths(window);
-    // draw_path(window, instance.get_optimal_paths()[0], agents_colors[0]);
 
     // draw the agents
-    // draw_agents(window);
-    // draw_goals(window);
+    draw_agents(window);
+    draw_goals(window);
 
     // set the view
     window.setView(view);
@@ -349,7 +359,8 @@ void Visualizer::update_goal_circles(const std::vector<Point2d>& positions)
     // create shape
     goal_circles[i] = sf::CircleShape((double)(CELL_SIZE - 2 * BORDER_SIZE) / 2);
     // set color
-    goal_circles[i].setFillColor(agents_colors[i]);
+    goal_circles.back().setOutlineColor(agents_colors[i]);
+    goal_circles.back().setOutlineThickness(-GOAL_VIS_THICKNESS);
     // set position
     goal_circles[i].setPosition(x * scale * CELL_SIZE + scale * BORDER_SIZE, y * scale * CELL_SIZE + scale * BORDER_SIZE);
     goal_circles[i].setScale(sf::Vector2f(scale, scale));
@@ -366,39 +377,6 @@ void Visualizer::draw_goals(sf::RenderWindow& window)
   }
 }
 
-void Visualizer::draw_arrow(sf::RenderWindow& window, const Point2d& start, const Point2d& end, const sf::Color& color)
-{
-  const double x = (end.x + start.x) / 2.;
-  const double y = (end.y + start.y) / 2.;
-
-  // draw the line
-  sf::Vector2f       shape;
-  sf::RectangleShape line;
-  if (start.x == end.x)  // vertical
-  {
-    shape = sf::Vector2f(CELL_SIZE / (float)LINE_WIDTH, CELL_SIZE + (float)CELL_SIZE / LINE_WIDTH);
-    line  = sf::RectangleShape(shape);
-    line.setPosition((x + (float)1 / LINE_WIDTH) * scale * CELL_SIZE, (y - (float)1 / (2 * LINE_WIDTH)) * scale * CELL_SIZE);
-  }
-  else  // horizontal
-  {
-    shape = sf::Vector2f(CELL_SIZE + (float)CELL_SIZE / LINE_WIDTH, CELL_SIZE / (float)LINE_WIDTH);
-    line  = sf::RectangleShape(shape);
-    line.setPosition((x - (float)1 / (2 * LINE_WIDTH)) * scale * CELL_SIZE, (y + (float)1 / LINE_WIDTH) * scale * CELL_SIZE);
-  }
-  line.setScale(sf::Vector2f(scale, scale));
-  line.setFillColor(color);
-  window.draw(line);
-}
-
-void Visualizer::draw_path(sf::RenderWindow& window, const Path& path, const sf::Color& color)
-{
-  for (int i = 1; i < (int)path.size(); i++)
-  {
-    draw_arrow(window, path[i - 1], path[i], color);
-  }
-}
-
 void Visualizer::update_path(const int agent_num, const Path& path)
 {
   std::cout << "Updating path: " << agent_num << std::endl;
@@ -411,25 +389,34 @@ void Visualizer::update_path(const int agent_num, const Path& path)
   sf::VertexArray path_vis(sf::Quads);
   if (path.size() >= 2)
   {
-    auto segment_start = path.cbegin();
-    auto segment_end   = path.cbegin();
-    bool horizontal    = false;
+    auto           segment_start = path.cbegin();
+    auto           segment_end   = path.cbegin() + 1;
+    enum Direction dir           = Direction::NONE;
 
     // merge contiguous segments
-    for (int i = 1; i < (int)path.size() + 1; i++)
+    for (int i = 2; i < (int)path.size() + 1; i++)
     {
       if (segment_start == segment_end)  // segment of length 0
       {
         segment_end++;
-        horizontal = segment_start->y == segment_end->y;
         continue;
       }
       // skip repeating points
-      if (i < (int)path.size() && path[i] == *segment_end) continue;
+      if (i < (int)path.size() && path[i] == *segment_end)
+      {
+        segment_end++;
+        continue;
+      }
+
+      if (dir == Direction::NONE)
+      {
+        dir = find_direction(*segment_start, *segment_end);
+      }
+
+      assertm(dir != Direction::NONE, "Direction must be set.");
 
       // check whether segment continuous (trick with checking if i == path.size() is used to prevent out of bounds)
-      bool curr_horizontal = i == (int)path.size() || path[i].y == segment_end->y;
-      if (i != (int)path.size() && horizontal == curr_horizontal)  // both horizontal or both vertical (for last segment skip)
+      if (i != (int)path.size() && dir == find_direction(*segment_end, path[i]))
       {
         // extend the end of the segment
         segment_end++;
@@ -442,6 +429,9 @@ void Visualizer::update_path(const int agent_num, const Path& path)
         min_y = std::min(segment_start->y, segment_end->y);
         max_x = std::max(segment_start->x, segment_end->x);
         max_y = std::max(segment_start->y, segment_end->y);
+        assertm(max_x - min_x > 0 != max_y - min_y > 0, "Segment must be either horizontal or vertical.");
+
+
         sf::Vector2f left_upper =
             sf::Vector2f(rescale(min_x + 0.5 - (double)1 / (2 * LINE_WIDTH)), rescale(min_y + 0.5 - (double)1 / (2 * LINE_WIDTH)));
         sf::Vector2f right_upper =
@@ -461,7 +451,7 @@ void Visualizer::update_path(const int agent_num, const Path& path)
         // start a new segment
         segment_start = segment_end;
         segment_end++;
-        horizontal = segment_start->y == segment_end->y;
+        dir = find_direction(*segment_start, *segment_end);
       }
     }
   }
@@ -473,6 +463,7 @@ void Visualizer::draw_paths(sf::RenderWindow& window)
 {
   for (auto& it : agents_paths)
   {
+    if (it.getVertexCount() == 0) continue;
     window.draw(it);
   }
 }

@@ -15,6 +15,16 @@
 // Use (void) to silence unused warnings.
 #define assertm(exp, msg) assert((void(msg), exp))
 
+enum Direction
+{
+  NONE,
+  UP,
+  RIGHT,
+  DOWN,
+  LEFT
+};
+
+
 class Node
 {
 public:
@@ -91,6 +101,7 @@ public:
   };
 };
 
+enum Direction find_direction(const Point2d& start, const Point2d& end);
 
 class TimeInterval
 {

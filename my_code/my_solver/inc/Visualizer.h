@@ -13,12 +13,13 @@
 #include <thread>
 
 #include "Instance.h"
+#include "SharedData.h"
 
 class Visualizer
 {
 public:
   // constructor and destructor
-  Visualizer(const Instance& instance);
+  Visualizer(const Instance& instance, SharedData& shared_data);
   ~Visualizer();
 
   // manage the underlying thread
@@ -39,15 +40,14 @@ public:
 
 private:
   // draw the agents
-  void              draw_agents(sf::RenderWindow& window);
-  void              draw_goals(sf::RenderWindow& window);
-  void              draw_path(sf::RenderWindow& window, const Path& path, const sf::Color& color);
-  void              draw_paths(sf::RenderWindow& window);
-  void              draw_arrow(sf::RenderWindow& window, const Point2d& start, const Point2d& end, const sf::Color& color);
-  double            rescale(double x);
-  std::thread       vis_thread;  // the underlying thread
-  std::atomic<bool> running;     // indicator whether the thread should be running
-  const Instance&   instance;
+  void            draw_agents(sf::RenderWindow& window);
+  void            draw_goals(sf::RenderWindow& window);
+  void            draw_paths(sf::RenderWindow& window);
+  double          rescale(double x);
+  std::thread     vis_thread;  // the underlying thread
+  bool            running;     // indicator whether the thread should be running
+  const Instance& instance;
+  SharedData&     shared_data;
 
   // drawing objects
   sf::Texture                  map_texture;  // the map texture

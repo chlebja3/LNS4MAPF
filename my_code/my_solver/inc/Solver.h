@@ -45,6 +45,5 @@ public:
   // pure virtual function solve
   virtual void solve() = 0;
 
-protected:
   Solution solution;  // the so far best solution
 };
