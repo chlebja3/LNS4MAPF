@@ -12,67 +12,86 @@
 #include <math.h>
 
 #include <memory>
-#include <queue>
-#include <unordered_set>
 
 #include "utils.h"
 
 #define MOVE_TIME 1  // time to move to the next cell
 
-SIPP::SIPP(const Instance& instance) : constraint_table(ConstraintTable(instance)), instance(instance){};
+using namespace sipp;
+
+SIPP::SIPP(const Instance& instance)
+    : constraint_table(ConstraintTable(instance)),
+      instance(instance),
+      node_pool(NodePool(instance.get_map_data().width * instance.get_map_data().height)){};
 
 
-class SIPPNode : public Node
+SIPPNode::SIPPNode(const int x, const int y, const int time_min, const int time_max, const double g, const double h,
+                   SIPPNode const* const parent)
+    : Node(g, h), time_point(TimePoint(x, y, time_min, time_max)), parent(parent){};
+
+SIPPNode::SIPPNode(const Point2d& position, const TimeInterval& interval, const double g, const double h, SIPPNode const* const parent)
+    : Node(g, h), time_point(position, interval), parent(parent){};
+
+SIPPNode::SIPPNode(const TimePoint& time_point, const double g, const double h, SIPPNode const* const parent)
+    : Node(g, h), time_point(time_point), parent(parent){};
+
+
+bool SIPPNode::operator==(const SIPPNode& other) const
 {
-public:
-  TimePoint       time_point;
-  SIPPNode const* parent;
+  return g == other.g && h == other.h && time_point == other.time_point;
+}
 
-
-  // constructors
-  SIPPNode(const int x, const int y, const int time_min, const int time_max, const double g, const double h, SIPPNode const* const parent)
-      : Node(g, h), time_point(TimePoint(x, y, time_min, time_max)), parent(parent){};
-
-  SIPPNode(const Point2d& position, const TimeInterval& interval, const double g, const double h, SIPPNode const* const parent)
-      : Node(g, h), time_point(position, interval), parent(parent){};
-
-  SIPPNode(const TimePoint& time_point, const double g, const double h, SIPPNode const* const parent)
-      : Node(g, h), time_point(time_point), parent(parent){};
-
-  bool operator==(const SIPPNode& other) const
+bool SIPPNode::compare_node_ptrs::operator()(SIPPNode const* n1, SIPPNode const* n2) const
+{
+  // compare f
+  if (n1->f < n2->f)
+    return false;
+  else if (n1->f > n2->f)
+    return true;
+  else  // f1 == f2
   {
-    return g == other.g && h == other.h && time_point == other.time_point;
+    if (n1->h == n2->h)        // tie
+      return rand() % 2 == 1;  // choose randomly
+    else
+      return n1->h > n2->h;  // if f is the same, prefer nodes closer to the goal
+  }
+}
+
+
+NodePool::NodePool(const int size)
+{
+  // initialize the pool with dummy nodes
+  pool.resize(size, SIPPNode({0, 0}, {0, 0}, 0, 0, nullptr));
+  end = 0;
+}
+
+SIPPNode* NodePool::add_node(SIPPNode node)
+{
+  // check, whether there is still space in the node pool
+  if (end < (int)pool.size())
+  {
+    // move to the end of the pool and increment the count
+    pool[end++] = std::move(node);
+    return &pool[end - 1];
   }
 
-  struct compare_node_ptrs
-  {
-    bool operator()(SIPPNode const* n1, SIPPNode const* n2) const
-    {
-      // compare f
-      if (n1->f < n2->f)
-        return false;
-      else if (n1->f > n2->f)
-        return true;
-      else  // f1 == f2
-      {
-        if (n1->h == n2->h)        // tie
-          return rand() % 2 == 1;  // choose randomly
-        else
-          return n1->h > n2->h;  // if f is the same, prefer nodes closer to the goal
-      }
-    }
-  };
-};
+  // if there is no space in the vector, add to the list, which will be merged with the vector at the end of the iteration
+  extra.push_back(node);
+  return &extra.back();
+}
 
-namespace sipp
+
+void NodePool::merge_extra(void)
 {
-typedef std::priority_queue<SIPPNode const*, std::vector<SIPPNode const*>, SIPPNode::compare_node_ptrs> PriorityQueue;
-typedef std::unordered_set<TimePoint, TimePoint::hash_time_point>                                       UnorderedSet;
-typedef std::unordered_map<Point2d, int, Point2d::hash_point>                                           UnorderedMap;
-
-TimeInterval  neighbor_time_interval(const TimeInterval& i);
-TimePointPath extract_path(SIPPNode const* const final_node);
-}  // namespace sipp
+  if (extra.size() > 0)
+  {
+    // merge the list with the vector
+    // be careful, this invalidates all pointers to the nodes in the node pool
+    pool.insert(pool.end(), std::move_iterator{extra.begin()}, std::move_iterator{extra.end()});
+    extra.clear();
+  }
+  end = 0;
+}
 
 TimePointPath SIPP::plan(const int agent_num)
 {
@@ -106,8 +125,7 @@ TimePointPath SIPP::plan(const int agent_num)
   TimeInterval time_interval_start = constraint_table.get_first_safe_interval(start);
 
   // create the start node
-  node_list.push_back(std::make_unique<SIPPNode>(start, time_interval_start, 0, h, nullptr));
-  open_list.push(node_list.back().get());
+  open_list.push(node_pool.add_node(SIPPNode(start, time_interval_start, 0, h, nullptr)));
   generated_nodes++;
 
   // create known nodes database
@@ -132,7 +150,12 @@ TimePointPath SIPP::plan(const int agent_num)
     if (current->time_point.position == goal && current->time_point.interval.t_max == INT_MAX)
     {
       // extract the path
-      return sipp::extract_path(current);
+      TimePointPath ret = sipp::extract_path(current);
+
+      // reset the node pool
+      node_pool.merge_extra();
+
+      return ret;
     }
 
     // add to known nodes
@@ -168,15 +191,15 @@ TimePointPath SIPP::plan(const int agent_num)
         TimePoint neighbor_time_point(neighbor, interval);
         assertm(neighbor_time_point.interval.t_min > current->time_point.interval.t_min, "Invalid interval.");
 
-        // add to the node list
-        node_list.push_back(std::make_unique<SIPPNode>(neighbor_time_point, neighbor_time_point.interval.t_min, h, current));
-
         // add to the open list
-        open_list.push(node_list.back().get());
+        open_list.push(node_pool.add_node(SIPPNode(neighbor_time_point, neighbor_time_point.interval.t_min, h, current)));
         generated_nodes++;
       }
     }
   }
+  // reset the node pool
+  node_pool.merge_extra();
+
   return TimePointPath();
 }
 

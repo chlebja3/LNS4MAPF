@@ -18,7 +18,7 @@
 class Node
 {
 public:
-  const double g, h, f;
+  double g, h, f;
 
   Node(const double g, const double h);
   virtual ~Node() = default;  // make Node an abstract class
