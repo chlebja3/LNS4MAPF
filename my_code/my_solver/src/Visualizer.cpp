@@ -22,7 +22,8 @@
 #include "imgui_internal.h"
 #include "utils.h"
 
-#define WINDOW_WIDTH 800
+#define WINDOW_WIDTH 1920
+#define WINDOW_HEIGHT 1080
 #define CELL_SIZE 20
 #define BORDER_SIZE 1
 #define GOAL_VIS_THICKNESS 3
@@ -83,9 +84,11 @@ void Visualizer::join_thread()
 
 void Visualizer::run()
 {
+  const int screen_width  = (int)sf::VideoMode::getDesktopMode().width;
+  const int screen_height = (int)sf::VideoMode::getDesktopMode().height;
   const int map_width     = instance.get_map_data().width;
   const int map_height    = instance.get_map_data().height;
-  const int window_height = (int)std::round(WINDOW_WIDTH * ((double)map_width / (double)map_height)) + MENU_BAR_SIZE;
+  const int window_height = (int)std::round(screen_width * ((double)map_width / (double)map_height));
   // std::cout << "Requested window height " << window_height << std::endl;
 
   // turn on antialiasing
@@ -93,7 +96,7 @@ void Visualizer::run()
   settings.antialiasingLevel = 8.0;
 
 
-  sf::RenderWindow window(sf::VideoMode(WINDOW_WIDTH, window_height), "Visualization", sf::Style::Default, settings);
+  sf::RenderWindow window(sf::VideoMode(screen_width, screen_height), "Visualization", sf::Style::Default, settings);
 
   // set framerate
   window.setFramerateLimit(60);
@@ -104,7 +107,8 @@ void Visualizer::run()
   window.setActive();
 
   // create a view
-  sf::View view(sf::FloatRect(0, 0, WINDOW_WIDTH, window_height));
+  // sf::View view(sf::FloatRect(0, 0, screen_width, screen_height));
+  sf::View view(sf::Vector2f((float)screen_width / 2, (float)screen_height / 2), sf::Vector2f(screen_width, window_height));
 
   // Zoom settings
   float       zoomLevel = 1.0f;
@@ -240,7 +244,7 @@ void Visualizer::run()
       }
       ImVec2 menu_bar_size = ImGui::GetWindowSize();
       // set the are where the map and agents will be rendered
-      view.setViewport(sf::FloatRect({0.f, (float)menu_bar_size.y / (float)window_height}, {1.0f, 1.f}));
+      // view.setViewport(sf::FloatRect({0.f, (float)menu_bar_size.y / (float)window_height}, {1.0f, 1.f}));
 
       ImGui::EndMainMenuBar();
     }
@@ -496,34 +500,38 @@ double Visualizer::rescale(double x)
 
 void Visualizer::ShowDockingSpace()
 {
-
+  // get the viewport
   ImGuiViewport* viewport = ImGui::GetMainViewport();
   ImGui::SetNextWindowPos(viewport->Pos);
   ImGui::SetNextWindowSize(viewport->Size);
   ImGui::SetNextWindowViewport(viewport->ID);
 
+  // set the flags for the gui overlay
   ImGuiWindowFlags host_window_flags = ImGuiWindowFlags_NoDocking | ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoCollapse |
                                        ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoBringToFrontOnFocus |
                                        ImGuiWindowFlags_NoNavFocus | ImGuiWindowFlags_NoBackground;
 
+  // set the style
   ImGui::PushStyleVar(ImGuiStyleVar_WindowRounding, 0.0f);
   ImGui::PushStyleVar(ImGuiStyleVar_WindowBorderSize, 0.0f);
   ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(0.0f, 0.0f));
 
+  // create the dockspace
   ImGui::Begin("DockSpace Window", nullptr, host_window_flags);
   ImGui::PopStyleVar(3);
 
   // Get menu bar height
   float menuBarHeight = MENU_BAR_SIZE;
-  // float menuBarHeight = 2 * ImGui::GetFrameHeight();
+  // float menuBarHeight = ImGui::GetFrameHeight(); // does not work for some reason
 
   // Offset dockspace position to account for menu bar
   ImGui::SetCursorPosY(menuBarHeight);
 
+  // Create the dockspace
   ImGuiID dockspace_id = ImGui::GetID("MyDockSpace");
   ImGui::DockSpace(dockspace_id, ImVec2(0.0f, 0.0f), ImGuiDockNodeFlags_PassthruCentralNode);
   static bool initialized = false;
-  if (!initialized)
+  if (!initialized)  // initialize the dockspace
   {
     initialized = true;
 
@@ -541,12 +549,12 @@ void Visualizer::ShowDockingSpace()
     // split bottom
     ImGuiID dock_bottom = ImGui::DockBuilderSplitNode(dock_main_id, ImGuiDir_Down, 0.25f, nullptr, &dock_main_id);
 
-    // now cplit sides
+    // split sides
     ImGuiID dock_left  = ImGui::DockBuilderSplitNode(dock_main_id, ImGuiDir_Left, 0.2f, nullptr, &dock_main_id);
     ImGuiID dock_right = ImGui::DockBuilderSplitNode(dock_main_id, ImGuiDir_Right, 0.2f, nullptr, &dock_main_id);
 
 
-    // Set dock positions
+    // Create the dock windows
     ImGui::DockBuilderDockWindow("Left Panel", dock_left);
     ImGui::DockBuilderDockWindow("Right Panel", dock_right);
     ImGui::DockBuilderDockWindow("Console", dock_bottom);
@@ -554,6 +562,5 @@ void Visualizer::ShowDockingSpace()
     // Finalize
     ImGui::DockBuilderFinish(dockspace_id);
   }
-
   ImGui::End();
 }
