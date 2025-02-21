@@ -17,6 +17,7 @@
 #include <memory>
 #include <stdexcept>
 
+#include "IconsFontAwesome5.h"
 #include "imgui-SFML.h"
 #include "imgui.h"
 #include "imgui_internal.h"
@@ -33,7 +34,6 @@
 #define GOAL_VIS_THICKNESS 3
 #define LINE_WIDTH 3  // denominator of line width, so line width is 1/LINE_WIDTH * CELL_SIZE
 #define MENU_BAR_SIZE 40
-
 
 Visualizer::Visualizer(const Instance& instance, SharedData& shared_data) : instance(instance), shared_data(shared_data)
 {
@@ -156,10 +156,33 @@ void Visualizer::run()
 
   ImGuiIO& io = ImGui::GetIO();
   io.Fonts->Clear();  // Clear old fonts
-  // load fonts
+                      // load fonts
   io.Fonts->AddFontFromFileTTF((get_base_path() + "/fonts/Cousine-Regular.ttf").c_str(), 20.0f);
   // io.Fonts->AddFontFromFileTTF((get_base_path() + "/fonts/DroidSans.ttf").c_str(), 20.0f);
   if (!ImGui::SFML::UpdateFontTexture()) std::cout << "Could not load the default font. " << std::endl;
+
+  // load fontawesome for icons
+  static const ImWchar icons_ranges[] = {ICON_MIN_FA, ICON_MAX_FA, 0};  // Unicode range for icons
+                                                                        //
+  // Load FontAwesome font
+  ImFontConfig config;
+  // config.MergeMode = true;  // Merge with default font
+  // config.PixelSnapH       = true;   // Align to pixels for sharp rendering
+  // config.GlyphMinAdvanceX = 13.0f;  // Use if you want to make the icon monospaced
+
+  // if (!io.Fonts->AddFontFromFileTTF((get_base_path() + "/fonts/forkawesome-webfont.ttf").c_str(), 13.0f, &config, icons_ranges))
+  if (!io.Fonts->AddFontFromFileTTF((get_base_path() + "/fonts/fa-solid-900.ttf").c_str(), 13.0f, &config, icons_ranges))
+  {
+    std::cout << "WARNING: Unable to load icons." << std::endl;
+  };
+  if (!ImGui::SFML::UpdateFontTexture()) std::cout << "Could not update the icon font. " << std::endl;
+
+  std::cout << "Total fonts loaded: " << io.Fonts->Fonts.Size << std::endl;
+  for (int i = 0; i < io.Fonts->Fonts.Size; i++)
+  {
+    std::cout << "Font " << i << ": " << io.Fonts->Fonts[i]->ConfigData->Name << std::endl;
+  }
+
 
   // enable docking
   io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;
@@ -235,13 +258,18 @@ void Visualizer::run()
     // Setup Docking Space
     ShowDockingSpace();
 
+    ImGui::ShowDemoWindow();
     // Left Panel
     ImGui::Begin("Left Panel", nullptr, ImGuiWindowFlags_NoResize);
     ImGui::Text("Tools, Layers, or Options here...");
 
     ImVec2 leftSize = ImGui::GetWindowSize();
-    ImGui::Text("Left Panel Size: %.2f, %.2f", leftSize.x, leftSize.y);
-
+    ImGui::PushFont(io.Fonts->Fonts[1]);
+    ImGui::Text(ICON_FA_SEARCH);
+    if (ImGui::Button(ICON_FA_BRUSH))
+    { /* do something */
+    }
+    ImGui::PopFont();
     ImGui::End();
 
     // Right Panel
