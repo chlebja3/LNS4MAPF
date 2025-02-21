@@ -50,7 +50,7 @@ Visualizer::Visualizer(const Instance& instance, SharedData& shared_data) : inst
   update_agent_circles(instance.get_start_positions());
   update_goal_circles(instance.get_goal_positions());
 
-  std::cout << "Instance initialized: " << instance.is_initialized() << std::endl;
+  // std::cout << "Instance initialized: " << instance.is_initialized() << std::endl;
   // generate the paths
   // for (int i = 0; i < (int)instance.get_optimal_paths().size(); i++)
   // {
@@ -394,6 +394,7 @@ void Visualizer::update_agent_circles(const std::vector<Point2d>& positions)
     agents_circles[i] = sf::CircleShape((double)(CELL_SIZE - 2 * BORDER_SIZE) / 2);
     // set color
     agents_circles[i].setFillColor(agents_colors[i]);
+    agents_circles[i].setOutlineThickness(0);
     // set position
     agents_circles[i].setPosition(x * CELL_SIZE + BORDER_SIZE, y * CELL_SIZE + BORDER_SIZE);
   }
@@ -428,8 +429,9 @@ void Visualizer::update_goal_circles(const std::vector<Point2d>& positions)
     // create shape
     goal_circles[i] = sf::CircleShape((double)(CELL_SIZE - 2 * BORDER_SIZE) / 2);
     // set color
-    goal_circles.back().setOutlineColor(agents_colors[i]);
-    goal_circles.back().setOutlineThickness(-GOAL_VIS_THICKNESS);
+    goal_circles[i].setOutlineColor(agents_colors[i]);
+    goal_circles[i].setOutlineThickness(-GOAL_VIS_THICKNESS);
+    goal_circles[i].setFillColor(sf::Color::White);  // make the inner part white
     // set position
     goal_circles[i].setPosition(x * CELL_SIZE + BORDER_SIZE, y * CELL_SIZE + BORDER_SIZE);
   }
@@ -447,7 +449,7 @@ void Visualizer::draw_goals(sf::RenderWindow& window)
 
 void Visualizer::update_path(const int agent_num, const Path& path)
 {
-  std::cout << "Updating path: " << agent_num << std::endl;
+  // std::cout << "Updating path: " << agent_num << std::endl;
   assertm(agent_num >= 0 && agent_num < agents_colors.size() && agent_num < instance.num_of_agents, "Invalid agent number.");
   if (agent_num >= (int)agents_paths.size())
   {
