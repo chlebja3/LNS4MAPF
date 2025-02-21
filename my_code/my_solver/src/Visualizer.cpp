@@ -110,14 +110,14 @@ void Visualizer::run()
   const float zoomStep  = 1.1f;
 
 
-  // turn on antialisasing for fonts
   ImGuiIO& io = ImGui::GetIO();
   io.Fonts->Clear();  // Clear old fonts
+  // load fonts
   io.Fonts->AddFontFromFileTTF((get_base_path() + "/fonts/Cousine-Regular.ttf").c_str(), 20.0f);
   // io.Fonts->AddFontFromFileTTF((get_base_path() + "/fonts/DroidSans.ttf").c_str(), 20.0f);
-  // io.Fonts->TexGlyphPadding = 1;  // Improves quality
-  // ImGui::GetIO().FontGlobalScale = 2.0f;  // Increase all UI elementsImGuiIO io = ImGui::GetIO();
-  // ImFont* font1 = io.Fonts->AddFontFromFileTTF("../res/FFF_Tusj.ttf", 13);
+
+  // Enable docking system
+  io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;
   if (!ImGui::SFML::UpdateFontTexture()) std::cout << "Could not load the default font. " << std::endl;
 
   sf::Clock deltaClock;

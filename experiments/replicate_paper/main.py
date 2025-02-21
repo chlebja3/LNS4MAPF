@@ -58,6 +58,8 @@ for t in tqdm.tqdm([15, 30, 60, 120], desc=" outer", position=0):
 
         # construct lns experiment
         exp = construct_experiment(lns_path, map_path, scen_path, results_file, agent_num, t)
+        print(exp)
+        exit(0)
         res = subprocess.check_output(exp)[:-1].decode('UTF-8')
         res = extract_solution_costs(res)
         res_lns_t.append(res)
