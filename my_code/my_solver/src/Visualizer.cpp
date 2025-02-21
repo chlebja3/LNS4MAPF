@@ -32,7 +32,7 @@
 #define BORDER_SIZE 1
 #define GOAL_VIS_THICKNESS 3
 #define LINE_WIDTH 3  // denominator of line width, so line width is 1/LINE_WIDTH * CELL_SIZE
-#define MENU_BAR_SIZE 46
+#define MENU_BAR_SIZE 40
 
 
 Visualizer::Visualizer(const Instance& instance, SharedData& shared_data) : instance(instance), shared_data(shared_data)
@@ -88,10 +88,11 @@ void Visualizer::join_thread()
 
 void Visualizer::run()
 {
-  const int screen_width  = (int)sf::VideoMode::getDesktopMode().width;
-  const int screen_height = (int)sf::VideoMode::getDesktopMode().height;
-  const int map_width     = instance.get_map_data().width;
-  const int map_height    = instance.get_map_data().height;
+  const int    screen_width  = (int)sf::VideoMode::getDesktopMode().width;
+  const int    screen_height = (int)sf::VideoMode::getDesktopMode().height;
+  const int    map_width     = instance.get_map_data().width;
+  const int    map_height    = instance.get_map_data().height;
+  const double aspect_ratio  = (double)map_width / (double)map_height;
   // std::cout << "Requested window height " << window_height << std::endl;
 
   // turn on antialiasing
@@ -100,9 +101,10 @@ void Visualizer::run()
 
 
   sf::RenderWindow window(sf::VideoMode(screen_width, screen_height), "Visualization", sf::Style::Default, settings);
-  const int        window_width  = window.getSize().x;
-  const int        window_height = window.getSize().y;
-  std::cout << "Window size: " << window_width << " " << window_height << std::endl;
+  const int        window_width        = window.getSize().x;
+  const int        window_height       = window.getSize().y;
+  const double     window_aspect_ratio = (double)window_width / (double)window_height;
+  // std::cout << "Window size: " << window_width << " " << window_height << std::endl;
 
   // set framerate
   window.setFramerateLimit(60);
@@ -113,21 +115,38 @@ void Visualizer::run()
   window.setActive();
 
 
-  std::cout << "Map size: " << map_sprite.getGlobalBounds().left << " " << map_sprite.getGlobalBounds().top << " "
-            << map_sprite.getGlobalBounds().width << " " << map_sprite.getGlobalBounds().height << std::endl;
+  // std::cout << "Map size: " << map_sprite.getGlobalBounds().left << " " << map_sprite.getGlobalBounds().top << " "
+  //          << map_sprite.getGlobalBounds().width << " " << map_sprite.getGlobalBounds().height << std::endl;
 
   // create a view
-  // sf::View view(sf::FloatRect(0, 0, screen_width, screen_height));
+  // sf::View view(sf::FloatRect(0, 0, window_width, window_height));
   sf::View view(sf::Vector2f((float)map_width * CELL_SIZE / 2, (float)map_height * CELL_SIZE / 2),
                 sf::Vector2f((float)map_width * CELL_SIZE, (float)map_height * CELL_SIZE));
 
   // view size
-  std::cout << "View size: " << view.getSize().x << " " << view.getSize().y << std::endl;
+  // std::cout << "View size: " << view.getSize().x << " " << view.getSize().y << std::endl;
 
+  const double sfml_part_width        = window_width * (1.0 - LEFT_PANEL_SIZE - RIGHT_PANEL_SIZE);
+  const double sfml_part_height       = window_height * (1.0 - BOTTOM_PANEL_SIZE);
+  const double sfml_part_aspect_ratio = sfml_part_width / sfml_part_height;
+  double       viewport_width, viewport_height;
 
-  view.setViewport(sf::FloatRect({LEFT_PANEL_SIZE, 0.0f}, {1.0f - LEFT_PANEL_SIZE - RIGHT_PANEL_SIZE, 1.0f - BOTTOM_PANEL_SIZE}));
-  std::cout << "SFML Viewport size: " << view.getViewport().left << " " << view.getViewport().top << " " << view.getViewport().width << " "
-            << view.getViewport().height << std::endl;
+  // std::cout << "sfml width: " << sfml_part_width << " height: " << sfml_part_height << " aspect ratio: " << sfml_part_aspect_ratio
+  //         << std::endl;
+  if (aspect_ratio < sfml_part_aspect_ratio)
+  {
+    // map is wider
+    viewport_width  = sfml_part_width;
+    viewport_height = viewport_width / aspect_ratio;
+  }
+  else
+  {
+    // map is taller
+    viewport_height = sfml_part_height;
+    viewport_width  = viewport_height * aspect_ratio;
+  }
+  view.setViewport(
+      sf::FloatRect({LEFT_PANEL_SIZE, 0.0f}, {(float)(viewport_width / window_width), (float)(viewport_height / window_height)}));
 
   // Zoom settings
   float       zoomLevel = 1.0;
@@ -217,13 +236,19 @@ void Visualizer::run()
     ShowDockingSpace();
 
     // Left Panel
-    ImGui::Begin("Left Panel");
+    ImGui::Begin("Left Panel", nullptr, ImGuiWindowFlags_NoResize);
     ImGui::Text("Tools, Layers, or Options here...");
+
+    ImVec2 leftSize = ImGui::GetWindowSize();
+    ImGui::Text("Left Panel Size: %.2f, %.2f", leftSize.x, leftSize.y);
+
     ImGui::End();
 
     // Right Panel
-    ImGui::Begin("Right Panel");
+    ImGui::Begin("Right Panel", nullptr, ImGuiWindowFlags_NoResize);
     ImGui::Text("Properties, Debug Info, etc.");
+    ImVec2 rightSize = ImGui::GetWindowSize();
+    ImGui::Text("Right Panel Size: %.2f, %.2f", rightSize.x, rightSize.y);
     ImGui::End();
 
     // Right Panel
@@ -566,8 +591,10 @@ void Visualizer::ShowDockingSpace()
     ImGuiID dock_bottom = ImGui::DockBuilderSplitNode(dock_main_id, ImGuiDir_Down, BOTTOM_PANEL_SIZE, nullptr, &dock_main_id);
 
     // split sides
-    ImGuiID dock_left  = ImGui::DockBuilderSplitNode(dock_main_id, ImGuiDir_Left, LEFT_PANEL_SIZE, nullptr, &dock_main_id);
-    ImGuiID dock_right = ImGui::DockBuilderSplitNode(dock_main_id, ImGuiDir_Right, RIGHT_PANEL_SIZE, nullptr, &dock_main_id);
+    ImGuiID dock_left = ImGui::DockBuilderSplitNode(dock_main_id, ImGuiDir_Left, LEFT_PANEL_SIZE, nullptr, &dock_main_id);
+    // calculate the right panel size taking into account the left panel
+    const double right_panel_size = (float)RIGHT_PANEL_SIZE / (1.0 - LEFT_PANEL_SIZE);
+    ImGuiID      dock_right = ImGui::DockBuilderSplitNode(dock_main_id, ImGuiDir_Right, (float)right_panel_size, nullptr, &dock_main_id);
 
 
     // Create the dock windows
