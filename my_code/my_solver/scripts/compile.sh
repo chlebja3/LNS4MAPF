@@ -4,15 +4,15 @@ export CC=/usr/bin/clang
 export CXX=/usr/bin/clang++-18
 
 # check whether RELEASE or DEBUG
-if [ $# -eq 0 ] || [ $1 == "debug" ]
+if [ $# -eq 0 ] || [ $1 == "relwithdebinfo" ]
 then
-  BUILD_TYPE=Debug
+  BUILD_TYPE=RelWithDebInfo
 elif [ $1 == "release" ]
 then
   BUILD_TYPE=Release
-elif [ $1 == "relwithdebinfo" ]
+elif [ $1 == "debug" ]
 then
-  BUILD_TYPE=RelWithDebInfo
+  BUILD_TYPE=Debug
 fi
 
 echo "Build type: ${BUILD_TYPE}"

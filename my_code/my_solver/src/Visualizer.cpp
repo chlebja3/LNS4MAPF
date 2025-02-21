@@ -100,6 +100,9 @@ void Visualizer::run()
 
 
   sf::RenderWindow window(sf::VideoMode(screen_width, screen_height), "Visualization", sf::Style::Default, settings);
+  const int        window_width  = window.getSize().x;
+  const int        window_height = window.getSize().y;
+  std::cout << "Window size: " << window_width << " " << window_height << std::endl;
 
   // set framerate
   window.setFramerateLimit(60);
@@ -109,19 +112,27 @@ void Visualizer::run()
   // Activate the window for OpenGL rendering
   window.setActive();
 
+
+  std::cout << "Map size: " << map_sprite.getGlobalBounds().left << " " << map_sprite.getGlobalBounds().top << " "
+            << map_sprite.getGlobalBounds().width << " " << map_sprite.getGlobalBounds().height << std::endl;
+
   // create a view
   // sf::View view(sf::FloatRect(0, 0, screen_width, screen_height));
-  sf::View view(sf::Vector2f((float)screen_width / 2, (float)screen_height / 2), sf::Vector2f(screen_width, screen_height));
+  sf::View view(sf::Vector2f((float)map_width * CELL_SIZE / 2, (float)map_height * CELL_SIZE / 2),
+                sf::Vector2f((float)map_width * CELL_SIZE, (float)map_height * CELL_SIZE));
+
+  // view size
+  std::cout << "View size: " << view.getSize().x << " " << view.getSize().y << std::endl;
+
+
+  view.setViewport(sf::FloatRect({LEFT_PANEL_SIZE, 0.0f}, {1.0f - LEFT_PANEL_SIZE - RIGHT_PANEL_SIZE, 1.0f - BOTTOM_PANEL_SIZE}));
+  std::cout << "SFML Viewport size: " << view.getViewport().left << " " << view.getViewport().top << " " << view.getViewport().width << " "
+            << view.getViewport().height << std::endl;
 
   // Zoom settings
-  // calculate default zoom settings so that the map fits to the screen
-  float zoom_x    = (float)scale * map_width / (screen_width * (1 - LEFT_PANEL_SIZE - RIGHT_PANEL_SIZE));
-  float zoom_y    = (float)scale * map_height / (screen_height * (1 - MENU_BAR_SIZE - BOTTOM_PANEL_SIZE));
-  float zoomLevel = 1 / std::max(zoom_x, zoom_y);
-  // std::cout << "Calculated zoom: " << zoomLevel << std::endl;
-  zoomLevel            = 1.2;
-  const float zoomStep = 1.1f;
-  view.zoom(zoomLevel);
+  float       zoomLevel = 1.0;
+  const float zoomStep  = 1.1f;
+  // view.zoom(zoomLevel);
 
 
   ImGuiIO& io = ImGui::GetIO();
@@ -335,8 +346,8 @@ void Visualizer::mapToTexture(const Map& map_data)
   // turn on antialiasing
   // map_texture.setSmooth(true);
   map_sprite = sf::Sprite(map_texture);
-  scale      = (double)WINDOW_WIDTH / (CELL_SIZE * map_data.width);
-  map_sprite.setScale(sf::Vector2f(scale, scale));
+  // scale      = (double)WINDOW_WIDTH / (CELL_SIZE * map_data.width);
+  // map_sprite.setScale(sf::Vector2f(scale, scale));
 }
 void Visualizer::update_agent_circles(const std::vector<Point2d>& positions)
 {
@@ -359,8 +370,7 @@ void Visualizer::update_agent_circles(const std::vector<Point2d>& positions)
     // set color
     agents_circles[i].setFillColor(agents_colors[i]);
     // set position
-    agents_circles[i].setPosition(x * scale * CELL_SIZE + scale * BORDER_SIZE, y * scale * CELL_SIZE + scale * BORDER_SIZE);
-    agents_circles[i].setScale(sf::Vector2f(scale, scale));
+    agents_circles[i].setPosition(x * CELL_SIZE + BORDER_SIZE, y * CELL_SIZE + BORDER_SIZE);
   }
 }
 
@@ -396,8 +406,7 @@ void Visualizer::update_goal_circles(const std::vector<Point2d>& positions)
     goal_circles.back().setOutlineColor(agents_colors[i]);
     goal_circles.back().setOutlineThickness(-GOAL_VIS_THICKNESS);
     // set position
-    goal_circles[i].setPosition(x * scale * CELL_SIZE + scale * BORDER_SIZE, y * scale * CELL_SIZE + scale * BORDER_SIZE);
-    goal_circles[i].setScale(sf::Vector2f(scale, scale));
+    goal_circles[i].setPosition(x * CELL_SIZE + BORDER_SIZE, y * CELL_SIZE + BORDER_SIZE);
   }
 }
 
@@ -466,14 +475,14 @@ void Visualizer::update_path(const int agent_num, const Path& path)
         assertm(max_x - min_x > 0 != max_y - min_y > 0, "Segment must be either horizontal or vertical.");
 
 
-        sf::Vector2f left_upper =
-            sf::Vector2f(rescale(min_x + 0.5 - (double)1 / (2 * LINE_WIDTH)), rescale(min_y + 0.5 - (double)1 / (2 * LINE_WIDTH)));
-        sf::Vector2f right_upper =
-            sf::Vector2f(rescale(max_x + 0.5 + (double)1 / (2 * LINE_WIDTH)), rescale(min_y + 0.5 - (double)1 / (2 * LINE_WIDTH)));
-        sf::Vector2f right_lower =
-            sf::Vector2f(rescale(max_x + 0.5 + (double)1 / (2 * LINE_WIDTH)), rescale(max_y + 0.5 + (double)1 / (2 * LINE_WIDTH)));
-        sf::Vector2f left_lower =
-            sf::Vector2f(rescale(min_x + 0.5 - (double)1 / (2 * LINE_WIDTH)), rescale(max_y + 0.5 + (double)1 / (2 * LINE_WIDTH)));
+        sf::Vector2f left_upper  = sf::Vector2f(CELL_SIZE * (min_x + 0.5 - (double)1 / (2 * LINE_WIDTH)),
+                                               CELL_SIZE * (min_y + 0.5 - (double)1 / (2 * LINE_WIDTH)));
+        sf::Vector2f right_upper = sf::Vector2f(CELL_SIZE * (max_x + 0.5 + (double)1 / (2 * LINE_WIDTH)),
+                                                CELL_SIZE * (min_y + 0.5 - (double)1 / (2 * LINE_WIDTH)));
+        sf::Vector2f right_lower = sf::Vector2f(CELL_SIZE * (max_x + 0.5 + (double)1 / (2 * LINE_WIDTH)),
+                                                CELL_SIZE * (max_y + 0.5 + (double)1 / (2 * LINE_WIDTH)));
+        sf::Vector2f left_lower  = sf::Vector2f(CELL_SIZE * (min_x + 0.5 - (double)1 / (2 * LINE_WIDTH)),
+                                               CELL_SIZE * (max_y + 0.5 + (double)1 / (2 * LINE_WIDTH)));
 
         // add previous segment
         path_vis.append(sf::Vertex(left_upper, color));
@@ -502,15 +511,13 @@ void Visualizer::draw_paths(sf::RenderWindow& window)
   }
 }
 
-double Visualizer::rescale(double x)
-{
-  return x * scale * CELL_SIZE;
-}
-
 void Visualizer::ShowDockingSpace()
 {
   // get the viewport
   ImGuiViewport* viewport = ImGui::GetMainViewport();
+
+  // std::cout << "Viewport imgui size: " << viewport->Size.x << " " << viewport->Size.y << std::endl;
+
   ImGui::SetNextWindowPos(viewport->Pos);
   ImGui::SetNextWindowSize(viewport->Size);
   ImGui::SetNextWindowViewport(viewport->ID);

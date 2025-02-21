@@ -43,7 +43,6 @@ private:
   void            draw_agents(sf::RenderWindow& window);
   void            draw_goals(sf::RenderWindow& window);
   void            draw_paths(sf::RenderWindow& window);
-  double          rescale(double x);
   std::thread     vis_thread;  // the underlying thread
   bool            running;     // indicator whether the thread should be running
   const Instance& instance;
