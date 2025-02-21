@@ -19,6 +19,7 @@
 
 #include "imgui-SFML.h"
 #include "imgui.h"
+#include "imgui_internal.h"
 #include "utils.h"
 
 #define WINDOW_WIDTH 800
@@ -115,10 +116,10 @@ void Visualizer::run()
   // load fonts
   io.Fonts->AddFontFromFileTTF((get_base_path() + "/fonts/Cousine-Regular.ttf").c_str(), 20.0f);
   // io.Fonts->AddFontFromFileTTF((get_base_path() + "/fonts/DroidSans.ttf").c_str(), 20.0f);
-
-  // Enable docking system
-  io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;
   if (!ImGui::SFML::UpdateFontTexture()) std::cout << "Could not load the default font. " << std::endl;
+
+  // enable docking
+  io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;
 
   sf::Clock deltaClock;
   while (window.isOpen() && running)
@@ -135,6 +136,7 @@ void Visualizer::run()
         update_path(i, new_paths[i]);
       }
     }
+
 
     // poll all events from the window
     sf::Event event;
@@ -180,11 +182,30 @@ void Visualizer::run()
       }
     }
 
+
     // clear the window
     window.clear(sf::Color::Black);
 
     // update imgui
     ImGui::SFML::Update(window, deltaClock.restart());
+
+    // Setup Docking Space
+    ShowDockingSpace();
+
+    // Left Panel
+    ImGui::Begin("Left Panel");
+    ImGui::Text("Tools, Layers, or Options here...");
+    ImGui::End();
+
+    // Right Panel
+    ImGui::Begin("Right Panel");
+    ImGui::Text("Properties, Debug Info, etc.");
+    ImGui::End();
+
+    // Right Panel
+    ImGui::Begin("Console");
+    ImGui::Text("Solver output");
+    ImGui::End();
 
     // draw the map
     window.draw(map_sprite);
@@ -471,4 +492,68 @@ void Visualizer::draw_paths(sf::RenderWindow& window)
 double Visualizer::rescale(double x)
 {
   return x * scale * CELL_SIZE;
+}
+
+void Visualizer::ShowDockingSpace()
+{
+
+  ImGuiViewport* viewport = ImGui::GetMainViewport();
+  ImGui::SetNextWindowPos(viewport->Pos);
+  ImGui::SetNextWindowSize(viewport->Size);
+  ImGui::SetNextWindowViewport(viewport->ID);
+
+  ImGuiWindowFlags host_window_flags = ImGuiWindowFlags_NoDocking | ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoCollapse |
+                                       ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoBringToFrontOnFocus |
+                                       ImGuiWindowFlags_NoNavFocus | ImGuiWindowFlags_NoBackground;
+
+  ImGui::PushStyleVar(ImGuiStyleVar_WindowRounding, 0.0f);
+  ImGui::PushStyleVar(ImGuiStyleVar_WindowBorderSize, 0.0f);
+  ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(0.0f, 0.0f));
+
+  ImGui::Begin("DockSpace Window", nullptr, host_window_flags);
+  ImGui::PopStyleVar(3);
+
+  // Get menu bar height
+  float menuBarHeight = MENU_BAR_SIZE;
+  // float menuBarHeight = 2 * ImGui::GetFrameHeight();
+
+  // Offset dockspace position to account for menu bar
+  ImGui::SetCursorPosY(menuBarHeight);
+
+  ImGuiID dockspace_id = ImGui::GetID("MyDockSpace");
+  ImGui::DockSpace(dockspace_id, ImVec2(0.0f, 0.0f), ImGuiDockNodeFlags_PassthruCentralNode);
+  static bool initialized = false;
+  if (!initialized)
+  {
+    initialized = true;
+
+    // Clear old dock layout
+    ImGui::DockBuilderRemoveNode(dockspace_id);
+    ImGui::DockBuilderAddNode(dockspace_id, ImGuiDockNodeFlags_DockSpace);
+
+    // Adjust dock builder size based on menu bar height
+    ImVec2 dockspaceSize = ImVec2(viewport->Size.x, viewport->Size.y - menuBarHeight);
+    ImGui::DockBuilderSetNodeSize(dockspace_id, dockspaceSize);
+
+    // Create dock spaces
+    ImGuiID dock_main_id = dockspace_id;  // Main area
+
+    // split bottom
+    ImGuiID dock_bottom = ImGui::DockBuilderSplitNode(dock_main_id, ImGuiDir_Down, 0.25f, nullptr, &dock_main_id);
+
+    // now cplit sides
+    ImGuiID dock_left  = ImGui::DockBuilderSplitNode(dock_main_id, ImGuiDir_Left, 0.2f, nullptr, &dock_main_id);
+    ImGuiID dock_right = ImGui::DockBuilderSplitNode(dock_main_id, ImGuiDir_Right, 0.2f, nullptr, &dock_main_id);
+
+
+    // Set dock positions
+    ImGui::DockBuilderDockWindow("Left Panel", dock_left);
+    ImGui::DockBuilderDockWindow("Right Panel", dock_right);
+    ImGui::DockBuilderDockWindow("Console", dock_bottom);
+
+    // Finalize
+    ImGui::DockBuilderFinish(dockspace_id);
+  }
+
+  ImGui::End();
 }

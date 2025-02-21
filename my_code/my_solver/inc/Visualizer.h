@@ -48,6 +48,7 @@ private:
   bool            running;     // indicator whether the thread should be running
   const Instance& instance;
   SharedData&     shared_data;
+  void            ShowDockingSpace();
 
   // drawing objects
   sf::Texture                  map_texture;  // the map texture
