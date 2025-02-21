@@ -22,12 +22,16 @@
 #include "imgui_internal.h"
 #include "utils.h"
 
+// default size of the panels (0 - 1)
+#define LEFT_PANEL_SIZE 0.2
+#define RIGHT_PANEL_SIZE 0.2
+#define BOTTOM_PANEL_SIZE 0.2
 #define WINDOW_WIDTH 1920
-#define WINDOW_HEIGHT 1080
+
 #define CELL_SIZE 20
 #define BORDER_SIZE 1
 #define GOAL_VIS_THICKNESS 3
-#define LINE_WIDTH 3  // denominator od line width, so line width is 1/LINE_WIDTH * CELL_SIZE
+#define LINE_WIDTH 3  // denominator of line width, so line width is 1/LINE_WIDTH * CELL_SIZE
 #define MENU_BAR_SIZE 46
 
 
@@ -88,7 +92,6 @@ void Visualizer::run()
   const int screen_height = (int)sf::VideoMode::getDesktopMode().height;
   const int map_width     = instance.get_map_data().width;
   const int map_height    = instance.get_map_data().height;
-  const int window_height = (int)std::round(screen_width * ((double)map_width / (double)map_height));
   // std::cout << "Requested window height " << window_height << std::endl;
 
   // turn on antialiasing
@@ -108,11 +111,17 @@ void Visualizer::run()
 
   // create a view
   // sf::View view(sf::FloatRect(0, 0, screen_width, screen_height));
-  sf::View view(sf::Vector2f((float)screen_width / 2, (float)screen_height / 2), sf::Vector2f(screen_width, window_height));
+  sf::View view(sf::Vector2f((float)screen_width / 2, (float)screen_height / 2), sf::Vector2f(screen_width, screen_height));
 
   // Zoom settings
-  float       zoomLevel = 1.0f;
-  const float zoomStep  = 1.1f;
+  // calculate default zoom settings so that the map fits to the screen
+  float zoom_x    = (float)scale * map_width / (screen_width * (1 - LEFT_PANEL_SIZE - RIGHT_PANEL_SIZE));
+  float zoom_y    = (float)scale * map_height / (screen_height * (1 - MENU_BAR_SIZE - BOTTOM_PANEL_SIZE));
+  float zoomLevel = 1 / std::max(zoom_x, zoom_y);
+  // std::cout << "Calculated zoom: " << zoomLevel << std::endl;
+  zoomLevel            = 1.2;
+  const float zoomStep = 1.1f;
+  view.zoom(zoomLevel);
 
 
   ImGuiIO& io = ImGui::GetIO();
@@ -547,11 +556,11 @@ void Visualizer::ShowDockingSpace()
     ImGuiID dock_main_id = dockspace_id;  // Main area
 
     // split bottom
-    ImGuiID dock_bottom = ImGui::DockBuilderSplitNode(dock_main_id, ImGuiDir_Down, 0.25f, nullptr, &dock_main_id);
+    ImGuiID dock_bottom = ImGui::DockBuilderSplitNode(dock_main_id, ImGuiDir_Down, BOTTOM_PANEL_SIZE, nullptr, &dock_main_id);
 
     // split sides
-    ImGuiID dock_left  = ImGui::DockBuilderSplitNode(dock_main_id, ImGuiDir_Left, 0.2f, nullptr, &dock_main_id);
-    ImGuiID dock_right = ImGui::DockBuilderSplitNode(dock_main_id, ImGuiDir_Right, 0.2f, nullptr, &dock_main_id);
+    ImGuiID dock_left  = ImGui::DockBuilderSplitNode(dock_main_id, ImGuiDir_Left, LEFT_PANEL_SIZE, nullptr, &dock_main_id);
+    ImGuiID dock_right = ImGui::DockBuilderSplitNode(dock_main_id, ImGuiDir_Right, RIGHT_PANEL_SIZE, nullptr, &dock_main_id);
 
 
     // Create the dock windows
