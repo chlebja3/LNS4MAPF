@@ -12,8 +12,11 @@
 class LNS : public Solver
 {
 public:
+  bool                  is_visualisation;
+  std::vector<SIPPInfo> sipp_info;
+
   // constructor
-  LNS(const Instance& instance);
+  LNS(const Instance& instance, const bool is_visualisation);
 
   // Destructor
   ~LNS(void) = default;

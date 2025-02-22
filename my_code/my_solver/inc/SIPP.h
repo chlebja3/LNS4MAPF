@@ -13,6 +13,7 @@
 #include <unordered_set>
 
 #include "ConstraintTable.h"
+#include "IterInfo.h"
 
 namespace sipp
 {
@@ -68,10 +69,17 @@ class SIPP
 {
 public:
   ConstraintTable constraint_table;
-  int             generated_nodes = 0;
+  int             generated_all_iter  = 0;
+  int             generated_this_iter = 0;
+  int             expanded_all_iter   = 0;
+  int             expanded_this_iter  = 0;
+  int             iteration_num       = 0;
+  SIPPInfo        iter_info;
+
+  bool generate_iter_info = false;
 
   // constructor
-  SIPP(const Instance& instance);
+  SIPP(const Instance& instance, const bool generate_iter_info);
 
   // destructor
   ~SIPP() = default;
@@ -79,6 +87,8 @@ public:
   TimePointPath plan(const int agent_num);
 
 private:
+  void            initialize_iter_info(void);
+  void            update_iter_info(const sipp::SIPPNode& expanded, const bool last_iter);
   const Instance& instance;
   sipp::NodePool  node_pool;
 };

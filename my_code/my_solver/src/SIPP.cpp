@@ -20,8 +20,9 @@
 
 using namespace sipp;
 
-SIPP::SIPP(const Instance& instance)
+SIPP::SIPP(const Instance& instance, const bool generate_iter_info)
     : constraint_table(ConstraintTable(instance)),
+      generate_iter_info(generate_iter_info),
       instance(instance),
       node_pool(NodePool(5 * instance.get_map_data().width * instance.get_map_data().height)){};
 
@@ -97,6 +98,8 @@ void NodePool::merge_extra(void)
 
 TimePointPath SIPP::plan(const int agent_num)
 {
+  if (generate_iter_info) initialize_iter_info();
+
   const Map&     map_data = instance.get_map_data();
   const Point2d& start    = instance.get_start_positions()[agent_num];
   const Point2d& goal     = instance.get_goal_positions()[agent_num];
@@ -110,15 +113,11 @@ TimePointPath SIPP::plan(const int agent_num)
   // estimate the maximum time the goal can be reached (after all dynamic constraints disappear, the path can go through all free cells
   // in the worst case)
   int max_time = std::max(INT_MAX, constraint_table.get_last_dynamic_constraint() + map_data.free_cells);
-  // std::cout << "Max time: " << max_time << std::endl;
+
+  assertm(max_time >= 0, "Time can not be negative.");
 
   // create openlist
   sipp::PriorityQueue open_list;
-
-  // create a vector to store all nodes so that they dont go out of scope
-  std::vector<std::unique_ptr<SIPPNode>> node_list = {};
-  node_list.reserve(map_data.width * map_data.height);
-
 
   // retrieve the first safe interval
   TimeInterval time_interval_start = constraint_table.get_first_safe_interval(start);
@@ -127,10 +126,13 @@ TimePointPath SIPP::plan(const int agent_num)
   {
     // const double h = instance.get_heuristic_euclidean(agent_num, start);
     const double h = instance.get_heuristic_manhattan(agent_num, start);
+
     // create the start node
     open_list.push(node_pool.add_node(SIPPNode(start, time_interval_start, 0, h, nullptr)));
+
+    if (generate_iter_info) generated_this_iter++;
   }
-  generated_nodes++;
+
 
   // create known nodes database
   sipp::UnorderedMap known;
@@ -138,17 +140,16 @@ TimePointPath SIPP::plan(const int agent_num)
   // main loop
   while (!open_list.empty())
   {
+    if (generate_iter_info) iteration_num++;
+
     // pop the node to be processed
     SIPPNode const* const current = std::move(open_list.top());
     open_list.pop();
-
-    // std::cout << current->time_point.position << ", " << current->time_point.interval << std::endl;
 
     // check whether node was expanded already (same position and tmax higher then current tmin)
     if (known.find(current->time_point.position) != known.end() &&
         current->time_point.interval.t_min <= known[current->time_point.position])
       continue;
-
 
     // check whether goal position is reached and that there will be no more dynamic constraints at the goal location
     if (current->time_point.position == goal && current->time_point.interval.t_max == INT_MAX)
@@ -158,6 +159,9 @@ TimePointPath SIPP::plan(const int agent_num)
 
       // reset the node pool
       node_pool.merge_extra();
+
+      // generate last iteration info
+      if (generate_iter_info) update_iter_info(*current, true);
 
       return ret;
     }
@@ -197,14 +201,38 @@ TimePointPath SIPP::plan(const int agent_num)
 
         // add to the open list
         open_list.push(node_pool.add_node(SIPPNode(neighbor_time_point, neighbor_time_point.interval.t_min, h, current)));
-        generated_nodes++;
+
+        if (generate_iter_info) generated_this_iter++;
       }
     }
+
+    // save the iteration info
+    if (generate_iter_info) update_iter_info(*current, false);
   }
   // reset the node pool
   node_pool.merge_extra();
 
   return TimePointPath();
+}
+
+void SIPP::initialize_iter_info(void)
+{
+  generated_this_iter = 0;
+  expanded_this_iter  = 0;
+  iteration_num       = -1;
+}
+
+void SIPP::update_iter_info(const sipp::SIPPNode& expanded, const bool last_iter)
+{
+  expanded_this_iter += 1;
+  iter_info.emplace_back(expanded.time_point, expanded.g, expanded.h, generated_this_iter, expanded_this_iter, iteration_num);
+
+  if (last_iter)
+  {
+    // update the info across all sipp runs
+    generated_all_iter += generated_this_iter;
+    expanded_all_iter += expanded_this_iter;
+  }
 }
 
 TimePointPath sipp::extract_path(SIPPNode const* const final_node)

@@ -144,7 +144,7 @@ void Visualizer::run()
     else if (shared_data.are_new_paths.load(std::memory_order_acquire))
     {
       // get the new paths from the shared structure
-      agents_paths = shared_data.consume_paths();
+      std::tie(agents_paths, sipp_info) = shared_data.consume_paths();
       assertm(instance.num_of_agents == (int)agents_paths.size(), "Number of paths should be the same as the number of agents.");
 
       int max_path_len = 0;
@@ -637,6 +637,10 @@ void Visualizer::create_left_panel(void)
 {
   ImGui::Begin("Left Panel", nullptr, ImGuiWindowFlags_NoResize);
   ImGui::Text("Agent info:");
+  if ((int)sipp_info.size() > 0)
+  {
+    ImGui::Text("Sipp iterations: %d", sipp_info[0].back().iteration_num);
+  }
   ImGui::End();
 }
 

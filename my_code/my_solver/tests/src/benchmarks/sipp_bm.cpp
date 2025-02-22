@@ -22,7 +22,7 @@ static void BM_PP_den520(benchmark::State& state)
   for (auto _ : state)
   {
     // create LNS
-    LNS lns(*instance);
+    LNS lns(*instance, false);
 
     // plan path by Prioritized Planning
     Solution sol = lns.PrioritizedPlanning();

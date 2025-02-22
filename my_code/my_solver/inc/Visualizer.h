@@ -15,6 +15,7 @@
 #include <thread>
 
 #include "Instance.h"
+#include "IterInfo.h"
 #include "SharedData.h"
 
 class Visualization
@@ -95,6 +96,7 @@ private:
   std::vector<sf::Color>       agents_colors;
   std::vector<sf::VertexArray> agents_paths_vis;
   std::vector<Path>            agents_paths;
+  std::vector<SIPPInfo>        sipp_info;
 
   // Zoom settings
   float       zoom_level = 1.0;

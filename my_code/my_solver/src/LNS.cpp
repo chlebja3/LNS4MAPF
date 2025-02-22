@@ -12,10 +12,10 @@
 
 #include "SIPP.h"
 
-LNS::LNS(const Instance& instance) : Solver("LNS", instance)
+LNS::LNS(const Instance& instance, const bool is_visualisation) : Solver("LNS", instance), is_visualisation(is_visualisation)
 {
   // SIPP's lifetime can not be longer than LNS's lifetime, because then map_data might be deleted before SIPP
-  planner = std::make_unique<SIPP>(instance);
+  planner = std::make_unique<SIPP>(instance, is_visualisation);
 };
 
 void LNS::solve()
@@ -42,16 +42,15 @@ Solution LNS::PrioritizedPlanning()
   std::vector<int> priorities(agent_num);
   std::iota(priorities.begin(), priorities.end(), 0);
 
-  /*// print priorities
-  std::cout << "Priorities: ";
-  for (int i = 0; i < agent_num; i++)
-  {
-    std::cout << priorities[i] << " ";
-  }
-  */
-
   // shuffle the sequence to get random priorities
   std::random_shuffle(priorities.begin(), priorities.end());
+
+  // initialize iter info
+  if (is_visualisation)
+  {
+    sipp_info.clear();
+    sipp_info.resize(agent_num);
+  }
 
   // plan path for each agent according to its priority
   for (int i = 0; i < agent_num; i++)
@@ -63,14 +62,12 @@ Solution LNS::PrioritizedPlanning()
     // plan path for agent
     TimePointPath tp_path = planner->plan(agent_id);
 
-    // print the path
-    // std::cout << "Path for agent " << agent_id << ": " << std::endl;
-    // for (const auto& tp : tp_path)
-    // {
-    //   std::cout << "{" << tp.position << ", " << tp.interval << "}"
-    //             << " ";
-    // }
-    // std::cout << std::endl;
+    // get the visualization info
+    if (is_visualisation)
+    {
+      sipp_info[i] = std::move(planner->iter_info);
+      planner->iter_info.clear();
+    }
 
     // check validity
     if (tp_path.empty())
@@ -82,7 +79,7 @@ Solution LNS::PrioritizedPlanning()
     // update the constraint table
     planner->constraint_table.add_constraints(tp_path);
 
-    // convert to Path and add to the solution
+    // convert to Path and add to the solution TODO not needed
     sol.paths[agent_id] = timepointpath_to_path(tp_path);
   }
   return sol;
@@ -90,5 +87,5 @@ Solution LNS::PrioritizedPlanning()
 
 int LNS::get_num_of_generated_nodes(void) const
 {
-  return planner->generated_nodes;
+  return planner->generated_all_iter;
 }

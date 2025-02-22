@@ -8,6 +8,7 @@
 #include <atomic>
 #include <mutex>
 
+#include "IterInfo.h"
 #include "utils.h"
 
 class SharedData
@@ -17,11 +18,12 @@ public:
 
   SharedData(void);
 
-  void update_paths(const std::vector<Path>& new_paths);
+  void update_paths(const std::vector<Path>& new_paths, std::vector<SIPPInfo>& sipp_info);
 
-  std::vector<Path> consume_paths(void);
+  std::pair<std::vector<Path>, std::vector<SIPPInfo>> consume_paths(void);
 
 private:
-  std::mutex        paths_mtx;
-  std::vector<Path> paths;
+  std::mutex            paths_mtx;
+  std::vector<Path>     paths;
+  std::vector<SIPPInfo> sipp_info;
 };

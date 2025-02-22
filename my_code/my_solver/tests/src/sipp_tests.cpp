@@ -249,7 +249,7 @@ TEST(SIPPTest, BasicPathEmptyMap)
       std::make_unique<Instance>(base_path + "/tests/test_maps/empty_5_5.map", base_path + "/tests/test_scen/empty_5_5_scen_1.scen", 1);
 
   // create SIPP
-  SIPP sipp(*instance);
+  SIPP sipp(*instance, false);
 
   // from (0,0) to (4,4)
   Point2d       start = instance->get_start_positions()[0];
@@ -270,7 +270,7 @@ TEST(SIPPTest, StaticObstacleAvoidance)
       std::make_unique<Instance>(base_path + "/tests/test_maps/wall_5_5.map", base_path + "/tests/test_scen/wall_5_5_scen_1.scen", 1);
 
   // create SIPP
-  SIPP sipp(*instance);
+  SIPP sipp(*instance, false);
 
   // from (4,0) to (0,4)
   Point2d       start = instance->get_start_positions()[0];
@@ -300,7 +300,7 @@ TEST(SIPPTest, TimeConstraintHandling)
       std::make_unique<Instance>(base_path + "/tests/test_maps/empty_5_5.map", base_path + "/tests/test_scen/empty_5_5_scen_1.scen", 1);
 
   // create SIPP
-  SIPP sipp(*instance);
+  SIPP sipp(*instance, false);
 
   // from (0,0) to (4,4)
   Point2d start = instance->get_start_positions()[0];
@@ -339,7 +339,7 @@ TEST(SIPPTest, NoPathPossible)
       std::make_unique<Instance>(base_path + "/tests/test_maps/biparted_5_5.map", base_path + "/tests/test_scen/empty_5_5_scen_1.scen", 1);
 
   // create SIPP
-  SIPP sipp(*instance);
+  SIPP sipp(*instance, false);
 
   // from (0,0) to (4,4)
   Point2d start = instance->get_start_positions()[0];
@@ -359,7 +359,7 @@ TEST(SIPPTest, NoPathDueToTimeConstraints)
       std::make_unique<Instance>(base_path + "/tests/test_maps/empty_5_5.map", base_path + "/tests/test_scen/empty_5_5_scen_1.scen", 1);
 
   // create SIPP
-  SIPP sipp(*instance);
+  SIPP sipp(*instance, false);
 
   // from (0,0) to (4,4)
   Point2d start = instance->get_start_positions()[0];
@@ -407,7 +407,7 @@ TEST(SIPPTest, DynamicObstacleAtGoal)
       std::make_unique<Instance>(base_path + "/tests/test_maps/empty_5_5.map", base_path + "/tests/test_scen/empty_5_5_scen_1.scen", 1);
 
   // create SIPP
-  SIPP sipp(*instance);
+  SIPP sipp(*instance, false);
 
   // from (0,0) to (4,4)
   Point2d start = instance->get_start_positions()[0];
@@ -435,7 +435,7 @@ TEST(SIPPTest, EdgeConstraintsAtGoal)
       std::make_unique<Instance>(base_path + "/tests/test_maps/dummy_3_3.map", base_path + "/tests/test_scen/dummy_3_3_scen_2.scen", 1);
 
   // create SIPP
-  SIPP sipp(*instance);
+  SIPP sipp(*instance, false);
 
   // from (2, 0) to (2, 1)
   Point2d start = instance->get_start_positions()[0];
@@ -467,7 +467,7 @@ TEST(SIPPTest, SamePathAsAStar1)
       std::make_unique<Instance>(base_path + "/tests/test_maps/empty_5_5.map", base_path + "/tests/test_scen/empty_5_5_scen_1.scen", 1);
 
   // create SIPP
-  SIPP sipp(*instance);
+  SIPP sipp(*instance, false);
 
   // from (0,0) to (4,4)
   Point2d start = instance->get_start_positions()[0];
@@ -504,7 +504,7 @@ TEST(SIPPTest, SamePathAsAStar2)
       std::make_unique<Instance>(base_path + "/tests/test_maps/den520d.map", base_path + "/tests/test_scen/den520d-random-0.scen", 1);
 
   // create SIPP
-  SIPP sipp(*instance);
+  SIPP sipp(*instance, false);
 
   // from (0,0) to (4,4)
   Point2d start = instance->get_start_positions()[0];
@@ -547,7 +547,7 @@ TEST(SIPPTest, PrioritizedPlanning1agent)
       std::make_unique<Instance>(base_path + "/tests/test_maps/dummy_3_3.map", base_path + "/tests/test_scen/dummy_3_3_scen_1.scen", 1);
 
   // create LNS
-  LNS lns(*instance);
+  LNS lns(*instance, false);
 
   // plan path by Prioritized Planning
   Solution sol = lns.PrioritizedPlanning();
@@ -565,7 +565,7 @@ TEST(SIPPTest, PrioritizedPlanningEmpty2agents)
       std::make_unique<Instance>(base_path + "/tests/test_maps/empty_5_5.map", base_path + "/tests/test_scen/empty_5_5_scen_1.scen", 2);
 
   // create LNS
-  LNS lns(*instance);
+  LNS lns(*instance, false);
 
   // plan path by Prioritized Planning
   Solution sol = lns.PrioritizedPlanning();
@@ -591,7 +591,7 @@ TEST(SIPPTest, PrioritizedPlanning)
       std::make_unique<Instance>(base_path + "/tests/test_maps/den520d.map", base_path + "/tests/test_scen/den520d-random-0.scen", 100);
 
   // create LNS
-  LNS lns(*instance);
+  LNS lns(*instance, false);
 
   // plan path by Prioritized Planning
   Solution sol = lns.PrioritizedPlanning();

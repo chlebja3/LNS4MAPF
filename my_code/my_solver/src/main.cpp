@@ -57,16 +57,11 @@ int main(int argc, char** argv)
   // calculate the optimal paths neglecting the other agents
   instance->calculate_optimal_paths_parallel();
 
-  // print the map
-  // std::cout << "The map is:" << std::endl;
-  // instance.print_map();
-  // instance->print_agents();
-
   // create the shared datastructure
   std::unique_ptr<SharedData> shared_data = std::make_unique<SharedData>();
 
   // create the computation object
-  Computation computation(*instance, *shared_data);
+  Computation computation(*instance, *shared_data, GUI);
 
   // start the computation thread
   computation.start();

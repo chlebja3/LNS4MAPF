@@ -18,7 +18,7 @@ class Computation
 {
 public:
   // constructor and destructor
-  Computation(const Instance& instance, SharedData& shared_data);
+  Computation(const Instance& instance, SharedData& shared_data, const bool is_visualization);
   ~Computation();
 
   // manage the underlying thread
@@ -35,4 +35,5 @@ private:
   const Instance&      instance;
   SharedData&          shared_data;
   std::atomic<bool>    running;
+  const bool           is_visualization;
 };
