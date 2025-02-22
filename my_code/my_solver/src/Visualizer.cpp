@@ -38,7 +38,10 @@
 #define FRAME_RATE 60
 
 Visualizer::Visualizer(const Instance& instance, SharedData& shared_data)
-    : instance(instance), shared_data(shared_data), solution_vis([this](Visualization& vis) { this->solution_visualization_update(vis); })
+    : instance(instance),
+      shared_data(shared_data),
+      solution_vis([this](Visualization& vis) { this->solution_visualization_update(vis); }),
+      sipp_vis([this](Visualization& vis) { this->sipp_visualization_update(vis); })
 {
   // generate random colors for the agents
   for (int i = 0; i < (int)instance.get_start_positions().size(); i++)
@@ -136,38 +139,24 @@ void Visualizer::run()
     // check whether new paths arrived
     if (solution_vis.is_playing)
     {
-      solution_vis.iteration_counter++;
-
-      // update the iteration time
-      if ((int)std::round((float)solution_vis.iteration_counter * solution_vis.speed) % FRAME_RATE == 0)
-      {
-        solution_vis.iteration_counter = 0;
-        solution_vis.time++;
-        if (solution_vis.time >= solution_vis.max_time)
-        {
-          solution_vis.pause();
-        }
-        solution_vis.update();
-      }
+      solution_vis.next_iteration();
     }
     else if (shared_data.are_new_paths.load(std::memory_order_acquire))
     {
+      // get the new paths from the shared structure
       agents_paths = shared_data.consume_paths();
       assertm(instance.num_of_agents == (int)agents_paths.size(), "Number of paths should be the same as the number of agents.");
 
-      // reset the visualization time
-      solution_vis.time = 0;
-
       int max_path_len = 0;
-      // construct the path visualizations
+      // construct the path visualizations and find the new length of the visualization
       for (int i = 0; i < instance.num_of_agents; i++)
       {
         update_path(i, agents_paths[i]);
         max_path_len = std::max(max_path_len, (int)agents_paths[i].size() - 1);
       }
-      // update the maximal visualization time
-      solution_vis.max_time          = max_path_len;
-      solution_vis.iteration_counter = 0;
+
+      // update the visualization
+      solution_vis.new_data(max_path_len);
     }
 
     // process the events
@@ -779,6 +768,11 @@ void Visualizer::solution_visualization_update(const Visualization& vis)
   update_agent_circles(get_agent_positions(vis.time));
 }
 
+
+void Visualizer::sipp_visualization_update(const Visualization& vis)
+{
+}
+
 Visualization::Visualization(std::function<void(Visualization& vis)> update_func) : update_func(update_func)
 {
 }
@@ -822,6 +816,31 @@ void Visualization::step_backward(void)
   if (time > 0)
   {
     time--;
+    update();
+  }
+}
+
+void Visualization::new_data(int new_len)
+{
+  // reset the visualization time
+  time              = 0;
+  iteration_counter = 0;
+  max_time          = new_len;
+}
+
+void Visualization::next_iteration(void)
+{
+  iteration_counter++;
+
+  // update the iteration time
+  if ((int)std::round((float)iteration_counter * speed) % FRAME_RATE == 0)
+  {
+    iteration_counter = 0;
+    time++;
+    if (time >= max_time)
+    {
+      pause();
+    }
     update();
   }
 }

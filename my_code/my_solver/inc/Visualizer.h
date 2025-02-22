@@ -33,6 +33,8 @@ public:
   void update(void);
   void step_forward(void);
   void step_backward(void);
+  void new_data(int new_len);
+  void next_iteration(void);
 };
 
 class Visualizer
@@ -59,6 +61,7 @@ public:
   void                 update_all_paths(int time);
   std::vector<Point2d> get_agent_positions(int time);
   void                 solution_visualization_update(const Visualization& vis);
+  void                 sipp_visualization_update(const Visualization& vis);
 
 
 private:
@@ -99,4 +102,5 @@ private:
 
   // Visualizations
   Visualization solution_vis;
+  Visualization sipp_vis;
 };
