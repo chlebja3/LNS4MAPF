@@ -39,6 +39,16 @@ public:
 
 
 private:
+  void load_fonts();
+
+  void adjust_sfml_part_viewport(sf::RenderWindow& window, sf::View& view, const float left_panel_size, const float right_panel_size,
+                                 const float bottom_panel_size);
+
+  void process_events(sf::RenderWindow& window, sf::View& view);
+
+  void create_left_panel(void);
+  void create_right_panel(void);
+  void create_bottom_panel(void);
   // draw the agents
   void            draw_agents(sf::RenderWindow& window);
   void            draw_goals(sf::RenderWindow& window);
@@ -47,7 +57,9 @@ private:
   bool            running;     // indicator whether the thread should be running
   const Instance& instance;
   SharedData&     shared_data;
-  void            ShowDockingSpace();
+
+  void create_docking_space(void);
+  void create_menu_bar(void);
 
   // drawing objects
   sf::Texture                  map_texture;  // the map texture
@@ -56,5 +68,11 @@ private:
   std::vector<sf::CircleShape> goal_circles;
   std::vector<sf::Color>       agents_colors;
   std::vector<sf::VertexArray> agents_paths;
-  // double                       scale;
+
+  // Zoom settings
+  float       zoom_level = 1.0;
+  const float zoom_step  = 1.1f;
+
+  int visualization_time     = 0;
+  int visualization_max_time = 100;
 };
