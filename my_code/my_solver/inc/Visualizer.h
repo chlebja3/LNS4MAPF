@@ -99,7 +99,7 @@ private:
   std::vector<SIPPInfo>        sipp_info;
   int                          selected_agent = -1;
   bool                         is_moving      = false;
-  sf::Vector2f                 last_click_pos;
+  sf::Vector2i                 last_click_pos;
 
   // Zoom settings
   float       zoom_level = 1.0;

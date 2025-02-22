@@ -27,7 +27,6 @@
 #define LEFT_PANEL_SIZE_DEFAULT 0.2
 #define RIGHT_PANEL_SIZE_DEFAULT 0.2
 #define BOTTOM_PANEL_SIZE_DEFAULT 0.2
-#define WINDOW_WIDTH 1920
 
 #define CELL_SIZE 20
 #define BORDER_SIZE 1
@@ -36,8 +35,6 @@
 #define MENU_BAR_SIZE 40
 #define ICON_SIZE 20.0f
 #define FRAME_RATE 60
-#define AVERAGING_FOR_DRAGGING 3
-#define GAMMA_FOR_DRAGGING 0.7f
 
 Visualizer::Visualizer(const Instance& instance, SharedData& shared_data)
     : instance(instance),
@@ -590,8 +587,6 @@ void Visualizer::adjust_sfml_part_viewport(sf::RenderWindow& window, sf::View& v
 
 void Visualizer::process_events(sf::RenderWindow& window, sf::View& view)
 {
-  static int          pressed_counter;
-  static sf::Vector2f estimated_click_pos;
   // poll all events from the window
   sf::Event event;
   while (window.pollEvent(event))
@@ -634,10 +629,8 @@ void Visualizer::process_events(sf::RenderWindow& window, sf::View& view)
           }
 
           // clicked on the map
-          is_moving           = true;
-          last_click_pos      = translated_pos;
-          pressed_counter     = 1;
-          estimated_click_pos = translated_pos;
+          is_moving      = true;
+          last_click_pos = mouse_pos;
         }
       }
     }
@@ -646,21 +639,18 @@ void Visualizer::process_events(sf::RenderWindow& window, sf::View& view)
     {
       if (is_moving)
       {
-
-        const sf::Vector2f mouse_pos = window.mapPixelToCoords(sf::Mouse::getPosition(window));
-        pressed_counter++;
-        if (pressed_counter % AVERAGING_FOR_DRAGGING == 0)
-        {
-          const sf::Vector2f delta = (last_click_pos - estimated_click_pos);
-          std::cout << "Moving: " << delta.x << " " << delta.y << std::endl;
-          view.move(1.1f * delta);
-          last_click_pos      = mouse_pos;
-          estimated_click_pos = mouse_pos;
-        }
-        else
-        {
-          estimated_click_pos = (1.0f - GAMMA_FOR_DRAGGING) * estimated_click_pos + GAMMA_FOR_DRAGGING * mouse_pos;
-        }
+        const sf::Vector2i mouse_pos = sf::Mouse::getPosition(window);
+        const sf::Vector2i delta     = last_click_pos - mouse_pos;
+        // get viewport size
+        const float viewport_width  = view.getViewport().width;
+        const float viewport_height = view.getViewport().height;
+        const float view_width      = view.getSize().x;
+        const float view_height     = view.getSize().y;
+        const int   window_width    = window.getSize().x;
+        const int   window_height   = window.getSize().y;
+        view.move(view_width * delta.x / ((float)window_width * viewport_width),
+                  view_height * delta.y / ((float)window_height * viewport_height));
+        last_click_pos = mouse_pos;
       }
     }
     else if (event.type == sf::Event::MouseButtonReleased)
