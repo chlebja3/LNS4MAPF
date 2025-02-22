@@ -151,14 +151,14 @@ void Solution::load(const std::string& filename)
     line = boost::algorithm::trim_copy(line);
 
     // find the agent number
-    size_t idx = line.find("Agent ");
-    if (idx == std::string::npos)
+    const size_t idx_an = line.find("Agent ");
+    if (idx_an == std::string::npos)
     {
       throw std::runtime_error("Cannot find agent number in line '" + line + "'");
     }
 
-    size_t idx2 = line.find(":");
-    if (idx == std::string::npos)
+    const size_t idx2_an = line.find(":");
+    if (idx_an == std::string::npos)
     {
       throw std::runtime_error("Cannot find : in line '" + line + "'");
     }
@@ -167,7 +167,7 @@ void Solution::load(const std::string& filename)
     int agent_num;
     try
     {
-      agent_num = std::stoi(line.substr(idx + 6, idx2 - idx - 6));
+      agent_num = std::stoi(line.substr(idx_an + 6, idx2_an - idx_an - 6));
     }
     catch (const std::exception& e)
     {
@@ -184,7 +184,7 @@ void Solution::load(const std::string& filename)
 
     // split the line
     std::vector<std::string> split_line;
-    boost::algorithm::split_regex(split_line, line.substr(idx2 + 1), boost::regex("->"));
+    boost::algorithm::split_regex(split_line, line.substr(idx2_an + 1), boost::regex("->"));
 
     // read the path
     Path path;

@@ -119,15 +119,17 @@ TimePointPath SIPP::plan(const int agent_num)
   std::vector<std::unique_ptr<SIPPNode>> node_list = {};
   node_list.reserve(map_data.width * map_data.height);
 
-  // calculate the heuristic of the start node
-  // const double h = instance.get_heuristic_euclidean(agent_num, start);
-  const double h = instance.get_heuristic_manhattan(agent_num, start);
 
   // retrieve the first safe interval
   TimeInterval time_interval_start = constraint_table.get_first_safe_interval(start);
 
-  // create the start node
-  open_list.push(node_pool.add_node(SIPPNode(start, time_interval_start, 0, h, nullptr)));
+  // calculate the heuristic of the start node
+  {
+    // const double h = instance.get_heuristic_euclidean(agent_num, start);
+    const double h = instance.get_heuristic_manhattan(agent_num, start);
+    // create the start node
+    open_list.push(node_pool.add_node(SIPPNode(start, time_interval_start, 0, h, nullptr)));
+  }
   generated_nodes++;
 
   // create known nodes database

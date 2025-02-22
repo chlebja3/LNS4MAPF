@@ -50,7 +50,6 @@ void Computation::join_thread()
 
 void Computation::run()
 {
-  int i = 0;
 
   // initialize LNS
   std::unique_ptr<LNS> lns = std::make_unique<LNS>(instance);

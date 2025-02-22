@@ -76,9 +76,6 @@ Path ASTAR::find_path(const int agent_num, const Instance& instance)
   // check whether start and goal not obstructed
   assertm(map_data.index(start) == 0 && map_data.index(goal) == 0, "Start or goal obstructed.");
 
-  // calculate the heuristic
-  // const double h = instance.get_heuristic_euclidean(agent_num, start);
-  const double h = instance.get_heuristic_manhattan(agent_num, start);
 
   // create frontier - possible datastructures priority_queue, ordered set and pairing heap, TODO try all of them
   ASTAR::PriorityQueue open_list;
@@ -89,7 +86,12 @@ Path ASTAR::find_path(const int agent_num, const Instance& instance)
 
 
   // create the start node
-  node_list.push_back(std::make_unique<AstarNode>(start.x, start.y, 0, h, nullptr));
+  // calculate the heuristic
+  {
+    // const double h = instance.get_heuristic_euclidean(agent_num, start);
+    const double h = instance.get_heuristic_manhattan(agent_num, start);
+    node_list.push_back(std::make_unique<AstarNode>(start.x, start.y, 0, h, nullptr));
+  }
 
   // add the start node to the priority queue
   open_list.push(node_list.back().get());

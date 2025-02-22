@@ -101,9 +101,9 @@ void Visualizer::run()
 
 
   sf::RenderWindow window(sf::VideoMode(screen_width, screen_height), "Visualization", sf::Style::Default, settings);
-  const int        window_width        = window.getSize().x;
-  const int        window_height       = window.getSize().y;
-  const double     window_aspect_ratio = (double)window_width / (double)window_height;
+  const int        window_width  = window.getSize().x;
+  const int        window_height = window.getSize().y;
+  // const double     window_aspect_ratio = (double)window_width / (double)window_height;
   // std::cout << "Window size: " << window_width << " " << window_height << std::endl;
 
   // set framerate
@@ -194,7 +194,7 @@ void Visualizer::run()
     if (shared_data.are_new_paths.load(std::memory_order_acquire))
     {
       std::vector<Path> new_paths = shared_data.consume_paths();
-      assertm(instance.num_of_agents == new_paths.size(), "Number of paths should be the same as the number of agents.");
+      assertm(instance.num_of_agents == (int)new_paths.size(), "Number of paths should be the same as the number of agents.");
 
       // construct the path visualizations
       for (int i = 0; i < instance.num_of_agents; i++)
@@ -263,7 +263,7 @@ void Visualizer::run()
     ImGui::Begin("Left Panel", nullptr, ImGuiWindowFlags_NoResize);
     ImGui::Text("Tools, Layers, or Options here...");
 
-    ImVec2 leftSize = ImGui::GetWindowSize();
+    // ImVec2 leftSize = ImGui::GetWindowSize();
     ImGui::PushFont(io.Fonts->Fonts[1]);
     ImGui::Text(ICON_FA_SEARCH);
     if (ImGui::Button(ICON_FA_BRUSH))
@@ -315,7 +315,7 @@ void Visualizer::run()
         if (ImGui::MenuItem("Algorithm settings")) std::cout << "Algorithm settings." << std::endl;
         ImGui::EndMenu();
       }
-      ImVec2 menu_bar_size = ImGui::GetWindowSize();
+      // ImVec2 menu_bar_size = ImGui::GetWindowSize();
       // set the are where the map and agents will be rendered
       // view.setViewport(sf::FloatRect({0.f, (float)menu_bar_size.y / (float)window_height}, {1.0f, 1.f}));
 
@@ -404,7 +404,7 @@ void Visualizer::mapToTexture(const Map& map_data)
 }
 void Visualizer::update_agent_circles(const std::vector<Point2d>& positions)
 {
-  assertm(positions.size() == instance.num_of_agents, "Wrong number of agent positions.");
+  assertm((int)positions.size() == instance.num_of_agents, "Wrong number of agent positions.");
 
   // initialize the vector
   if (agents_circles.size() != positions.size())
@@ -440,7 +440,7 @@ void Visualizer::draw_agents(sf::RenderWindow& window)
 
 void Visualizer::update_goal_circles(const std::vector<Point2d>& positions)
 {
-  assertm(positions.size() == instance.num_of_agents, "Wrong number of agent positions.");
+  assertm((int)positions.size() == instance.num_of_agents, "Wrong number of agent positions.");
 
   // initialize the vector
   if (goal_circles.size() != positions.size())
@@ -478,7 +478,7 @@ void Visualizer::draw_goals(sf::RenderWindow& window)
 void Visualizer::update_path(const int agent_num, const Path& path)
 {
   // std::cout << "Updating path: " << agent_num << std::endl;
-  assertm(agent_num >= 0 && agent_num < agents_colors.size() && agent_num < instance.num_of_agents, "Invalid agent number.");
+  assertm(agent_num >= 0 && agent_num < (int)agents_colors.size() && agent_num < instance.num_of_agents, "Invalid agent number.");
   if (agent_num >= (int)agents_paths.size())
   {
     agents_paths.resize(agent_num + 1);
@@ -553,7 +553,7 @@ void Visualizer::update_path(const int agent_num, const Path& path)
       }
     }
   }
-  assertm(agent_num < agents_paths.size(), "Agent_num must be bigger than the size of the paths vector.");
+  assertm(agent_num < (int)agents_paths.size(), "Agent_num must be bigger than the size of the paths vector.");
   agents_paths[agent_num] = path_vis;
 }
 

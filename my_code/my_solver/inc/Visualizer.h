@@ -56,5 +56,5 @@ private:
   std::vector<sf::CircleShape> goal_circles;
   std::vector<sf::Color>       agents_colors;
   std::vector<sf::VertexArray> agents_paths;
-  double                       scale;
+  // double                       scale;
 };

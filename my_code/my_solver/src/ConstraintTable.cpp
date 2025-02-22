@@ -52,7 +52,7 @@ void ConstraintTable::add_constraint(const TimePoint& timepoint)
   assertm(idx >= 0 && idx < instance.get_map_data().width * instance.get_map_data().height, "Invalid index.");
 
   // check that there are enough constraints
-  assertm(idx < constraints.size(), "Not enough constraints.");
+  assertm(idx < (int)constraints.size(), "Not enough constraints.");
 
   std::list<TimeInterval>& cur_TI_list = constraints[idx];
 

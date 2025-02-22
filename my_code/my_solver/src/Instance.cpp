@@ -275,8 +275,8 @@ void Instance::calculate_heuristics(void)
 
   // check map validity
   assertm(map_data.width * map_data.height > 0, "Invalid map.");
-  assertm(map_data.data.size() == map_data.width * map_data.height, "Map size invalid");
-  assertm(map_data.free_cells > 0 && map_data.free_cells <= map_data.data.size(), "Invalid free cell count.");
+  assertm((int)map_data.data.size() == map_data.width * map_data.height, "Map size invalid");
+  assertm(map_data.free_cells > 0 && map_data.free_cells <= (int)map_data.data.size(), "Invalid free cell count.");
 
   // preallocate vectors for the heuristics
   const std::vector<int>    manhattan_initializer(map_data.width * map_data.height, 0);
@@ -303,13 +303,13 @@ void Instance::calculate_heuristics(void)
 int Instance::get_heuristic_manhattan(const int agent_num, const Point2d& pos) const
 {
 
-  assertm(agent_num >= 0 && agent_num < heuristic_manhattan.size(), "Agent number out of range of the heuristic vector.");
+  assertm(agent_num >= 0 && agent_num < (int)heuristic_manhattan.size(), "Agent number out of range of the heuristic vector.");
   assertm(map_data.is_in(pos), "Trying to index a point that is not in the map.");
   return heuristic_manhattan[agent_num][pos.y * map_data.width + pos.x];
 };
 double Instance::get_heuristic_euclidean(const int agent_num, const Point2d& pos) const
 {
-  assertm(agent_num >= 0 && agent_num < heuristic_euclidean.size(), "Agent number out of range of the heuristic vector.");
+  assertm(agent_num >= 0 && agent_num < (int)heuristic_euclidean.size(), "Agent number out of range of the heuristic vector.");
   assertm(map_data.is_in(pos), "Trying to index a point that is not in the map.");
   return heuristic_euclidean[agent_num][pos.y * map_data.width + pos.x];
 };
