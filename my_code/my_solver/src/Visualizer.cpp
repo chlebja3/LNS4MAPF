@@ -37,7 +37,8 @@
 #define ICON_SIZE 20.0f
 #define FRAME_RATE 60
 
-Visualizer::Visualizer(const Instance& instance, SharedData& shared_data) : instance(instance), shared_data(shared_data)
+Visualizer::Visualizer(const Instance& instance, SharedData& shared_data)
+    : instance(instance), shared_data(shared_data), solution_vis([this](Visualization& vis) { this->solution_visualization_update(vis); })
 {
   // generate random colors for the agents
   for (int i = 0; i < (int)instance.get_start_positions().size(); i++)
@@ -133,21 +134,20 @@ void Visualizer::run()
   while (window.isOpen() && running)
   {
     // check whether new paths arrived
-    if (visualization_is_playing)
+    if (solution_vis.is_playing)
     {
-      iteration_counter++;
+      solution_vis.iteration_counter++;
 
       // update the iteration time
-      if ((int)std::round((float)iteration_counter * visualization_speed) % FRAME_RATE == 0)
+      if ((int)std::round((float)solution_vis.iteration_counter * solution_vis.speed) % FRAME_RATE == 0)
       {
-        iteration_counter = 0;
-        visualization_time++;
-        if (visualization_time >= visualization_max_time)
+        solution_vis.iteration_counter = 0;
+        solution_vis.time++;
+        if (solution_vis.time >= solution_vis.max_time)
         {
-          pause_visualization();
+          solution_vis.pause();
         }
-        update_all_paths();
-        update_agent_circles(get_agent_positions());
+        solution_vis.update();
       }
     }
     else if (shared_data.are_new_paths.load(std::memory_order_acquire))
@@ -156,7 +156,7 @@ void Visualizer::run()
       assertm(instance.num_of_agents == (int)agents_paths.size(), "Number of paths should be the same as the number of agents.");
 
       // reset the visualization time
-      visualization_time = 0;
+      solution_vis.time = 0;
 
       int max_path_len = 0;
       // construct the path visualizations
@@ -166,8 +166,8 @@ void Visualizer::run()
         max_path_len = std::max(max_path_len, (int)agents_paths[i].size() - 1);
       }
       // update the maximal visualization time
-      visualization_max_time = max_path_len;
-      iteration_counter      = 0;
+      solution_vis.max_time          = max_path_len;
+      solution_vis.iteration_counter = 0;
     }
 
     // process the events
@@ -202,8 +202,8 @@ void Visualizer::run()
     draw_paths(window);
 
     // draw the agents
-    draw_agents(window);
     draw_goals(window);
+    draw_agents(window);
 
     // set the view
     window.setView(view);
@@ -433,12 +433,12 @@ void Visualizer::update_path(const int agent_num, const Path& path)
   agents_paths_vis[agent_num] = path_vis;
 }
 
-void Visualizer::update_all_paths(void)
+void Visualizer::update_all_paths(int time)
 {
   for (int i = 0; i < (int)agents_paths.size(); i++)
   {
     // calculate the start index of the path according to the visualization time
-    int idx = std::min((int)agents_paths[i].size() - 1, visualization_time);
+    int idx = std::min((int)agents_paths[i].size() - 1, time);
     update_path(i, Path(agents_paths[i].begin() + idx, agents_paths[i].end()));
   }
 }
@@ -587,8 +587,14 @@ void Visualizer::adjust_sfml_part_viewport(sf::RenderWindow& window, sf::View& v
     viewport_height = sfml_part_height;
     viewport_width  = viewport_height * map_aspect_ratio;
   }
-  view.setViewport(
-      sf::FloatRect({left_panel_size, 0.0f}, {(float)(viewport_width / window_width), (float)(viewport_height / window_height)}));
+
+  // calculate the viewport size relative to the window size
+  const float viewport_width_rel  = (float)(viewport_width / sfml_part_width);
+  const float viewport_height_rel = (float)(viewport_height / sfml_part_height);
+  const float offset_x            = (1 - viewport_width_rel) / 2;
+  const float offset_y            = (1 - viewport_height_rel) / 2;
+  view.setViewport(sf::FloatRect({left_panel_size + offset_x, offset_y},
+                                 {(float)(viewport_width / window_width), (float)(viewport_height / window_height)}));
 }
 
 void Visualizer::process_events(sf::RenderWindow& window, sf::View& view)
@@ -665,12 +671,11 @@ void Visualizer::create_right_panel(void)
   ImGui::Text("Time: ");
   ImGui::SameLine();
   ImGui::SetNextItemWidth(available_width);
-  if (ImGui::SliderInt("##time_slider", &visualization_time, 0,
-                       visualization_max_time))  // ##time_slider means that the slider name is not displayed
+  if (ImGui::SliderInt("##time_slider", &solution_vis.time, 0,
+                       solution_vis.max_time))  // ##time_slider means that the slider name is not displayed
   {
     // slider changed
-    update_all_paths();
-    update_agent_circles(get_agent_positions());
+    solution_vis.update();
   }
 
   // calculate the width of button array
@@ -685,48 +690,31 @@ void Visualizer::create_right_panel(void)
 
   if (ImGui::Button(ICON_FA_PLAY))
   {
-    start_visualization();
+    solution_vis.start();
   }
   ImGui::SameLine();
 
   if (ImGui::Button(ICON_FA_STOP))
   {
-    reset_visualization();
+    solution_vis.reset();
   }
   ImGui::SameLine();
 
   if (ImGui::Button(ICON_FA_STEP_BACKWARD))
   {
-    if (visualization_time > 0)
-    {
-      visualization_time--;
-      // update the visualization paths
-      update_all_paths();
-
-      // update the agents positions
-      update_agent_circles(get_agent_positions());
-    }
+    solution_vis.step_backward();
   }
   ImGui::SameLine();
 
   if (ImGui::Button(ICON_FA_PAUSE))
   {
-    pause_visualization();
+    solution_vis.pause();
   }
   ImGui::SameLine();
 
   if (ImGui::Button(ICON_FA_STEP_FORWARD))
   {
-    if (visualization_time < visualization_max_time)
-    {
-      visualization_time++;
-
-      // update the visualization paths
-      update_all_paths();
-
-      // update the agents positions
-      update_agent_circles(get_agent_positions());
-    }
+    solution_vis.step_forward();
   }
 
   ImGui::PopStyleColor(1);
@@ -771,37 +759,70 @@ void Visualizer::create_menu_bar(void)
   ImGui::PopStyleVar(2);  // Pop both styles
 }
 
-std::vector<Point2d> Visualizer::get_agent_positions()
+std::vector<Point2d> Visualizer::get_agent_positions(int time)
 {
   std::vector<Point2d> agent_positions;
 
   // find the current position for each agent
   for (int i = 0; i < (int)agents_paths.size(); i++)
   {
-    const int idx = std::min((int)agents_paths[i].size() - 1, visualization_time);
+    const int idx = std::min((int)agents_paths[i].size() - 1, time);
     agent_positions.push_back(agents_paths[i][idx]);
   }
 
   return agent_positions;
 }
 
-void Visualizer::reset_visualization(void)
+void Visualizer::solution_visualization_update(const Visualization& vis)
 {
-  visualization_is_playing = false;
-  visualization_time       = 0;
-  iteration_counter        = 0;
-  update_all_paths();
-  update_agent_circles(get_agent_positions());
+  update_all_paths(vis.time);
+  update_agent_circles(get_agent_positions(vis.time));
 }
 
-void Visualizer::start_visualization(void)
+Visualization::Visualization(std::function<void(Visualization& vis)> update_func) : update_func(update_func)
 {
-  if (visualization_time >= visualization_max_time) reset_visualization();
-  visualization_is_playing = true;
 }
 
-void Visualizer::pause_visualization(void)
+void Visualization::reset(void)
 {
-  visualization_is_playing = false;
+  is_playing        = false;
+  time              = 0;
+  iteration_counter = 0;
+  update();
+}
+
+void Visualization::start(void)
+{
+  if (time >= max_time) reset();
+  is_playing = true;
+}
+
+void Visualization::pause(void)
+{
+  is_playing = false;
+}
+
+void Visualization::update(void)
+{
+  update_func(*this);
+}
+
+void Visualization::step_forward(void)
+{
+  if (time < max_time)
+  {
+    time++;
+    update();
+  }
+}
+
+
+void Visualization::step_backward(void)
+{
+  if (time > 0)
+  {
+    time--;
+    update();
+  }
 }
 

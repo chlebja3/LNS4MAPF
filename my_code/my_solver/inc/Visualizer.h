@@ -6,6 +6,8 @@
  */
 
 #pragma once
+#include <bits/stdc++.h>
+
 #include <SFML/Graphics.hpp>
 #include <SFML/Graphics/CircleShape.hpp>
 #include <atomic>
@@ -14,6 +16,24 @@
 
 #include "Instance.h"
 #include "SharedData.h"
+
+class Visualization
+{
+public:
+  int                                     time              = 0;
+  int                                     max_time          = 100;
+  bool                                    is_playing        = false;
+  int                                     iteration_counter = 0;
+  float                                   speed             = 2.0;
+  std::function<void(Visualization& vis)> update_func;
+  Visualization(std::function<void(Visualization& vis)> update_func);
+  void start(void);
+  void reset(void);
+  void pause(void);
+  void update(void);
+  void step_forward(void);
+  void step_backward(void);
+};
 
 class Visualizer
 {
@@ -36,12 +56,9 @@ public:
   void                 update_agent_circles(const std::vector<Point2d>& positions);
   void                 update_goal_circles(const std::vector<Point2d>& positions);
   void                 update_path(const int agent_num, const Path& path);
-  void                 update_all_paths(void);
-  std::vector<Point2d> get_agent_positions();
-
-  void start_visualization(void);
-  void reset_visualization(void);
-  void pause_visualization(void);
+  void                 update_all_paths(int time);
+  std::vector<Point2d> get_agent_positions(int time);
+  void                 solution_visualization_update(const Visualization& vis);
 
 
 private:
@@ -80,9 +97,6 @@ private:
   float       zoom_level = 1.0;
   const float zoom_step  = 1.1f;
 
-  int   visualization_time       = 0;
-  int   visualization_max_time   = 100;
-  bool  visualization_is_playing = false;
-  int   iteration_counter        = 0;
-  float visualization_speed      = 2.0;
+  // Visualizations
+  Visualization solution_vis;
 };
