@@ -15,7 +15,14 @@ set(CMAKE_CXX_STANDARD_REQUIRED True)
 
 # Set a default build type if not specified
 if(NOT CMAKE_BUILD_TYPE)
-  set(CMAKE_BUILD_TYPE Debug)
+  set(CMAKE_BUILD_TYPE RelWithDebInfo)
+endif()
+
+# enable asserts in Release With Debug Info
+if (CMAKE_BUILD_TYPE STREQUAL RelWithDebInfo)
+  message(STATUS "Enabling aseerts")
+  string( REPLACE "-DNDEBUG" "" CMAKE_CXX_FLAGS_RELWITHDEBINFO "${CMAKE_CXX_FLAGS_RELWITHDEBINFO}" ) 
+
 endif()
 
 # include directories
@@ -43,7 +50,7 @@ set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
 # allow threads
 set(CMAKE_THREAD_LIBS_INIT "-lpthread")
-SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -pthread -pedantic")
+SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -pthread -pedantic -Wall -Wextra -Wfloat-equal -Wundef -Wshadow -Wpointer-arith -Wcast-align -Wwrite-strings")
 set(CMAKE_HAVE_THREADS_LIBRARY 1)
 set(CMAKE_USE_WIN32_THREADS_INIT 0)
 set(CMAKE_USE_PTHREADS_INIT 1)
