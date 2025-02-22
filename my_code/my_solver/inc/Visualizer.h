@@ -97,6 +97,9 @@ private:
   std::vector<sf::VertexArray> agents_paths_vis;
   std::vector<Path>            agents_paths;
   std::vector<SIPPInfo>        sipp_info;
+  int                          selected_agent = -1;
+  bool                         is_moving      = false;
+  sf::Vector2f                 last_click_pos;
 
   // Zoom settings
   float       zoom_level = 1.0;

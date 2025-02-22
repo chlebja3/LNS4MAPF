@@ -36,6 +36,8 @@
 #define MENU_BAR_SIZE 40
 #define ICON_SIZE 20.0f
 #define FRAME_RATE 60
+#define AVERAGING_FOR_DRAGGING 3
+#define GAMMA_FOR_DRAGGING 0.7f
 
 Visualizer::Visualizer(const Instance& instance, SharedData& shared_data)
     : instance(instance),
@@ -588,6 +590,8 @@ void Visualizer::adjust_sfml_part_viewport(sf::RenderWindow& window, sf::View& v
 
 void Visualizer::process_events(sf::RenderWindow& window, sf::View& view)
 {
+  static int          pressed_counter;
+  static sf::Vector2f estimated_click_pos;
   // poll all events from the window
   sf::Event event;
   while (window.pollEvent(event))
@@ -613,6 +617,56 @@ void Visualizer::process_events(sf::RenderWindow& window, sf::View& view)
         zoom_level *= zoom_step;
       }
     }
+    // mouse click
+    else if (event.type == sf::Event::MouseButtonPressed)
+    {
+      if (event.mouseButton.button == sf::Mouse::Left)
+      {
+        const sf::Vector2i mouse_pos      = sf::Vector2i(event.mouseButton.x, event.mouseButton.y);
+        const sf::Vector2f translated_pos = window.mapPixelToCoords(mouse_pos);
+        for (int i = 0; i < (int)agents_circles.size(); i++)
+        {
+          // check whether clicked on agent
+          if (agents_circles[i].getGlobalBounds().contains(translated_pos))
+          {
+            selected_agent = i;
+            return;
+          }
+
+          // clicked on the map
+          is_moving           = true;
+          last_click_pos      = translated_pos;
+          pressed_counter     = 1;
+          estimated_click_pos = translated_pos;
+        }
+      }
+    }
+    // mouse is pressed
+    else if (sf::Mouse::isButtonPressed(sf::Mouse::Left))
+    {
+      if (is_moving)
+      {
+
+        const sf::Vector2f mouse_pos = window.mapPixelToCoords(sf::Mouse::getPosition(window));
+        pressed_counter++;
+        if (pressed_counter % AVERAGING_FOR_DRAGGING == 0)
+        {
+          const sf::Vector2f delta = (last_click_pos - estimated_click_pos);
+          std::cout << "Moving: " << delta.x << " " << delta.y << std::endl;
+          view.move(1.1f * delta);
+          last_click_pos      = mouse_pos;
+          estimated_click_pos = mouse_pos;
+        }
+        else
+        {
+          estimated_click_pos = (1.0f - GAMMA_FOR_DRAGGING) * estimated_click_pos + GAMMA_FOR_DRAGGING * mouse_pos;
+        }
+      }
+    }
+    else if (event.type == sf::Event::MouseButtonReleased)
+    {
+      is_moving = false;
+    }
     // Panning with arrow keys
     else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Left))
     {
@@ -637,6 +691,7 @@ void Visualizer::create_left_panel(void)
 {
   ImGui::Begin("Left Panel", nullptr, ImGuiWindowFlags_NoResize);
   ImGui::Text("Agent info:");
+  if (selected_agent != -1) ImGui::Text("Selected agent: %d", selected_agent);
   if ((int)sipp_info.size() > 0)
   {
     ImGui::Text("Sipp iterations: %d", sipp_info[0].back().iteration_num);
