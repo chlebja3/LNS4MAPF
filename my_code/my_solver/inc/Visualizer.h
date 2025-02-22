@@ -33,9 +33,15 @@ public:
   // create a texture from the map
   void mapToTexture(const Map& map_data);
 
-  void update_agent_circles(const std::vector<Point2d>& positions);
-  void update_goal_circles(const std::vector<Point2d>& positions);
-  void update_path(const int agent_num, const Path& path);
+  void                 update_agent_circles(const std::vector<Point2d>& positions);
+  void                 update_goal_circles(const std::vector<Point2d>& positions);
+  void                 update_path(const int agent_num, const Path& path);
+  void                 update_all_paths(void);
+  std::vector<Point2d> get_agent_positions();
+
+  void start_visualization(void);
+  void reset_visualization(void);
+  void pause_visualization(void);
 
 
 private:
@@ -67,12 +73,16 @@ private:
   std::vector<sf::CircleShape> agents_circles;
   std::vector<sf::CircleShape> goal_circles;
   std::vector<sf::Color>       agents_colors;
-  std::vector<sf::VertexArray> agents_paths;
+  std::vector<sf::VertexArray> agents_paths_vis;
+  std::vector<Path>            agents_paths;
 
   // Zoom settings
   float       zoom_level = 1.0;
   const float zoom_step  = 1.1f;
 
-  int visualization_time     = 0;
-  int visualization_max_time = 100;
+  int   visualization_time       = 0;
+  int   visualization_max_time   = 100;
+  bool  visualization_is_playing = false;
+  int   iteration_counter        = 0;
+  float visualization_speed      = 2.0;
 };
