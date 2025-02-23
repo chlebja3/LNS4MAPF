@@ -55,6 +55,11 @@ Visualizer::Visualizer(const Instance& instance, SharedData& shared_data)
   update_agent_circles(instance.get_start_positions());
   update_goal_circles(instance.get_goal_positions());
 
+  // generate the rectangles that represent the map
+  update_cell_rectangles();
+  cell_rectangles_counts[0][1]++;
+
+
   // initialize visualization for the astar paths
   for (int i = 0; i < (int)instance.get_optimal_paths().size(); i++)
   {
@@ -185,6 +190,9 @@ void Visualizer::run()
 
     // draw the map
     window.draw(map_sprite);
+
+    // draw the cell rectangles
+    draw_cell_rectangles(window);
 
     // draw the path visualizations
     draw_paths(window);
@@ -331,6 +339,68 @@ void Visualizer::draw_goals(sf::RenderWindow& window)
   {
     // draw the shape
     window.draw(it);
+  }
+}
+
+void Visualizer::update_cell_rectangles(void)
+{
+  // get the map info
+  const Map& map_data = instance.get_map_data();
+  const int  width    = map_data.width;
+  const int  height   = map_data.height;
+
+  // clear the previous rectangles
+  cell_rectangles.clear();
+  cell_rectangles_counts.clear();
+
+  // resize the vectors
+  cell_rectangles.resize(height);
+  cell_rectangles_counts.resize(height);
+
+  // create a rectangle shape to initialize the rectangles
+  sf::RectangleShape rec(sf::Vector2f(CELL_SIZE, CELL_SIZE));
+  rec.setOutlineThickness(-BORDER_SIZE);
+  rec.setOutlineColor(sf::Color::Black);
+
+  // add the rectangles
+  for (int y = 0; y < height; y++)
+  {
+    // initialize the row of rectangles
+    cell_rectangles_counts[y].resize(width, 0);
+    cell_rectangles[y].resize(width, rec);
+
+    for (int x = 0; x < width; x++)
+    {
+      cell_rectangles[y][x].setPosition((float)x * CELL_SIZE, (float)y * CELL_SIZE);
+      if (map_data.index(Point2d(x, y)) == 1)
+      {
+        // obstacles red, because they should not be ever drawn
+        cell_rectangles[y][x].setFillColor(sf::Color::Red);
+      }
+      else
+      {
+        // free cells grey
+        cell_rectangles[y][x].setFillColor(sf::Color(150, 150, 150, 255));
+      }
+    }
+  }
+}
+
+void Visualizer::draw_cell_rectangles(sf::RenderWindow& window)
+{
+  assertm((int)cell_rectangles.size() > 0, "No cell rectangles.");
+  assertm((int)cell_rectangles.size() == (int)cell_rectangles_counts.size(),
+          "Size of the rectangles vector and counts vector must be the same.");
+  for (int i = 0; i < (int)cell_rectangles.size(); i++)
+  {
+    assertm((int)cell_rectangles[i].size() > 0, "No cell rectangles.");
+    for (int j = 0; j < (int)cell_rectangles[i].size(); j++)
+    {
+      if (cell_rectangles_counts[i][j] > 0)
+      {
+        window.draw(cell_rectangles[i][j]);
+      }
+    }
   }
 }
 
@@ -617,20 +687,26 @@ void Visualizer::process_events(sf::RenderWindow& window, sf::View& view)
     {
       if (event.mouseButton.button == sf::Mouse::Left)
       {
-        const sf::Vector2i mouse_pos      = sf::Vector2i(event.mouseButton.x, event.mouseButton.y);
-        const sf::Vector2f translated_pos = window.mapPixelToCoords(mouse_pos);
-        for (int i = 0; i < (int)agents_circles.size(); i++)
+        const int          window_width  = window.getSize().x;
+        const int          window_height = window.getSize().y;
+        const sf::Vector2i mouse_pos     = sf::Vector2i(event.mouseButton.x, event.mouseButton.y);
+        const sf::Vector2f mouse_pos_rel =
+            sf::Vector2f((float)mouse_pos.x / (float)window_width, (float)mouse_pos.y / (float)window_height);
+        // check whether clicked on the map
+        if (view.getViewport().contains(mouse_pos_rel))
         {
-          // check whether clicked on agent
-          if (agents_circles[i].getGlobalBounds().contains(translated_pos))
+          const sf::Vector2f translated_pos = window.mapPixelToCoords(mouse_pos);
+          is_moving                         = true;
+          last_click_pos                    = mouse_pos;
+          for (int i = 0; i < (int)agents_circles.size(); i++)
           {
-            selected_agent = i;
-            return;
+            // check whether clicked on agent
+            if (agents_circles[i].getGlobalBounds().contains(translated_pos))
+            {
+              selected_agent = i;
+              return;
+            }
           }
-
-          // clicked on the map
-          is_moving      = true;
-          last_click_pos = mouse_pos;
         }
       }
     }

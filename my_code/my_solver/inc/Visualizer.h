@@ -60,6 +60,7 @@ public:
   void                 update_goal_circles(const std::vector<Point2d>& positions);
   void                 update_path(const int agent_num, const Path& path);
   void                 update_all_paths(int time);
+  void                 update_cell_rectangles(void);
   std::vector<Point2d> get_agent_positions(int time);
   void                 solution_visualization_update(const Visualization& vis);
   void                 sipp_visualization_update(const Visualization& vis);
@@ -80,6 +81,7 @@ private:
   void            draw_agents(sf::RenderWindow& window);
   void            draw_goals(sf::RenderWindow& window);
   void            draw_paths(sf::RenderWindow& window);
+  void            draw_cell_rectangles(sf::RenderWindow& window);
   std::thread     vis_thread;  // the underlying thread
   bool            running;     // indicator whether the thread should be running
   const Instance& instance;
@@ -89,17 +91,19 @@ private:
   void create_menu_bar(void);
 
   // drawing objects
-  sf::Texture                  map_texture;  // the map texture
-  sf::Sprite                   map_sprite;   // the sprite that represents the map
-  std::vector<sf::CircleShape> agents_circles;
-  std::vector<sf::CircleShape> goal_circles;
-  std::vector<sf::Color>       agents_colors;
-  std::vector<sf::VertexArray> agents_paths_vis;
-  std::vector<Path>            agents_paths;
-  std::vector<SIPPInfo>        sipp_info;
-  int                          selected_agent = -1;
-  bool                         is_moving      = false;
-  sf::Vector2i                 last_click_pos;
+  sf::Texture                                  map_texture;  // the map texture
+  sf::Sprite                                   map_sprite;   // the sprite that represents the map
+  std::vector<sf::CircleShape>                 agents_circles;
+  std::vector<sf::CircleShape>                 goal_circles;
+  std::vector<sf::Color>                       agents_colors;
+  std::vector<sf::VertexArray>                 agents_paths_vis;
+  std::vector<Path>                            agents_paths;
+  std::vector<std::vector<sf::RectangleShape>> cell_rectangles;
+  std::vector<std::vector<int>>                cell_rectangles_counts;
+  std::vector<SIPPInfo>                        sipp_info;
+  int                                          selected_agent = -1;
+  bool                                         is_moving      = false;
+  sf::Vector2i                                 last_click_pos;
 
   // Zoom settings
   float       zoom_level = 1.0;
