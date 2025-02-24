@@ -10,6 +10,7 @@
 // #include <boost/heap/pairing_heap.hpp>
 // #include <boost/heap/priority_queue.hpp>
 #include <queue>
+#include <unordered_map>
 #include <unordered_set>
 
 #include "ConstraintTable.h"

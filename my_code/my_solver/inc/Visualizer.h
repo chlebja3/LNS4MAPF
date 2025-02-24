@@ -107,6 +107,7 @@ private:
   bool                                         is_moving      = false;
   sf::Vector2i                                 last_click_pos;
   sf::RectangleShape                           curr_expanded_rectangle;
+  std::vector<std::string>                     log;
 
   // Zoom settings
   float       zoom_level = 1.0;

@@ -163,6 +163,11 @@ void Visualizer::run()
 
       // update the visualization
       solution_vis.new_data(max_path_len);
+
+      if (log.size() == 0)
+      {
+        log.push_back("Prioritized planning finished.");
+      }
     }
 
     // process the events
@@ -953,7 +958,10 @@ void Visualizer::create_right_panel(void)
 void Visualizer::create_bottom_panel(void)
 {
   ImGui::Begin(ICON_FA_CODE " Console");
-  ImGui::Text("Solver output");
+  for (int i = 0; i < (int)log.size(); i++)
+  {
+    ImGui::Text("%s", log[i].c_str());
+  }
   ImGui::End();
 }
 
