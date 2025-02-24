@@ -255,6 +255,7 @@ void Instance::calculate_optimal_paths(void)
   }
 }
 
+// old function, do not use!
 void Instance::calculate_optimal_paths_parallel(void)
 {
   optimal_paths.clear();

@@ -25,19 +25,19 @@ static void BM_AStar_Sequential(benchmark::State& state)
 }
 BENCHMARK(BM_AStar_Sequential)->Arg(5)->Arg(10)->Arg(20)->Arg(50)->Arg(100)->Arg(200)->Arg(500);
 
-// Benchmark for Parallel A*
-static void BM_AStar_Parallel(benchmark::State& state)
-{
-  // setup the instance
-  std::string base_path = get_base_path_tests();
-  for (auto _ : state)
-  {
-    int             num_agents = state.range(0);
-    std::unique_ptr instance   = std::make_unique<Instance>(base_path + "/tests/test_maps/den520d.map",
-                                                          base_path + "/tests/test_scen/den520d-random-0.scen", num_agents);
-    instance->calculate_optimal_paths_parallel();
-  }
-}
-BENCHMARK(BM_AStar_Parallel)->Arg(5)->Arg(10)->Arg(20)->Arg(50)->Arg(100)->Arg(200)->Arg(500);
+// Benchmark for Parallel A* - was slow
+// static void BM_AStar_Parallel(benchmark::State& state)
+// {
+//   // setup the instance
+//   std::string base_path = get_base_path_tests();
+//   for (auto _ : state)
+//   {
+//     int             num_agents = state.range(0);
+//     std::unique_ptr instance   = std::make_unique<Instance>(base_path + "/tests/test_maps/den520d.map",
+//                                                           base_path + "/tests/test_scen/den520d-random-0.scen", num_agents);
+//     instance->calculate_optimal_paths_parallel();
+//   }
+// }
+// BENCHMARK(BM_AStar_Parallel)->Arg(5)->Arg(10)->Arg(20)->Arg(50)->Arg(100)->Arg(200)->Arg(500);
 
 BENCHMARK_MAIN();

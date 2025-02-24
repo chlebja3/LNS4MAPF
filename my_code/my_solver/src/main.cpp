@@ -55,7 +55,8 @@ int main(int argc, char** argv)
   std::unique_ptr<Instance> instance = std::make_unique<Instance>(map_name, scene_name, agent_num);
 
   // calculate the optimal paths neglecting the other agents
-  instance->calculate_optimal_paths_parallel();
+  // instance->calculate_optimal_paths_parallel(); // old, dont use
+  instance->calculate_optimal_paths();
 
   // create the shared datastructure
   std::unique_ptr<SharedData> shared_data = std::make_unique<SharedData>();

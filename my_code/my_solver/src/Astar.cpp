@@ -10,10 +10,12 @@
 #include <algorithm>
 #include <cmath>
 #include <iostream>
+#include <list>
 #include <memory>
 #include <queue>
 #include <unordered_set>
 
+#define NODE_POOL_MERGE_SIZE 100
 int ASTAR::generated_nodes = 0;
 
 class AstarNode : public Node
@@ -50,21 +52,72 @@ public:
   };
 };
 
-
 namespace ASTAR
 {
 typedef std::priority_queue<AstarNode const*, std::vector<AstarNode const*>, AstarNode::compare_node_ptrs> PriorityQueue;
 
 Path extract_path(AstarNode const* const final_node);
+
+class NodePool
+{
+public:
+  NodePool(const int size);
+  AstarNode* add_node(AstarNode node);
+  void       merge_extra(void);
+
+private:
+  int                    end = 0;
+  std::vector<AstarNode> pool;
+  std::list<AstarNode>   extra;
+};
 }  // namespace ASTAR
+
+ASTAR::NodePool::NodePool(const int size)
+{
+  // initialize the pool with dummy nodes
+  pool.resize(size, AstarNode(0, 0, 0, nullptr));
+  end = 0;
+}
+
+AstarNode* ASTAR::NodePool::add_node(AstarNode node)
+{
+  // check, whether there is still space in the node pool
+  if (end < (int)pool.size())
+  {
+    // move to the end of the pool and increment the count
+    pool[end++] = std::move(node);
+    return &pool[end - 1];
+  }
+
+  // if there is no space in the vector, add to the list, which will be merged with the vector at the end of the iteration
+  extra.push_back(node);
+  return &extra.back();
+}
+
+
+void ASTAR::NodePool::merge_extra(void)
+{
+  if (extra.size() > NODE_POOL_MERGE_SIZE)
+  {
+    // merge the list with the vector
+    // be careful, this invalidates all pointers to the nodes in the node pool
+    pool.insert(pool.end(), std::move_iterator{extra.begin()}, std::move_iterator{extra.end()});
+    extra.clear();
+  }
+  // reset the node counter
+  end = 0;
+}
+
 
 Path ASTAR::find_path(const int agent_num, const Instance& instance)
 {
-  assertm(agent_num < instance.get_start_locations().size(), "Agent number out of range.");
+  assertm(agent_num < (int)instance.get_start_locations().size(), "Agent number out of range.");
   const Map& map_data = instance.get_map_data();
   const int  start    = instance.get_start_locations()[agent_num];
   const int  goal     = instance.get_goal_locations()[agent_num];
   generated_nodes     = 0;
+
+  static ASTAR::NodePool node_pool(instance.get_map_data().width * instance.get_map_data().height);
 
   Path path;
 
@@ -75,23 +128,14 @@ Path ASTAR::find_path(const int agent_num, const Instance& instance)
   assertm(map_data.index(start) == 0 && map_data.index(goal) == 0, "Start or goal obstructed.");
 
 
-  // create frontier - possible datastructures priority_queue, ordered set and pairing heap, TODO try all of them
+  // create frontier - possible datastructures priority_queue, ordered set and pairing heap
   ASTAR::PriorityQueue open_list;
 
-  // create a vector to store all nodes so that they dont go out of scope
-  std::vector<std::unique_ptr<AstarNode>> node_list = {};
-  node_list.reserve(map_data.width * map_data.height);
-
-
-  // create the start node
   // calculate the heuristic
-  {
-    const double h = instance.get_heuristic_manhattan(agent_num, start);
-    node_list.push_back(std::make_unique<AstarNode>(start, 0, h, nullptr));
-  }
+  const double h = instance.get_heuristic_manhattan(agent_num, start);
 
   // add the start node to the priority queue
-  open_list.push(node_list.back().get());
+  open_list.push(node_pool.add_node(AstarNode(start, 0, h, nullptr)));
   ASTAR::generated_nodes++;
   // std::cout << ASTAR::generated_nodes << std::endl;
 
@@ -113,7 +157,12 @@ Path ASTAR::find_path(const int agent_num, const Instance& instance)
     if (current->location == goal)
     {
       // extract the path
-      return ASTAR::extract_path(current);
+      Path ret = ASTAR::extract_path(current);
+
+      // merge the extra generated nodes
+      node_pool.merge_extra();
+
+      return ret;
     }
 
     // add to known nodes
@@ -130,15 +179,13 @@ Path ASTAR::find_path(const int agent_num, const Instance& instance)
       // const double h = instance.get_heuristic_euclidean(agent_num, neighbor);
       const double h = instance.get_heuristic_manhattan(agent_num, neighbor);
 
-      // add to the node list
-      node_list.push_back(std::make_unique<AstarNode>(neighbor, current->g + 1, h, current));
-
       // add to the open list
-      open_list.push(node_list.back().get());
+      open_list.push(node_pool.add_node(AstarNode(neighbor, current->g + 1, h, current)));
       ASTAR::generated_nodes++;
     }
   }
 
+  node_pool.merge_extra();
   // could not find a path
   return {};
 }
