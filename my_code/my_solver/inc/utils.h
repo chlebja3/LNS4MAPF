@@ -99,6 +99,9 @@ public:
   {
     size_t operator()(const Point2d& p) const;
   };
+
+
+  operator std::string() const;
 };
 
 enum Direction find_direction(const Point2d& start, const Point2d& end);

@@ -58,6 +58,12 @@ size_t Point2d::hash_point::operator()(const Point2d& p) const
   return std::hash<int>()(p.x) ^ (std::hash<int>()(p.y) << 1);
 }
 
+
+Point2d::operator std::string() const
+{
+  return "(" + std::to_string(x) + "," + std::to_string(y) + ")";
+}
+
 enum Direction find_direction(const Point2d& start, const Point2d& end)
 {
   if (start.x > end.x) return Direction::LEFT;

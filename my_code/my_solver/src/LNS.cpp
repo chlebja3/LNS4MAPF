@@ -65,7 +65,7 @@ Solution LNS::PrioritizedPlanning()
     // get the visualization info
     if (is_visualisation)
     {
-      sipp_info[i] = std::move(planner->iter_info);
+      sipp_info[agent_id] = std::move(planner->iter_info);
       planner->iter_info.clear();
     }
 

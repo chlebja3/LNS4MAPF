@@ -56,9 +56,7 @@ Visualizer::Visualizer(const Instance& instance, SharedData& shared_data)
   update_goal_circles(instance.get_goal_positions());
 
   // generate the rectangles that represent the map
-  update_cell_rectangles();
-  cell_rectangles_counts[0][1]++;
-
+  create_cell_rectangles();
 
   // initialize visualization for the astar paths
   for (int i = 0; i < (int)instance.get_optimal_paths().size(); i++)
@@ -342,7 +340,25 @@ void Visualizer::draw_goals(sf::RenderWindow& window)
   }
 }
 
-void Visualizer::update_cell_rectangles(void)
+void Visualizer::update_cell_rectangles_active(int time)
+{
+  //  set all cells to inactive
+  for (auto& row : cell_rectangles_active)
+  {
+    std::fill(row.begin(), row.end(), 0);
+  }
+
+  // find all active rectangles
+  for (int i = 0; i < std::min(time, (int)sipp_info[selected_agent].size()); i++)
+  {
+    const Point2d cur_pos                        = sipp_info[selected_agent][i].cur_expanded.position;
+    cell_rectangles_active[cur_pos.y][cur_pos.x] = true;
+    // draw only until time
+    if (i == time) break;
+  }
+}
+
+void Visualizer::create_cell_rectangles(void)
 {
   // get the map info
   const Map& map_data = instance.get_map_data();
@@ -351,11 +367,11 @@ void Visualizer::update_cell_rectangles(void)
 
   // clear the previous rectangles
   cell_rectangles.clear();
-  cell_rectangles_counts.clear();
+  cell_rectangles_active.clear();
 
   // resize the vectors
   cell_rectangles.resize(height);
-  cell_rectangles_counts.resize(height);
+  cell_rectangles_active.resize(height);
 
   // create a rectangle shape to initialize the rectangles
   sf::RectangleShape rec(sf::Vector2f(CELL_SIZE, CELL_SIZE));
@@ -366,7 +382,7 @@ void Visualizer::update_cell_rectangles(void)
   for (int y = 0; y < height; y++)
   {
     // initialize the row of rectangles
-    cell_rectangles_counts[y].resize(width, 0);
+    cell_rectangles_active[y].resize(width, 0);
     cell_rectangles[y].resize(width, rec);
 
     for (int x = 0; x < width; x++)
@@ -389,14 +405,14 @@ void Visualizer::update_cell_rectangles(void)
 void Visualizer::draw_cell_rectangles(sf::RenderWindow& window)
 {
   assertm((int)cell_rectangles.size() > 0, "No cell rectangles.");
-  assertm((int)cell_rectangles.size() == (int)cell_rectangles_counts.size(),
+  assertm((int)cell_rectangles.size() == (int)cell_rectangles_active.size(),
           "Size of the rectangles vector and counts vector must be the same.");
   for (int i = 0; i < (int)cell_rectangles.size(); i++)
   {
     assertm((int)cell_rectangles[i].size() > 0, "No cell rectangles.");
     for (int j = 0; j < (int)cell_rectangles[i].size(); j++)
     {
-      if (cell_rectangles_counts[i][j] > 0)
+      if (cell_rectangles_active[i][j])
       {
         window.draw(cell_rectangles[i][j]);
       }
@@ -704,6 +720,7 @@ void Visualizer::process_events(sf::RenderWindow& window, sf::View& view)
             if (agents_circles[i].getGlobalBounds().contains(translated_pos))
             {
               selected_agent = i;
+              sipp_vis.new_data(sipp_info[selected_agent].size());
               return;
             }
           }
@@ -756,11 +773,94 @@ void Visualizer::process_events(sf::RenderWindow& window, sf::View& view)
 void Visualizer::create_left_panel(void)
 {
   ImGui::Begin("Left Panel", nullptr, ImGuiWindowFlags_NoResize);
-  ImGui::Text("Agent info:");
-  if (selected_agent != -1) ImGui::Text("Selected agent: %d", selected_agent);
-  if ((int)sipp_info.size() > 0)
+  // agent info
+  if (selected_agent != -1)
   {
-    ImGui::Text("Sipp iterations: %d", sipp_info[0].back().iteration_num);
+    ImGui::Text("Agent info:");
+    ImGui::Text("\tSelected agent: %d", selected_agent);
+    ImGui::Text("\tCurrent position: %s", ((std::string)get_agent_position(selected_agent, solution_vis.time)).c_str());
+    ImGui::Text("\tStart: %s", ((std::string)instance.get_start_positions()[selected_agent]).c_str());
+    ImGui::Text("\tGoal: %s", ((std::string)instance.get_goal_positions()[selected_agent]).c_str());
+    // sipp info
+    ImGui::Text("Sipp visualization:");
+
+    // Set button background color to transparent
+    ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(1.0f, 1.0f, 1.0f, 0.0f));
+
+    // calculate the width of the slider label
+    const float time_text_width = ImGui::CalcTextSize("Time: ").x + ImGui::GetStyle().ItemSpacing.x;
+
+    // Get the width of the remaining space in the panel after adding the slider label
+    const float panel_size      = ImGui::GetContentRegionAvail().x;
+    float       available_width = panel_size - time_text_width;
+
+    // create the slider
+    ImGui::Text("Time: ");
+    ImGui::SameLine();
+    ImGui::SetNextItemWidth(available_width);
+    if (ImGui::SliderInt("##time_slider2", &sipp_vis.time, 0,
+                         sipp_vis.max_time))  // ##time_slider means that the slider name is not displayed
+    {
+      // slider changed
+      sipp_vis.update();
+    }
+
+    // calculate the width of button array
+    const int num_buttons = 5;
+    float     total_width = num_buttons * ImGui::CalcTextSize(ICON_FA_PLAY).x + 2 * num_buttons * ImGui::GetStyle().FramePadding.x +
+                        (num_buttons - 1) * ImGui::GetStyle().ItemSpacing.x;
+
+    // center the playback buttons
+    float start_x = time_text_width + (available_width - total_width) * 0.5f;
+    if (start_x + total_width > panel_size) start_x = panel_size - total_width;
+    ImGui::SetCursorPosX(start_x);
+
+    if (ImGui::Button(ICON_FA_PLAY))
+    {
+      sipp_vis.start();
+    }
+    ImGui::SameLine();
+
+    if (ImGui::Button(ICON_FA_STOP))
+    {
+      sipp_vis.reset();
+    }
+    ImGui::SameLine();
+
+    if (ImGui::Button(ICON_FA_STEP_BACKWARD))
+    {
+      sipp_vis.step_backward();
+    }
+    ImGui::SameLine();
+
+    if (ImGui::Button(ICON_FA_PAUSE))
+    {
+      sipp_vis.pause();
+    }
+    ImGui::SameLine();
+
+    if (ImGui::Button(ICON_FA_STEP_FORWARD))
+    {
+      sipp_vis.step_forward();
+    }
+
+    ImGui::PopStyleColor(1);
+
+    // sipp node info
+    if (sipp_vis.time > 0)
+    {
+      ImGui::Text("SIPP node info:");
+      const SIPPIterationInfo& cur_info = sipp_info[selected_agent][sipp_vis.time - 1];
+
+      ImGui::Text("\tIteration num: %d", cur_info.iteration_num);
+      ImGui::Text("\tExpanded position: %s", ((std::string)cur_info.cur_expanded.position).c_str());
+      ImGui::Text("\tExpanded interval: %s", ((std::string)cur_info.cur_expanded.interval).c_str());
+      ImGui::Text("\tg: %lf", cur_info.g);
+      ImGui::Text("\th: %lf", cur_info.h);
+      ImGui::Text("\tf: %lf", cur_info.g + cur_info.h);
+      ImGui::Text("\tNum generated: %d", cur_info.generated);
+      ImGui::Text("\tNum expanded: %d", cur_info.expanded);
+    }
   }
   ImGui::End();
 }
@@ -769,7 +869,7 @@ void Visualizer::create_right_panel(void)
 {
   ImGui::Begin("Right Panel", nullptr, ImGuiWindowFlags_NoResize);
 
-  ImGui::Text("Visualization:");
+  ImGui::Text("Solution visualization:");
 
   // Set button background color to transparent
   ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(1.0f, 1.0f, 1.0f, 0.0f));
@@ -873,7 +973,14 @@ void Visualizer::create_menu_bar(void)
   ImGui::PopStyleVar(2);  // Pop both styles
 }
 
-std::vector<Point2d> Visualizer::get_agent_positions(int time)
+const Point2d& Visualizer::get_agent_position(const int agent_num, const int time) const
+{
+  assertm(agent_num < (int)agents_paths.size(), "Agent number outside of the range.");
+  const int idx = std::min((int)agents_paths[agent_num].size() - 1, time);
+  return agents_paths[agent_num][idx];
+}
+
+std::vector<Point2d> Visualizer::get_agent_positions(const int time) const
 {
   std::vector<Point2d> agent_positions;
 
@@ -896,11 +1003,10 @@ void Visualizer::solution_visualization_update(const Visualization& vis)
 
 void Visualizer::sipp_visualization_update(const Visualization& vis)
 {
+  update_cell_rectangles_active(vis.time);
 }
 
-Visualization::Visualization(std::function<void(Visualization& vis)> update_func) : update_func(update_func)
-{
-}
+Visualization::Visualization(std::function<void(Visualization& vis)> update_func) : update_func(update_func){};
 
 void Visualization::reset(void)
 {
