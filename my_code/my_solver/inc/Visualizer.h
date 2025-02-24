@@ -106,6 +106,7 @@ private:
   int                                          selected_agent = -1;
   bool                                         is_moving      = false;
   sf::Vector2i                                 last_click_pos;
+  sf::RectangleShape                           curr_expanded_rectangle;
 
   // Zoom settings
   float       zoom_level = 1.0;

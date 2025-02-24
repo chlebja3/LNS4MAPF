@@ -143,6 +143,10 @@ void Visualizer::run()
     {
       solution_vis.next_iteration();
     }
+    else if (sipp_vis.is_playing)
+    {
+      sipp_vis.next_iteration();
+    }
     else if (shared_data.are_new_paths.load(std::memory_order_acquire))
     {
       // get the new paths from the shared structure
@@ -417,6 +421,15 @@ void Visualizer::draw_cell_rectangles(sf::RenderWindow& window)
         window.draw(cell_rectangles[i][j]);
       }
     }
+  }
+
+  // draw the currently expanded
+  if (selected_agent >= 0 && sipp_vis.time < (int)sipp_info[selected_agent].size())
+  {
+    const Point2d& cur_pos  = sipp_info[selected_agent][sipp_vis.time].cur_expanded.position;
+    curr_expanded_rectangle = cell_rectangles[cur_pos.y][cur_pos.x];
+    curr_expanded_rectangle.setFillColor(sf::Color::Yellow);
+    window.draw(curr_expanded_rectangle);
   }
 }
 
