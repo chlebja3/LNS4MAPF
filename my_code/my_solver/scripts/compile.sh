@@ -15,8 +15,19 @@ then
   BUILD_TYPE=Debug
 fi
 
+# check whether to compile with tests
+
 echo "Build type: ${BUILD_TYPE}"
 
+if [ $# -lt 2 ] || [ $2 == "tests" ]
+then
+  TESTS=ON
+elif [ $2 == "notest" ]
+then
+  TESTS=OFF
+else
+  echo "Invalid second argument, should be tests/notests"
+fi
 
 cmake .. -DENABLE_TESTS=ON -DCMAKE_BUILD_TYPE=${BUILD_TYPE}
 cmake --build . 

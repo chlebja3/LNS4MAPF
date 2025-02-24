@@ -187,7 +187,7 @@ void Solution::load(const std::string& filename)
     boost::algorithm::split_regex(split_line, line.substr(idx2_an + 1), boost::regex("->"));
 
     // read the path
-    Path path;
+    PointPath path;
     for (const std::string& point_str : split_line)
     {
       if (point_str.empty()) continue;

@@ -20,7 +20,7 @@ public:
   bool feasible;
 
   // paths of the agents
-  std::vector<Path> paths;
+  std::vector<PointPath> paths;
 
   int cost;
   int delay;  // cost - distance

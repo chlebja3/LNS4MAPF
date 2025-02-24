@@ -42,7 +42,7 @@ TEST(AStarTest, StartEqualsGoal)
   Path path = ASTAR::find_path(1, *instance);
 
   EXPECT_EQ(path.size(), 1);  // Should return only the start node
-  EXPECT_EQ(path[0], instance->get_start_positions()[1]);
+  EXPECT_EQ(path[0], instance->get_start_locations()[1]);
 }
 
 // Test Case: No Path Possible (Blocked Goal)
@@ -90,6 +90,6 @@ TEST(AStarTest, LargeGrid)
   Path path = ASTAR::find_path(0, *instance);
 
   EXPECT_EQ(path.size(), 1 + 99 + 99);  // Should find a path of length 199
-  EXPECT_EQ(path.front(), instance->get_start_positions()[0]);
-  EXPECT_EQ(path.back(), instance->get_goal_positions()[0]);
+  EXPECT_EQ(path.front(), instance->get_start_locations()[0]);
+  EXPECT_EQ(path.back(), instance->get_goal_locations()[0]);
 }

@@ -58,7 +58,7 @@ public:
 
   void                 update_agent_circles(const std::vector<Point2d>& positions);
   void                 update_goal_circles(const std::vector<Point2d>& positions);
-  void                 update_path(const int agent_num, const Path& path);
+  void                 update_path(const int agent_num, const PointPath& path);
   void                 update_all_paths(int time);
   void                 update_cell_rectangles_active(int time);
   void                 create_cell_rectangles(void);
@@ -99,7 +99,7 @@ private:
   std::vector<sf::CircleShape>                 goal_circles;
   std::vector<sf::Color>                       agents_colors;
   std::vector<sf::VertexArray>                 agents_paths_vis;
-  std::vector<Path>                            agents_paths;
+  std::vector<PointPath>                       agents_paths;
   std::vector<std::vector<sf::RectangleShape>> cell_rectangles;
   std::vector<std::vector<bool>>               cell_rectangles_active;
   std::vector<SIPPInfo>                        sipp_info;

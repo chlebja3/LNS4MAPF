@@ -118,10 +118,21 @@ bool Map::is_in(const Point2d& p) const
   return !(p.x < 0 || p.x >= width || p.y < 0 || p.y >= height);
 }
 
+bool Map::is_in(const int loc) const
+{
+  return loc >= 0 && loc < width * height;
+}
+
 uint8_t Map::index(const Point2d& point) const
 {
   assertm(is_in(point), "Trying to index a point that is not in the map.");
   return data[point.y * width + point.x];
+}
+
+uint8_t Map::index(const int loc) const
+{
+  assertm(is_in(loc), "Trying to index a point that is not in the map.");
+  return data[loc];
 }
 
 int Map::position_to_index(const Point2d& p) const
@@ -141,14 +152,30 @@ std::ostream& operator<<(std::ostream& os, TimeInterval const& i)
   return os << "(" << i.t_min << "," << i.t_max << ")";
 }
 
-std::vector<Point2d> Map::find_neighbors(const Point2d& point) const
+std::vector<int> Map::find_neighbors(const int loc) const
 {
-  if (!is_in(point)) return {};  // invalid point
+  assertm(is_in(loc) && index(loc) == 0, "Invalid position.");
+  const std::array<int, 4> neighbors_rel = {-width, -1, 1, width};
+  std::vector<int>         ret;
+  for (auto& neigh_rel : neighbors_rel)
+  {
+    // edges - sjip the neighboring indexes which  are on different row
+    if (loc % width == 0 && neigh_rel == -1) continue;         // left edge
+    if (loc % width == width - 1 && neigh_rel == 1) continue;  // right edge
+    const int neigh = loc + neigh_rel;
+    if (is_in(neigh) && index(neigh) == 0) ret.push_back(neigh);
+  }
+  return ret;
+}
+
+std::vector<Point2d> Map::find_neighbors(const Point2d& pos) const
+{
+  assertm(is_in(pos) && index(pos) == 0, "Invalid position.");
   std::vector<Point2d>         ret;
   const std::array<Point2d, 4> neighbors = {Point2d(0, 1), Point2d(1, 0), Point2d(0, -1), Point2d(-1, 0)};
   for (auto& it : neighbors)
   {
-    Point2d neigh = point + it;
+    const Point2d neigh = pos + it;
     if (!is_in(neigh)) continue;
     if (index(neigh) != 0) continue;
     ret.push_back(neigh);
@@ -170,9 +197,9 @@ void Map::print(void) const
   }
 }
 
-Path timepointpath_to_path(const TimePointPath& tp_path)
+PointPath timepointpath_to_path(const TimePointPath& tp_path)
 {
-  Path path;
+  PointPath path;
   for (auto it = tp_path.begin(); it != tp_path.end(); it++)
   {
     // for last element add the position only once, as it is obvious that the agent stays in the last position forever

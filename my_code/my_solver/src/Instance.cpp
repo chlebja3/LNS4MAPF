@@ -35,6 +35,7 @@ void Instance::initialize()
   load_map();
   load_scene();
   calculate_heuristics();
+  precompute_neighbors();
   initialized = true;
 }
 
@@ -179,7 +180,9 @@ void Instance::load_scene(void)
 
       // store the positions in the list
       start_positions.emplace_back(start_x, start_y);
+      start_locations.push_back(map_data.position_to_index(start_positions.back()));
       goal_positions.emplace_back(goal_x, goal_y);
+      goal_locations.push_back(map_data.position_to_index(goal_positions.back()));
       loaded_agents++;
     }
     catch (const std::exception& e)
@@ -216,17 +219,27 @@ void Instance::print_map(void) const
 
 const Map& Instance::get_map_data(void) const
 {
-  return map_data;  // should copy the vector
+  return map_data;
 }
 
 const std::vector<Point2d>& Instance::get_start_positions(void) const
 {
-  return start_positions;  // should copy the vector
+  return start_positions;
+}
+
+const std::vector<int>& Instance::get_start_locations(void) const
+{
+  return start_locations;
 }
 
 const std::vector<Point2d>& Instance::get_goal_positions(void) const
 {
-  return goal_positions;  // should copy the vector
+  return goal_positions;
+}
+
+const std::vector<int>& Instance::get_goal_locations(void) const
+{
+  return goal_locations;
 }
 
 void Instance::calculate_optimal_paths(void)
@@ -278,6 +291,10 @@ void Instance::calculate_heuristics(void)
   assertm((int)map_data.data.size() == map_data.width * map_data.height, "Map size invalid");
   assertm(map_data.free_cells > 0 && map_data.free_cells <= (int)map_data.data.size(), "Invalid free cell count.");
 
+  // clear the vectors
+  heuristic_euclidean.clear();
+  heuristic_manhattan.clear();
+
   // preallocate vectors for the heuristics
   const std::vector<int>    manhattan_initializer(map_data.width * map_data.height, 0);
   const std::vector<double> euclidean_initializer(map_data.width * map_data.height, 0.0);
@@ -300,16 +317,46 @@ void Instance::calculate_heuristics(void)
   }
 };
 
-int Instance::get_heuristic_manhattan(const int agent_num, const Point2d& pos) const
+void Instance::precompute_neighbors()
+{
+  // check map validity
+  assertm(map_data.width * map_data.height > 0, "Invalid map.");
+  assertm((int)map_data.data.size() == map_data.width * map_data.height, "Map size invalid");
+
+  // clear the previous neighbors
+  neighbors.clear();
+  neighbors.resize(map_data.width * map_data.height, {});
+
+  // iterate over all locations
+  for (int i = 0; i < map_data.width * map_data.height; i++)
+  {
+    if (map_data.index(i) != 0) continue;
+    neighbors[i] = map_data.find_neighbors(i);
+  }
+}
+
+
+Point2d Instance::location_to_position(const int location) const
+{
+  return Point2d(location % map_data.width, (int)(location / map_data.width));
+}
+
+int Instance::position_to_location(const Point2d& position) const
+{
+  return position.y * map_data.width + position.x;
+}
+
+int Instance::get_heuristic_manhattan(const int agent_num, const int loc) const
 {
 
   assertm(agent_num >= 0 && agent_num < (int)heuristic_manhattan.size(), "Agent number out of range of the heuristic vector.");
-  assertm(map_data.is_in(pos), "Trying to index a point that is not in the map.");
-  return heuristic_manhattan[agent_num][pos.y * map_data.width + pos.x];
+  assertm(map_data.is_in(loc), "Trying to index a point that is not in the map.");
+  return heuristic_manhattan[agent_num][loc];
 };
-double Instance::get_heuristic_euclidean(const int agent_num, const Point2d& pos) const
+
+double Instance::get_heuristic_euclidean(const int agent_num, const int loc) const
 {
   assertm(agent_num >= 0 && agent_num < (int)heuristic_euclidean.size(), "Agent number out of range of the heuristic vector.");
-  assertm(map_data.is_in(pos), "Trying to index a point that is not in the map.");
-  return heuristic_euclidean[agent_num][pos.y * map_data.width + pos.x];
+  assertm(map_data.is_in(loc), "Trying to index a point that is not in the map.");
+  return heuristic_euclidean[agent_num][loc];
 };

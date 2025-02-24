@@ -486,7 +486,7 @@ TEST(SIPPTest, SamePathAsAStar1)
   ASSERT_FALSE(path_sipp.empty()) << "SIPP should find a path when no constraints are present!";
 
   // convert SIPP path to the same format as A*
-  Path path_sipp_converted = timepointpath_to_path(path_sipp);
+  PointPath path_sipp_converted = timepointpath_to_path(path_sipp);
 
   // check that the paths have the same length
   EXPECT_EQ(path_sipp_converted.size(), path_astar.size()) << "The paths found by SIPP and ASTAR should have the same length!";
@@ -523,7 +523,7 @@ TEST(SIPPTest, SamePathAsAStar2)
   ASSERT_FALSE(path_sipp.empty()) << "SIPP should find a path when no constraints are present!";
 
   // convert SIPP path to the same format as A*
-  Path path_sipp_converted = timepointpath_to_path(path_sipp);
+  PointPath path_sipp_converted = timepointpath_to_path(path_sipp);
 
   // check that the paths have the same length
   EXPECT_EQ(path_sipp_converted.size(), path_astar.size()) << "The paths found by SIPP and ASTAR should have the same length!";

@@ -10,11 +10,12 @@
 #include <stdint.h>
 
 #include <iostream>
+#include <numeric>
 
 #include "Instance.h"
 #include "test_utils.h"
 
-// Test 1: Test initialization when instance loaded
+// Test initialization when instance loaded
 TEST(InstanceTest, Initialized)
 {
   // load instance
@@ -25,7 +26,7 @@ TEST(InstanceTest, Initialized)
   EXPECT_TRUE(instance->is_initialized());
 }
 
-// Test 2: Check initialization when empty instance is created
+// Check initialization when empty instance is created
 TEST(InstanceTest, NotInitialized)
 {
   // create empty instance
@@ -35,7 +36,7 @@ TEST(InstanceTest, NotInitialized)
   EXPECT_FALSE(instance->is_initialized());
 }
 
-// Test 3: Test manual initialization
+// Test manual initialization
 TEST(InstanceTest, ManualInitialization)
 {
   // create empty instance
@@ -49,7 +50,7 @@ TEST(InstanceTest, ManualInitialization)
   EXPECT_TRUE(instance->is_initialized());
 }
 
-// Test 4: Test map loading
+// Test map loading
 TEST(InstanceTest, LoadMap)
 {
   // load instance
@@ -69,7 +70,7 @@ TEST(InstanceTest, LoadMap)
   EXPECT_EQ(loaded_map.data, expected_map) << "Map is not correct";
 }
 
-// Test 5: Test scene loading
+// Test scene loading
 TEST(InstanceTest, LoadScene)
 {
   // load instance
@@ -89,7 +90,7 @@ TEST(InstanceTest, LoadScene)
   EXPECT_EQ(instance->get_goal_positions(), expected_goals);
 }
 
-// Test 6: Check manhattan distance heuristics
+// Check manhattan distance heuristics
 TEST(InstanceTest, ManhattanDistance)
 {
   // load instance
@@ -103,18 +104,14 @@ TEST(InstanceTest, ManhattanDistance)
   // check with the calculated
   for (int i = 0; i < instance->num_of_agents; i++)
   {
-    for (int y = 0; y < instance->get_map_data().height; y++)
+    for (int loc = 0; loc < instance->get_map_data().height * instance->get_map_data().width; loc++)
     {
-      for (int x = 0; x < instance->get_map_data().width; x++)
-      {
-        EXPECT_EQ(instance->get_heuristic_manhattan(i, Point2d(x, y)), expected_heuristics[i][y * instance->get_map_data().width + x])
-            << "Heuristic is not correct";
-      }
+      EXPECT_EQ(instance->get_heuristic_manhattan(i, loc), expected_heuristics[i][loc]) << "Heuristic is not correct";
     }
   }
 }
 
-// Test 7: Check euclidean distance heuristics
+// Check euclidean distance heuristics
 TEST(InstanceTest, EuclideanDistance)
 {
   // load instance
@@ -130,13 +127,99 @@ TEST(InstanceTest, EuclideanDistance)
   // check with the calculated
   for (int i = 0; i < instance->num_of_agents; i++)
   {
-    for (int y = 0; y < instance->get_map_data().height; y++)
+    for (int loc = 0; loc < instance->get_map_data().height * instance->get_map_data().width; loc++)
     {
-      for (int x = 0; x < instance->get_map_data().width; x++)
-      {
-        EXPECT_EQ(instance->get_heuristic_euclidean(i, Point2d(x, y)), expected_heuristics[i][y * instance->get_map_data().width + x])
-            << "Heuristic is not correct";
-      }
+      EXPECT_EQ(instance->get_heuristic_euclidean(i, loc), expected_heuristics[i][loc]) << "Heuristic is not correct";
+    }
+  }
+}
+
+// Test position-location conversion
+// Position to location
+TEST(InstanceTest, PositionToLocation)
+{
+  // load instance
+  std::string               base_path = get_base_path_tests();  // path to my_solver
+  std::unique_ptr<Instance> instance =
+      std::make_unique<Instance>(base_path + "/tests/test_maps/empty_5_5.map", base_path + "/tests/test_scen/empty_5_5_scen_1.scen", 1);
+
+  std::vector<int> calculated_locations;
+  // check with the calculated
+  for (int y = 0; y < instance->get_map_data().height; y++)
+  {
+    for (int x = 0; x < instance->get_map_data().width; x++)
+    {
+      calculated_locations.push_back(instance->position_to_location(Point2d(x, y)));
+    }
+  }
+
+  // construct the expected locations
+  std::vector<int> expected_locations(calculated_locations.size());
+  std::iota(expected_locations.begin(), expected_locations.end(), 0);
+
+  // check equality
+  EXPECT_EQ(calculated_locations, expected_locations) << "Locations are not correct";
+}
+
+// Location to position
+TEST(InstanceTest, LocationToPosition)
+{
+  // load instance
+  std::string               base_path = get_base_path_tests();  // path to my_solver
+  std::unique_ptr<Instance> instance =
+      std::make_unique<Instance>(base_path + "/tests/test_maps/empty_5_5.map", base_path + "/tests/test_scen/empty_5_5_scen_1.scen", 1);
+
+  std::vector<Point2d> calculated_positions;
+  // check with the calculated
+  for (int i = 0; i < instance->get_map_data().height * instance->get_map_data().width; i++)
+  {
+    calculated_positions.push_back(instance->location_to_position(i));
+  }
+
+  // construct the expected positions
+  std::vector<Point2d> expected_positions;
+  for (int y = 0; y < instance->get_map_data().height; y++)
+  {
+    for (int x = 0; x < instance->get_map_data().width; x++)
+    {
+      expected_positions.push_back(Point2d(x, y));
+    }
+  }
+
+  // check equality
+  EXPECT_EQ(calculated_positions, expected_positions) << "Positions are not correct";
+}
+
+// Check that location - to position - to location is identity
+TEST(InstanceTest, LocationPositionIdentity)
+{
+  // load instance
+  std::string               base_path = get_base_path_tests();  // path to my_solver
+  std::unique_ptr<Instance> instance =
+      std::make_unique<Instance>(base_path + "/tests/test_maps/empty_5_5.map", base_path + "/tests/test_scen/empty_5_5_scen_1.scen", 1);
+
+  // check with the calculated
+  for (int i = 0; i < instance->get_map_data().height * instance->get_map_data().width; i++)
+  {
+    EXPECT_EQ(i, instance->position_to_location(instance->location_to_position(i))) << "Location to position to location is not identity";
+  }
+}
+
+// Check that position - to location - to position is identity
+TEST(InstanceTest, PositionLocationIdentity)
+{
+  // load instance
+  std::string               base_path = get_base_path_tests();  // path to my_solver
+  std::unique_ptr<Instance> instance =
+      std::make_unique<Instance>(base_path + "/tests/test_maps/empty_5_5.map", base_path + "/tests/test_scen/empty_5_5_scen_1.scen", 1);
+
+  // check with the calculated
+  for (int y = 0; y < instance->get_map_data().height; y++)
+  {
+    for (int x = 0; x < instance->get_map_data().width; x++)
+    {
+      EXPECT_EQ(Point2d(x, y), instance->location_to_position(instance->position_to_location(Point2d(x, y))))
+          << "Position to location to position is not identity";
     }
   }
 }

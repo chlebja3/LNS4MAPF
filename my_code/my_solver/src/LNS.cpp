@@ -35,7 +35,7 @@ void LNS::find_initial_solution()
 Solution LNS::PrioritizedPlanning()
 {
   Solution sol;
-  sol.paths.resize(instance.num_of_agents, Path());
+  sol.paths.resize(instance.num_of_agents, PointPath());
   const int agent_num = instance.num_of_agents;
 
   // create a sequence from 0 to agent_num

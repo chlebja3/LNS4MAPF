@@ -59,10 +59,10 @@ Visualizer::Visualizer(const Instance& instance, SharedData& shared_data)
   create_cell_rectangles();
 
   // initialize visualization for the astar paths
-  for (int i = 0; i < (int)instance.get_optimal_paths().size(); i++)
-  {
-    update_path(i, instance.get_optimal_paths()[i]);
-  }
+  // for (int i = 0; i < (int)instance.get_optimal_paths().size(); i++)
+  //{
+  //  update_path(i, instance.get_optimal_paths()[i]);
+  //}
   std::cout << "Visualizer initialized. " << std::endl;
 }
 
@@ -438,7 +438,7 @@ void Visualizer::draw_cell_rectangles(sf::RenderWindow& window)
   }
 }
 
-void Visualizer::update_path(const int agent_num, const Path& path)
+void Visualizer::update_path(const int agent_num, const PointPath& path)
 {
   assertm(agent_num >= 0 && agent_num < (int)agents_colors.size() && agent_num < instance.num_of_agents, "Invalid agent number.");
 
@@ -531,7 +531,7 @@ void Visualizer::update_all_paths(int time)
   {
     // calculate the start index of the path according to the visualization time
     int idx = std::min((int)agents_paths[i].size() - 1, time);
-    update_path(i, Path(agents_paths[i].begin() + idx, agents_paths[i].end()));
+    update_path(i, PointPath(agents_paths[i].begin() + idx, agents_paths[i].end()));
   }
 }
 

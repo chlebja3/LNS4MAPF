@@ -150,7 +150,9 @@ public:
   Map() = default;
   void    print() const;
   bool    is_in(const Point2d& point) const;
+  bool    is_in(const int loc) const;
   uint8_t index(const Point2d& point) const;
+  uint8_t index(const int loc) const;
   int     position_to_index(const Point2d& p) const;
 
 
@@ -162,13 +164,16 @@ public:
    * @return A vector of points that are neighbors of the input point.
    */
   std::vector<Point2d> find_neighbors(const Point2d& p) const;
+
+  std::vector<int> find_neighbors(const int loc) const;
 };
 
 // define a path as a vectors of (int, int) tuples
-typedef std::vector<Point2d>   Path;
+typedef std::vector<int>       Path;
+typedef std::vector<Point2d>   PointPath;
 typedef std::vector<TimePoint> TimePointPath;
 
-Path timepointpath_to_path(const TimePointPath& path);
+PointPath timepointpath_to_path(const TimePointPath& path);
 
 /**
  * @brief Generate a random color. To make the color palette look more visually pleasing, the random color is mixed with (mix_r, mix_g,

@@ -19,17 +19,15 @@ int ASTAR::generated_nodes = 0;
 class AstarNode : public Node
 {
 public:
-  Point2d          position;
+  int              location;
   AstarNode const* parent;  // pointer to const parent
 
-  AstarNode(const int x, const int y, const double g, const double h, AstarNode const* const parent)
-      : Node(g, h), position(Point2d(x, y)), parent(parent){};
-  AstarNode(const Point2d& position, const double g, const double h, AstarNode const* const parent)
-      : Node(g, h), position(position), parent(parent){};
+  AstarNode(const int location, const double g, const double h, AstarNode const* const parent)
+      : Node(g, h), location(location), parent(parent){};
 
   bool operator==(const AstarNode& other) const
   {
-    return g == other.g && h == other.h && position == other.position;
+    return g == other.g && h == other.h && location == other.location;
   }
 
   struct compare_node_ptrs
@@ -56,17 +54,17 @@ public:
 namespace ASTAR
 {
 typedef std::priority_queue<AstarNode const*, std::vector<AstarNode const*>, AstarNode::compare_node_ptrs> PriorityQueue;
-typedef std::unordered_set<Point2d, Point2d::hash_point>                                                   UnorderedSet;
 
 Path extract_path(AstarNode const* const final_node);
 }  // namespace ASTAR
 
 Path ASTAR::find_path(const int agent_num, const Instance& instance)
 {
-  const Map&     map_data = instance.get_map_data();
-  const Point2d& start    = instance.get_start_positions()[agent_num];
-  const Point2d& goal     = instance.get_goal_positions()[agent_num];
-  generated_nodes         = 0;
+  assertm(agent_num < instance.get_start_locations().size(), "Agent number out of range.");
+  const Map& map_data = instance.get_map_data();
+  const int  start    = instance.get_start_locations()[agent_num];
+  const int  goal     = instance.get_goal_locations()[agent_num];
+  generated_nodes     = 0;
 
   Path path;
 
@@ -88,9 +86,8 @@ Path ASTAR::find_path(const int agent_num, const Instance& instance)
   // create the start node
   // calculate the heuristic
   {
-    // const double h = instance.get_heuristic_euclidean(agent_num, start);
     const double h = instance.get_heuristic_manhattan(agent_num, start);
-    node_list.push_back(std::make_unique<AstarNode>(start.x, start.y, 0, h, nullptr));
+    node_list.push_back(std::make_unique<AstarNode>(start, 0, h, nullptr));
   }
 
   // add the start node to the priority queue
@@ -99,7 +96,8 @@ Path ASTAR::find_path(const int agent_num, const Instance& instance)
   // std::cout << ASTAR::generated_nodes << std::endl;
 
   // create known nodes database
-  ASTAR::UnorderedSet known;
+  std::vector<bool> known;
+  known.resize(map_data.width * map_data.height, false);
 
   // main loop
   while (!open_list.empty())
@@ -109,24 +107,24 @@ Path ASTAR::find_path(const int agent_num, const Instance& instance)
     open_list.pop();
 
     // check whether node is in known set
-    if (known.find(current->position) != known.end()) continue;
+    if (known[current->location]) continue;
 
     // check whether goal is reached
-    if (current->position.x == goal.x && current->position.y == goal.y)
+    if (current->location == goal)
     {
       // extract the path
       return ASTAR::extract_path(current);
     }
 
     // add to known nodes
-    known.insert(current->position);
+    known[current->location] = true;
 
     // expand current node
-    std::vector<Point2d> neighbors = map_data.find_neighbors(current->position);
-    for (Point2d& neighbor : neighbors)
+    std::vector<int> neighbors = map_data.find_neighbors(current->location);
+    for (auto& neighbor : neighbors)
     {
       // check whether neighbor already known
-      if (known.find(neighbor) != known.end()) continue;
+      if (known[neighbor]) continue;
 
       // calculate heuristic
       // const double h = instance.get_heuristic_euclidean(agent_num, neighbor);
@@ -151,7 +149,7 @@ Path ASTAR::extract_path(AstarNode const* const final_node)
   AstarNode const* curr = final_node;
   while (curr != nullptr)
   {
-    path.push_back(curr->position);
+    path.push_back(curr->location);
     curr = curr->parent;
   }
   std::reverse(path.begin(), path.end());

@@ -12,9 +12,9 @@
 #include "test_utils.h"
 #include "utils.h"
 
-Path timepointpath_to_path_resize(const TimePointPath& tp_path)
+PointPath timepointpath_to_path_resize(const TimePointPath& tp_path)
 {
-  Path path;
+  PointPath path;
   for (auto it = tp_path.begin(); it != tp_path.end(); it++)
   {
     // for last element add the position only once, as it is obvious that the agent stays in the last position forever
@@ -32,9 +32,9 @@ Path timepointpath_to_path_resize(const TimePointPath& tp_path)
   return path;
 }
 
-Path timepointpath_to_path_insert(const TimePointPath& tp_path)
+PointPath timepointpath_to_path_insert(const TimePointPath& tp_path)
 {
-  Path path;
+  PointPath path;
   for (auto it = tp_path.begin(); it != tp_path.end(); it++)
   {
     // for last element add the position only once, as it is obvious that the agent stays in the last position forever
@@ -52,9 +52,9 @@ Path timepointpath_to_path_insert(const TimePointPath& tp_path)
   return path;
 }
 
-Path timepointpath_to_path_pushback(const TimePointPath& tp_path)
+PointPath timepointpath_to_path_pushback(const TimePointPath& tp_path)
 {
-  Path path;
+  PointPath path;
   for (auto it = tp_path.begin(); it != tp_path.end(); it++)
   {
     // for last element add the position only once, as it is obvious that the agent stays in the last position forever
@@ -76,9 +76,9 @@ Path timepointpath_to_path_pushback(const TimePointPath& tp_path)
   return path;
 }
 
-Path timepointpath_to_path_emplaceback(const TimePointPath& tp_path)
+PointPath timepointpath_to_path_emplaceback(const TimePointPath& tp_path)
 {
-  Path path;
+  PointPath path;
   for (auto it = tp_path.begin(); it != tp_path.end(); it++)
   {
     // for last element add the position only once, as it is obvious that the agent stays in the last position forever
@@ -107,8 +107,8 @@ static void BenchmarkFunction(benchmark::State& state, Func func)
   TimePointPath tp_path = generate_random_timepointpath(state.range(0));  // Ensure same random input for all tests
   for (auto _ : state)
   {
-    Path p = func(tp_path);
-    assertm(p.size() == state.range(0), "The converted path has wrong size");
+    PointPath p = func(tp_path);
+    assertm((int)p.size() == (int)state.range(0), "The converted path has wrong size");
   }
 }
 

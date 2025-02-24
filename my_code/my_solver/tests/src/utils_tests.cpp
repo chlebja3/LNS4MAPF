@@ -168,7 +168,7 @@ TEST(Point2dTest, LargeValues)
   EXPECT_EQ(result.y, 2000000000) << "Overflow not handled in y.";
 }
 
-// test finding the neighbours
+// MAP TESTS
 
 // Helper function to create a map
 namespace UTILS_TEST
@@ -183,50 +183,97 @@ Map create_test_map()
 }
 }  // namespace UTILS_TEST
 
-// Test Case: Center Position (Now Order-Independent)
+// Test is in check
+TEST(MapTest, IsIn)
+{
+  Map my_map = UTILS_TEST::create_test_map();
+  // test Point2d format
+  EXPECT_TRUE(my_map.is_in({0, 0})) << "Point should be in the map.";
+  EXPECT_TRUE(my_map.is_in({2, 2})) << "Point should be in the map.";
+  EXPECT_FALSE(my_map.is_in({-1, 0})) << "Point should not be in the map.";
+  EXPECT_FALSE(my_map.is_in({0, 3})) << "Point should not be in the map.";
+  EXPECT_FALSE(my_map.is_in({3, 3})) << "Point should not be in the map.";
+  // test int format
+  EXPECT_TRUE(my_map.is_in(0)) << "Point should be in the map.";
+  EXPECT_TRUE(my_map.is_in(8)) << "Point should be in the map.";
+  EXPECT_FALSE(my_map.is_in(-1)) << "Point should not be in the map.";
+  EXPECT_FALSE(my_map.is_in(9)) << "Point should not be in the map.";
+}
+
+// Test index function
+TEST(MapTest, Index)
+{
+  Map my_map = UTILS_TEST::create_test_map();
+  // test Point2d format
+  EXPECT_EQ(my_map.index({0, 0}), 0) << "Should be free cell.";
+  EXPECT_EQ(my_map.index({1, 2}), 0) << "Should be free cell.";
+  EXPECT_EQ(my_map.index({1, 0}), 1) << "Should be obstacle.";
+  EXPECT_EQ(my_map.index({2, 2}), 1) << "Should be obstacle.";
+  // test int format
+  EXPECT_EQ(my_map.index(0), 0) << "Should be free cell.";
+  EXPECT_EQ(my_map.index(4), 0) << "Should be free cell.";
+  EXPECT_EQ(my_map.index(1), 1) << "Should be obstacle.";
+  EXPECT_EQ(my_map.index(8), 1) << "Should be obstacle.";
+}
+
+
+// test finding the neighbours
+// Test Case: Center Position
 TEST(FindNeighborsTest, CenterPosition)
 {
-  Map     my_map = UTILS_TEST::create_test_map();
-  Point2d pos(1, 1);
+  Map my_map = UTILS_TEST::create_test_map();
 
-  std::vector<Point2d> neighbors = my_map.find_neighbors(pos);
-
+  // test Point2d version
+  std::vector<Point2d> neighbors = my_map.find_neighbors({1, 1});
   EXPECT_THAT(neighbors, ::testing::UnorderedElementsAre(Point2d(1, 2), Point2d(0, 1)));
+
+  // test int version
+  std::vector<int> neighbors_int = my_map.find_neighbors(4);
+  EXPECT_THAT(neighbors_int, ::testing::UnorderedElementsAre(3, 7));
 }
 
 // Test Case: Corner Position (Top-Left)
 TEST(FindNeighborsTest, TopLeftCorner)
 {
-  Map     my_map = UTILS_TEST::create_test_map();
-  Point2d pos(0, 0);
+  Map my_map = UTILS_TEST::create_test_map();
 
-  std::vector<Point2d> neighbors = my_map.find_neighbors(pos);
-
-  std::vector<Point2d> expected = {{0, 1}};
+  // Point2d version
+  std::vector<Point2d> neighbors = my_map.find_neighbors({0, 0});
+  std::vector<Point2d> expected  = {{0, 1}};
   EXPECT_EQ(neighbors, expected);
+
+  // int version
+  std::vector<int> neighbors_int = my_map.find_neighbors(0);
+  EXPECT_EQ(neighbors_int, std::vector<int>({3}));
 }
 
-// Test Case: Corner Position (Bottom-Right)
-TEST(FindNeighborsTest, BottomRightCorner)
+// Test Case: Position (Bottom-middle)
+TEST(FindNeighborsTest, BottomMiddle)
 {
-  Map     my_map = UTILS_TEST::create_test_map();
-  Point2d pos(2, 2);
+  Map my_map = UTILS_TEST::create_test_map();
 
-  std::vector<Point2d> neighbors = my_map.find_neighbors(pos);
-
-  std::vector<Point2d> expected = {{1, 2}};  // No valid neighbors
+  // Point2d version
+  std::vector<Point2d> neighbors = my_map.find_neighbors({1, 2});
+  std::vector<Point2d> expected  = {{1, 1}};
   EXPECT_EQ(neighbors, expected);
+
+  // int version
+  std::vector<int> neighbors_int = my_map.find_neighbors(7);
+  EXPECT_EQ(neighbors_int, std::vector<int>({4}));
 }
 
-// Test Case: Left Edge (Now Order-Independent)
+// Test Case: Left Edge
 TEST(FindNeighborsTest, LeftEdge)
 {
-  Map     my_map = UTILS_TEST::create_test_map();
-  Point2d pos(0, 1);
+  Map my_map = UTILS_TEST::create_test_map();
 
-  std::vector<Point2d> neighbors = my_map.find_neighbors(pos);
-
+  // Point2d version
+  std::vector<Point2d> neighbors = my_map.find_neighbors({0, 1});
   EXPECT_THAT(neighbors, ::testing::UnorderedElementsAre(Point2d(0, 0), Point2d(1, 1)));
+
+  // int version
+  std::vector<int> neighbors_int = my_map.find_neighbors(3);
+  EXPECT_THAT(neighbors_int, ::testing::UnorderedElementsAre(0, 4));
 }
 
 // Test Case: Out-of-Bounds Position
@@ -235,20 +282,30 @@ TEST(FindNeighborsTest, OutOfBounds)
   Map     my_map = UTILS_TEST::create_test_map();
   Point2d pos(-1, -1);
 
-  std::vector<Point2d> neighbors = my_map.find_neighbors(pos);
+#ifdef NDEBUG
+  std::vector<Point2d> neighbors     = my_map.find_neighbors(pos);
+  std::vector<int>     neighbors_int = my_map.find_neighbors(-1);
 
   EXPECT_TRUE(neighbors.empty());  // Should return empty vector
+  EXPECT_TRUE(neighbors_int.empty());
+#else
+  // expect assert death
+  EXPECT_DEATH(my_map.find_neighbors({-1, -1}), "Invalid position.");
+  EXPECT_DEATH(my_map.find_neighbors(-1), "Invalid position.");
+#endif
 }
 
 // Test Case: Position Inside an Obstacle
+#ifdef NDEBUG
+TEST(FindNeighborsTest, DISABLED_InsideObstacle)
+#else
 TEST(FindNeighborsTest, InsideObstacle)
+#endif
 {
-  Map     my_map = UTILS_TEST::create_test_map();
-  Point2d pos(2, 0);  // This is an obstacle
+  Map my_map = UTILS_TEST::create_test_map();
 
-  std::vector<Point2d> neighbors = my_map.find_neighbors(pos);
-
-  EXPECT_TRUE(neighbors.empty());  // No neighbors should be returned
+  EXPECT_DEATH(my_map.find_neighbors({0, 2}), "Invalid position.");
+  EXPECT_DEATH(my_map.find_neighbors(6), "Invalid position.");
 }
 
 // Test Case: Large Map Edge Case
@@ -259,11 +316,13 @@ TEST(FindNeighborsTest, LargeMapEdge)
   my_map.height = 100;
   my_map.data.resize(100 * 100, 0);  // All free cells
 
-  Point2d pos(99, 99);  // Bottom-right corner
-
-  std::vector<Point2d> neighbors = my_map.find_neighbors(pos);
-
+  // Check the Point2d version
+  std::vector<Point2d> neighbors = my_map.find_neighbors({99, 99});
   EXPECT_THAT(neighbors, ::testing::UnorderedElementsAre(Point2d(98, 99), Point2d(99, 98)));
+
+  // Check the int version
+  std::vector<int> neighbors_int = my_map.find_neighbors(9999);
+  EXPECT_THAT(neighbors_int, ::testing::UnorderedElementsAre(9899, 9998));
 }
 
 // test detection of overlap of time intervals
@@ -330,8 +389,8 @@ TEST(test_utils, timepointpath_to_path_simple)
   tp_path.push_back({{2, 2}, {7, INT_MAX}});
 
   // convert to path
-  Path path          = timepointpath_to_path(tp_path);
-  Path expected_path = {{0, 1}, {0, 1}, {0, 1}, {0, 2}, {0, 2}, {0, 2}, {1, 2}, {2, 2}};
+  PointPath path          = timepointpath_to_path(tp_path);
+  PointPath expected_path = {{0, 1}, {0, 1}, {0, 1}, {0, 2}, {0, 2}, {0, 2}, {1, 2}, {2, 2}};
 
   // check that the path has the right length
   EXPECT_EQ(path.size(), expected_path.size()) << "Wrong path length.";
@@ -348,7 +407,7 @@ TEST(test_utils, timepointpath_to_path_random)
   TimePointPath tp_path = generate_random_timepointpath(len);
 
   // convert to path
-  Path path = timepointpath_to_path(tp_path);
+  PointPath path = timepointpath_to_path(tp_path);
 
   // check that the path has the right length
   EXPECT_EQ(path.size(), len) << "Wrong path length.";
