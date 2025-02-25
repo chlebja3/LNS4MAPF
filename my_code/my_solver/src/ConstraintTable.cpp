@@ -32,8 +32,11 @@ auto EdgeCollision::hash_edge_collision::operator()(const EdgeCollision& c) cons
 ConstraintTable::ConstraintTable(const Instance& instance) : instance(instance)
 {
   // initialize the constraint vectors TODO static obstacles dont need constraint vectors
-  const int num_constraints = instance.get_map_data().width * instance.get_map_data().height;
-  constraints               = std::vector<std::list<TimeInterval>>(num_constraints, std::list<TimeInterval>());
+  const int num_cells = instance.get_map_data().width * instance.get_map_data().height;
+  constraints         = std::vector<std::list<TimeInterval>>(num_cells, std::list<TimeInterval>());
+
+  // initialize the safe interval vectors
+  safe_intervals = std::vector<std::list<TimeInterval>>(num_cells, std::list<TimeInterval>(1, TimeInterval(0, INT_MAX)));
 }
 
 
@@ -96,29 +99,30 @@ void ConstraintTable::add_constraint_safe_intervals(const TimePoint& timepoint)
       continue;
     }
 
-    // check whether finished
-    if (it->t_min > timepoint.interval.t_max)
-    {
-      break;
-    }
+    // check that there are still intervals that could be reduced
+    assertm(it->t_min <= timepoint.interval.t_max, "Can not add an overlapping constraint.");
 
     // shorten intervals starting before the range
     if (it->t_min < timepoint.interval.t_min)
     {
-      it->t_max = timepoint.interval.t_min - 1;
+      assertm(it->t_max >= timepoint.interval.t_max, "Can not add an overlapping constraint.");
+      const int new_tmax = timepoint.interval.t_min - 1;
 
       // create new interval if there is still some time in the safe interval after the constraint
       if (it->t_max > timepoint.interval.t_max)
       {
         cur_TI_list.insert(std::next(it, 1), TimeInterval(timepoint.interval.t_max + 1, it->t_max));
+        it->t_max = new_tmax;
         break;
       }
 
+      it->t_max = new_tmax;
       it++;
     }
     // shorten intervals ending after the range
     else if (it->t_max > timepoint.interval.t_max)
     {
+      assertm(it->t_min == timepoint.interval.t_min, "Can not add an overlapping constraint.");
       it->t_min = timepoint.interval.t_max + 1;
       break;
     }
@@ -132,13 +136,11 @@ void ConstraintTable::add_constraint_safe_intervals(const TimePoint& timepoint)
 
 void ConstraintTable::remove_constraint_safe_intervals(const TimePoint& timepoint)
 {
+  // TODO overflow check
   // check the location is valid
   assertm(instance.get_map_data().is_in(timepoint.location), "Invalid location.");
 
   std::list<TimeInterval>& cur_TI_list = safe_intervals[timepoint.location];
-
-  // check that the list is not empty
-  assertm(!cur_TI_list.empty(), "Trying to remove interval from an empty list.");
 
   // find intervals that will be affected by the removal
   auto it = cur_TI_list.begin();
@@ -179,7 +181,9 @@ void ConstraintTable::remove_constraint_safe_intervals(const TimePoint& timepoin
 
       // no interval can be extended, therefore insert a new interval
       cur_TI_list.insert(it, timepoint.interval);
+      break;
     }
+    it++;
   }
 }
 
@@ -212,6 +216,8 @@ void ConstraintTable::add_constraints(const TimePointPath& path)
   {
     // add the point constraint
     add_constraint(path[i]);
+    // add the safe interval constraint
+    add_constraint_safe_intervals(path[i]);
 
     // add the edge constraint
     if (i > 0)  // skip the first point as there is no edge
@@ -448,8 +454,9 @@ auto ConstraintTable::get_safe_intervals(int location, int from, const TimeInter
   auto end   = safe_intervals[location].cend();
   for (auto it = safe_intervals[location].cbegin(); it != safe_intervals[location].cend(); it++)
   {
+    // std::cout << "Interval: " << it->t_min << " " << it->t_max << std::endl;
     // check whether the interval is inside the given time range
-    if (it->t_min >= time_interval.t_min && it->t_max <= time_interval.t_max)
+    if (it->t_max >= time_interval.t_min && it->t_min <= time_interval.t_max)
     {
       // remember the first interval in the range
       if (start == safe_intervals[location].end())
