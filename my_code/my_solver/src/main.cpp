@@ -18,13 +18,13 @@
 namespace po = boost::program_options;
 
 
-int main(int argc, char** argv)
+auto main(int argc, char** argv) -> int
 {
   // Define command-line options
   po::options_description desc("Allowed options");
   desc.add_options()("help,h", "Show help message")("map,m", po::value<std::string>()->required(), "file with the map")(
       "agents,a", po::value<std::string>()->required(), "input file for agents")(
-      "agentNum,k", po::value<int>()->default_value(0), "number of agents")("GUI,G", po::value<bool>()->default_value(1));
+      "agentNum,k", po::value<int>()->default_value(0), "number of agents")("GUI,G", po::value<bool>()->default_value(true));
 
   // Parse command-line arguments
   po::variables_map vm;
@@ -36,7 +36,7 @@ int main(int argc, char** argv)
   catch (const po::error& ex)
   {
     // Handle --help
-    if (vm.count("help"))
+    if (vm.count("help") != 0U)
     {
       std::cout << desc << std::endl;
       return 0;

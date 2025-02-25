@@ -25,8 +25,8 @@ public:
   int cost;
   int delay;  // cost - distance
 
-  bool is_valid(const Instance& instance) const;
-  void load(const std::string& filename, const Instance& instance);
+  [[nodiscard]] auto is_valid(const Instance& instance) const -> bool;
+  void               load(const std::string& filename, const Instance& instance);
 };
 
 class Solver

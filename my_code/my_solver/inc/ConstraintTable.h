@@ -22,29 +22,29 @@ public:
   int to;
   int t;
 
-  EdgeCollision(const int from, const int to, const int t);
+  EdgeCollision(int from, int to, int t);
 
-  bool operator==(const EdgeCollision& other) const;
+  auto operator==(const EdgeCollision& other) const -> bool;
 
   struct hash_edge_collision
   {
-    size_t operator()(const EdgeCollision& c) const;
+    auto operator()(const EdgeCollision& c) const -> size_t;
   };
 };
 
 class ConstraintTable
 {
 public:
-  ConstraintTable(const Instance& instance);
+  explicit ConstraintTable(const Instance& instance);
 
-  void                      add_constraint(const TimePoint& timepoint);
-  void                      add_constraints(const TimePointPath& path);
-  void                      remove_constraint(const TimePoint& timepoint);
-  void                      remove_constraints(const TimePointPath& path);
-  TimeInterval              get_first_safe_interval(const int position);
-  TimeInterval              get_safe_interval(const int position, const int from, const int time);
-  std::vector<TimeInterval> get_safe_intervals(const int position, const int from, const TimeInterval& time_interval);
-  int                       get_last_dynamic_constraint(void);
+  void add_constraint(const TimePoint& timepoint);
+  void add_constraints(const TimePointPath& path);
+  void remove_constraint(const TimePoint& timepoint);
+  void remove_constraints(const TimePointPath& path);
+  auto get_first_safe_interval(int location) const -> TimeInterval;
+  auto get_safe_interval(int location, int from, int time) const -> TimeInterval;
+  auto get_safe_intervals(int location, int from, const TimeInterval& time_interval) const -> std::vector<TimeInterval>;
+  auto get_last_dynamic_constraint() const -> int;
 
 private:
   std::vector<std::list<TimeInterval>>                                  constraints;       // constraints for each position

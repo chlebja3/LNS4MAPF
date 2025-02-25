@@ -16,11 +16,11 @@ class SharedData
 public:
   std::atomic<bool> are_new_paths;
 
-  SharedData(void);
+  SharedData();
 
   void update_paths(const std::vector<Path>& new_paths, std::vector<SIPPInfo>& sipp_info);
 
-  std::pair<std::vector<Path>, std::vector<SIPPInfo>> consume_paths(void);
+  auto consume_paths() -> std::pair<std::vector<Path>, std::vector<SIPPInfo>>;
 
 private:
   std::mutex            paths_mtx;

@@ -16,18 +16,18 @@ public:
   std::vector<SIPPInfo> sipp_info;
 
   // constructor
-  LNS(const Instance& instance, const bool is_visualisation);
+  LNS(const Instance& instance, bool is_visualisation);
 
   // Destructor
-  ~LNS(void) = default;
+  ~LNS() override = default;
 
   // solve method
-  void solve(void) override;
+  void solve() override;
 
-  void     find_initial_solution(void);
-  Solution PrioritizedPlanning(void);
+  void find_initial_solution();
+  auto PrioritizedPlanning() -> Solution;
 
-  int get_num_of_generated_nodes(void) const;
+  [[nodiscard]] auto get_num_of_generated_nodes() const -> int;
 
 private:
   std::unique_ptr<SIPP> planner;

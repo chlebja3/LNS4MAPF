@@ -27,15 +27,15 @@ public:
   int                                     iteration_counter = 0;
   float                                   speed             = 2.0;
   std::function<void(Visualization& vis)> update_func;
-  Visualization(std::function<void(Visualization& vis)> update_func);
-  void start(void);
-  void reset(void);
-  void pause(void);
-  void update(void);
-  void step_forward(void);
-  void step_backward(void);
+  explicit Visualization(std::function<void(Visualization& vis)> update_func);
+  void start();
+  void reset();
+  void pause();
+  void update();
+  void step_forward();
+  void step_backward();
   void new_data(int new_len);
-  void next_iteration(void);
+  void next_iteration();
 };
 
 class Visualizer
@@ -56,31 +56,31 @@ public:
   // create a texture from the map
   void mapToTexture(const Map& map_data);
 
-  void                 update_agent_circles(const std::vector<Point2d>& positions);
-  void                 update_goal_circles(const std::vector<Point2d>& positions);
-  void                 update_path(const int agent_num, const Path& path);
-  void                 update_all_paths(int time);
-  void                 update_cell_rectangles_active(int time);
-  void                 create_cell_rectangles(void);
-  const Point2d        get_agent_position(const int agent_num, const int time) const;
-  int                  get_agent_location(const int agent_num, const int time) const;
-  std::vector<Point2d> get_agent_positions(int time) const;
-  std::vector<int>     get_agent_locations(const int time) const;
-  void                 solution_visualization_update(const Visualization& vis);
-  void                 sipp_visualization_update(const Visualization& vis);
+  void update_agent_circles(const std::vector<Point2d>& positions);
+  void update_goal_circles(const std::vector<Point2d>& positions);
+  void update_path(int agent_num, const Path& path);
+  void update_all_paths(int time);
+  void update_cell_rectangles_active(int time);
+  void create_cell_rectangles();
+  auto get_agent_position(int agent_num, int time) const -> const Point2d;
+  auto get_agent_location(int agent_num, int time) const -> int;
+  auto get_agent_positions(int time) const -> std::vector<Point2d>;
+  auto get_agent_locations(int time) const -> std::vector<int>;
+  void solution_visualization_update(const Visualization& vis);
+  void sipp_visualization_update(const Visualization& vis);
 
 
 private:
   void load_fonts();
 
-  void adjust_sfml_part_viewport(sf::RenderWindow& window, sf::View& view, const float left_panel_size, const float right_panel_size,
-                                 const float bottom_panel_size);
+  void adjust_sfml_part_viewport(sf::RenderWindow& window, sf::View& view, float left_panel_size, float right_panel_size,
+                                 float bottom_panel_size);
 
   void process_events(sf::RenderWindow& window, sf::View& view);
 
-  void create_left_panel(void);
-  void create_right_panel(void);
-  void create_bottom_panel(void);
+  void create_left_panel();
+  void create_right_panel();
+  void create_bottom_panel();
   // draw the agents
   void            draw_agents(sf::RenderWindow& window);
   void            draw_goals(sf::RenderWindow& window);
@@ -91,8 +91,8 @@ private:
   const Instance& instance;
   SharedData&     shared_data;
 
-  void create_docking_space(void);
-  void create_menu_bar(void);
+  void create_docking_space();
+  void create_menu_bar();
 
   // drawing objects
   sf::Texture                                  map_texture;  // the map texture
@@ -113,7 +113,7 @@ private:
 
   // Zoom settings
   float       zoom_level = 1.0;
-  const float zoom_step  = 1.1f;
+  const float zoom_step  = 1.1F;
 
   // Visualizations
   Visualization solution_vis;

@@ -18,7 +18,7 @@ class Computation
 {
 public:
   // constructor and destructor
-  Computation(const Instance& instance, SharedData& shared_data, const bool is_visualization);
+  Computation(const Instance& instance, SharedData& shared_data, bool is_visualization);
   ~Computation();
 
   // manage the underlying thread

@@ -11,7 +11,7 @@
 
 namespace ASTAR
 {
-Path find_path(const int agent_num, const Instance& instance);
+auto find_path(int agent_num, const Instance& instance) -> Path;
 
 extern int generated_nodes;
 }  // namespace ASTAR

@@ -6,10 +6,9 @@
  */
 
 #pragma once
-#include <stdint.h>
-
 #include <SFML/Graphics.hpp>
 #include <cassert>
+#include <cstdint>
 #include <vector>
 
 // Use (void) to silence unused warnings.
@@ -30,13 +29,13 @@ class Node
 public:
   double g, h, f;
 
-  Node(const double g, const double h);
+  Node(double g, double h);
   virtual ~Node() = default;  // make Node an abstract class
 
   // compare
-  virtual bool operator>(const Node& other);
-  virtual bool operator<(const Node& other);
-  virtual bool operator==(const Node& other);
+  virtual auto operator>(const Node& other) -> bool;
+  virtual auto operator<(const Node& other) -> bool;
+  virtual auto operator==(const Node& other) -> bool;
 };
 
 class Point2d
@@ -53,7 +52,7 @@ public:
    *
    * @return A new point that is the sum of the two points.
    */
-  Point2d operator+(const Point2d& other) const;
+  auto operator+(const Point2d& other) const -> Point2d;
 
   /**
    * @brief Subtract two points.
@@ -62,7 +61,7 @@ public:
    *
    * @return A new point that is the difference of the two points.
    */
-  Point2d operator-(const Point2d& other) const;
+  auto operator-(const Point2d& other) const -> Point2d;
 
 
   /**
@@ -72,7 +71,7 @@ public:
    *
    * @return True if the two points are equal, false otherwise.
    */
-  bool operator==(const Point2d& other) const;
+  auto operator==(const Point2d& other) const -> bool;
 
 
   /**
@@ -90,37 +89,37 @@ public:
    *
    * @return The output stream.
    */
-  friend std::ostream& operator<<(std::ostream& os, Point2d const& p);
+  friend auto operator<<(std::ostream& os, Point2d const& p) -> std::ostream&;
 
   /**
    * @brief Hash function for the Point2d class.
    */
   struct hash_point
   {
-    size_t operator()(const Point2d& p) const;
+    auto operator()(const Point2d& p) const -> size_t;
   };
 
 
-  operator std::string() const;
+  explicit operator std::string() const;
 };
 
-enum Direction find_direction(const Point2d& start, const Point2d& end);
-enum Direction find_direction(const int start, const int end);
+auto find_direction(const Point2d& start, const Point2d& end) -> enum Direction;
+auto find_direction(int start, int end) -> enum Direction;
 
 class TimeInterval
 {
 public:
   int t_min, t_max;
 
-  TimeInterval(const int t_min, const int t_max);
+  TimeInterval(int t_min, int t_max);
 
-  bool                 operator==(const TimeInterval& other) const;
-  TimeInterval         operator+(const int x) const;
-                       operator std::string() const;
-  friend std::ostream& operator<<(std::ostream& os, TimeInterval const& p);
+  auto        operator==(const TimeInterval& other) const -> bool;
+  auto        operator+(int x) const -> TimeInterval;
+  explicit    operator std::string() const;
+  friend auto operator<<(std::ostream& os, TimeInterval const& i) -> std::ostream&;
 };
 
-bool overlap(const TimeInterval& i1, const TimeInterval& i2);
+auto overlap(const TimeInterval& i1, const TimeInterval& i2) -> bool;
 
 class TimePoint
 {
@@ -128,9 +127,9 @@ public:
   int          location;
   TimeInterval interval;
 
-  TimePoint(const int location, const TimeInterval& interval);
+  TimePoint(int location, const TimeInterval& interval);
 
-  bool operator==(const TimePoint& other) const;
+  auto operator==(const TimePoint& other) const -> bool;
 };
 
 
@@ -143,12 +142,12 @@ public:
   std::vector<uint8_t> data;
 
   Map() = default;
-  void    print() const;
-  bool    is_in(const Point2d& point) const;
-  bool    is_in(const int loc) const;
-  uint8_t index(const Point2d& point) const;
-  uint8_t index(const int loc) const;
-  int     position_to_index(const Point2d& p) const;
+  void               print() const;
+  [[nodiscard]] auto is_in(const Point2d& point) const -> bool;
+  [[nodiscard]] auto is_in(int loc) const -> bool;
+  [[nodiscard]] auto index(const Point2d& point) const -> uint8_t;
+  [[nodiscard]] auto index(int loc) const -> uint8_t;
+  [[nodiscard]] auto position_to_index(const Point2d& p) const -> int;
 
 
   /**
@@ -158,17 +157,17 @@ public:
    *
    * @return A vector of points that are neighbors of the input point.
    */
-  std::vector<Point2d> find_neighbors(const Point2d& p) const;
+  [[nodiscard]] auto find_neighbors(const Point2d& p) const -> std::vector<Point2d>;
 
-  std::vector<int> find_neighbors(const int loc) const;
+  [[nodiscard]] auto find_neighbors(int loc) const -> std::vector<int>;
 };
 
 // define a path as a vectors of (int, int) tuples
-typedef std::vector<int>       Path;
-typedef std::vector<Point2d>   PointPath;
-typedef std::vector<TimePoint> TimePointPath;
+using Path          = std::vector<int>;
+using PointPath     = std::vector<Point2d>;
+using TimePointPath = std::vector<TimePoint>;
 
-Path timepointpath_to_path(const TimePointPath& path);
+auto timepointpath_to_path(const TimePointPath& path) -> Path;
 
 /**
  * @brief Generate a random color. To make the color palette look more visually pleasing, the random color is mixed with (mix_r, mix_g,
@@ -181,7 +180,7 @@ Path timepointpath_to_path(const TimePointPath& path);
  *
  * @return A random color.
  */
-sf::Color generate_random_color(const int mix_r, const int mix_g, const int mix_b, const double mix_ratio = 0.5);
+auto generate_random_color(int mix_r, int mix_g, int mix_b, double mix_ratio = 0.5) -> sf::Color;
 
 /**
  * @brief Get the path to the project directory, assuming the project is run from the build directory. This function is useful for loading
@@ -189,4 +188,4 @@ sf::Color generate_random_color(const int mix_r, const int mix_g, const int mix_
  *
  * @return The path to the project directory.
  */
-std::string get_base_path();
+auto get_base_path() -> std::string;

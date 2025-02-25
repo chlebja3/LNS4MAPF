@@ -17,41 +17,41 @@ public:
   int num_of_agents;
 
   // constructor
-  Instance(void) = default;
+  Instance() = default;
   Instance(const std::string& map_fname, const std::string& scene_fname, int num_of_agents = 0);
 
-  void initialize(const std::string& map_fname, const std::string& scene_fname, int num_of_agents = 0);
-  void initialize(void);
-  bool is_initialized(void) const;
+  void               initialize(const std::string& map_fname, const std::string& scene_fname, int num_of_agents = 0);
+  void               initialize();
+  [[nodiscard]] auto is_initialized() const -> bool;
 
   // function to print the map
-  void print_map(void) const;
+  void print_map() const;
 
   // function to print the agents starts and goal positions
-  void print_agents(void) const;
+  void print_agents() const;
 
   // function to obtain the map data
-  const Map& get_map_data(void) const;
+  [[nodiscard]] auto get_map_data() const -> const Map&;
 
   // functions to obtain the agent starts, goals and optimal paths
-  const std::vector<Point2d>& get_start_positions(void) const;
-  const std::vector<int>&     get_start_locations(void) const;
-  const std::vector<Point2d>& get_goal_positions(void) const;
-  const std::vector<int>&     get_goal_locations(void) const;
-  const std::vector<Path>&    get_optimal_paths(void) const;
+  [[nodiscard]] auto get_start_positions() const -> const std::vector<Point2d>&;
+  [[nodiscard]] auto get_start_locations() const -> const std::vector<int>&;
+  [[nodiscard]] auto get_goal_positions() const -> const std::vector<Point2d>&;
+  [[nodiscard]] auto get_goal_locations() const -> const std::vector<int>&;
+  [[nodiscard]] auto get_optimal_paths() const -> const std::vector<Path>&;
 
   // function to calculate the optimal paths ignoring the other agents
-  void calculate_optimal_paths(void);
-  void calculate_optimal_paths_parallel(void);
+  void calculate_optimal_paths();
+  void calculate_optimal_paths_parallel();
 
-  void   calculate_heuristics(void);
-  void   precompute_neighbors(void);
-  int    get_heuristic_manhattan(const int agent_num, const int loc) const;
-  double get_heuristic_euclidean(const int agent_num, const int loc) const;
+  void               calculate_heuristics();
+  void               precompute_neighbors();
+  [[nodiscard]] auto get_heuristic_manhattan(int agent_num, int loc) const -> int;
+  [[nodiscard]] auto get_heuristic_euclidean(int agent_num, int loc) const -> double;
 
-  Point2d   location_to_position(const int location) const;
-  int       position_to_location(const Point2d& position) const;
-  PointPath path_to_pointpath(const Path& path) const;
+  [[nodiscard]] auto location_to_position(int location) const -> Point2d;
+  [[nodiscard]] auto position_to_location(const Point2d& position) const -> int;
+  [[nodiscard]] auto path_to_pointpath(const Path& path) const -> PointPath;
 
 
 private:
@@ -60,10 +60,10 @@ private:
    *
    * @return Success of the operation
    */
-  void load_map(void);
+  void load_map();
 
   // function to load a scene
-  void load_scene(void);
+  void load_scene();
 
   bool                          initialized = false;
   std::string                   map_fname;

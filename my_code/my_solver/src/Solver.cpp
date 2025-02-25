@@ -12,7 +12,7 @@
 #include <iostream>
 #include <unordered_set>
 
-bool Solution::is_valid(const Instance& instance) const
+auto Solution::is_valid(const Instance& instance) const -> bool
 {
   // check that each agent has a path
   if (instance.num_of_agents != (int)paths.size())
@@ -47,7 +47,10 @@ bool Solution::is_valid(const Instance& instance) const
     }
 
     // remember the length of the longest path
-    if ((int)paths[i].size() > T_max) T_max = paths[i].size();
+    if ((int)paths[i].size() > T_max)
+    {
+      T_max = paths[i].size();
+    }
   }
   //  std::cout << "Max length of path: " << T_max << std::endl;
 
@@ -57,10 +60,10 @@ bool Solution::is_valid(const Instance& instance) const
     // create reservation set for each time step to check for dynamic coliisions
     std::unordered_set<int, std::hash<int>> occupied;
 
-    for (int i = 0; i < (int)paths.size(); i++)
+    for (const auto& path : paths)
     {
       int       idx          = t;
-      const int cur_path_len = (int)paths[i].size();
+      const int cur_path_len = (int)path.size();
 
       // paths that are already finished at time t
       if (t >= cur_path_len)
@@ -72,8 +75,8 @@ bool Solution::is_valid(const Instance& instance) const
       if (idx > 0)
       {
         // check if the move is valid
-        Point2d p1 = instance.location_to_position(paths[i][idx - 1]);
-        Point2d p2 = instance.location_to_position(paths[i][idx]);
+        Point2d p1 = instance.location_to_position(path[idx - 1]);
+        Point2d p2 = instance.location_to_position(path[idx]);
         if (abs(p2.x - p1.x) + abs(p2.y - p1.y) > 1)
         {
           std::cout << "Invalid move." << std::endl;
@@ -82,28 +85,28 @@ bool Solution::is_valid(const Instance& instance) const
       }
 
       // check the path does not leave the map
-      if (!instance.get_map_data().is_in(paths[i][idx]))
+      if (!instance.get_map_data().is_in(path[idx]))
       {
-        std::cout << "Path leaves the map in point " << paths[i][idx] << std::endl;
+        std::cout << "Path leaves the map in point " << path[idx] << std::endl;
         return false;
       }
 
       // check collisions with static obstacles
-      if (instance.get_map_data().index(paths[i][idx]) != 0)
+      if (instance.get_map_data().index(path[idx]) != 0)
       {
         std::cout << "Collision with static obstacle." << std::endl;
         return false;
       }
 
       // check collisions with dynamic obstacles
-      if (occupied.find(paths[i][idx]) != occupied.end())
+      if (occupied.find(path[idx]) != occupied.end())
       {
         std::cout << "Collision with dynamic obstacle." << std::endl;
         return false;
       }
 
       // add the point to the reservation set
-      occupied.insert(paths[i][idx]);
+      occupied.insert(path[idx]);
     }
   }
 
@@ -118,7 +121,10 @@ bool Solution::is_valid(const Instance& instance) const
         const int cur_path_len_j = (int)paths[j].size();
 
         // paths that are already finished at time t
-        if (t >= cur_path_len_i || t >= cur_path_len_j) continue;
+        if (t >= cur_path_len_i || t >= cur_path_len_j)
+        {
+          continue;
+        }
 
         if (paths[i][t] == paths[j][t - 1] && paths[i][t - 1] == paths[j][t])
         {
@@ -159,14 +165,14 @@ void Solution::load(const std::string& filename, const Instance& instance)
       throw std::runtime_error("Cannot find agent number in line '" + line + "'");
     }
 
-    const size_t idx2_an = line.find(":");
+    const size_t idx2_an = line.find(':');
     if (idx_an == std::string::npos)
     {
       throw std::runtime_error("Cannot find : in line '" + line + "'");
     }
 
     // get the agent number
-    int agent_num;
+    int agent_num = 0;
     try
     {
       agent_num = std::stoi(line.substr(idx_an + 6, idx2_an - idx_an - 6));
@@ -181,8 +187,7 @@ void Solution::load(const std::string& filename, const Instance& instance)
     {
       throw std::runtime_error("Unexpected agent number in line '" + line + "'");
     }
-    else
-      expected_agent_num++;
+    expected_agent_num++;
 
     // split the line
     std::vector<std::string> split_line;
@@ -192,26 +197,29 @@ void Solution::load(const std::string& filename, const Instance& instance)
     Path path;
     for (const std::string& point_str : split_line)
     {
-      if (point_str.empty()) continue;
+      if (point_str.empty())
+      {
+        continue;
+      }
       // remove the leading and trailing spaces
       std::string point_str_trimmed = boost::algorithm::trim_copy(point_str);
 
       // find the opening bracket of the point
-      size_t idx = point_str_trimmed.find("(");
+      size_t idx = point_str_trimmed.find('(');
       if (idx == std::string::npos)
       {
         throw std::runtime_error("Cannot find '(' in point '" + point_str + "'");
       }
 
       // find the closing bracket of the point
-      size_t idx2 = point_str_trimmed.find(")");
+      size_t idx2 = point_str_trimmed.find(')');
       if (idx2 == std::string::npos)
       {
         throw std::runtime_error("Cannot find ')' in point '" + point_str + "'");
       }
 
       // find ,
-      size_t idx_comma = point_str_trimmed.find(",");
+      size_t idx_comma = point_str_trimmed.find(',');
       if (idx_comma == std::string::npos)
       {
         throw std::runtime_error("Cannot find ',' in point '" + point_str + "'");

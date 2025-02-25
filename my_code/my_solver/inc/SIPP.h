@@ -27,24 +27,24 @@ public:
 
 
   // constructors
-  SIPPNode(const int location, const TimeInterval& interval, const double g, const double h, SIPPNode const* const parent);
+  SIPPNode(int location, const TimeInterval& interval, double g, double h, SIPPNode const* parent);
 
-  SIPPNode(const TimePoint& time_point, const double g, const double h, SIPPNode const* const parent);
+  SIPPNode(const TimePoint& time_point, double g, double h, SIPPNode const* parent);
 
-  bool operator==(const SIPPNode& other) const;
+  auto operator==(const SIPPNode& other) const -> bool;
 
   struct compare_node_ptrs
   {
-    bool operator()(SIPPNode const* n1, SIPPNode const* n2) const;
+    auto operator()(SIPPNode const* n1, SIPPNode const* n2) const -> bool;
   };
 };
 
 class NodePool
 {
 public:
-  NodePool(const int size);
-  SIPPNode* add_node(SIPPNode node);
-  void      merge_extra(void);
+  explicit NodePool(int size);
+  auto add_node(SIPPNode node) -> SIPPNode*;
+  void merge_extra();
 
 private:
   int                   end = 0;
@@ -53,14 +53,14 @@ private:
 };
 
 
-typedef std::priority_queue<SIPPNode const*, std::vector<SIPPNode const*>, SIPPNode::compare_node_ptrs> PriorityQueue;
+using PriorityQueue = std::priority_queue<const SIPPNode*, std::vector<const SIPPNode*>, SIPPNode::compare_node_ptrs>;
 // typedef boost::heap::priority_queue<SIPPNode const*, boost::heap::compare<SIPPNode::compare_node_ptrs>> PriorityQueue;
 // typedef boost::heap::pairing_heap<SIPPNode const*, boost::heap::compare<SIPPNode::compare_node_ptrs>> PriorityQueue;
 // typedef std::unordered_set<TimePoint, TimePoint::hash_time_point> UnorderedSet;
 // typedef std::unordered_map<Point2d, int, Point2d::hash_point>     UnorderedMap;
 
-TimeInterval  neighbor_time_interval(const TimeInterval& i);
-TimePointPath extract_path(SIPPNode const* const final_node);
+auto neighbor_time_interval(const TimeInterval& i) -> TimeInterval;
+auto extract_path(SIPPNode const* final_node) -> TimePointPath;
 
 }  // namespace sipp
 
@@ -78,16 +78,16 @@ public:
   bool generate_iter_info = false;
 
   // constructor
-  SIPP(const Instance& instance, const bool generate_iter_info);
+  SIPP(const Instance& instance, bool generate_iter_info);
 
   // destructor
   ~SIPP() = default;
 
-  TimePointPath plan(const int agent_num);
+  auto plan(int agent_num) -> TimePointPath;
 
 private:
-  void            initialize_iter_info(void);
-  void            update_iter_info(const sipp::SIPPNode& expanded, const bool last_iter);
+  void            initialize_iter_info();
+  void            update_iter_info(const sipp::SIPPNode& expanded, bool last_iter);
   const Instance& instance;
   sipp::NodePool  node_pool;
 };

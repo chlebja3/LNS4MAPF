@@ -39,21 +39,25 @@ void Instance::initialize()
   initialized = true;
 }
 
-bool Instance::is_initialized(void) const
+auto Instance::is_initialized() const -> bool
 {
   return initialized;
 }
 
-void Instance::load_map(void)
+void Instance::load_map()
 {
   // reset the map data
   Map new_map;
   int num_of_cols, num_of_rows = 0;
+
   // open the map file
   std::ifstream map_file(map_fname.c_str());
 
   // check if the open was successful
-  if (!map_file.is_open()) throw std::runtime_error("Cannot open file '" + map_fname + "'");
+  if (!map_file.is_open())
+  {
+    throw std::runtime_error("Cannot open file '" + map_fname + "'");
+  }
 
   // read the file line by line
   std::string line;
@@ -64,10 +68,15 @@ void Instance::load_map(void)
     boost::split(split_line, line, boost::is_any_of(" "));
 
     // filter out invalid lines
-    if (split_line.size() == 0) continue;
+    if (split_line.empty())
+    {
+      continue;
+    }
 
     if (boost::iequals(split_line[0], "type"))
-      type = split_line[1];                            // read type
+    {
+      type = split_line[1];  // read type
+    }
     else if (boost::iequals(split_line[0], "height"))  // read height
     {
       try
@@ -94,16 +103,16 @@ void Instance::load_map(void)
     {
       while (getline(map_file, line))
       {
-        for (int i = 0; i < (int)line.size(); i++)
+        for (char i : line)
         {
           // treat . as free cell
-          if (line[i] == '.')
+          if (i == '.')
           {
             new_map.data.push_back(0);
             new_map.free_cells++;
           }
           // treat @, T as obstacle
-          else if (line[i] == '@' || line[i] == 'T')
+          else if (i == '@' || i == 'T')
           {
             new_map.data.push_back(1);
           }
@@ -127,8 +136,14 @@ void Instance::load_map(void)
     }
   }
 
-  if (num_of_cols <= 0) throw std::runtime_error("Invalid number of columns.");
-  if (num_of_rows <= 0) throw std::runtime_error("Invalid number of rows.");
+  if (num_of_cols <= 0)
+  {
+    throw std::runtime_error("Invalid number of columns.");
+  }
+  if (num_of_rows <= 0)
+  {
+    throw std::runtime_error("Invalid number of rows.");
+  }
 
   // close the map file
   map_file.close();
@@ -140,18 +155,24 @@ void Instance::load_map(void)
   map_data = std::move(new_map);
 }
 
-void Instance::load_scene(void)
+void Instance::load_scene()
 {
   // open the scene file
   std::ifstream scene_file(scene_fname.c_str());
 
   // check if the open was successful
-  if (!scene_file.is_open()) throw std::runtime_error("Unable to open scene file.");
+  if (!scene_file.is_open())
+  {
+    throw std::runtime_error("Unable to open scene file.");
+  }
 
   std::string line;
 
   // read the version
-  if (!getline(scene_file, line) || line != "version 1") throw std::invalid_argument("Invalid version of scene file.");
+  if (!getline(scene_file, line) || line != "version 1")
+  {
+    throw std::invalid_argument("Invalid version of scene file.");
+  }
 
   int loaded_agents = 0;
   start_positions.reserve(num_of_agents);
@@ -203,7 +224,7 @@ void Instance::load_scene(void)
   }
 }
 
-void Instance::print_agents(void) const
+void Instance::print_agents() const
 {
   for (int i = 0; i < (int)start_positions.size(); i++)
   {
@@ -212,37 +233,37 @@ void Instance::print_agents(void) const
   }
 }
 
-void Instance::print_map(void) const
+void Instance::print_map() const
 {
   map_data.print();
 }
 
-const Map& Instance::get_map_data(void) const
+auto Instance::get_map_data() const -> const Map&
 {
   return map_data;
 }
 
-const std::vector<Point2d>& Instance::get_start_positions(void) const
+auto Instance::get_start_positions() const -> const std::vector<Point2d>&
 {
   return start_positions;
 }
 
-const std::vector<int>& Instance::get_start_locations(void) const
+auto Instance::get_start_locations() const -> const std::vector<int>&
 {
   return start_locations;
 }
 
-const std::vector<Point2d>& Instance::get_goal_positions(void) const
+auto Instance::get_goal_positions() const -> const std::vector<Point2d>&
 {
   return goal_positions;
 }
 
-const std::vector<int>& Instance::get_goal_locations(void) const
+auto Instance::get_goal_locations() const -> const std::vector<int>&
 {
   return goal_locations;
 }
 
-void Instance::calculate_optimal_paths(void)
+void Instance::calculate_optimal_paths()
 {
   optimal_paths.clear();
   optimal_paths.reserve(num_of_agents);
@@ -256,7 +277,7 @@ void Instance::calculate_optimal_paths(void)
 }
 
 // old function, do not use!
-void Instance::calculate_optimal_paths_parallel(void)
+void Instance::calculate_optimal_paths_parallel()
 {
   optimal_paths.clear();
   optimal_paths.reserve(num_of_agents);
@@ -266,6 +287,7 @@ void Instance::calculate_optimal_paths_parallel(void)
   std::vector<std::future<Path>> futures;
 
   // calculate asynchronously the paths
+  futures.reserve(num_of_agents);
   for (int i = 0; i < num_of_agents; i++)
   {
     futures.push_back(std::async(std::launch::async, [this, i]() { return ASTAR::find_path(i, *this); }));
@@ -278,13 +300,13 @@ void Instance::calculate_optimal_paths_parallel(void)
   }
 }
 
-const std::vector<Path>& Instance::get_optimal_paths(void) const
+auto Instance::get_optimal_paths() const -> const std::vector<Path>&
 {
   return optimal_paths;
 }
 
 
-void Instance::calculate_heuristics(void)
+void Instance::calculate_heuristics()
 {
 
   // check map validity
@@ -331,23 +353,26 @@ void Instance::precompute_neighbors()
   // iterate over all locations
   for (int i = 0; i < map_data.width * map_data.height; i++)
   {
-    if (map_data.index(i) != 0) continue;
+    if (map_data.index(i) != 0)
+    {
+      continue;
+    }
     neighbors[i] = map_data.find_neighbors(i);
   }
 }
 
 
-Point2d Instance::location_to_position(const int location) const
+auto Instance::location_to_position(const int location) const -> Point2d
 {
   return Point2d(location % map_data.width, (int)(location / map_data.width));
 }
 
-int Instance::position_to_location(const Point2d& position) const
+auto Instance::position_to_location(const Point2d& position) const -> int
 {
   return position.y * map_data.width + position.x;
 }
 
-int Instance::get_heuristic_manhattan(const int agent_num, const int loc) const
+auto Instance::get_heuristic_manhattan(const int agent_num, const int loc) const -> int
 {
 
   assertm(agent_num >= 0 && agent_num < (int)heuristic_manhattan.size(), "Agent number out of range of the heuristic vector.");
@@ -355,17 +380,17 @@ int Instance::get_heuristic_manhattan(const int agent_num, const int loc) const
   return heuristic_manhattan[agent_num][loc];
 };
 
-double Instance::get_heuristic_euclidean(const int agent_num, const int loc) const
+auto Instance::get_heuristic_euclidean(const int agent_num, const int loc) const -> double
 {
   assertm(agent_num >= 0 && agent_num < (int)heuristic_euclidean.size(), "Agent number out of range of the heuristic vector.");
   assertm(map_data.is_in(loc), "Trying to index a point that is not in the map.");
   return heuristic_euclidean[agent_num][loc];
 };
 
-PointPath Instance::path_to_pointpath(const Path& path) const
+auto Instance::path_to_pointpath(const Path& path) const -> PointPath
 {
   PointPath ret;
-  for (auto& loc : path)
+  for (const auto& loc : path)
   {
     ret.push_back(location_to_position(loc));
   }

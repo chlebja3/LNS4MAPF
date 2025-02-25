@@ -27,43 +27,45 @@ public:
   AstarNode(const int location, const double g, const double h, AstarNode const* const parent)
       : Node(g, h), location(location), parent(parent){};
 
-  bool operator==(const AstarNode& other) const
+  auto operator==(const AstarNode& other) const -> bool
   {
     return g == other.g && h == other.h && location == other.location;
   }
 
   struct compare_node_ptrs
   {
-    bool operator()(AstarNode const* n1, AstarNode const* n2) const
+    auto operator()(AstarNode const* n1, AstarNode const* n2) const -> bool
     {
       // compare f
       if (n1->f < n2->f)
-        return false;
-      else if (n1->f > n2->f)
-        return true;
-      else  // f1 == f2
       {
-        if (n1->h == n2->h)        // tie
-          return rand() % 2 == 1;  // choose randomly
-        else
-          return n1->h > n2->h;  // if f is the same, prefer nodes closer to the goal
+        return false;
       }
+      if (n1->f > n2->f)
+      {
+        return true;
+      }  // f1 == f2
+      if (n1->h == n2->h)
+      {                          // tie
+        return rand() % 2 == 1;  // choose randomly
+      }
+      return n1->h > n2->h;  // if f is the same, prefer nodes closer to the goal
     }
   };
 };
 
 namespace ASTAR
 {
-typedef std::priority_queue<AstarNode const*, std::vector<AstarNode const*>, AstarNode::compare_node_ptrs> PriorityQueue;
+using PriorityQueue = std::priority_queue<const AstarNode*, std::vector<const AstarNode*>, AstarNode::compare_node_ptrs>;
 
-Path extract_path(AstarNode const* const final_node);
+auto extract_path(AstarNode const* const final_node) -> Path;
 
 class NodePool
 {
 public:
-  NodePool(const int size);
-  AstarNode* add_node(AstarNode node);
-  void       merge_extra(void);
+  explicit NodePool(int size);
+  auto add_node(AstarNode node) -> AstarNode*;
+  void merge_extra();
 
 private:
   int                    end = 0;
@@ -79,7 +81,7 @@ ASTAR::NodePool::NodePool(const int size)
   end = 0;
 }
 
-AstarNode* ASTAR::NodePool::add_node(AstarNode node)
+auto ASTAR::NodePool::add_node(AstarNode node) -> AstarNode*
 {
   // check, whether there is still space in the node pool
   if (end < (int)pool.size())
@@ -95,7 +97,7 @@ AstarNode* ASTAR::NodePool::add_node(AstarNode node)
 }
 
 
-void ASTAR::NodePool::merge_extra(void)
+void ASTAR::NodePool::merge_extra()
 {
   if (extra.size() > NODE_POOL_MERGE_SIZE)
   {
@@ -109,7 +111,7 @@ void ASTAR::NodePool::merge_extra(void)
 }
 
 
-Path ASTAR::find_path(const int agent_num, const Instance& instance)
+auto ASTAR::find_path(const int agent_num, const Instance& instance) -> Path
 {
   assertm(agent_num < (int)instance.get_start_locations().size(), "Agent number out of range.");
   const Map& map_data = instance.get_map_data();
@@ -149,11 +151,14 @@ Path ASTAR::find_path(const int agent_num, const Instance& instance)
   while (!open_list.empty())
   {
     // pop the node to be processed
-    AstarNode const* const current = std::move(open_list.top());
+    AstarNode const* const current = open_list.top();
     open_list.pop();
 
     // check whether node is in known set
-    if (known[current->location]) continue;
+    if (known[current->location])
+    {
+      continue;
+    }
 
     // check whether goal is reached
     if (current->location == goal)
@@ -175,7 +180,10 @@ Path ASTAR::find_path(const int agent_num, const Instance& instance)
     for (auto& neighbor : neighbors)
     {
       // check whether neighbor already known
-      if (known[neighbor]) continue;
+      if (known[neighbor])
+      {
+        continue;
+      }
 
       // calculate heuristic
       // const double h = instance.get_heuristic_euclidean(agent_num, neighbor);
@@ -192,7 +200,7 @@ Path ASTAR::find_path(const int agent_num, const Instance& instance)
   return {};
 }
 
-Path ASTAR::extract_path(AstarNode const* const final_node)
+auto ASTAR::extract_path(AstarNode const* const final_node) -> Path
 {
   Path             path;
   AstarNode const* curr = final_node;

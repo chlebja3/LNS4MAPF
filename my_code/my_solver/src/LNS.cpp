@@ -32,7 +32,7 @@ void LNS::find_initial_solution()
   solution = PrioritizedPlanning();
 }
 
-Solution LNS::PrioritizedPlanning()
+auto LNS::PrioritizedPlanning() -> Solution
 {
   Solution sol;
   sol.paths.resize(instance.num_of_agents, Path());
@@ -85,7 +85,7 @@ Solution LNS::PrioritizedPlanning()
   return sol;
 }
 
-int LNS::get_num_of_generated_nodes(void) const
+auto LNS::get_num_of_generated_nodes() const -> int
 {
   return planner->generated_all_iter;
 }

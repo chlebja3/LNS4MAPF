@@ -8,15 +8,15 @@
 
 #include "SIPP.h"
 
-#include <limits.h>
-#include <math.h>
-
+#include <climits>
+#include <cmath>
 #include <memory>
 
 #include "utils.h"
 
 #define MOVE_TIME 1               // time to move to the next cell
 #define NODE_POOL_MERGE_SIZE 500  // merge the extra list with the node pool vector only of there are more elements in the list
+#define INITIAL_NODE_POOL_SIZE 2  // the multiple of map size to use as initial node pool size
 
 using namespace sipp;
 
@@ -24,7 +24,7 @@ SIPP::SIPP(const Instance& instance, const bool generate_iter_info)
     : constraint_table(ConstraintTable(instance)),
       generate_iter_info(generate_iter_info),
       instance(instance),
-      node_pool(NodePool(5 * instance.get_map_data().width * instance.get_map_data().height)){};
+      node_pool(NodePool(INITIAL_NODE_POOL_SIZE * instance.get_map_data().width * instance.get_map_data().height)){};
 
 SIPPNode::SIPPNode(const int location, const TimeInterval& interval, const double g, const double h, SIPPNode const* const parent)
     : Node(g, h), time_point(location, interval), parent(parent){};
@@ -33,25 +33,27 @@ SIPPNode::SIPPNode(const TimePoint& time_point, const double g, const double h, 
     : Node(g, h), time_point(time_point), parent(parent){};
 
 
-bool SIPPNode::operator==(const SIPPNode& other) const
+auto SIPPNode::operator==(const SIPPNode& other) const -> bool
 {
   return g == other.g && h == other.h && time_point == other.time_point;
 }
 
-bool SIPPNode::compare_node_ptrs::operator()(SIPPNode const* n1, SIPPNode const* n2) const
+auto SIPPNode::compare_node_ptrs::operator()(SIPPNode const* n1, SIPPNode const* n2) const -> bool
 {
   // compare f
   if (n1->f < n2->f)
-    return false;
-  else if (n1->f > n2->f)
-    return true;
-  else  // f1 == f2
   {
-    if (n1->h == n2->h)        // tie
-      return rand() % 2 == 1;  // choose randomly
-    else
-      return n1->h > n2->h;  // if f is the same, prefer nodes closer to the goal
+    return false;
   }
+  if (n1->f > n2->f)
+  {
+    return true;
+  }  // f1 == f2
+  if (n1->h == n2->h)
+  {                          // tie
+    return rand() % 2 == 1;  // choose randomly
+  }
+  return n1->h > n2->h;  // if f is the same, prefer nodes closer to the goal
 }
 
 
@@ -62,7 +64,7 @@ NodePool::NodePool(const int size)
   end = 0;
 }
 
-SIPPNode* NodePool::add_node(SIPPNode node)
+auto NodePool::add_node(SIPPNode node) -> SIPPNode*
 {
   // check, whether there is still space in the node pool
   if (end < (int)pool.size())
@@ -78,7 +80,7 @@ SIPPNode* NodePool::add_node(SIPPNode node)
 }
 
 
-void NodePool::merge_extra(void)
+void NodePool::merge_extra()
 {
   if (extra.size() > NODE_POOL_MERGE_SIZE)
   {
@@ -91,9 +93,12 @@ void NodePool::merge_extra(void)
   end = 0;
 }
 
-TimePointPath SIPP::plan(const int agent_num)
+auto SIPP::plan(const int agent_num) -> TimePointPath
 {
-  if (generate_iter_info) initialize_iter_info();
+  if (generate_iter_info)
+  {
+    initialize_iter_info();
+  }
 
   const Map& map_data = instance.get_map_data();
   const int  start    = instance.get_start_locations()[agent_num];
@@ -125,7 +130,10 @@ TimePointPath SIPP::plan(const int agent_num)
     // create the start node
     open_list.push(node_pool.add_node(SIPPNode(start, time_interval_start, 0, h, nullptr)));
 
-    if (generate_iter_info) generated_this_iter++;
+    if (generate_iter_info)
+    {
+      generated_this_iter++;
+    }
   }
 
 
@@ -136,14 +144,20 @@ TimePointPath SIPP::plan(const int agent_num)
   // main loop
   while (!open_list.empty())
   {
-    if (generate_iter_info) iteration_num++;
+    if (generate_iter_info)
+    {
+      iteration_num++;
+    }
 
     // pop the node to be processed
-    SIPPNode const* const current = std::move(open_list.top());
+    SIPPNode const* const current = open_list.top();
     open_list.pop();
 
     // check whether node was expanded already (same position and tmax higher then current tmin)
-    if (current->time_point.interval.t_min <= known[current->time_point.location]) continue;
+    if (current->time_point.interval.t_min <= known[current->time_point.location])
+    {
+      continue;
+    }
 
     // check whether goal location is reached and that there will be no more dynamic constraints at the goal location
     if (current->time_point.location == goal && current->time_point.interval.t_max == INT_MAX)
@@ -155,7 +169,10 @@ TimePointPath SIPP::plan(const int agent_num)
       node_pool.merge_extra();
 
       // generate last iteration info
-      if (generate_iter_info) update_iter_info(*current, true);
+      if (generate_iter_info)
+      {
+        update_iter_info(*current, true);
+      }
 
       return ret;
     }
@@ -181,14 +198,23 @@ TimePointPath SIPP::plan(const int agent_num)
         // std::cout << "interval:" << interval << std::endl;
 
         // skip intervals that start later then the maximum time to reach the goal
-        if (interval.t_min > max_time) continue;
+        if (interval.t_min > max_time)
+        {
+          continue;
+        }
 
         // if the earliest reachable time of the neighbor is greater than maximum time of the current node + travel time, then the neighbor
         // is not reachable without collision
-        if (current->time_point.interval.t_max != INT_MAX && interval.t_min > current->time_point.interval.t_max + 1) continue;
+        if (current->time_point.interval.t_max != INT_MAX && interval.t_min > current->time_point.interval.t_max + 1)
+        {
+          continue;
+        }
 
         // check whether known
-        if (interval.t_min <= known[neighbor]) continue;
+        if (interval.t_min <= known[neighbor])
+        {
+          continue;
+        }
 
         TimePoint neighbor_time_point(neighbor, interval);
         assertm(neighbor_time_point.interval.t_min > current->time_point.interval.t_min, "Invalid interval.");
@@ -196,12 +222,18 @@ TimePointPath SIPP::plan(const int agent_num)
         // add to the open list
         open_list.push(node_pool.add_node(SIPPNode(neighbor_time_point, neighbor_time_point.interval.t_min, h, current)));
 
-        if (generate_iter_info) generated_this_iter++;
+        if (generate_iter_info)
+        {
+          generated_this_iter++;
+        }
       }
     }
 
     // save the iteration info
-    if (generate_iter_info) update_iter_info(*current, false);
+    if (generate_iter_info)
+    {
+      update_iter_info(*current, false);
+    }
   }
   // reset the node pool
   node_pool.merge_extra();
@@ -209,7 +241,7 @@ TimePointPath SIPP::plan(const int agent_num)
   return TimePointPath();
 }
 
-void SIPP::initialize_iter_info(void)
+void SIPP::initialize_iter_info()
 {
   generated_this_iter = 0;
   expanded_this_iter  = 0;
@@ -229,7 +261,7 @@ void SIPP::update_iter_info(const sipp::SIPPNode& expanded, const bool last_iter
   }
 }
 
-TimePointPath sipp::extract_path(SIPPNode const* const final_node)
+auto sipp::extract_path(SIPPNode const* const final_node) -> TimePointPath
 {
   TimePointPath   path;
   SIPPNode const* curr = final_node;
@@ -252,12 +284,16 @@ TimePointPath sipp::extract_path(SIPPNode const* const final_node)
   return path;
 }
 
-TimeInterval sipp::neighbor_time_interval(const TimeInterval& i)
+auto sipp::neighbor_time_interval(const TimeInterval& i) -> TimeInterval
 {
   TimeInterval next_ti = i;
   if (next_ti.t_max == INT_MAX)
+  {
     next_ti.t_min += MOVE_TIME;  // increase only t_min, otherwise overflow would happen
+  }
   else
+  {
     next_ti = next_ti + MOVE_TIME;  // increase both t_min and t_max
+  }
   return next_ti;
 }

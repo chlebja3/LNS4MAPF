@@ -29,7 +29,7 @@ void SharedData::update_paths(const std::vector<Path>& new_paths, std::vector<SI
   are_new_paths.store(true, std::memory_order_release);
 }
 
-std::pair<std::vector<Path>, std::vector<SIPPInfo>> SharedData::consume_paths(void)
+auto SharedData::consume_paths() -> std::pair<std::vector<Path>, std::vector<SIPPInfo>>
 {
   assertm(are_new_paths, "Trying to consume paths when there are no paths.");
   // lock  the mutex

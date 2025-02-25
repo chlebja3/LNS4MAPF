@@ -35,6 +35,7 @@
 #define MENU_BAR_SIZE 40
 #define ICON_SIZE 20.0f
 #define FRAME_RATE 60
+#define DEFAULT_ANTIALIASING_LEVEL 8.0F
 
 Visualizer::Visualizer(const Instance& instance, SharedData& shared_data)
     : instance(instance),
@@ -105,7 +106,7 @@ void Visualizer::run()
 
   // turn on antialiasing
   sf::ContextSettings settings;
-  settings.antialiasingLevel = 8.0;
+  settings.antialiasingLevel = DEFAULT_ANTIALIASING_LEVEL;
 
   // create the sfml window
   sf::RenderWindow window(sf::VideoMode(screen_width, screen_height), "MAPF solver", sf::Style::Default, settings);
@@ -114,7 +115,10 @@ void Visualizer::run()
   window.setFramerateLimit(FRAME_RATE);
 
   // check whether the window was created
-  if (!ImGui::SFML::Init(window)) throw std::runtime_error("Unable to initialize ImGUI.");
+  if (!ImGui::SFML::Init(window))
+  {
+    throw std::runtime_error("Unable to initialize ImGUI.");
+  }
 
   // Activate the window for OpenGL rendering
   window.setActive();
@@ -219,7 +223,10 @@ void Visualizer::run()
   }
 
   // close the window
-  if (window.isOpen()) window.close();
+  if (window.isOpen())
+  {
+    window.close();
+  }
   ImGui::SFML::Shutdown();
   std::cout << "Visualizer thread ended" << std::endl;
 }
@@ -363,11 +370,14 @@ void Visualizer::update_cell_rectangles_active(int time)
     const Point2d cur_pos                        = instance.location_to_position(sipp_info[selected_agent][i].cur_expanded.location);
     cell_rectangles_active[cur_pos.y][cur_pos.x] = true;
     // draw only until time
-    if (i == time) break;
+    if (i == time)
+    {
+      break;
+    }
   }
 }
 
-void Visualizer::create_cell_rectangles(void)
+void Visualizer::create_cell_rectangles()
 {
   // get the map info
   const Map& map_data = instance.get_map_data();
@@ -391,7 +401,7 @@ void Visualizer::create_cell_rectangles(void)
   for (int y = 0; y < height; y++)
   {
     // initialize the row of rectangles
-    cell_rectangles_active[y].resize(width, 0);
+    cell_rectangles_active[y].resize(width, false);
     cell_rectangles[y].resize(width, rec);
 
     for (int x = 0; x < width; x++)
@@ -488,40 +498,38 @@ void Visualizer::update_path(const int agent_num, const Path& path)
         segment_end++;
         continue;
       }
-      else
-      {
-        // find the rectangle that represents the segment
-        Point2d segment_start_pt = instance.location_to_position(*segment_start);
-        Point2d segment_end_pt   = instance.location_to_position(*segment_end);
 
-        int min_x, min_y, max_x, max_y;
-        min_x = std::min(segment_start_pt.x, segment_end_pt.x);
-        min_y = std::min(segment_start_pt.y, segment_end_pt.y);
-        max_x = std::max(segment_start_pt.x, segment_end_pt.x);
-        max_y = std::max(segment_start_pt.y, segment_end_pt.y);
-        assertm(max_x - min_x > 0 != max_y - min_y > 0, "Segment must be either horizontal or vertical.");
+      // find the rectangle that represents the segment
+      Point2d segment_start_pt = instance.location_to_position(*segment_start);
+      Point2d segment_end_pt   = instance.location_to_position(*segment_end);
 
-        // calculate the corners of the rectangle
-        sf::Vector2f left_upper  = sf::Vector2f(CELL_SIZE * (min_x + 0.5 - (double)1 / (2 * LINE_WIDTH)),
-                                               CELL_SIZE * (min_y + 0.5 - (double)1 / (2 * LINE_WIDTH)));
-        sf::Vector2f right_upper = sf::Vector2f(CELL_SIZE * (max_x + 0.5 + (double)1 / (2 * LINE_WIDTH)),
-                                                CELL_SIZE * (min_y + 0.5 - (double)1 / (2 * LINE_WIDTH)));
-        sf::Vector2f right_lower = sf::Vector2f(CELL_SIZE * (max_x + 0.5 + (double)1 / (2 * LINE_WIDTH)),
-                                                CELL_SIZE * (max_y + 0.5 + (double)1 / (2 * LINE_WIDTH)));
-        sf::Vector2f left_lower  = sf::Vector2f(CELL_SIZE * (min_x + 0.5 - (double)1 / (2 * LINE_WIDTH)),
-                                               CELL_SIZE * (max_y + 0.5 + (double)1 / (2 * LINE_WIDTH)));
+      int min_x, min_y, max_x, max_y;
+      min_x = std::min(segment_start_pt.x, segment_end_pt.x);
+      min_y = std::min(segment_start_pt.y, segment_end_pt.y);
+      max_x = std::max(segment_start_pt.x, segment_end_pt.x);
+      max_y = std::max(segment_start_pt.y, segment_end_pt.y);
+      assertm(max_x - min_x > 0 != max_y - min_y > 0, "Segment must be either horizontal or vertical.");
 
-        // add the segment into the path visualization
-        path_vis.append(sf::Vertex(left_upper, color));
-        path_vis.append(sf::Vertex(right_upper, color));
-        path_vis.append(sf::Vertex(right_lower, color));
-        path_vis.append(sf::Vertex(left_lower, color));
+      // calculate the corners of the rectangle
+      sf::Vector2f left_upper =
+          sf::Vector2f(CELL_SIZE * (min_x + 0.5 - (double)1 / (2 * LINE_WIDTH)), CELL_SIZE * (min_y + 0.5 - (double)1 / (2 * LINE_WIDTH)));
+      sf::Vector2f right_upper =
+          sf::Vector2f(CELL_SIZE * (max_x + 0.5 + (double)1 / (2 * LINE_WIDTH)), CELL_SIZE * (min_y + 0.5 - (double)1 / (2 * LINE_WIDTH)));
+      sf::Vector2f right_lower =
+          sf::Vector2f(CELL_SIZE * (max_x + 0.5 + (double)1 / (2 * LINE_WIDTH)), CELL_SIZE * (max_y + 0.5 + (double)1 / (2 * LINE_WIDTH)));
+      sf::Vector2f left_lower =
+          sf::Vector2f(CELL_SIZE * (min_x + 0.5 - (double)1 / (2 * LINE_WIDTH)), CELL_SIZE * (max_y + 0.5 + (double)1 / (2 * LINE_WIDTH)));
 
-        // start a new segment
-        segment_start = segment_end;
-        segment_end++;
-        dir = find_direction(*segment_start, *segment_end);
-      }
+      // add the segment into the path visualization
+      path_vis.append(sf::Vertex(left_upper, color));
+      path_vis.append(sf::Vertex(right_upper, color));
+      path_vis.append(sf::Vertex(right_lower, color));
+      path_vis.append(sf::Vertex(left_lower, color));
+
+      // start a new segment
+      segment_start = segment_end;
+      segment_end++;
+      dir = find_direction(*segment_start, *segment_end);
     }
   }
   assertm(agent_num < (int)agents_paths_vis.size(), "Agent_num must be bigger than the size of the paths visualization vector.");
@@ -542,7 +550,10 @@ void Visualizer::draw_paths(sf::RenderWindow& window)
 {
   for (auto& it : agents_paths_vis)
   {
-    if (it.getVertexCount() == 0) continue;
+    if (it.getVertexCount() == 0)
+    {
+      continue;
+    }
     window.draw(it);
   }
 }
@@ -562,9 +573,9 @@ void Visualizer::create_docking_space(void)
                                        ImGuiWindowFlags_NoNavFocus | ImGuiWindowFlags_NoBackground;
 
   // set the style
-  ImGui::PushStyleVar(ImGuiStyleVar_WindowRounding, 0.0f);
-  ImGui::PushStyleVar(ImGuiStyleVar_WindowBorderSize, 0.0f);
-  ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(0.0f, 0.0f));
+  ImGui::PushStyleVar(ImGuiStyleVar_WindowRounding, 0.0F);
+  ImGui::PushStyleVar(ImGuiStyleVar_WindowBorderSize, 0.0F);
+  ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(0.0F, 0.0F));
 
   // create the dockspace
   ImGui::Begin("DockSpace Window", nullptr, host_window_flags);
@@ -579,7 +590,7 @@ void Visualizer::create_docking_space(void)
 
   // Create the dockspace
   ImGuiID dockspace_id = ImGui::GetID("MyDockSpace");
-  ImGui::DockSpace(dockspace_id, ImVec2(0.0f, 0.0f), ImGuiDockNodeFlags_PassthruCentralNode);
+  ImGui::DockSpace(dockspace_id, ImVec2(0.0F, 0.0F), ImGuiDockNodeFlags_PassthruCentralNode);
   static bool initialized = false;
   if (!initialized)  // initialize the dockspace only once
   {
@@ -617,14 +628,14 @@ void Visualizer::create_docking_space(void)
   ImGui::End();
 }
 
-void Visualizer::load_fonts(void)
+void Visualizer::load_fonts()
 {
   // Clear old fonts
   ImGuiIO& io = ImGui::GetIO();
   io.Fonts->Clear();
 
   // load the default font
-  io.Fonts->AddFontFromFileTTF((get_base_path() + "/fonts/Cousine-Regular.ttf").c_str(), 20.0f);
+  io.Fonts->AddFontFromFileTTF((get_base_path() + "/fonts/Cousine-Regular.ttf").c_str(), 20.0F);
   // io.Fonts->AddFontFromFileTTF((get_base_path() + "/fonts/DroidSans.ttf").c_str(), 20.0f);
 
   // check, whether the load was successful
@@ -643,12 +654,15 @@ void Visualizer::load_fonts(void)
   config.GlyphMinAdvanceX = ICON_SIZE;  // make the icon monospaced
 
   // if (!io.Fonts->AddFontFromFileTTF((get_base_path() + "/fonts/forkawesome-webfont.ttf").c_str(), 13.0f, &config, icons_ranges))
-  if (!io.Fonts->AddFontFromFileTTF((get_base_path() + "/fonts/fa-solid-900.ttf").c_str(), ICON_SIZE, &config, icons_ranges))
+  if (io.Fonts->AddFontFromFileTTF((get_base_path() + "/fonts/fa-solid-900.ttf").c_str(), ICON_SIZE, &config, icons_ranges) == nullptr)
   {
     std::cout << "WARNING: Unable to load icons." << std::endl;
   };
 
-  if (!ImGui::SFML::UpdateFontTexture()) std::cout << "WARNING: Could not update the icon font. " << std::endl;
+  if (!ImGui::SFML::UpdateFontTexture())
+  {
+    std::cout << "WARNING: Could not update the icon font. " << std::endl;
+  }
 }
 
 void Visualizer::adjust_sfml_part_viewport(sf::RenderWindow& window, sf::View& view, const float left_panel_size,
@@ -684,8 +698,8 @@ void Visualizer::adjust_sfml_part_viewport(sf::RenderWindow& window, sf::View& v
   }
 
   // calculate the viewport size relative to the window size
-  const float viewport_width_rel  = (float)(viewport_width / sfml_part_width);
-  const float viewport_height_rel = (float)(viewport_height / sfml_part_height);
+  const auto  viewport_width_rel  = (float)(viewport_width / sfml_part_width);
+  const auto  viewport_height_rel = (float)(viewport_height / sfml_part_height);
   const float offset_x            = (1 - viewport_width_rel) / 2;
   const float offset_y            = (1 - viewport_height_rel) / 2;
   view.setViewport(sf::FloatRect({left_panel_size + offset_x, offset_y},
@@ -695,7 +709,7 @@ void Visualizer::adjust_sfml_part_viewport(sf::RenderWindow& window, sf::View& v
 void Visualizer::process_events(sf::RenderWindow& window, sf::View& view)
 {
   // poll all events from the window
-  sf::Event event;
+  sf::Event event{};
   while (window.pollEvent(event))
   {
     ImGui::SFML::ProcessEvent(window, event);  // Send event to ImGui
@@ -791,7 +805,7 @@ void Visualizer::process_events(sf::RenderWindow& window, sf::View& view)
   }
 }
 
-void Visualizer::create_left_panel(void)
+void Visualizer::create_left_panel()
 {
   ImGui::Begin("Left Panel", nullptr, ImGuiWindowFlags_NoResize);
   // agent info
@@ -806,7 +820,7 @@ void Visualizer::create_left_panel(void)
     ImGui::Text("Sipp visualization:");
 
     // Set button background color to transparent
-    ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(1.0f, 1.0f, 1.0f, 0.0f));
+    ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(1.0F, 1.0F, 1.0F, 0.0F));
 
     // calculate the width of the slider label
     const float time_text_width = ImGui::CalcTextSize("Time: ").x + ImGui::GetStyle().ItemSpacing.x;
@@ -832,8 +846,11 @@ void Visualizer::create_left_panel(void)
                         (num_buttons - 1) * ImGui::GetStyle().ItemSpacing.x;
 
     // center the playback buttons
-    float start_x = time_text_width + (available_width - total_width) * 0.5f;
-    if (start_x + total_width > panel_size) start_x = panel_size - total_width;
+    float start_x = time_text_width + (available_width - total_width) * 0.5F;
+    if (start_x + total_width > panel_size)
+    {
+      start_x = panel_size - total_width;
+    }
     ImGui::SetCursorPosX(start_x);
 
     if (ImGui::Button(ICON_FA_PLAY))
@@ -886,14 +903,14 @@ void Visualizer::create_left_panel(void)
   ImGui::End();
 }
 
-void Visualizer::create_right_panel(void)
+void Visualizer::create_right_panel()
 {
   ImGui::Begin("Right Panel", nullptr, ImGuiWindowFlags_NoResize);
 
   ImGui::Text("Solution visualization:");
 
   // Set button background color to transparent
-  ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(1.0f, 1.0f, 1.0f, 0.0f));
+  ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(1.0F, 1.0F, 1.0F, 0.0F));
 
   // calculate the width of the slider label
   const float time_text_width = ImGui::CalcTextSize("Time: ").x + ImGui::GetStyle().ItemSpacing.x;
@@ -919,8 +936,11 @@ void Visualizer::create_right_panel(void)
                       (num_buttons - 1) * ImGui::GetStyle().ItemSpacing.x;
 
   // center the playback buttons
-  float start_x = time_text_width + (available_width - total_width) * 0.5f;
-  if (start_x + total_width > panel_size) start_x = panel_size - total_width;
+  float start_x = time_text_width + (available_width - total_width) * 0.5F;
+  if (start_x + total_width > panel_size)
+  {
+    start_x = panel_size - total_width;
+  }
   ImGui::SetCursorPosX(start_x);
 
   if (ImGui::Button(ICON_FA_PLAY))
@@ -958,36 +978,45 @@ void Visualizer::create_right_panel(void)
 }
 
 
-void Visualizer::create_bottom_panel(void)
+void Visualizer::create_bottom_panel()
 {
   ImGui::Begin(ICON_FA_CODE " Console");
-  for (int i = 0; i < (int)log.size(); i++)
+  for (auto& i : log)
   {
-    ImGui::Text("%s", log[i].c_str());
+    ImGui::Text("%s", i.c_str());
   }
   ImGui::End();
 }
 
-void Visualizer::create_menu_bar(void)
+void Visualizer::create_menu_bar()
 {
   // Set style
-  ImGui::PushStyleVar(ImGuiStyleVar_FramePadding, ImVec2(10, 10));       // Increase padding (width, height)
-  ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(10, 10));      // Adjust window padding
-  ImGui::GetStyle().WindowBorderSize        = 2.0f;                      // Add border
-  ImGui::GetStyle().Colors[ImGuiCol_Border] = ImVec4(0.1, 0.1, 0.1, 1);  // border
+  ImGui::PushStyleVar(ImGuiStyleVar_FramePadding, ImVec2(10, 10));          // Increase padding (width, height)
+  ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(10, 10));         // Adjust window padding
+  ImGui::GetStyle().WindowBorderSize        = 2.0f;                         // Add border
+  ImGui::GetStyle().Colors[ImGuiCol_Border] = ImVec4(0.1F, 0.1F, 0.1F, 1);  // border
 
   // create the widget
   if (ImGui::BeginMainMenuBar())
   {
     if (ImGui::BeginMenu("Instance"))
     {
-      if (ImGui::MenuItem("Load map")) std::cout << "Loading a map." << std::endl;
-      if (ImGui::MenuItem("Load scene")) std::cout << "Loading a scene." << std::endl;
+      if (ImGui::MenuItem("Load map"))
+      {
+        std::cout << "Loading a map." << std::endl;
+      }
+      if (ImGui::MenuItem("Load scene"))
+      {
+        std::cout << "Loading a scene." << std::endl;
+      }
       ImGui::EndMenu();
     }
     if (ImGui::BeginMenu("Settings"))
     {
-      if (ImGui::MenuItem("Algorithm settings")) std::cout << "Algorithm settings." << std::endl;
+      if (ImGui::MenuItem("Algorithm settings"))
+      {
+        std::cout << "Algorithm settings." << std::endl;
+      }
       ImGui::EndMenu();
     }
     // ImVec2 menu_bar_size = ImGui::GetWindowSize();
@@ -997,7 +1026,7 @@ void Visualizer::create_menu_bar(void)
   ImGui::PopStyleVar(2);  // Pop both styles
 }
 
-const Point2d Visualizer::get_agent_position(const int agent_num, const int time) const
+auto Visualizer::get_agent_position(const int agent_num, const int time) const -> const Point2d
 {
   assertm(agent_num < (int)agents_paths.size(), "Agent number outside of the range.");
   // if path empty, return the start position
@@ -1009,18 +1038,19 @@ const Point2d Visualizer::get_agent_position(const int agent_num, const int time
   return instance.location_to_position(agents_paths[agent_num][idx]);
 }
 
-int Visualizer::get_agent_location(const int agent_num, const int time) const
+auto Visualizer::get_agent_location(const int agent_num, const int time) const -> int
 {
   assertm(agent_num < (int)agents_paths.size(), "Agent number outside of the range.");
   const int idx = std::min((int)agents_paths[agent_num].size() - 1, time);
   return agents_paths[agent_num][idx];
 }
 
-std::vector<Point2d> Visualizer::get_agent_positions(const int time) const
+auto Visualizer::get_agent_positions(const int time) const -> std::vector<Point2d>
 {
   std::vector<Point2d> agent_positions;
 
   // find the current position for each agent
+  agent_positions.reserve((int)agents_paths.size());
   for (int i = 0; i < (int)agents_paths.size(); i++)
   {
     agent_positions.push_back(get_agent_position(i, time));
@@ -1028,11 +1058,12 @@ std::vector<Point2d> Visualizer::get_agent_positions(const int time) const
   return agent_positions;
 }
 
-std::vector<int> Visualizer::get_agent_locations(const int time) const
+auto Visualizer::get_agent_locations(const int time) const -> std::vector<int>
 {
   std::vector<int> agent_positions;
 
   // find the current position for each agent
+  agent_positions.reserve((int)agents_paths.size());
   for (int i = 0; i < (int)agents_paths.size(); i++)
   {
     agent_positions.push_back(get_agent_location(i, time));
@@ -1054,7 +1085,7 @@ void Visualizer::sipp_visualization_update(const Visualization& vis)
 
 Visualization::Visualization(std::function<void(Visualization& vis)> update_func) : update_func(update_func){};
 
-void Visualization::reset(void)
+void Visualization::reset()
 {
   is_playing        = false;
   time              = 0;
@@ -1062,23 +1093,26 @@ void Visualization::reset(void)
   update();
 }
 
-void Visualization::start(void)
+void Visualization::start()
 {
-  if (time >= max_time) reset();
+  if (time >= max_time)
+  {
+    reset();
+  }
   is_playing = true;
 }
 
-void Visualization::pause(void)
+void Visualization::pause()
 {
   is_playing = false;
 }
 
-void Visualization::update(void)
+void Visualization::update()
 {
   update_func(*this);
 }
 
-void Visualization::step_forward(void)
+void Visualization::step_forward()
 {
   if (time < max_time)
   {
@@ -1088,7 +1122,7 @@ void Visualization::step_forward(void)
 }
 
 
-void Visualization::step_backward(void)
+void Visualization::step_backward()
 {
   if (time > 0)
   {
@@ -1105,7 +1139,7 @@ void Visualization::new_data(int new_len)
   max_time          = new_len;
 }
 
-void Visualization::next_iteration(void)
+void Visualization::next_iteration()
 {
   iteration_counter++;
 
