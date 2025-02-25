@@ -181,7 +181,7 @@ auto SIPP::plan(const int agent_num) -> TimePointPath
     known[current->time_point.location] = current->time_point.interval.t_max;
 
     // expand current node
-    std::vector<int> neighbors = map_data.find_neighbors(current->time_point.location);
+    std::vector<int> neighbors = instance.get_neighbor_locations(current->time_point.location);
     for (auto& neighbor : neighbors)
     {
       // std::cout << "Neighbor: " << neighbor << std::endl;
@@ -190,7 +190,7 @@ auto SIPP::plan(const int agent_num) -> TimePointPath
       const double h = instance.get_heuristic_manhattan(agent_num, neighbor);
 
       // retrieve the safe intervals for the neighbor
-      std::vector<TimeInterval> time_intervals = constraint_table.get_safe_intervals(
+      std::vector<TimeInterval> time_intervals = constraint_table.calculate_safe_intervals(
           neighbor, current->time_point.location, sipp::neighbor_time_interval(current->time_point.interval));
 
       for (const TimeInterval& interval : time_intervals)

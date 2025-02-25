@@ -176,7 +176,7 @@ auto ASTAR::find_path(const int agent_num, const Instance& instance) -> Path
     known[current->location] = true;
 
     // expand current node
-    std::vector<int> neighbors = map_data.find_neighbors(current->location);
+    std::vector<int> neighbors = instance.get_neighbor_locations(current->location);
     for (auto& neighbor : neighbors)
     {
       // check whether neighbor already known

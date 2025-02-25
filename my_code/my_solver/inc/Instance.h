@@ -48,6 +48,7 @@ public:
   void               precompute_neighbors();
   [[nodiscard]] auto get_heuristic_manhattan(int agent_num, int loc) const -> int;
   [[nodiscard]] auto get_heuristic_euclidean(int agent_num, int loc) const -> double;
+  [[nodiscard]] auto get_neighbor_locations(int loc) const -> const std::vector<int>&;
 
   [[nodiscard]] auto location_to_position(int location) const -> Point2d;
   [[nodiscard]] auto position_to_location(const Point2d& position) const -> int;

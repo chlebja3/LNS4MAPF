@@ -387,6 +387,13 @@ auto Instance::get_heuristic_euclidean(const int agent_num, const int loc) const
   return heuristic_euclidean[agent_num][loc];
 };
 
+auto Instance::get_neighbor_locations(int loc) const -> const std::vector<int>&
+{
+  assertm(map_data.is_in(loc), "Trying to get neighbors of invalid location.");
+  assertm(loc < (int)neighbors.size(), "Neighbors are not precomputed for this location.");
+  return neighbors[loc];
+}
+
 auto Instance::path_to_pointpath(const Path& path) const -> PointPath
 {
   PointPath ret;

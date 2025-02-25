@@ -45,12 +45,12 @@ void ConstraintTable::add_constraint(const TimePoint& timepoint)
   std::list<TimeInterval>& cur_TI_list = constraints[timepoint.location];
 
   // insert the time interval to the given list
-  if (cur_TI_list.empty())
+  /*if (cur_TI_list.empty())
   {
     // insert to an empty list
     cur_TI_list.push_back(timepoint.interval);
     return;
-  }
+  }*/
 
   bool inserted = false;
   // find where to insert the interval
@@ -75,6 +75,111 @@ void ConstraintTable::add_constraint(const TimePoint& timepoint)
   if (!inserted)
   {
     cur_TI_list.push_back(timepoint.interval);
+  }
+}
+
+void ConstraintTable::add_constraint_safe_intervals(const TimePoint& timepoint)
+{
+  // check the location is valid
+  assertm(instance.get_map_data().is_in(timepoint.location), "Invalid location.");
+
+  std::list<TimeInterval>& cur_TI_list = safe_intervals[timepoint.location];
+
+  // modify intervals that have some intersections with the time range
+  auto it = cur_TI_list.begin();
+  while (it != cur_TI_list.end())
+  {
+    // skip irrelevant time intervals
+    if (it->t_max < timepoint.interval.t_min)
+    {
+      it++;
+      continue;
+    }
+
+    // check whether finished
+    if (it->t_min > timepoint.interval.t_max)
+    {
+      break;
+    }
+
+    // shorten intervals starting before the range
+    if (it->t_min < timepoint.interval.t_min)
+    {
+      it->t_max = timepoint.interval.t_min - 1;
+
+      // create new interval if there is still some time in the safe interval after the constraint
+      if (it->t_max > timepoint.interval.t_max)
+      {
+        cur_TI_list.insert(std::next(it, 1), TimeInterval(timepoint.interval.t_max + 1, it->t_max));
+        break;
+      }
+
+      it++;
+    }
+    // shorten intervals ending after the range
+    else if (it->t_max > timepoint.interval.t_max)
+    {
+      it->t_min = timepoint.interval.t_max + 1;
+      break;
+    }
+    // delete intervals that are fully overlapped by the constraint
+    else
+    {
+      it = cur_TI_list.erase(it);
+    }
+  }
+}
+
+void ConstraintTable::remove_constraint_safe_intervals(const TimePoint& timepoint)
+{
+  // check the location is valid
+  assertm(instance.get_map_data().is_in(timepoint.location), "Invalid location.");
+
+  std::list<TimeInterval>& cur_TI_list = safe_intervals[timepoint.location];
+
+  // check that the list is not empty
+  assertm(!cur_TI_list.empty(), "Trying to remove interval from an empty list.");
+
+  // find intervals that will be affected by the removal
+  auto it = cur_TI_list.begin();
+  while (it != cur_TI_list.end())
+  {
+    assertm(!overlap(*it, timepoint.interval), "Constraint interval can not have any overlap with safe interval.");
+
+    // find the interval after the constraint
+    if (it->t_min > timepoint.interval.t_max)
+    {
+      // check whether there was an interval before the constraint
+      if (it != cur_TI_list.begin())
+      {
+        // check whether the previous timeinterval can be extended
+        const auto prev = std::prev(it, 1);
+        if (prev->t_max == timepoint.interval.t_min - 1)
+        {
+          // check whether prev should be merged with next interval
+          if (it->t_min == timepoint.interval.t_max + 1)
+          {
+            prev->t_max = it->t_max;
+            it          = cur_TI_list.erase(it);
+          }
+          else  // extend prev
+          {
+            prev->t_max = timepoint.interval.t_max;
+          }
+          break;
+        }
+      }
+
+      // previous can not be extended, check whether next can be extended
+      if (it->t_min == timepoint.interval.t_max + 1)
+      {
+        it->t_min = timepoint.interval.t_min;
+        break;
+      }
+
+      // no interval can be extended, therefore insert a new interval
+      cur_TI_list.insert(it, timepoint.interval);
+    }
   }
 }
 
@@ -156,7 +261,7 @@ auto ConstraintTable::get_first_safe_interval(int location) const -> TimeInterva
 }
 
 // not used
-auto ConstraintTable::get_safe_interval(const int location, const int from, const int time) const -> TimeInterval
+auto ConstraintTable::calculate_safe_interval(const int location, const int from, const int time) const -> TimeInterval
 {
   // check the location is valid
   assertm(instance.get_map_data().is_in(location), "Invalid location.");
@@ -229,7 +334,7 @@ auto ConstraintTable::get_safe_interval(const int location, const int from, cons
   return TimeInterval(earliest_unobstructed_time, INT_MAX);
 }
 
-auto ConstraintTable::get_safe_intervals(const int location, const int from, const TimeInterval& time_interval) const
+auto ConstraintTable::calculate_safe_intervals(const int location, const int from, const TimeInterval& time_interval) const
     -> std::vector<TimeInterval>
 {
   // check the location is valid
@@ -275,8 +380,8 @@ auto ConstraintTable::get_safe_intervals(const int location, const int from, con
         }
         else
         {
-          // if there is an edge collision, then the location the agent is coming from is gonna be obstructed in the next time step, so the
-          // interval should end
+          // if there is an edge collision, then the location the agent is coming from is gonna be obstructed in the next time step, so
+          // the interval should end
           assertm(earliest_unobstructed_time == time_interval.t_max, "Invalid time interval, the from location will be in edge collision.");
           return intervals;
         }
@@ -330,6 +435,38 @@ auto ConstraintTable::get_safe_intervals(const int location, const int from, con
   // if there is no constraint after the time_interval end, add the interval from earliest_unobstructed_time to infinity.
   intervals.emplace_back(earliest_unobstructed_time, INT_MAX);
   return intervals;
+}
+
+auto ConstraintTable::get_safe_intervals(int location, int from, const TimeInterval& time_interval) const
+    -> std::pair<std::list<TimeInterval>::const_iterator, std::list<TimeInterval>::const_iterator>
+{
+  assertm(instance.get_map_data().is_in(location) && instance.get_map_data().is_in(from), "Invalid from or to location.");
+  assertm(location < (int)safe_intervals.size(), "Safe intervals not precomputed for this location.");
+
+  // iterate over the list to find the first and last safe interval
+  auto start = safe_intervals[location].cend();
+  auto end   = safe_intervals[location].cend();
+  for (auto it = safe_intervals[location].cbegin(); it != safe_intervals[location].cend(); it++)
+  {
+    // check whether the interval is inside the given time range
+    if (it->t_min >= time_interval.t_min && it->t_max <= time_interval.t_max)
+    {
+      // remember the first interval in the range
+      if (start == safe_intervals[location].end())
+      {
+        start = it;
+      }
+    }
+    // if the interval is not inside the time range, check whether already found some intervals
+    else if (start != safe_intervals[location].cend())
+    {
+      // if already found some intervals, return the found safe intervals
+      end = it;
+      return std::make_pair(start, end);
+    }
+  }
+  // TODO check also for edge collisions
+  return std::make_pair(start, end);
 }
 
 auto ConstraintTable::get_last_dynamic_constraint() const -> int
