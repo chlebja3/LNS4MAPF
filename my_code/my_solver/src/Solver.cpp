@@ -33,14 +33,14 @@ bool Solution::is_valid(const Instance& instance) const
     }
 
     // check that the path starts in the start position
-    if (!(paths[i].front() == instance.get_start_positions()[i]))
+    if (!(paths[i].front() == instance.get_start_locations()[i]))
     {
       std::cout << "Path does not start in the start position." << std::endl;
       return false;
     }
 
     // check that the path ends in the goal position
-    if (!(paths[i].back() == instance.get_goal_positions()[i]))
+    if (!(paths[i].back() == instance.get_goal_locations()[i]))
     {
       std::cout << "Path does not end in the goal position." << std::endl;
       return false;
@@ -55,7 +55,7 @@ bool Solution::is_valid(const Instance& instance) const
   for (int t = 0; t < T_max; t++)
   {
     // create reservation set for each time step to check for dynamic coliisions
-    std::unordered_set<Point2d, Point2d::hash_point> occupied;
+    std::unordered_set<int, std::hash<int>> occupied;
 
     for (int i = 0; i < (int)paths.size(); i++)
     {
@@ -72,7 +72,9 @@ bool Solution::is_valid(const Instance& instance) const
       if (idx > 0)
       {
         // check if the move is valid
-        if (abs(paths[i][idx].x - paths[i][idx - 1].x) + abs(paths[i][idx].y - paths[i][idx - 1].y) > 1)
+        Point2d p1 = instance.location_to_position(paths[i][idx - 1]);
+        Point2d p2 = instance.location_to_position(paths[i][idx]);
+        if (abs(p2.x - p1.x) + abs(p2.y - p1.y) > 1)
         {
           std::cout << "Invalid move." << std::endl;
           return false;
@@ -130,7 +132,7 @@ bool Solution::is_valid(const Instance& instance) const
   return true;
 }
 
-void Solution::load(const std::string& filename)
+void Solution::load(const std::string& filename, const Instance& instance)
 {
   // open the solution file
   std::ifstream sol_file(filename.c_str());
@@ -187,7 +189,7 @@ void Solution::load(const std::string& filename)
     boost::algorithm::split_regex(split_line, line.substr(idx2_an + 1), boost::regex("->"));
 
     // read the path
-    PointPath path;
+    Path path;
     for (const std::string& point_str : split_line)
     {
       if (point_str.empty()) continue;
@@ -231,12 +233,11 @@ void Solution::load(const std::string& filename)
       }
 
       // add the point to the path
-      path.push_back(Point2d(x, y));
+      path.push_back(instance.position_to_location(Point2d(x, y)));
     }
     // add the path to the solution
     paths.push_back(path);
   }
-
 
   // close the file
   sol_file.close();

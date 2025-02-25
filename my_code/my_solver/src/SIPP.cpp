@@ -26,13 +26,8 @@ SIPP::SIPP(const Instance& instance, const bool generate_iter_info)
       instance(instance),
       node_pool(NodePool(5 * instance.get_map_data().width * instance.get_map_data().height)){};
 
-
-SIPPNode::SIPPNode(const int x, const int y, const int time_min, const int time_max, const double g, const double h,
-                   SIPPNode const* const parent)
-    : Node(g, h), time_point(TimePoint(x, y, time_min, time_max)), parent(parent){};
-
-SIPPNode::SIPPNode(const Point2d& position, const TimeInterval& interval, const double g, const double h, SIPPNode const* const parent)
-    : Node(g, h), time_point(position, interval), parent(parent){};
+SIPPNode::SIPPNode(const int location, const TimeInterval& interval, const double g, const double h, SIPPNode const* const parent)
+    : Node(g, h), time_point(location, interval), parent(parent){};
 
 SIPPNode::SIPPNode(const TimePoint& time_point, const double g, const double h, SIPPNode const* const parent)
     : Node(g, h), time_point(time_point), parent(parent){};
@@ -63,7 +58,7 @@ bool SIPPNode::compare_node_ptrs::operator()(SIPPNode const* n1, SIPPNode const*
 NodePool::NodePool(const int size)
 {
   // initialize the pool with dummy nodes
-  pool.resize(size, SIPPNode({0, 0}, {0, 0}, 0, 0, nullptr));
+  pool.resize(size, SIPPNode(0, {0, 0}, 0, 0, nullptr));
   end = 0;
 }
 
@@ -100,9 +95,9 @@ TimePointPath SIPP::plan(const int agent_num)
 {
   if (generate_iter_info) initialize_iter_info();
 
-  const Map&     map_data = instance.get_map_data();
-  const Point2d& start    = instance.get_start_positions()[agent_num];
-  const Point2d& goal     = instance.get_goal_positions()[agent_num];
+  const Map& map_data = instance.get_map_data();
+  const int  start    = instance.get_start_locations()[agent_num];
+  const int  goal     = instance.get_goal_locations()[agent_num];
 
   // check whether start and goal inside the map
   assertm(map_data.is_in(start) && map_data.is_in(goal), "Start or goal outside the map.");
@@ -125,7 +120,7 @@ TimePointPath SIPP::plan(const int agent_num)
   // calculate the heuristic of the start node
   {
     // const double h = instance.get_heuristic_euclidean(agent_num, start);
-    const double h = instance.get_heuristic_manhattan(agent_num, instance.position_to_location(start));
+    const double h = instance.get_heuristic_manhattan(agent_num, start);
 
     // create the start node
     open_list.push(node_pool.add_node(SIPPNode(start, time_interval_start, 0, h, nullptr)));
@@ -135,7 +130,8 @@ TimePointPath SIPP::plan(const int agent_num)
 
 
   // create known nodes database
-  sipp::UnorderedMap known;
+  std::vector<int> known;
+  known.resize(map_data.width * map_data.height, -1);
 
   // main loop
   while (!open_list.empty())
@@ -147,12 +143,10 @@ TimePointPath SIPP::plan(const int agent_num)
     open_list.pop();
 
     // check whether node was expanded already (same position and tmax higher then current tmin)
-    if (known.find(current->time_point.position) != known.end() &&
-        current->time_point.interval.t_min <= known[current->time_point.position])
-      continue;
+    if (current->time_point.interval.t_min <= known[current->time_point.location]) continue;
 
-    // check whether goal position is reached and that there will be no more dynamic constraints at the goal location
-    if (current->time_point.position == goal && current->time_point.interval.t_max == INT_MAX)
+    // check whether goal location is reached and that there will be no more dynamic constraints at the goal location
+    if (current->time_point.location == goal && current->time_point.interval.t_max == INT_MAX)
     {
       // extract the path
       TimePointPath ret = sipp::extract_path(current);
@@ -167,20 +161,20 @@ TimePointPath SIPP::plan(const int agent_num)
     }
 
     // add to known nodes
-    known[current->time_point.position] = current->time_point.interval.t_max;
+    known[current->time_point.location] = current->time_point.interval.t_max;
 
     // expand current node
-    std::vector<Point2d> neighbors = map_data.find_neighbors(current->time_point.position);
-    for (Point2d& neighbor : neighbors)
+    std::vector<int> neighbors = map_data.find_neighbors(current->time_point.location);
+    for (auto& neighbor : neighbors)
     {
       // std::cout << "Neighbor: " << neighbor << std::endl;
       // calculate the heuristic
       // const double h = instance.get_heuristic_euclidean(agent_num, neighbor);
-      const double h = instance.get_heuristic_manhattan(agent_num, instance.position_to_location(neighbor));
+      const double h = instance.get_heuristic_manhattan(agent_num, neighbor);
 
       // retrieve the safe intervals for the neighbor
       std::vector<TimeInterval> time_intervals = constraint_table.get_safe_intervals(
-          neighbor, current->time_point.position, sipp::neighbor_time_interval(current->time_point.interval));
+          neighbor, current->time_point.location, sipp::neighbor_time_interval(current->time_point.interval));
 
       for (const TimeInterval& interval : time_intervals)
       {
@@ -194,7 +188,7 @@ TimePointPath SIPP::plan(const int agent_num)
         if (current->time_point.interval.t_max != INT_MAX && interval.t_min > current->time_point.interval.t_max + 1) continue;
 
         // check whether known
-        if (known.find(neighbor) != known.end() && interval.t_min <= known[neighbor]) continue;
+        if (interval.t_min <= known[neighbor]) continue;
 
         TimePoint neighbor_time_point(neighbor, interval);
         assertm(neighbor_time_point.interval.t_min > current->time_point.interval.t_min, "Invalid interval.");
@@ -249,7 +243,7 @@ TimePointPath sipp::extract_path(SIPPNode const* const final_node)
     else  // push only the occupied part of other intervals
     {
       path.push_back(
-          TimePoint(curr->time_point.position, TimeInterval(curr->time_point.interval.t_min, prev->time_point.interval.t_min - 1)));
+          TimePoint(curr->time_point.location, TimeInterval(curr->time_point.interval.t_min, prev->time_point.interval.t_min - 1)));
     }
     prev = curr;
     curr = curr->parent;

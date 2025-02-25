@@ -12,9 +12,9 @@
 #include "test_utils.h"
 #include "utils.h"
 
-PointPath timepointpath_to_path_resize(const TimePointPath& tp_path)
+Path timepointpath_to_path_resize(const TimePointPath& tp_path)
 {
-  PointPath path;
+  Path path;
   for (auto it = tp_path.begin(); it != tp_path.end(); it++)
   {
     // for last element add the position only once, as it is obvious that the agent stays in the last position forever
@@ -27,14 +27,14 @@ PointPath timepointpath_to_path_resize(const TimePointPath& tp_path)
     }
 
     // insert N copies to the end of the vector
-    path.resize(path.size() + N, it->position);
+    path.resize(path.size() + N, it->location);
   }
   return path;
 }
 
-PointPath timepointpath_to_path_insert(const TimePointPath& tp_path)
+Path timepointpath_to_path_insert(const TimePointPath& tp_path)
 {
-  PointPath path;
+  Path path;
   for (auto it = tp_path.begin(); it != tp_path.end(); it++)
   {
     // for last element add the position only once, as it is obvious that the agent stays in the last position forever
@@ -47,14 +47,14 @@ PointPath timepointpath_to_path_insert(const TimePointPath& tp_path)
     }
 
     // insert N copies to the end of the vector
-    path.insert(path.end(), N, it->position);
+    path.insert(path.end(), N, it->location);
   }
   return path;
 }
 
-PointPath timepointpath_to_path_pushback(const TimePointPath& tp_path)
+Path timepointpath_to_path_pushback(const TimePointPath& tp_path)
 {
-  PointPath path;
+  Path path;
   for (auto it = tp_path.begin(); it != tp_path.end(); it++)
   {
     // for last element add the position only once, as it is obvious that the agent stays in the last position forever
@@ -70,15 +70,15 @@ PointPath timepointpath_to_path_pushback(const TimePointPath& tp_path)
     path.reserve(path.size() + N);
     for (int i = 0; i < N; i++)
     {
-      path.push_back(it->position);
+      path.push_back(it->location);
     }
   }
   return path;
 }
 
-PointPath timepointpath_to_path_emplaceback(const TimePointPath& tp_path)
+Path timepointpath_to_path_emplaceback(const TimePointPath& tp_path)
 {
-  PointPath path;
+  Path path;
   for (auto it = tp_path.begin(); it != tp_path.end(); it++)
   {
     // for last element add the position only once, as it is obvious that the agent stays in the last position forever
@@ -94,7 +94,7 @@ PointPath timepointpath_to_path_emplaceback(const TimePointPath& tp_path)
     path.reserve(path.size() + N);
     for (int i = 0; i < N; i++)
     {
-      path.emplace_back(it->position.x, it->position.y);
+      path.emplace_back(it->location);
     }
   }
   return path;
@@ -107,7 +107,7 @@ static void BenchmarkFunction(benchmark::State& state, Func func)
   TimePointPath tp_path = generate_random_timepointpath(state.range(0));  // Ensure same random input for all tests
   for (auto _ : state)
   {
-    PointPath p = func(tp_path);
+    Path p = func(tp_path);
     assertm((int)p.size() == (int)state.range(0), "The converted path has wrong size");
   }
 }

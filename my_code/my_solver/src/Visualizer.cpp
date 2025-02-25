@@ -164,9 +164,9 @@ void Visualizer::run()
       // update the visualization
       solution_vis.new_data(max_path_len);
 
-      if (log.size() == 0)
+      if (log.empty())
       {
-        log.push_back("Prioritized planning finished.");
+        log.emplace_back("Prioritized planning finished.");
       }
     }
 
@@ -360,7 +360,7 @@ void Visualizer::update_cell_rectangles_active(int time)
   // find all active rectangles
   for (int i = 0; i < std::min(time, (int)sipp_info[selected_agent].size()); i++)
   {
-    const Point2d cur_pos                        = sipp_info[selected_agent][i].cur_expanded.position;
+    const Point2d cur_pos                        = instance.location_to_position(sipp_info[selected_agent][i].cur_expanded.location);
     cell_rectangles_active[cur_pos.y][cur_pos.x] = true;
     // draw only until time
     if (i == time) break;
@@ -431,14 +431,14 @@ void Visualizer::draw_cell_rectangles(sf::RenderWindow& window)
   // draw the currently expanded
   if (selected_agent >= 0 && sipp_vis.time < (int)sipp_info[selected_agent].size())
   {
-    const Point2d& cur_pos  = sipp_info[selected_agent][sipp_vis.time].cur_expanded.position;
+    const Point2d& cur_pos  = instance.location_to_position(sipp_info[selected_agent][sipp_vis.time].cur_expanded.location);
     curr_expanded_rectangle = cell_rectangles[cur_pos.y][cur_pos.x];
     curr_expanded_rectangle.setFillColor(sf::Color::Yellow);
     window.draw(curr_expanded_rectangle);
   }
 }
 
-void Visualizer::update_path(const int agent_num, const PointPath& path)
+void Visualizer::update_path(const int agent_num, const Path& path)
 {
   assertm(agent_num >= 0 && agent_num < (int)agents_colors.size() && agent_num < instance.num_of_agents, "Invalid agent number.");
 
@@ -491,11 +491,14 @@ void Visualizer::update_path(const int agent_num, const PointPath& path)
       else
       {
         // find the rectangle that represents the segment
+        Point2d segment_start_pt = instance.location_to_position(*segment_start);
+        Point2d segment_end_pt   = instance.location_to_position(*segment_end);
+
         int min_x, min_y, max_x, max_y;
-        min_x = std::min(segment_start->x, segment_end->x);
-        min_y = std::min(segment_start->y, segment_end->y);
-        max_x = std::max(segment_start->x, segment_end->x);
-        max_y = std::max(segment_start->y, segment_end->y);
+        min_x = std::min(segment_start_pt.x, segment_end_pt.x);
+        min_y = std::min(segment_start_pt.y, segment_end_pt.y);
+        max_x = std::max(segment_start_pt.x, segment_end_pt.x);
+        max_y = std::max(segment_start_pt.y, segment_end_pt.y);
         assertm(max_x - min_x > 0 != max_y - min_y > 0, "Segment must be either horizontal or vertical.");
 
         // calculate the corners of the rectangle
@@ -531,7 +534,7 @@ void Visualizer::update_all_paths(int time)
   {
     // calculate the start index of the path according to the visualization time
     int idx = std::min((int)agents_paths[i].size() - 1, time);
-    update_path(i, PointPath(agents_paths[i].begin() + idx, agents_paths[i].end()));
+    update_path(i, Path(agents_paths[i].begin() + idx, agents_paths[i].end()));
   }
 }
 
@@ -871,7 +874,7 @@ void Visualizer::create_left_panel(void)
       const SIPPIterationInfo& cur_info = sipp_info[selected_agent][sipp_vis.time - 1];
 
       ImGui::Text("\tIteration num: %d", cur_info.iteration_num);
-      ImGui::Text("\tExpanded position: %s", ((std::string)cur_info.cur_expanded.position).c_str());
+      ImGui::Text("\tExpanded position: %s", ((std::string)instance.location_to_position(cur_info.cur_expanded.location)).c_str());
       ImGui::Text("\tExpanded interval: %s", ((std::string)cur_info.cur_expanded.interval).c_str());
       ImGui::Text("\tg: %lf", cur_info.g);
       ImGui::Text("\th: %lf", cur_info.h);
@@ -994,7 +997,19 @@ void Visualizer::create_menu_bar(void)
   ImGui::PopStyleVar(2);  // Pop both styles
 }
 
-const Point2d& Visualizer::get_agent_position(const int agent_num, const int time) const
+const Point2d Visualizer::get_agent_position(const int agent_num, const int time) const
+{
+  assertm(agent_num < (int)agents_paths.size(), "Agent number outside of the range.");
+  // if path empty, return the start position
+  if (agents_paths[agent_num].empty())
+  {
+    return instance.get_start_positions()[agent_num];
+  }
+  const int idx = std::min((int)agents_paths[agent_num].size() - 1, time);
+  return instance.location_to_position(agents_paths[agent_num][idx]);
+}
+
+int Visualizer::get_agent_location(const int agent_num, const int time) const
 {
   assertm(agent_num < (int)agents_paths.size(), "Agent number outside of the range.");
   const int idx = std::min((int)agents_paths[agent_num].size() - 1, time);
@@ -1008,10 +1023,20 @@ std::vector<Point2d> Visualizer::get_agent_positions(const int time) const
   // find the current position for each agent
   for (int i = 0; i < (int)agents_paths.size(); i++)
   {
-    const int idx = std::min((int)agents_paths[i].size() - 1, time);
-    agent_positions.push_back(agents_paths[i][idx]);
+    agent_positions.push_back(get_agent_position(i, time));
   }
+  return agent_positions;
+}
 
+std::vector<int> Visualizer::get_agent_locations(const int time) const
+{
+  std::vector<int> agent_positions;
+
+  // find the current position for each agent
+  for (int i = 0; i < (int)agents_paths.size(); i++)
+  {
+    agent_positions.push_back(get_agent_location(i, time));
+  }
   return agent_positions;
 }
 

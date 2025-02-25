@@ -361,3 +361,13 @@ double Instance::get_heuristic_euclidean(const int agent_num, const int loc) con
   assertm(map_data.is_in(loc), "Trying to index a point that is not in the map.");
   return heuristic_euclidean[agent_num][loc];
 };
+
+PointPath Instance::path_to_pointpath(const Path& path) const
+{
+  PointPath ret;
+  for (auto& loc : path)
+  {
+    ret.push_back(location_to_position(loc));
+  }
+  return ret;
+}

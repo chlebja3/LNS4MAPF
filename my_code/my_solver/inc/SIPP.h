@@ -10,8 +10,8 @@
 // #include <boost/heap/pairing_heap.hpp>
 // #include <boost/heap/priority_queue.hpp>
 #include <queue>
-#include <unordered_map>
-#include <unordered_set>
+// #include <unordered_map>
+// #include <unordered_set>
 
 #include "ConstraintTable.h"
 #include "IterInfo.h"
@@ -27,9 +27,7 @@ public:
 
 
   // constructors
-  SIPPNode(const int x, const int y, const int time_min, const int time_max, const double g, const double h, SIPPNode const* const parent);
-
-  SIPPNode(const Point2d& position, const TimeInterval& interval, const double g, const double h, SIPPNode const* const parent);
+  SIPPNode(const int location, const TimeInterval& interval, const double g, const double h, SIPPNode const* const parent);
 
   SIPPNode(const TimePoint& time_point, const double g, const double h, SIPPNode const* const parent);
 
@@ -58,8 +56,8 @@ private:
 typedef std::priority_queue<SIPPNode const*, std::vector<SIPPNode const*>, SIPPNode::compare_node_ptrs> PriorityQueue;
 // typedef boost::heap::priority_queue<SIPPNode const*, boost::heap::compare<SIPPNode::compare_node_ptrs>> PriorityQueue;
 // typedef boost::heap::pairing_heap<SIPPNode const*, boost::heap::compare<SIPPNode::compare_node_ptrs>> PriorityQueue;
-typedef std::unordered_set<TimePoint, TimePoint::hash_time_point> UnorderedSet;
-typedef std::unordered_map<Point2d, int, Point2d::hash_point>     UnorderedMap;
+// typedef std::unordered_set<TimePoint, TimePoint::hash_time_point> UnorderedSet;
+// typedef std::unordered_map<Point2d, int, Point2d::hash_point>     UnorderedMap;
 
 TimeInterval  neighbor_time_interval(const TimeInterval& i);
 TimePointPath extract_path(SIPPNode const* const final_node);

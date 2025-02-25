@@ -12,7 +12,7 @@
 #include <boost/functional/hash.hpp>
 #include <iostream>
 
-EdgeCollision::EdgeCollision(const Point2d& from, const Point2d& to, const int t) : from(from), to(to), t(t){};
+EdgeCollision::EdgeCollision(const int from, const int to, const int t) : from(from), to(to), t(t){};
 
 
 bool EdgeCollision::operator==(const EdgeCollision& other) const
@@ -24,10 +24,8 @@ size_t EdgeCollision::hash_edge_collision::operator()(const EdgeCollision& c) co
 {
   std::size_t seed = 0;
   // combine hash of from, to and t
-  boost::hash_combine(seed, c.from.x);
-  boost::hash_combine(seed, c.from.y);
-  boost::hash_combine(seed, c.to.x);
-  boost::hash_combine(seed, c.to.y);
+  boost::hash_combine(seed, c.from);
+  boost::hash_combine(seed, c.to);
   boost::hash_combine(seed, c.t);
   return seed;
 }
@@ -42,19 +40,10 @@ ConstraintTable::ConstraintTable(const Instance& instance) : instance(instance)
 
 void ConstraintTable::add_constraint(const TimePoint& timepoint)
 {
-  // check the position is valid
-  assertm(instance.get_map_data().is_in(timepoint.position), "Invalid position.");
+  // check the location is valid
+  assertm(instance.get_map_data().is_in(timepoint.location), "Invalid location.");
 
-  // find the index of the position
-  int idx = instance.get_map_data().position_to_index(timepoint.position);
-
-  // check, that the index is valid
-  assertm(idx >= 0 && idx < instance.get_map_data().width * instance.get_map_data().height, "Invalid index.");
-
-  // check that there are enough constraints
-  assertm(idx < (int)constraints.size(), "Not enough constraints.");
-
-  std::list<TimeInterval>& cur_TI_list = constraints[idx];
+  std::list<TimeInterval>& cur_TI_list = constraints[timepoint.location];
 
   // insert the time interval to the given list
   if (cur_TI_list.empty())
@@ -91,16 +80,10 @@ void ConstraintTable::add_constraint(const TimePoint& timepoint)
 
 void ConstraintTable::remove_constraint(const TimePoint& timepoint)
 {
-  // check the position is valid
-  assertm(instance.get_map_data().is_in(timepoint.position), "Invalid position.");
+  // check the location is valid
+  assertm(instance.get_map_data().is_in(timepoint.location), "Invalid location.");
 
-  // find the index of the position
-  int idx = instance.get_map_data().position_to_index(timepoint.position);
-
-  // check, that the index is valid
-  assertm(idx >= 0 && idx < instance.get_map_data().width * instance.get_map_data().height, "Invalid index.");
-
-  std::list<TimeInterval>& cur_TI_list = constraints[idx];
+  std::list<TimeInterval>& cur_TI_list = constraints[timepoint.location];
 
   // check that the list is not empty
   assertm(!cur_TI_list.empty(), "Trying to remove interval from an empty list.");
@@ -129,7 +112,7 @@ void ConstraintTable::add_constraints(const TimePointPath& path)
     if (i > 0)  // skip the first point as there is no edge
     {
       // the time when the edge is used is the start time of the later interval
-      const EdgeCollision c(path[i - 1].position, path[i].position, path[i].interval.t_min);
+      const EdgeCollision c(path[i - 1].location, path[i].location, path[i].interval.t_min);
       edge_constraints.insert(c);
     }
   }
@@ -145,25 +128,19 @@ void ConstraintTable::remove_constraints(const TimePointPath& path)
     // remove the edge constraint
     if (i > 0)  // skip the first point as there is no edge
     {
-      const EdgeCollision c(path[i - 1].position, path[i].position, path[i].interval.t_min);
+      const EdgeCollision c(path[i - 1].location, path[i].location, path[i].interval.t_min);
       const int           erased = edge_constraints.erase(c);
       assertm(erased == 1, "Trying to erase an edge constraint that is not present.");
     }
   }
 }
 
-TimeInterval ConstraintTable::get_first_safe_interval(const Point2d& position)
+TimeInterval ConstraintTable::get_first_safe_interval(const int location)
 {
-  // check the position is valid
-  assertm(instance.get_map_data().is_in(position), "Invalid position.");
+  // check the location is valid
+  assertm(instance.get_map_data().is_in(location), "Invalid location.");
 
-  // find the index of the position
-  int idx = instance.get_map_data().position_to_index(position);
-
-  // check, that the index is valid
-  assertm(idx >= 0 && idx < instance.get_map_data().width * instance.get_map_data().height, "Invalid index.");
-
-  std::list<TimeInterval>& cur_TI_list = constraints[idx];
+  std::list<TimeInterval>& cur_TI_list = constraints[location];
 
   // if there are no constraints, return the whole interval
   if (cur_TI_list.empty()) return TimeInterval(0, INT_MAX);
@@ -176,18 +153,12 @@ TimeInterval ConstraintTable::get_first_safe_interval(const Point2d& position)
 }
 
 // not used
-TimeInterval ConstraintTable::get_safe_interval(const Point2d& position, const Point2d& from, const int time)
+TimeInterval ConstraintTable::get_safe_interval(const int location, const int from, const int time)
 {
-  // check the position is valid
-  assertm(instance.get_map_data().is_in(position), "Invalid position.");
+  // check the location is valid
+  assertm(instance.get_map_data().is_in(location), "Invalid location.");
 
-  // find the index of the position
-  int idx = instance.get_map_data().position_to_index(position);
-
-  // check, that the index is valid
-  assertm(idx >= 0 && idx < instance.get_map_data().width * instance.get_map_data().height, "Invalid index.");
-
-  std::list<TimeInterval>& cur_TI_list = constraints[idx];
+  std::list<TimeInterval>& cur_TI_list = constraints[location];
 
   // if there are no constraints, return the whole interval
   if (cur_TI_list.empty()) return TimeInterval(time, INT_MAX);
@@ -199,7 +170,7 @@ TimeInterval ConstraintTable::get_safe_interval(const Point2d& position, const P
 
   for (auto it = cur_TI_list.cbegin(); it != cur_TI_list.cend(); it++)
   {
-    // there is no position constraint in the requested time
+    // there is no location constraint in the requested time
     if (earliest_unobstructed_time < it->t_min)
     {
       // edge collision might happen only if the cell was occupied in last time step
@@ -207,7 +178,7 @@ TimeInterval ConstraintTable::get_safe_interval(const Point2d& position, const P
         return TimeInterval(earliest_unobstructed_time, it->t_min - 1);
 
       // if there is no edge collision, return the interval
-      const EdgeCollision c(position, from, earliest_unobstructed_time);
+      const EdgeCollision c(location, from, earliest_unobstructed_time);
       if (edge_constraints.find(c) == edge_constraints.end()) return TimeInterval(earliest_unobstructed_time, it->t_min - 1);
 
       // if there is an edge collision, increase earliest unobstructed time by one and then check, whether there is time before the next
@@ -229,7 +200,7 @@ TimeInterval ConstraintTable::get_safe_interval(const Point2d& position, const P
   if (cur_TI_list.back().t_max + 1 == earliest_unobstructed_time)
   {
     // if there is an edge collision, increase the earliest unobstructed time by one
-    const EdgeCollision c(position, from, earliest_unobstructed_time);
+    const EdgeCollision c(location, from, earliest_unobstructed_time);
     if (edge_constraints.find(c) != edge_constraints.end()) earliest_unobstructed_time++;
   }
 
@@ -238,22 +209,15 @@ TimeInterval ConstraintTable::get_safe_interval(const Point2d& position, const P
   return TimeInterval(earliest_unobstructed_time, INT_MAX);
 }
 
-std::vector<TimeInterval> ConstraintTable::get_safe_intervals(const Point2d& position, const Point2d& from,
-                                                              const TimeInterval& time_interval)
+std::vector<TimeInterval> ConstraintTable::get_safe_intervals(const int location, const int from, const TimeInterval& time_interval)
 {
-  // check the position is valid
-  assertm(instance.get_map_data().is_in(position), "Invalid position.");
+  // check the location is valid
+  assertm(instance.get_map_data().is_in(location), "Invalid location.");
 
   // check the time interval is valid
   assertm(time_interval.t_min >= 0 && time_interval.t_max >= time_interval.t_min, "Invalid time interval.");
 
-  // find the index of the position
-  int idx = instance.get_map_data().position_to_index(position);
-
-  // check, that the index is valid
-  assertm(idx >= 0 && idx < instance.get_map_data().width * instance.get_map_data().height, "Invalid index.");
-
-  std::list<TimeInterval>& cur_TI_list = constraints[idx];
+  std::list<TimeInterval>& cur_TI_list = constraints[location];
 
   // if there are no constraints, return the whole interval
   if (cur_TI_list.empty()) return {TimeInterval(time_interval.t_min, INT_MAX)};
@@ -280,14 +244,14 @@ std::vector<TimeInterval> ConstraintTable::get_safe_intervals(const Point2d& pos
       else
       {
         // check for edge collision
-        const EdgeCollision c(position, from, earliest_unobstructed_time);
+        const EdgeCollision c(location, from, earliest_unobstructed_time);
         if (edge_constraints.find(c) == edge_constraints.end())  // if there is no edge collision, add the interval to the safe intervals
           intervals.emplace_back(earliest_unobstructed_time, it->t_min - 1);
         else
         {
-          // if there is an edge collision, then the position the agent is coming from is gonna be obstructed in the next time step, so the
+          // if there is an edge collision, then the location the agent is coming from is gonna be obstructed in the next time step, so the
           // interval should end
-          assertm(earliest_unobstructed_time == time_interval.t_max, "Invalid time interval, the from position will be in edge collision.");
+          assertm(earliest_unobstructed_time == time_interval.t_max, "Invalid time interval, the from location will be in edge collision.");
           return intervals;
         }
       }
@@ -302,7 +266,7 @@ std::vector<TimeInterval> ConstraintTable::get_safe_intervals(const Point2d& pos
 
     if (it->t_max >= earliest_unobstructed_time)
     {
-      // if the constraint obstructs the position forever, there can not be any more safe intervals
+      // if the constraint obstructs the location forever, there can not be any more safe intervals
       if (it->t_max == INT_MAX) return intervals;
 
       // there is a constraint, increase the earliest unobstructed time estimate
@@ -317,11 +281,11 @@ std::vector<TimeInterval> ConstraintTable::get_safe_intervals(const Point2d& pos
   if (cur_TI_list.back().t_max + 1 == earliest_unobstructed_time)
   {
     // if there is an edge collision, increase the earliest unobstructed time by one
-    const EdgeCollision c(position, from, earliest_unobstructed_time);
+    const EdgeCollision c(location, from, earliest_unobstructed_time);
     if (edge_constraints.find(c) != edge_constraints.end())
     {
       // check whether the interval is valid
-      assertm(earliest_unobstructed_time == time_interval.t_max, "Invalid time interval, the from position will be in edge collision.");
+      assertm(earliest_unobstructed_time == time_interval.t_max, "Invalid time interval, the from location will be in edge collision.");
 
       // there can not be any more valid safe intervals after edge conflict
       return intervals;

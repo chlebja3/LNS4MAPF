@@ -20,13 +20,13 @@ public:
   bool feasible;
 
   // paths of the agents
-  std::vector<PointPath> paths;
+  std::vector<Path> paths;
 
   int cost;
   int delay;  // cost - distance
 
   bool is_valid(const Instance& instance) const;
-  void load(const std::string& filename);
+  void load(const std::string& filename, const Instance& instance);
 };
 
 class Solver

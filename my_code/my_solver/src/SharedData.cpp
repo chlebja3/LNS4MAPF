@@ -13,7 +13,7 @@ SharedData::SharedData() : are_new_paths(false)
   std::cout << "Initialized shared data." << std::endl;
 }
 
-void SharedData::update_paths(const std::vector<PointPath>& new_paths, std::vector<SIPPInfo>& new_sipp_info)
+void SharedData::update_paths(const std::vector<Path>& new_paths, std::vector<SIPPInfo>& new_sipp_info)
 {
   // lock  the mutex
   std::lock_guard<std::mutex> lock(paths_mtx);
@@ -29,7 +29,7 @@ void SharedData::update_paths(const std::vector<PointPath>& new_paths, std::vect
   are_new_paths.store(true, std::memory_order_release);
 }
 
-std::pair<std::vector<PointPath>, std::vector<SIPPInfo>> SharedData::consume_paths(void)
+std::pair<std::vector<Path>, std::vector<SIPPInfo>> SharedData::consume_paths(void)
 {
   assertm(are_new_paths, "Trying to consume paths when there are no paths.");
   // lock  the mutex

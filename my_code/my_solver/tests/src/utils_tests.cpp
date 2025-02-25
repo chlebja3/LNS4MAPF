@@ -383,14 +383,14 @@ TEST(test_utils, timepointpath_to_path_simple)
 {
   // generate a simple timepointpath
   TimePointPath tp_path;
-  tp_path.push_back({{0, 1}, {0, 10}});
-  tp_path.push_back({{0, 2}, {3, 6}});
-  tp_path.push_back({{1, 2}, {6, 6}});
-  tp_path.push_back({{2, 2}, {7, INT_MAX}});
+  tp_path.push_back({3, {0, 10}});
+  tp_path.push_back({6, {3, 6}});
+  tp_path.push_back({7, {6, 6}});
+  tp_path.push_back({8, {7, INT_MAX}});
 
   // convert to path
-  PointPath path          = timepointpath_to_path(tp_path);
-  PointPath expected_path = {{0, 1}, {0, 1}, {0, 1}, {0, 2}, {0, 2}, {0, 2}, {1, 2}, {2, 2}};
+  Path path          = timepointpath_to_path(tp_path);
+  Path expected_path = {3, 3, 3, 6, 6, 6, 7, 8};
 
   // check that the path has the right length
   EXPECT_EQ(path.size(), expected_path.size()) << "Wrong path length.";
@@ -407,7 +407,7 @@ TEST(test_utils, timepointpath_to_path_random)
   TimePointPath tp_path = generate_random_timepointpath(len);
 
   // convert to path
-  PointPath path = timepointpath_to_path(tp_path);
+  Path path = timepointpath_to_path(tp_path);
 
   // check that the path has the right length
   EXPECT_EQ(path.size(), len) << "Wrong path length.";
@@ -422,7 +422,7 @@ TEST(test_utils, timepointpath_to_path_random)
     }
     for (int t = it->interval.t_min; t <= t_max; t++)
     {
-      EXPECT_EQ(path[t], it->position) << "Wrong position at time " << t;
+      EXPECT_EQ(path[t], it->location) << "Wrong location at time " << t;
     }
   }
 }
@@ -433,7 +433,10 @@ TEST(test_utils, DirectionRight)
   Point2d p1(0, 0);
   Point2d p2(1, 0);
 
+  // Point version
   EXPECT_EQ(find_direction(p1, p2), Direction::RIGHT) << "Wrong direction.";
+  // location version
+  EXPECT_EQ(find_direction(0, 1), Direction::RIGHT) << "Wrong direction.";
 }
 
 TEST(test_utils, DirectionLeft)
@@ -441,7 +444,10 @@ TEST(test_utils, DirectionLeft)
   Point2d p1(1, 3);
   Point2d p2(0, 3);
 
+  // Point version
   EXPECT_EQ(find_direction(p1, p2), Direction::LEFT) << "Wrong direction.";
+  // location version
+  EXPECT_EQ(find_direction(1, 0), Direction::LEFT) << "Wrong direction.";
 }
 
 TEST(test_utils, DirectionUp)
@@ -449,7 +455,10 @@ TEST(test_utils, DirectionUp)
   Point2d p1(1, 1);
   Point2d p2(1, 0);
 
+  // Point version
   EXPECT_EQ(find_direction(p1, p2), Direction::UP) << "Wrong direction.";
+  // location version
+  EXPECT_EQ(find_direction(4, 1), Direction::UP) << "Wrong direction.";
 }
 
 TEST(test_utils, DirectionDown)
@@ -457,7 +466,10 @@ TEST(test_utils, DirectionDown)
   Point2d p1(2, 1);
   Point2d p2(2, 2);
 
+  // Point version
   EXPECT_EQ(find_direction(p1, p2), Direction::DOWN) << "Wrong direction.";
+  // location version
+  EXPECT_EQ(find_direction(5, 8), Direction::DOWN) << "Wrong direction.";
 }
 
 TEST(test_utils, DirectionNone)
@@ -465,7 +477,10 @@ TEST(test_utils, DirectionNone)
   Point2d p1(1, 1);
   Point2d p2(1, 1);
 
+  // Point version
   EXPECT_EQ(find_direction(p1, p2), Direction::NONE) << "Wrong direction.";
+  // location version
+  EXPECT_EQ(find_direction(4, 4), Direction::NONE) << "Wrong direction.";
 }
 
 

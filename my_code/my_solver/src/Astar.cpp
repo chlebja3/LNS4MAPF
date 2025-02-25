@@ -131,11 +131,13 @@ Path ASTAR::find_path(const int agent_num, const Instance& instance)
   // create frontier - possible datastructures priority_queue, ordered set and pairing heap
   ASTAR::PriorityQueue open_list;
 
-  // calculate the heuristic
-  const double h = instance.get_heuristic_manhattan(agent_num, start);
+  {
+    // calculate the heuristic
+    const double h = instance.get_heuristic_manhattan(agent_num, start);
 
-  // add the start node to the priority queue
-  open_list.push(node_pool.add_node(AstarNode(start, 0, h, nullptr)));
+    // add the start node to the priority queue
+    open_list.push(node_pool.add_node(AstarNode(start, 0, h, nullptr)));
+  }
   ASTAR::generated_nodes++;
   // std::cout << ASTAR::generated_nodes << std::endl;
 

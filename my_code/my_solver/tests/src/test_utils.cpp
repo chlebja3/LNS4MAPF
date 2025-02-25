@@ -19,11 +19,12 @@ std::string get_base_path_tests()
 
 TimePointPath generate_random_timepointpath(int len_wanted)
 {
-  int                          len             = len_wanted - 1;  // decrease the length as the last element has to be handled separately
-  TimePointPath                tp_path         = {};
-  int                          i               = 0;
-  Point2d                      cur_pos         = {0, 0};  // start at (0, 0)
-  const std::array<Point2d, 4> possible_shifts = {Point2d{0, 1}, Point2d{0, -1}, Point2d{1, 0}, Point2d{-1, 0}};
+  int                      len             = len_wanted - 1;  // decrease the length as the last element has to be handled separately
+  TimePointPath            tp_path         = {};
+  int                      i               = 0;
+  int                      cur_loc         = 0;  // start at (0, 0)
+  const int                instance_width  = 5;  // lets say the instance has width 5
+  const std::array<int, 4> possible_shifts = {-instance_width, -1, 1, instance_width};
   while (i < len)
   {
     // choose a random count of elements (maximum 10)
@@ -33,16 +34,19 @@ TimePointPath generate_random_timepointpath(int len_wanted)
     int interval_len = i + count - 1 + rand() % (INT_MAX - i - count + 1);
 
     // add the timepoint to the path
-    tp_path.emplace_back(cur_pos, TimeInterval(i, interval_len));
+    tp_path.emplace_back(cur_loc, TimeInterval(i, interval_len));
 
     // increment i
     i += count;
 
     // choose a random neighboring position
-    cur_pos = cur_pos + possible_shifts[rand() % 4];
+    cur_loc = cur_loc + possible_shifts[rand() % 4];
+
+    // make sure the position is valid
+    while (cur_loc < 0 || cur_loc > instance_width * instance_width) cur_loc = cur_loc + possible_shifts[rand() % 4];
   }
   // last interval
-  tp_path.emplace_back(cur_pos, TimeInterval(i, INT_MAX));
+  tp_path.emplace_back(cur_loc, TimeInterval(i, INT_MAX));
 
   return tp_path;
 }

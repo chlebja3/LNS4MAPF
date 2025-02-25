@@ -105,6 +105,7 @@ public:
 };
 
 enum Direction find_direction(const Point2d& start, const Point2d& end);
+enum Direction find_direction(const int start, const int end);
 
 class TimeInterval
 {
@@ -124,16 +125,10 @@ bool overlap(const TimeInterval& i1, const TimeInterval& i2);
 class TimePoint
 {
 public:
-  Point2d      position;
+  int          location;
   TimeInterval interval;
 
-  TimePoint(const int x, const int y, const int t_min, const int t_max);
-  TimePoint(const Point2d& position, const TimeInterval& interval);
-
-  struct hash_time_point
-  {
-    size_t operator()(const TimePoint& p) const;
-  };
+  TimePoint(const int location, const TimeInterval& interval);
 
   bool operator==(const TimePoint& other) const;
 };
@@ -173,7 +168,7 @@ typedef std::vector<int>       Path;
 typedef std::vector<Point2d>   PointPath;
 typedef std::vector<TimePoint> TimePointPath;
 
-PointPath timepointpath_to_path(const TimePointPath& path);
+Path timepointpath_to_path(const TimePointPath& path);
 
 /**
  * @brief Generate a random color. To make the color palette look more visually pleasing, the random color is mixed with (mix_r, mix_g,

@@ -18,11 +18,11 @@
 class EdgeCollision
 {
 public:
-  Point2d from;
-  Point2d to;
-  int     t;
+  int from;
+  int to;
+  int t;
 
-  EdgeCollision(const Point2d& from, const Point2d& to, const int t);
+  EdgeCollision(const int from, const int to, const int t);
 
   bool operator==(const EdgeCollision& other) const;
 
@@ -41,9 +41,9 @@ public:
   void                      add_constraints(const TimePointPath& path);
   void                      remove_constraint(const TimePoint& timepoint);
   void                      remove_constraints(const TimePointPath& path);
-  TimeInterval              get_first_safe_interval(const Point2d& position);
-  TimeInterval              get_safe_interval(const Point2d& position, const Point2d& from, const int time);
-  std::vector<TimeInterval> get_safe_intervals(const Point2d& position, const Point2d& from, const TimeInterval& time_interval);
+  TimeInterval              get_first_safe_interval(const int position);
+  TimeInterval              get_safe_interval(const int position, const int from, const int time);
+  std::vector<TimeInterval> get_safe_intervals(const int position, const int from, const TimeInterval& time_interval);
   int                       get_last_dynamic_constraint(void);
 
 private:

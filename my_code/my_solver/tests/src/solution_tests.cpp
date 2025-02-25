@@ -16,9 +16,11 @@
 TEST(SolutionTest, LoadSolutionDummy)
 {
   // load solution
-  std::string base_path = get_base_path_tests();  // path to my_solver
-  Solution    sol;
-  sol.load(base_path + "/tests/test_solutions/dummy_1.sol");
+  std::string               base_path = get_base_path_tests();  // path to my_solver
+  std::unique_ptr<Instance> instance =
+      std::make_unique<Instance>(base_path + "/tests/test_maps/dummy_3_3.map", base_path + "/tests/test_scen/dummy_3_3_scen_1.scen", 1);
+  Solution sol;
+  sol.load(base_path + "/tests/test_solutions/dummy_1.sol", *instance);
 
   // check that both agents have paths
   EXPECT_EQ(sol.paths.size(), 2);
@@ -26,39 +28,41 @@ TEST(SolutionTest, LoadSolutionDummy)
   EXPECT_EQ(sol.paths[0].size(), 5);
   EXPECT_EQ(sol.paths[1].size(), 5);
   // check that paths are correct
-  EXPECT_EQ(sol.paths[0][0], Point2d(0, 0));
-  EXPECT_EQ(sol.paths[0][1], Point2d(0, 1));
-  EXPECT_EQ(sol.paths[0][2], Point2d(0, 2));
-  EXPECT_EQ(sol.paths[0][3], Point2d(1, 2));
-  EXPECT_EQ(sol.paths[0][4], Point2d(2, 2));
-  EXPECT_EQ(sol.paths[1][0], Point2d(2, 2));
-  EXPECT_EQ(sol.paths[1][1], Point2d(2, 1));
-  EXPECT_EQ(sol.paths[1][2], Point2d(2, 0));
-  EXPECT_EQ(sol.paths[1][3], Point2d(1, 0));
-  EXPECT_EQ(sol.paths[1][4], Point2d(0, 0));
+  EXPECT_EQ(sol.paths[0][0], 0);
+  EXPECT_EQ(sol.paths[0][1], 3);
+  EXPECT_EQ(sol.paths[0][2], 6);
+  EXPECT_EQ(sol.paths[0][3], 7);
+  EXPECT_EQ(sol.paths[0][4], 8);
+  EXPECT_EQ(sol.paths[1][0], 8);
+  EXPECT_EQ(sol.paths[1][1], 5);
+  EXPECT_EQ(sol.paths[1][2], 2);
+  EXPECT_EQ(sol.paths[1][3], 1);
+  EXPECT_EQ(sol.paths[1][4], 0);
 }
 
 TEST(SolutionTest, LoadSolutionByLNS)
 {
   // load solution
-  std::string base_path = get_base_path_tests();  // path to my_solver
-  Solution    sol;
-  sol.load(base_path + "/tests/test_solutions/den520d_scen0_500agents.sol");
+  std::string               base_path = get_base_path_tests();  // path to my_solver
+  std::unique_ptr<Instance> instance =
+      std::make_unique<Instance>(base_path + "/tests/test_maps/dummy_3_3.map", base_path + "/tests/test_scen/dummy_3_3_scen_1.scen", 1);
+  Solution sol;
+  sol.load(base_path + "/tests/test_solutions/den520d_scen0_500agents.sol", *instance);
 
   // check that all agents have paths
   EXPECT_EQ(sol.paths.size(), 500);
 
   // check start of first path
-  EXPECT_EQ(sol.paths[0][0], Point2d(61, 174));
+  EXPECT_EQ(sol.paths[0][0], instance->position_to_location(Point2d(61, 174)));
 
   // check end of first path
-  EXPECT_EQ(sol.paths[0].back(), Point2d(132, 100));
+  EXPECT_EQ(sol.paths[0].back(), instance->position_to_location(Point2d(132, 100)));
 
   // check start of last path
-  EXPECT_EQ(sol.paths[499][0], Point2d(207, 190));
+  EXPECT_EQ(sol.paths[499][0], instance->position_to_location(Point2d(207, 190)));
 
   // check end of last path
-  EXPECT_EQ(sol.paths[499].back(), Point2d(179, 175));
+  EXPECT_EQ(sol.paths[499].back(), instance->position_to_location(Point2d(179, 175)));
 }
 
 // Test validity check
@@ -74,8 +78,8 @@ TEST(SolutionTest, ValidSolution)
 
   Solution sol;
   sol.paths = {
-      {{0, 0}, {1, 0}, {2, 0}, {2, 1}, {2, 2}},  // Agent 1
-      {{2, 2}, {1, 2}, {0, 2}, {0, 1}, {0, 0}}   // Agent 2
+      {0, 1, 2, 5, 8},  // Agent 1
+      {8, 7, 6, 3, 0}   // Agent 2
   };
 
   EXPECT_TRUE(sol.is_valid(*instance));
@@ -90,8 +94,8 @@ TEST(SolutionTest, InvalidStartPosition)
       std::make_unique<Instance>(base_path + "/tests/test_maps/dummy_3_3.map", base_path + "/tests/test_scen/dummy_3_3_scen_1.scen", 2);
 
   Solution sol;
-  sol.paths = {{{1, 0}, {2, 0}, {2, 1}, {2, 2}},  // Agent 1 starts at wrong position
-               {{2, 2}, {1, 2}, {0, 2}, {0, 1}, {0, 0}}};
+  sol.paths = {{1, 2, 5, 8},  // Agent 1 starts at wrong position
+               {8, 7, 6, 3, 0}};
 
   EXPECT_FALSE(sol.is_valid(*instance));
 }
@@ -105,8 +109,8 @@ TEST(SolutionTest, InvalidGoalPosition)
       std::make_unique<Instance>(base_path + "/tests/test_maps/dummy_3_3.map", base_path + "/tests/test_scen/dummy_3_3_scen_1.scen", 2);
 
   Solution sol;
-  sol.paths = {{{0, 0}, {1, 0}, {2, 0}, {2, 1}, {1, 1}},  // Agent 1 does not reach goal
-               {{2, 2}, {1, 2}, {0, 2}, {0, 1}, {0, 0}}};
+  sol.paths = {{0, 1, 2, 5, 4},  // Agent 1 does not reach goal
+               {8, 7, 6, 3, 0}};
 
   EXPECT_FALSE(sol.is_valid(*instance));
 }
@@ -121,8 +125,8 @@ TEST(SolutionTest, InvalidCollisionSamePosition)
 
   Solution sol;
   sol.paths = {
-      {{0, 0}, {1, 0}, {2, 0}, {2, 1}, {2, 2}},  // Agent 1
-      {{2, 2}, {2, 1}, {2, 0}, {0, 1}, {0, 0}}   // Collision at (2,0) at t=2
+      {0, 1, 2, 5, 8},  // Agent 1
+      {8, 5, 2, 1, 0}   // Collision at (2,0) at t=2
   };
 
   EXPECT_FALSE(sol.is_valid(*instance));
@@ -138,8 +142,8 @@ TEST(SolutionTest, InvalidEdgeSwapCollision)
 
   Solution sol;
   sol.paths = {
-      {{0, 0}, {1, 0}, {2, 0}, {2, 1}, {2, 2}},         // Agent 1
-      {{2, 2}, {2, 1}, {2, 1}, {2, 0}, {1, 0}, {0, 0}}  // Agents swap places at t=3
+      {0, 1, 2, 5, 8},    // Agent 1
+      {8, 5, 5, 2, 1, 0}  // Agents swap places at t=3
   };
 
   EXPECT_FALSE(sol.is_valid(*instance));
@@ -154,8 +158,8 @@ TEST(SolutionTest, InvalidThroughObstacle)
       std::make_unique<Instance>(base_path + "/tests/test_maps/dummy_3_3.map", base_path + "/tests/test_scen/dummy_3_3_scen_1.scen", 2);
 
   Solution sol;
-  sol.paths = {{{0, 0}, {0, 1}, {1, 1}, {1, 2}, {2, 2}},  // Moves through obstacle
-               {{2, 2}, {1, 2}, {0, 2}, {0, 1}, {0, 0}}};
+  sol.paths = {{0, 3, 4, 7, 8},  // Moves through obstacle
+               {8, 7, 6, 3, 0}};
 
   EXPECT_FALSE(sol.is_valid(*instance));
 }
@@ -183,8 +187,8 @@ TEST(SolutionTest, AgentWithoutPath)
       std::make_unique<Instance>(base_path + "/tests/test_maps/dummy_3_3.map", base_path + "/tests/test_scen/dummy_3_3_scen_1.scen", 2);
 
   Solution sol;
-  sol.paths = {{{0, 0}, {1, 0}, {2, 0}, {2, 1}, {2, 2}},  // agent 1
-               {}};                                       // agent 2 has no path
+  sol.paths = {{0, 1, 2, 5, 8},  // agent 1
+               {}};              // agent 2 has no path
 
   EXPECT_FALSE(sol.is_valid(*instance));
 }
@@ -199,8 +203,8 @@ TEST(SolutionTest, InvalidDiagonalMove)
       std::make_unique<Instance>(base_path + "/tests/test_maps/empty_3_3.map", base_path + "/tests/test_scen/dummy_3_3_scen_1.scen", 2);
 
   Solution sol;
-  sol.paths = {{{0, 0}, {1, 1}, {2, 2}},  // Moves diagonally
-               {{2, 2}, {1, 2}, {0, 2}, {0, 1}, {0, 0}}};
+  sol.paths = {{0, 4, 8},  // Moves diagonally
+               {8, 7, 6, 3, 0}};
 
   EXPECT_FALSE(sol.is_valid(*instance));
 }
@@ -214,8 +218,8 @@ TEST(SolutionTest, InvalidMoveOutsideMapNeg)
       std::make_unique<Instance>(base_path + "/tests/test_maps/dummy_3_3.map", base_path + "/tests/test_scen/dummy_3_3_scen_1.scen", 2);
 
   Solution sol;
-  sol.paths = {{{0, 0}, {0, 1}, {-1, 1}, {-1, 2}, {0, 2}, {1, 2}, {2, 2}},  // Moves out of the map (negative x)
-               {{2, 2}, {1, 2}, {0, 2}, {0, 1}, {0, 0}}};
+  sol.paths = {{0, -1, 0, 1, 2, 5, 8},  // Moves out of the map (negative x)
+               {8, 7, 6, 3, 0}};
 
   EXPECT_FALSE(sol.is_valid(*instance));
 }
@@ -230,8 +234,8 @@ TEST(SolutionTest, InvalidMoveOutsideMapPos)
       std::make_unique<Instance>(base_path + "/tests/test_maps/dummy_3_3.map", base_path + "/tests/test_scen/dummy_3_3_scen_1.scen", 2);
 
   Solution sol;
-  sol.paths = {{{0, 0}, {1, 0}, {2, 0}, {3, 0}, {3, 1}, {2, 1}, {2, 2}},  // Moves out of the map (x too big)
-               {{2, 2}, {1, 2}, {0, 2}, {0, 1}, {0, 0}}};
+  sol.paths = {{0, 1, 2, 5, 8, 9, 8},  // Moves out of the map
+               {8, 7, 6, 3, 0}};
 
   EXPECT_FALSE(sol.is_valid(*instance));
 }
@@ -245,8 +249,8 @@ TEST(SolutionTest, InvalidJumpMove)
       std::make_unique<Instance>(base_path + "/tests/test_maps/dummy_3_3.map", base_path + "/tests/test_scen/dummy_3_3_scen_1.scen", 2);
 
   Solution sol;
-  sol.paths = {{{0, 0}, {2, 0}, {2, 2}},  // Jumps from (0,0) to (2,0)
-               {{2, 2}, {1, 2}, {0, 2}, {0, 1}, {0, 0}}};
+  sol.paths = {{0, 2, 8},  // Jumps from (0,0) to (2,0)
+               {8, 7, 6, 3, 0}};
 
   EXPECT_FALSE(sol.is_valid(*instance));
 }
@@ -261,7 +265,7 @@ TEST(SolutionTest, LargeInstanceValid)
 
   // load solution by MAPF-LNS
   Solution sol;
-  sol.load(base_path + "/tests/test_solutions/den520d_scen0_500agents.sol");
+  sol.load(base_path + "/tests/test_solutions/den520d_scen0_500agents.sol", *instance);
 
   EXPECT_TRUE(sol.is_valid(*instance));
 }

@@ -73,6 +73,15 @@ enum Direction find_direction(const Point2d& start, const Point2d& end)
   return Direction::NONE;
 }
 
+enum Direction find_direction(const int start, const int end)
+{
+  if (start == end + 1) return Direction::LEFT;
+  if (start == end - 1) return Direction::RIGHT;
+  if (start > end) return Direction::UP;
+  if (start < end) return Direction::DOWN;
+  return Direction::NONE;
+}
+
 TimeInterval::TimeInterval(const int t_min, const int t_max) : t_min(t_min), t_max(t_max){};
 
 bool TimeInterval::operator==(const TimeInterval& other) const
@@ -98,19 +107,11 @@ bool overlap(const TimeInterval& i1, const TimeInterval& i2)
     return true;
 }
 
-TimePoint::TimePoint(const int x, const int y, const int t_min, const int t_max) : position(Point2d(x, y)), interval(t_min, t_max){};
-TimePoint::TimePoint(const Point2d& position, const TimeInterval& interval) : position(position), interval(interval){};
+TimePoint::TimePoint(const int location, const TimeInterval& interval) : location(location), interval(interval){};
 
 bool TimePoint::operator==(const TimePoint& other) const
 {
-  return position == other.position && interval == other.interval;
-}
-
-size_t TimePoint::hash_time_point::operator()(const TimePoint& p) const
-{
-  // hash x, y, tmin, tmax, bit shift to break the symmetry and xor to finalize
-  return std::hash<int>()(p.position.x) ^ (std::hash<int>()(p.position.y) << 1) ^ (std::hash<int>()(p.interval.t_min) << 2) ^
-         (std::hash<int>()(p.interval.t_max) << 3);
+  return location == other.location && interval == other.interval;
 }
 
 bool Map::is_in(const Point2d& p) const
@@ -197,9 +198,9 @@ void Map::print(void) const
   }
 }
 
-PointPath timepointpath_to_path(const TimePointPath& tp_path)
+Path timepointpath_to_path(const TimePointPath& tp_path)
 {
-  PointPath path;
+  Path path;
   for (auto it = tp_path.begin(); it != tp_path.end(); it++)
   {
     // for last element add the position only once, as it is obvious that the agent stays in the last position forever
@@ -212,7 +213,7 @@ PointPath timepointpath_to_path(const TimePointPath& tp_path)
     }
 
     // insert N copies to the end of the vector
-    path.resize(path.size() + N, it->position);
+    path.resize(path.size() + N, it->location);
   }
   return path;
 }

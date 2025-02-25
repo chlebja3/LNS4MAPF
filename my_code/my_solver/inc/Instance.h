@@ -49,8 +49,9 @@ public:
   int    get_heuristic_manhattan(const int agent_num, const int loc) const;
   double get_heuristic_euclidean(const int agent_num, const int loc) const;
 
-  Point2d location_to_position(const int location) const;
-  int     position_to_location(const Point2d& position) const;
+  Point2d   location_to_position(const int location) const;
+  int       position_to_location(const Point2d& position) const;
+  PointPath path_to_pointpath(const Path& path) const;
 
 
 private:

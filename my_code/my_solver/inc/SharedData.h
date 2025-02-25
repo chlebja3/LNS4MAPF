@@ -18,12 +18,12 @@ public:
 
   SharedData(void);
 
-  void update_paths(const std::vector<PointPath>& new_paths, std::vector<SIPPInfo>& sipp_info);
+  void update_paths(const std::vector<Path>& new_paths, std::vector<SIPPInfo>& sipp_info);
 
-  std::pair<std::vector<PointPath>, std::vector<SIPPInfo>> consume_paths(void);
+  std::pair<std::vector<Path>, std::vector<SIPPInfo>> consume_paths(void);
 
 private:
-  std::mutex             paths_mtx;
-  std::vector<PointPath> paths;
-  std::vector<SIPPInfo>  sipp_info;
+  std::mutex            paths_mtx;
+  std::vector<Path>     paths;
+  std::vector<SIPPInfo> sipp_info;
 };

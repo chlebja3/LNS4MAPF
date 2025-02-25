@@ -223,3 +223,22 @@ TEST(InstanceTest, PositionLocationIdentity)
     }
   }
 }
+
+// Test Path to PointPath
+TEST(InstanceTest, PathToPointPath)
+{
+  // load instance
+  std::string               base_path = get_base_path_tests();  // path to my_solver
+  std::unique_ptr<Instance> instance =
+      std::make_unique<Instance>(base_path + "/tests/test_maps/empty_5_5.map", base_path + "/tests/test_scen/empty_5_5_scen_1.scen", 1);
+
+  // create path
+  std::vector<int> path = {0, 1, 2, 7, 12, 11, 10, 5, 6};
+
+  // convert path to point path
+  std::vector<Point2d> point_path = instance->path_to_pointpath(path);
+
+  // check that the path is correct
+  std::vector<Point2d> expected_point_path = {{0, 0}, {1, 0}, {2, 0}, {2, 1}, {2, 2}, {1, 2}, {0, 2}, {0, 1}, {1, 1}};
+  EXPECT_EQ(point_path, expected_point_path) << "Path to point path is not correct";
+}
