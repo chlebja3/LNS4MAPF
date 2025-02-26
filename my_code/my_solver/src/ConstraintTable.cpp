@@ -11,15 +11,15 @@
 #include <climits>
 #include <iostream>
 
-EdgeCollision::EdgeCollision(const int from, const int to, const int t) : from(from), to(to), t(t){};
+EdgeConstraint::EdgeConstraint(const int from, const int to, const int t) : from(from), to(to), t(t){};
 
 
-auto EdgeCollision::operator==(const EdgeCollision& other) const -> bool
+auto EdgeConstraint::operator==(const EdgeConstraint& other) const -> bool
 {
   return from == other.from && to == other.to && t == other.t;
 }
 
-auto EdgeCollision::hash_edge_collision::operator()(const EdgeCollision& c) const -> size_t
+auto EdgeConstraint::hash_edge_collision::operator()(const EdgeConstraint& c) const -> size_t
 {
   std::size_t seed = 0;
   // combine hash of from, to and t
@@ -29,7 +29,7 @@ auto EdgeCollision::hash_edge_collision::operator()(const EdgeCollision& c) cons
   return seed;
 }
 
-ConstraintTable::ConstraintTable(const Instance& instance) : instance(instance)
+ConstraintTable::ConstraintTable(const Instance& instance) : instance(instance), max_path_len_estimate(INT_MAX)
 {
   // initialize the constraint vectors TODO static obstacles dont need constraint vectors
   const int num_cells = instance.get_map_data().width * instance.get_map_data().height;
@@ -221,8 +221,7 @@ void ConstraintTable::add_constraints(const TimePointPath& path)
     if (i > 0)  // skip the first point as there is no edge
     {
       // the time when the edge is used is the start time of the later interval
-      const EdgeCollision c(path[i - 1].location, path[i].location, path[i].interval.t_min);
-      edge_constraints.insert(c);
+      edge_constraint_table.add(path[i - 1].location, path[i].location, path[i].interval.t_min);
     }
   }
 }
@@ -238,8 +237,7 @@ void ConstraintTable::add_constraints_old(const TimePointPath& path)
     if (i > 0)  // skip the first point as there is no edge
     {
       // the time when the edge is used is the start time of the later interval
-      const EdgeCollision c(path[i - 1].location, path[i].location, path[i].interval.t_min);
-      edge_constraints.insert(c);
+      edge_constraint_table.add(path[i - 1].location, path[i].location, path[i].interval.t_min);
     }
   }
 }
@@ -254,9 +252,7 @@ void ConstraintTable::remove_constraints(const TimePointPath& path)
     // remove the edge constraint
     if (i > 0)  // skip the first point as there is no edge
     {
-      const EdgeCollision c(path[i - 1].location, path[i].location, path[i].interval.t_min);
-      const int           erased = edge_constraints.erase(c);
-      assertm(erased == 1, "Trying to erase an edge constraint that is not present.");
+      edge_constraint_table.remove(path[i - 1].location, path[i].location, path[i].interval.t_min);
     }
   }
 }
@@ -271,9 +267,7 @@ void ConstraintTable::remove_constraints_old(const TimePointPath& path)
     // remove the edge constraint
     if (i > 0)  // skip the first point as there is no edge
     {
-      const EdgeCollision c(path[i - 1].location, path[i].location, path[i].interval.t_min);
-      const int           erased = edge_constraints.erase(c);
-      assertm(erased == 1, "Trying to erase an edge constraint that is not present.");
+      edge_constraint_table.remove(path[i - 1].location, path[i].location, path[i].interval.t_min);
     }
   }
 }
@@ -386,8 +380,7 @@ auto ConstraintTable::get_safe_intervals_old(const int location, const int from,
       else
       {
         // check for edge collision
-        const EdgeCollision c(location, from, earliest_unobstructed_time);
-        if (edge_constraints.find(c) == edge_constraints.end())
+        if (!edge_constraint_table.get(location, from, earliest_unobstructed_time))
         {  // if there is no edge collision, add the interval to the safe intervals
           intervals.emplace_back(earliest_unobstructed_time, it->t_min - 1);
         }
@@ -434,8 +427,7 @@ auto ConstraintTable::get_safe_intervals_old(const int location, const int from,
   if (cur_TI_list.back().t_max + 1 == earliest_unobstructed_time)
   {
     // if there is an edge collision, increase the earliest unobstructed time by one
-    const EdgeCollision c(location, from, earliest_unobstructed_time);
-    if (edge_constraints.find(c) != edge_constraints.end())
+    if (edge_constraint_table.get(location, from, earliest_unobstructed_time))
     {
       // check whether the interval is valid
       assertm(earliest_unobstructed_time == time_interval.t_max, "Invalid time interval, the from location will be in edge collision.");
@@ -480,8 +472,7 @@ auto ConstraintTable::get_safe_interval_old(const int location, const int from, 
       }
 
       // if there is no edge collision, return the interval
-      const EdgeCollision c(location, from, earliest_unobstructed_time);
-      if (edge_constraints.find(c) == edge_constraints.end())
+      if (!edge_constraint_table.get(location, from, earliest_unobstructed_time))
       {
         return TimeInterval(earliest_unobstructed_time, it->t_min - 1);
       }
@@ -511,8 +502,7 @@ auto ConstraintTable::get_safe_interval_old(const int location, const int from, 
   if (cur_TI_list.back().t_max + 1 == earliest_unobstructed_time)
   {
     // if there is an edge collision, increase the earliest unobstructed time by one
-    const EdgeCollision c(location, from, earliest_unobstructed_time);
-    if (edge_constraints.find(c) != edge_constraints.end())
+    if (edge_constraint_table.get(location, from, earliest_unobstructed_time))
     {
       earliest_unobstructed_time++;
     }
@@ -576,4 +566,20 @@ void ConstraintTable::update_max_path_len_estimate()
       max_path_len_estimate = INT_MAX;
     }
   }
+}
+
+void EdgeConstraintTable::add(int loc1, int loc2, int time)
+{
+  edge_constraints.insert(EdgeConstraint(loc1, loc2, time));
+}
+
+void EdgeConstraintTable::remove(int loc1, int loc2, int time)
+{
+  int erased = edge_constraints.erase(EdgeConstraint(loc1, loc2, time));
+  assertm(erased == 1, "Trying to erase an edge constraint that is not present.");
+}
+
+auto EdgeConstraintTable::get(int loc1, int loc2, int time) const -> bool
+{
+  return edge_constraints.find(EdgeConstraint(loc1, loc2, time)) != edge_constraints.end();
 }
