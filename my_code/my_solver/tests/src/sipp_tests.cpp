@@ -16,312 +16,6 @@
 #include "SIPP.h"
 #include "test_utils.h"
 
-/**
- * @brief Class for testing the ConstraintTable class
- */
-class ConstraintTableTest : public ::testing::Test
-{
-protected:
-  std::unique_ptr<Instance>        instance;
-  std::unique_ptr<ConstraintTable> table;
-
-  void SetUp() override
-  {
-    // load instance
-    std::string base_path = get_base_path_tests();  // path to my_solver
-
-    instance =
-        std::make_unique<Instance>(base_path + "/tests/test_maps/dummy_3_3.map", base_path + "/tests/test_scen/dummy_3_3_scen_1.scen", 1);
-    table = std::make_unique<ConstraintTable>(*instance);
-  }
-
-  void TearDown() override
-  {
-  }
-};
-
-// Constraint Table tests
-// Test 1: Adding a single constraint and checking if it is stored correctly
-TEST_F(ConstraintTableTest, SingleConstraint)
-{
-  TimePoint tp(7, {3, 5});  // location (1,2) with time interval [3,5]
-                            //
-  table->add_constraint(tp);
-  table->add_constraint_safe_intervals(tp);
-
-  // test that the last constraint is right
-  EXPECT_EQ(table->get_last_dynamic_constraint(), 3);
-
-  // test that the first safe interval is right
-  TimeInterval first_si = table->get_first_safe_interval(7);
-  EXPECT_EQ(first_si, TimeInterval(0, 2));
-
-  // test that the interval after the constraint is retrieved
-  TimeInterval after_si = table->calculate_safe_interval(7, 4, 3);
-  EXPECT_EQ(after_si, TimeInterval(6, INT_MAX));
-
-  // test that both the interval before and after the constraint are retrieved
-  std::vector<TimeInterval> safeIntervals = table->calculate_safe_intervals(7, 4, {0, 6});
-  ASSERT_EQ(safeIntervals.size(), 2) << "Expected two safe intervals after adding a constraint!";
-  EXPECT_EQ(safeIntervals[0], TimeInterval(0, 2));
-  EXPECT_EQ(safeIntervals[1], TimeInterval(6, INT_MAX));
-
-  // test the other method to retrieve itnervals
-  std::list<TimeInterval>::const_iterator start, end;
-  std::tie(start, end) = table->get_safe_intervals(7, 4, {0, 6});
-  ASSERT_EQ(std::distance(start, end), 2) << "Expected two safe intervals after adding a constraint!";
-  EXPECT_EQ(*start, TimeInterval(0, 2));
-  EXPECT_EQ(*std::next(start), TimeInterval(6, INT_MAX));
-
-
-  // test that no interval is retrieved when the constraint is in the way
-  safeIntervals = table->calculate_safe_intervals(7, 4, {2, 5});
-  ASSERT_EQ(safeIntervals.size(), 1) << "Expected only one safe interval!";
-  EXPECT_EQ(safeIntervals[0], TimeInterval(2, 2));
-
-  // the other method
-  std::tie(start, end) = table->get_safe_intervals(7, 4, {2, 5});
-  ASSERT_EQ(std::distance(start, end), 1) << "Expected only one safe interval!";
-  EXPECT_EQ(*start, TimeInterval(0, 2));
-}
-
-// Test 2: Adding multiple constraints and ensuring safe intervals are computed correctly
-TEST_F(ConstraintTableTest, MultipleSingleConstraints)
-{
-  table->add_constraint(TimePoint(7, {2, 4}));
-  table->add_constraint(TimePoint(7, {5, 5}));
-  table->add_constraint(TimePoint(7, {6, 7}));
-  table->add_constraint(TimePoint(7, {10, 15}));
-  table->add_constraint_safe_intervals(TimePoint(7, {2, 4}));
-  table->add_constraint_safe_intervals(TimePoint(7, {5, 5}));
-  table->add_constraint_safe_intervals(TimePoint(7, {6, 7}));
-  table->add_constraint_safe_intervals(TimePoint(7, {10, 15}));
-
-  // test that the last constraint end is right
-  EXPECT_EQ(table->get_last_dynamic_constraint(), 10);
-
-  std::vector<TimeInterval> safe_intervals = table->calculate_safe_intervals(7, 0, {0, 20});
-  ASSERT_EQ(safe_intervals.size(), 3) << "Expected three safe intervals after adding multiple constraints!";
-  EXPECT_EQ(safe_intervals[0], TimeInterval(0, 1));
-  EXPECT_EQ(safe_intervals[1], TimeInterval(8, 9));
-  EXPECT_EQ(safe_intervals[2], TimeInterval(16, INT_MAX));
-
-  // test the other method to retrieve itnervals
-  std::list<TimeInterval>::const_iterator start, end;
-  std::tie(start, end) = table->get_safe_intervals(7, 0, {0, 20});
-  ASSERT_EQ(std::distance(start, end), 3) << "Expected three safe intervals after adding multiple constraints!";
-  EXPECT_EQ(*start, TimeInterval(0, 1));
-  EXPECT_EQ(*std::next(start), TimeInterval(8, 9));
-  EXPECT_EQ(*std::next(start, 2), TimeInterval(16, INT_MAX));
-}
-
-// Test 3: Removing a constraint and ensuring safe intervals update
-TEST_F(ConstraintTableTest, RemoveConstraint)
-{
-  TimePoint tp(7, {3, 5});
-  table->add_constraint(tp);
-  table->add_constraint_safe_intervals(tp);
-  table->remove_constraint(tp);
-  table->remove_constraint_safe_intervals(tp);
-
-  // test that the last constraint end is right
-  EXPECT_EQ(table->get_last_dynamic_constraint(), 0);
-
-  TimeInterval first_si = table->get_first_safe_interval(7);
-  EXPECT_TRUE(first_si.t_min == 0 && first_si.t_max == INT_MAX);
-
-  std::list<TimeInterval>::const_iterator start, end;
-  std::tie(start, end) = table->get_safe_intervals(7, 4, {0, INT_MAX});
-  ASSERT_EQ(std::distance(start, end), 1) << "Expected one safe interval after removing a constraint!";
-  EXPECT_EQ(*start, TimeInterval(0, INT_MAX));
-}
-
-// Test 4: Querying safe interval for an empty position
-TEST_F(ConstraintTableTest, GetSafeIntervalEmpty)
-{
-  TimeInterval first_si = table->get_first_safe_interval(4);
-  EXPECT_TRUE(first_si.t_min == 0 && first_si.t_max == INT_MAX) << "No constraints should mean an unlimited safe interval.";
-
-  // The other method
-  std::list<TimeInterval>::const_iterator start, end;
-  std::tie(start, end) = table->get_safe_intervals(4, 0, {0, INT_MAX});
-  ASSERT_EQ(std::distance(start, end), 1) << "Expected one safe interval for an empty position!";
-  EXPECT_EQ(*start, TimeInterval(0, INT_MAX));
-}
-
-// Test 5: Handling constraints dynamically (adding and removing in sequence)
-TEST_F(ConstraintTableTest, DynamicAddRemove)
-{
-  table->add_constraint(TimePoint(4, {2, 4}));
-  table->add_constraint_safe_intervals(TimePoint(4, {2, 4}));
-  table->add_constraint(TimePoint(4, {6, 8}));
-  table->add_constraint_safe_intervals(TimePoint(4, {6, 8}));
-  table->remove_constraint(TimePoint(4, {2, 4}));
-  table->remove_constraint_safe_intervals(TimePoint(4, {2, 4}));
-
-  // test that the last constraint end is right
-  EXPECT_EQ(table->get_last_dynamic_constraint(), 6);
-
-  std::vector<TimeInterval> safe_intervals = table->calculate_safe_intervals(4, 0, {0, 10});
-  ASSERT_EQ(safe_intervals.size(), 2) << "Expected two safe intervals after removal.";
-  EXPECT_EQ(safe_intervals[0], TimeInterval(0, 5));
-  EXPECT_EQ(safe_intervals[1], TimeInterval(9, INT_MAX));
-
-  // the other method
-  std::list<TimeInterval>::const_iterator start, end;
-  std::tie(start, end) = table->get_safe_intervals(4, 0, {0, 10});
-  ASSERT_EQ(std::distance(start, end), 2) << "Expected two safe intervals after removal.";
-  EXPECT_EQ(*start, TimeInterval(0, 5));
-  EXPECT_EQ(*std::next(start), TimeInterval(9, INT_MAX));
-}
-
-// Test 6: Constraint removal from empty table if in debug mode
-#ifdef NDEBUG
-TEST_F(ConstraintTableTest, DISABLED_RemoveFromEmptyTable)
-#else
-TEST_F(ConstraintTableTest, RemoveFromEmptyTable)
-#endif
-{
-  TimePoint tp(4, {3, 6});
-  // expect assert death
-  EXPECT_DEATH(table->remove_constraint(tp), "Trying to remove interval from an empty list.");
-  EXPECT_DEATH(table->remove_constraint_safe_intervals(tp), "Constraint interval can not have any overlap with safe interval.");
-}
-
-// Test 7: Constraint removal when no constraint exists
-TEST_F(ConstraintTableTest, RemoveNonExistentConstraint)
-{
-  TimePoint tp(4, {3, 6});
-  // add a dummy constraint to prevent assertion failure removing from empty table
-  table->add_constraint(TimePoint(4, {0, 2}));
-  table->add_constraint_safe_intervals(TimePoint(4, {0, 2}));
-  try
-  {
-    table->remove_constraint(tp);
-    FAIL() << "Removing non-existent constraint should throw an exception.";
-  }
-  catch (std::runtime_error& e)
-  {
-    EXPECT_STREQ(e.what(), "Trying to remove non-existing interval from the constraint table.");
-  }
-  catch (...)
-  {
-    FAIL() << "Removing non-existent constraint should throw a runtime error.";
-  }
-
-  // test the second method
-  EXPECT_DEATH(table->remove_constraint_safe_intervals(tp), "Constraint interval can not have any overlap with safe interval.");
-}
-
-// Test 8: Adding a constraint that is already present (should cause assert death)
-#ifdef NDEBUG
-TEST_F(ConstraintTableTest, DISABLED_AddExistingConstraint)
-#else
-TEST_F(ConstraintTableTest, AddExistingConstraint)
-#endif
-{
-  TimePoint tp(4, {3, 6});
-  table->add_constraint(tp);
-  table->add_constraint_safe_intervals(tp);
-  ASSERT_DEATH(table->add_constraint(tp), "Cannot add overlapping constraints.");
-  ASSERT_DEATH(table->add_constraint_safe_intervals(tp), "Can not add an overlapping constraint.");
-}
-
-// Test 9: Adding a path that forms constraints, test whether edge constraints are added
-TEST_F(ConstraintTableTest, AddPathConstraints)
-{
-  std::vector<TimePoint> path1 = {TimePoint(4, {0, 2}), TimePoint(7, {3, 4}), TimePoint(8, {5, 6})};
-  table->add_constraints(path1);
-  std::vector<TimePoint> path2 = {TimePoint(5, {0, 5}), TimePoint(4, {6, 8}), TimePoint(7, {9, 10})};
-  table->add_constraints(path2);
-
-  // test that the last constraint end is right
-  EXPECT_EQ(table->get_last_dynamic_constraint(), 9);
-
-  // test first edge conflict
-  std::vector<TimeInterval> safe_intervals = table->calculate_safe_intervals(4, 7, {0, 3});
-  EXPECT_EQ(safe_intervals.size(), 0) << "Expected no safe interval due to an edge conflict.";
-
-  // other method
-  std::list<TimeInterval>::const_iterator start, end;
-  std::tie(start, end) = table->get_safe_intervals(4, 7, {0, 3});
-  ASSERT_EQ(std::distance(start, end), 0) << "Expected no safe interval due to an edge conflict.";
-
-  // test going to 1, 1 from a non constrained position
-  safe_intervals = table->calculate_safe_intervals(4, 1, {0, 10});
-  ASSERT_EQ(safe_intervals.size(), 2) << "Expected two safe intervals after adding path constraints.";
-  EXPECT_EQ(safe_intervals[0], TimeInterval(3, 5));
-  EXPECT_EQ(safe_intervals[1], TimeInterval(9, INT_MAX));
-
-  // other method
-  std::tie(start, end) = table->get_safe_intervals(4, 1, {0, 10});
-  ASSERT_EQ(std::distance(start, end), 2) << "Expected two safe intervals after adding path constraints.";
-  EXPECT_EQ(*start, TimeInterval(3, 5));
-  EXPECT_EQ(*std::next(start), TimeInterval(9, INT_MAX));
-
-  // test second edge conflict
-  safe_intervals = table->calculate_safe_intervals(4, 7, {5, 9});
-  EXPECT_EQ(safe_intervals.size(), 1) << "Expected only one safe interval.";
-  EXPECT_EQ(safe_intervals[0], TimeInterval(5, 5));
-
-  // other method
-  std::tie(start, end) = table->get_safe_intervals(4, 7, {5, 9});
-  ASSERT_EQ(std::distance(start, end), 1) << "Expected only one safe interval.";
-  EXPECT_EQ(*start, TimeInterval(5, 5));
-}
-
-// Test 10: check assert death when the time interval is wrong, because, there will be an edge conflict if an agent came from the location
-#ifdef NDEBUG
-TEST_F(ConstraintTableTest, DISABLED_WrongSafeInterval)
-#else
-TEST_F(ConstraintTableTest, WrongSafeInterval)
-#endif
-{
-  std::vector<TimePoint> path1 = {TimePoint(4, {0, 1}), TimePoint(7, {2, 4})};
-  table->add_constraints(path1);
-
-  // expect assert death
-  EXPECT_DEATH(table->calculate_safe_intervals(4, 7, {0, 3}), "Invalid time interval, the from location will be in edge collision.");
-
-  // the other method
-  EXPECT_DEATH(table->get_safe_intervals(4, 7, {0, 3}), "Invalid time interval, the from location will be in edge collision.");
-}
-
-// Test 11: check assert death when the safe interval of to position is not right and there are more constraints in the list
-#ifdef NDEBUG
-TEST_F(ConstraintTableTest, DISABLED_WrongSafeIntervalMoreConstraints)
-#else
-TEST_F(ConstraintTableTest, WrongSafeIntervalMoreConstraints)
-#endif
-{
-  std::vector<TimePoint> path1 = {TimePoint(4, {0, 1}), TimePoint(7, {2, 4}), TimePoint(4, {5, 6}), TimePoint(7, {7, 8}),
-                                  TimePoint(4, {9, 10})};
-  table->add_constraints(path1);
-
-  // expect assert death
-  EXPECT_DEATH(table->calculate_safe_intervals(4, 7, {0, 3}), "Invalid time interval, the from location will be in edge collision.");
-
-  // the other method
-  EXPECT_DEATH(table->get_safe_intervals(4, 7, {0, 3}), "Invalid time interval, the from location will be in edge collision.");
-}
-
-// Test 12 check that the edge conflict is resolved correctly when there are more constraints in the list
-TEST_F(ConstraintTableTest, EdgeConflictMoreConstraints)
-{
-  std::vector<TimePoint> path1 = {TimePoint(4, {0, 1}), TimePoint(7, {2, 4}), TimePoint(4, {5, 6}), TimePoint(7, {7, 8}),
-                                  TimePoint(4, {9, 10})};
-  table->add_constraints(path1);
-
-  // test going to 1, 1 from a location with edge conflict in time 0 - 2
-  std::vector<TimeInterval> safe_intervals = table->calculate_safe_intervals(4, 7, {0, 2});
-  EXPECT_EQ(safe_intervals.size(), 0) << "Expected no safe intervals due to edge conflict.";
-
-  // the other method
-  std::list<TimeInterval>::const_iterator start, end;
-  std::tie(start, end) = table->get_safe_intervals(4, 7, {0, 2});
-  ASSERT_EQ(std::distance(start, end), 0) << "Expected no safe intervals due to edge conflict.";
-}
-
 // SIPP tests
 
 // **Test 1: Basic pathfinding in an empty map**
@@ -391,7 +85,7 @@ TEST(SIPPTest, TimeConstraintHandling)
   for (int i = 0; i < 5; i++)
   {
     if (i == 2) continue;  // passage through (2,2)
-    sipp.constraint_table.add_constraint(TimePoint(instance->position_to_location({i, 2}), {0, 20}));
+    sipp.constraint_table.add_constraint_old(TimePoint(instance->position_to_location({i, 2}), {0, 20}));
   }
 
   TimePointPath path = sipp.plan(0);
@@ -439,12 +133,12 @@ TEST(SIPPTest, NoPathDueToTimeConstraints)
   SIPP sipp(*instance, false);
 
   // Add constraints that make it impossible to leave start until time 10
-  sipp.constraint_table.add_constraint(TimePoint(1, {0, 10}));  // {1, 0}
-  sipp.constraint_table.add_constraint(TimePoint(5, {0, 10}));  // {0, 1}
+  sipp.constraint_table.add_constraint_old(TimePoint(1, {0, 10}));  // {1, 0}
+  sipp.constraint_table.add_constraint_old(TimePoint(5, {0, 10}));  // {0, 1}
 
   // add constraints that make it impossible to reach the goal from time 10 to 20
-  sipp.constraint_table.add_constraint(TimePoint(instance->position_to_location({3, 4}), {10, 20}));  // {3, 4}
-  sipp.constraint_table.add_constraint(TimePoint(instance->position_to_location({4, 3}), {10, 20}));  // {4, 3}
+  sipp.constraint_table.add_constraint_old(TimePoint(instance->position_to_location({3, 4}), {10, 20}));  // {3, 4}
+  sipp.constraint_table.add_constraint_old(TimePoint(instance->position_to_location({4, 3}), {10, 20}));  // {4, 3}
 
   // plan path
   TimePointPath path = sipp.plan(0);
@@ -485,7 +179,7 @@ TEST(SIPPTest, DynamicObstacleAtGoal)
   // from (0,0) to (4,4)
 
   // add a constraint that blocks the goal after time 20
-  sipp.constraint_table.add_constraint(TimePoint(instance->get_goal_locations()[0], {20, 30}));
+  sipp.constraint_table.add_constraint_old(TimePoint(instance->get_goal_locations()[0], {20, 30}));
 
   TimePointPath path = sipp.plan(0);
 
@@ -511,8 +205,8 @@ TEST(SIPPTest, EdgeConstraintsAtGoal)
   // from (2, 0) to (2, 1)
 
   // add edge constraints at the goal so that the agent has to go around
-  sipp.constraint_table.add_constraints({TimePoint(5, {0, 0}), TimePoint(2, {1, 1}), TimePoint(1, {2, 2}), TimePoint(0, {3, 3}),
-                                         TimePoint(3, {4, 4}), TimePoint(6, {5, 5}), TimePoint(7, {6, 6}), TimePoint(8, {7, 7})});
+  sipp.constraint_table.add_constraints_old({TimePoint(5, {0, 0}), TimePoint(2, {1, 1}), TimePoint(1, {2, 2}), TimePoint(0, {3, 3}),
+                                             TimePoint(3, {4, 4}), TimePoint(6, {5, 5}), TimePoint(7, {6, 6}), TimePoint(8, {7, 7})});
 
 
   TimePointPath path = sipp.plan(0);

@@ -112,7 +112,7 @@ auto SIPP::plan(const int agent_num) -> TimePointPath
 
   // estimate the maximum time the goal can be reached (after all dynamic constraints disappear, the path can go through all free cells
   // in the worst case)
-  int max_time = std::max(INT_MAX, constraint_table.get_last_dynamic_constraint() + map_data.free_cells);
+  int max_time = std::max(INT_MAX, constraint_table.get_last_dynamic_constraint_old() + map_data.free_cells);
 
   assertm(max_time >= 0, "Time can not be negative.");
 
@@ -120,7 +120,7 @@ auto SIPP::plan(const int agent_num) -> TimePointPath
   sipp::PriorityQueue open_list;
 
   // retrieve the first safe interval
-  TimeInterval time_interval_start = constraint_table.get_first_safe_interval(start);
+  TimeInterval time_interval_start = constraint_table.get_first_safe_interval_old(start);
 
   // calculate the heuristic of the start node
   {
@@ -190,7 +190,7 @@ auto SIPP::plan(const int agent_num) -> TimePointPath
       const double h = instance.get_heuristic_manhattan(agent_num, neighbor);
 
       // retrieve the safe intervals for the neighbor
-      std::vector<TimeInterval> time_intervals = constraint_table.calculate_safe_intervals(
+      std::vector<TimeInterval> time_intervals = constraint_table.get_safe_intervals_old(
           neighbor, current->time_point.location, sipp::neighbor_time_interval(current->time_point.interval));
 
       for (const TimeInterval& interval : time_intervals)

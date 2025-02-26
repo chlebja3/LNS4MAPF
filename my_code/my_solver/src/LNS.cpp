@@ -77,7 +77,7 @@ auto LNS::PrioritizedPlanning() -> Solution
     }
 
     // update the constraint table
-    planner->constraint_table.add_constraints(tp_path);
+    planner->constraint_table.add_constraints_old(tp_path);
 
     // convert to Path and add to the solution TODO not needed
     sol.paths[agent_id] = timepointpath_to_path(tp_path);
