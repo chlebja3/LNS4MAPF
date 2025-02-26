@@ -47,6 +47,7 @@ class ConstraintTable
 {
 public:
   explicit ConstraintTable(const Instance& instance);
+  EdgeConstraintTable edge_constraint_table;
 
   // new implementation
   void               add_constraint(const TimePoint& timepoint);
@@ -72,7 +73,6 @@ public:
 private:
   std::vector<std::list<TimeInterval>> constraints;     // constraints for each position
   std::vector<std::list<TimeInterval>> safe_intervals;  // safe intervals for each position
-  EdgeConstraintTable                  edge_constraint_table;
   const Instance&                      instance;
   int                                  max_path_len_estimate;
 };

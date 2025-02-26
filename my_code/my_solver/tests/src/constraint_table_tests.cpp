@@ -394,3 +394,50 @@ TEST_F(ConstraintTableTest, EdgeConflictMoreConstraints)
   ASSERT_EQ(std::distance(start, end), 0) << "Expected no safe intervals due to edge conflict.";
 }
 
+// test edge constraint table
+// add to edge constraint table
+TEST_F(ConstraintTableTest, EdgeConstraintTableAdd)
+{
+  // add a constraint to the table
+  table->edge_constraint_table.add(4, 7, 3);
+
+  // check that the constraint is in the table
+  EXPECT_TRUE(table->edge_constraint_table.get(4, 7, 3));
+
+  // check that the other times are not there
+  EXPECT_FALSE(table->edge_constraint_table.get(4, 7, 2));
+  EXPECT_FALSE(table->edge_constraint_table.get(4, 7, 4));
+}
+
+// remove from edge constraint table
+TEST_F(ConstraintTableTest, EdgeConstraintTableRemove)
+{
+  // add a constraint to the table
+  table->edge_constraint_table.add(1, 2, 3);
+
+  EXPECT_TRUE(table->edge_constraint_table.get(1, 2, 3));
+
+  // remove the constraint
+  table->edge_constraint_table.remove(1, 2, 3);
+
+  // check that the constraint is not in the table
+  EXPECT_FALSE(table->edge_constraint_table.get(1, 2, 3));
+}
+
+// add an existing edge constraint
+TEST_F(ConstraintTableTest, EdgeConstraintTableAddExisting)
+{
+  // add a constraint to the table
+  table->edge_constraint_table.add(1, 2, 3);
+
+  // expect assert death
+  EXPECT_DEATH(table->edge_constraint_table.add(1, 2, 3), "Edge constraint already exists.");
+}
+
+// add an invalid edge constraint
+TEST_F(ConstraintTableTest, EdgeConstraintTableAddInvalid)
+{
+  // expect assert death
+  EXPECT_DEATH(table->edge_constraint_table.add(1, 1, 2), "Invalid edge constraint.");
+}
+

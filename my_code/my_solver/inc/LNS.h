@@ -26,6 +26,7 @@ public:
 
   void find_initial_solution();
   auto PrioritizedPlanning() -> Solution;
+  auto PrioritizedPlanningOld() -> Solution;
 
   [[nodiscard]] auto get_num_of_generated_nodes() const -> int;
 

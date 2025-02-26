@@ -18,7 +18,7 @@
 
 // SIPP tests
 
-// **Test 1: Basic pathfinding in an empty map**
+// Basic pathfinding in an empty map
 TEST(SIPPTest, BasicPathEmptyMap)
 {
   // load instance
@@ -30,17 +30,14 @@ TEST(SIPPTest, BasicPathEmptyMap)
   SIPP sipp(*instance, false);
 
   // from (0,0) to (4,4)
-  const int start = instance->get_start_locations()[0];
-  const int goal  = instance->get_goal_locations()[0];
-  std::cout << "start" << start << ", goal" << goal << std::endl;
   TimePointPath path = sipp.plan(0);
 
   ASSERT_EQ(path.size(), 9) << "SIPP failed to find a basic path!";
-  EXPECT_EQ(path.front().location, start) << "Path does not start at the correct point!";
-  EXPECT_EQ(path.back().location, goal) << "Path does not end at the correct point!";
+  EXPECT_EQ(path.front().location, instance->get_start_locations()[0]) << "Path does not start at the correct point!";
+  EXPECT_EQ(path.back().location, instance->get_goal_locations()[0]) << "Path does not end at the correct point!";
 }
 
-// **Test 2: Pathfinding with static obstacles**
+// Pathfinding with static obstacles
 TEST(SIPPTest, StaticObstacleAvoidance)
 {
   // load instance
@@ -52,16 +49,14 @@ TEST(SIPPTest, StaticObstacleAvoidance)
   SIPP sipp(*instance, false);
 
   // from (4,0) to (0,4)
-  const int     start = instance->get_start_locations()[0];
-  const int     goal  = instance->get_goal_locations()[0];
-  TimePointPath path  = sipp.plan(0);
+  TimePointPath path = sipp.plan(0);
 
   // check that the path size is correct
   ASSERT_EQ(path.size(), 9) << "SIPP failed to find a path around obstacles!";
 
   // check that the path starts and end at the correct points
-  EXPECT_EQ(path.front().location, start) << "Path does not start at the correct point!";
-  EXPECT_EQ(path.back().location, goal) << "Path does not end at the correct point!";
+  EXPECT_EQ(path.front().location, instance->get_start_locations()[0]) << "Path does not start at the correct point!";
+  EXPECT_EQ(path.back().location, instance->get_goal_locations()[0]) << "Path does not end at the correct point!";
 
   // check that no obstacles are in the path
   for (const auto& tp : path)
@@ -70,7 +65,7 @@ TEST(SIPPTest, StaticObstacleAvoidance)
   }
 }
 
-// **Test 3: Handling of time constraints (SIPP-specific test)**
+// Handling of time constraints (SIPP-specific test)**
 TEST(SIPPTest, TimeConstraintHandling)
 {
   // load instance
@@ -84,8 +79,11 @@ TEST(SIPPTest, TimeConstraintHandling)
   // Create a wall from time constraints
   for (int i = 0; i < 5; i++)
   {
-    if (i == 2) continue;  // passage through (2,2)
-    sipp.constraint_table.add_constraint_old(TimePoint(instance->position_to_location({i, 2}), {0, 20}));
+    if (i == 2)
+    {
+      continue;  // passage through (2,2)
+    }
+    sipp.constraint_table.add_constraint(TimePoint(instance->position_to_location({i, 2}), {0, 20}));
   }
 
   TimePointPath path = sipp.plan(0);
@@ -105,7 +103,7 @@ TEST(SIPPTest, TimeConstraintHandling)
   EXPECT_EQ(path.back().interval.t_min, 8) << "Path does not complete in the expected time!";
 }
 
-// **Test 5: No possible path due to obstacles**
+// No possible path due to obstacles
 TEST(SIPPTest, NoPathPossible)
 {
   // load instance
@@ -121,7 +119,7 @@ TEST(SIPPTest, NoPathPossible)
   ASSERT_TRUE(path.empty()) << "SIPP should return an empty path when no path exists!";
 }
 
-// **Test 6: No path due to time constraints**
+// No path due to time constraints**
 TEST(SIPPTest, NoPathDueToTimeConstraints)
 {
   // load instance
@@ -133,12 +131,12 @@ TEST(SIPPTest, NoPathDueToTimeConstraints)
   SIPP sipp(*instance, false);
 
   // Add constraints that make it impossible to leave start until time 10
-  sipp.constraint_table.add_constraint_old(TimePoint(1, {0, 10}));  // {1, 0}
-  sipp.constraint_table.add_constraint_old(TimePoint(5, {0, 10}));  // {0, 1}
+  sipp.constraint_table.add_constraint(TimePoint(1, {0, 10}));  // {1, 0}
+  sipp.constraint_table.add_constraint(TimePoint(5, {0, 10}));  // {0, 1}
 
   // add constraints that make it impossible to reach the goal from time 10 to 20
-  sipp.constraint_table.add_constraint_old(TimePoint(instance->position_to_location({3, 4}), {10, 20}));  // {3, 4}
-  sipp.constraint_table.add_constraint_old(TimePoint(instance->position_to_location({4, 3}), {10, 20}));  // {4, 3}
+  sipp.constraint_table.add_constraint(TimePoint(instance->position_to_location({3, 4}), {10, 20}));  // {3, 4}
+  sipp.constraint_table.add_constraint(TimePoint(instance->position_to_location({4, 3}), {10, 20}));  // {4, 3}
 
   // plan path
   TimePointPath path = sipp.plan(0);
@@ -165,7 +163,7 @@ TEST(SIPPTest, NoPathDueToTimeConstraints)
   }
 }
 
-// **Test 10: dynamic obstacle at the goal after time of possible arrival**
+// dynamic obstacle at the goal after time of possible arrival**
 TEST(SIPPTest, DynamicObstacleAtGoal)
 {
   // load instance
@@ -179,7 +177,7 @@ TEST(SIPPTest, DynamicObstacleAtGoal)
   // from (0,0) to (4,4)
 
   // add a constraint that blocks the goal after time 20
-  sipp.constraint_table.add_constraint_old(TimePoint(instance->get_goal_locations()[0], {20, 30}));
+  sipp.constraint_table.add_constraint(TimePoint(instance->get_goal_locations()[0], {20, 30}));
 
   TimePointPath path = sipp.plan(0);
 
@@ -191,7 +189,7 @@ TEST(SIPPTest, DynamicObstacleAtGoal)
 }
 
 // test that SIPP takes into account the edge constraints
-// **Test 11: Edge constraints at the goal
+// Edge constraints at the goal
 TEST(SIPPTest, EdgeConstraintsAtGoal)
 {
   // load instance
@@ -205,8 +203,8 @@ TEST(SIPPTest, EdgeConstraintsAtGoal)
   // from (2, 0) to (2, 1)
 
   // add edge constraints at the goal so that the agent has to go around
-  sipp.constraint_table.add_constraints_old({TimePoint(5, {0, 0}), TimePoint(2, {1, 1}), TimePoint(1, {2, 2}), TimePoint(0, {3, 3}),
-                                             TimePoint(3, {4, 4}), TimePoint(6, {5, 5}), TimePoint(7, {6, 6}), TimePoint(8, {7, 7})});
+  sipp.constraint_table.add_constraints({TimePoint(5, {0, 0}), TimePoint(2, {1, 1}), TimePoint(1, {2, 2}), TimePoint(0, {3, 3}),
+                                         TimePoint(3, {4, 4}), TimePoint(6, {5, 5}), TimePoint(7, {6, 6}), TimePoint(8, {7, 7})});
 
 
   TimePointPath path = sipp.plan(0);
@@ -219,7 +217,8 @@ TEST(SIPPTest, EdgeConstraintsAtGoal)
                                  TimePoint(6, {4, 4}), TimePoint(7, {5, 5}), TimePoint(8, {6, 6}), TimePoint(5, {7, INT_MAX})}));
 }
 
-// **Test 12: SIPP plans the same path as A* when no constraints are present
+
+// SIPP plans the same path as A* when no constraints are present
 TEST(SIPPTest, SamePathAsAStar1)
 {
   // load instance
@@ -254,7 +253,7 @@ TEST(SIPPTest, SamePathAsAStar1)
   // EXPECT_EQ(ASTAR::generated_nodes, sipp.generated_nodes) << "SIPP should expand the same number of nodes as A*!";
 }
 
-// **Test 14: SIPP plans the same path as A* when no dynamic constraints are present
+// SIPP plans the same path as A* when no dynamic constraints are present
 TEST(SIPPTest, SamePathAsAStar2)
 {
   // load instance
@@ -284,18 +283,10 @@ TEST(SIPPTest, SamePathAsAStar2)
 
   // check that the paths have the same length
   EXPECT_EQ(path_sipp_converted.size(), path_astar.size()) << "The paths found by SIPP and ASTAR should have the same length!";
-
-
-  // std::cout << "SIPP expanded " << sipp.generated_nodes << " nodes." << std::endl;
-  // std::cout << "A* expanded " << ASTAR::generated_nodes << " nodes." << std::endl;
-
-  // check whether both algorithms expanded the same number of nodes
-  // EXPECT_EQ(ASTAR::generated_nodes, sipp.generated_nodes) << "SIPP should expand the same number of nodes as A*!";
 }
 
-
 // Test Prioritized Planning
-// Test 1: Prioritized Planning with dummy map and 1 agent
+// Prioritized Planning with dummy map and 1 agent
 TEST(SIPPTest, PrioritizedPlanning1agent)
 {
   // load instance
@@ -313,7 +304,7 @@ TEST(SIPPTest, PrioritizedPlanning1agent)
   EXPECT_TRUE(sol.is_valid(*instance)) << "Solution is invalid!";
 }
 
-// Test 2: Prioritized Planning with empty map and 2 agents
+// Prioritized Planning with empty map and 2 agents
 TEST(SIPPTest, PrioritizedPlanningEmpty2agents)
 {
   // load instance
@@ -327,17 +318,9 @@ TEST(SIPPTest, PrioritizedPlanningEmpty2agents)
   // plan path by Prioritized Planning
   Solution sol = lns.PrioritizedPlanning();
 
-  // print the first path
-  // for (const auto& tp : sol.paths[0])
-  // {
-  //   std::cout << tp << " " << std::endl;
-  // }
-  // std::cout << std::endl;
-
   // check solution validity
   EXPECT_TRUE(sol.is_valid(*instance)) << "Solution is invalid!";
 }
-
 
 // Test Prioritized Planning
 TEST(SIPPTest, PrioritizedPlanning)
@@ -356,4 +339,3 @@ TEST(SIPPTest, PrioritizedPlanning)
   // check solution validity
   EXPECT_TRUE(sol.is_valid(*instance)) << "Solution is invalid!";
 }
-

@@ -73,8 +73,15 @@ void ConstraintTable::add_constraint(const TimePoint& timepoint)
         it->t_max = new_tmax;
         break;
       }
+      const int tmax = it->t_max;
 
       it->t_max = new_tmax;
+
+      // check whether there might be any other affected intervals
+      if (tmax == timepoint.interval.t_max)
+      {
+        break;
+      }
       it++;
     }
     // shorten intervals ending after the range
@@ -87,7 +94,14 @@ void ConstraintTable::add_constraint(const TimePoint& timepoint)
     // delete intervals that are fully overlapped by the constraint
     else
     {
-      it = cur_TI_list.erase(it);
+      const int tmax = it->t_max;
+      it             = cur_TI_list.erase(it);
+
+      // check whether there can be any other affected ontervals
+      if (tmax == timepoint.interval.t_max)
+      {
+        break;
+      }
     }
   }
 }
@@ -570,6 +584,8 @@ void ConstraintTable::update_max_path_len_estimate()
 
 void EdgeConstraintTable::add(int loc1, int loc2, int time)
 {
+  assertm(edge_constraints.find(EdgeConstraint(loc1, loc2, time)) == edge_constraints.end(), "Edge constraint already exists.");
+  assertm(loc1 != loc2, "Invalid edge constraint.");
   edge_constraints.insert(EdgeConstraint(loc1, loc2, time));
 }
 
