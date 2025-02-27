@@ -8,10 +8,11 @@
 #include <utils.h>
 
 // #include <boost/heap/pairing_heap.hpp>
-// #include <boost/heap/priority_queue.hpp>
-#include <queue>
+#include <boost/heap/priority_queue.hpp>
+// #include <queue>
 // #include <unordered_map>
 // #include <unordered_set>
+// #include <boost/heap/fibonacci_heap.hpp>
 
 #include "ConstraintTable.h"
 #include "IterInfo.h"
@@ -53,9 +54,10 @@ private:
 };
 
 
-using PriorityQueue = std::priority_queue<const SIPPNode*, std::vector<const SIPPNode*>, SIPPNode::compare_node_ptrs>;
-// typedef boost::heap::priority_queue<SIPPNode const*, boost::heap::compare<SIPPNode::compare_node_ptrs>> PriorityQueue;
-// typedef boost::heap::pairing_heap<SIPPNode const*, boost::heap::compare<SIPPNode::compare_node_ptrs>> PriorityQueue;
+// using PriorityQueue = std::priority_queue<const SIPPNode*, std::vector<const SIPPNode*>, SIPPNode::compare_node_ptrs>;
+using PriorityQueue = boost::heap::priority_queue<const SIPPNode*, boost::heap::compare<SIPPNode::compare_node_ptrs>>;
+// using PriorityQueue = boost::heap::fibonacci_heap<const SIPPNode*, boost::heap::compare<SIPPNode::compare_node_ptrs>>;
+// using PriorityQueue = boost::heap::pairing_heap<const SIPPNode*, boost::heap::compare<SIPPNode::compare_node_ptrs>>;
 // typedef std::unordered_set<TimePoint, TimePoint::hash_time_point> UnorderedSet;
 // typedef std::unordered_map<Point2d, int, Point2d::hash_point>     UnorderedMap;
 
