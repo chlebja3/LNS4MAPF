@@ -372,13 +372,6 @@ auto Instance::position_to_location(const Point2d& position) const -> int
   return position.y * map_data.width + position.x;
 }
 
-auto Instance::get_heuristic_manhattan(const int agent_num, const int loc) const -> int
-{
-
-  assertm(agent_num >= 0 && agent_num < (int)heuristic_manhattan.size(), "Agent number out of range of the heuristic vector.");
-  assertm(map_data.is_in(loc), "Trying to index a point that is not in the map.");
-  return heuristic_manhattan[agent_num][loc];
-};
 
 auto Instance::get_heuristic_euclidean(const int agent_num, const int loc) const -> double
 {
@@ -387,12 +380,6 @@ auto Instance::get_heuristic_euclidean(const int agent_num, const int loc) const
   return heuristic_euclidean[agent_num][loc];
 };
 
-auto Instance::get_neighbor_locations(int loc) const -> const std::vector<int>&
-{
-  assertm(map_data.is_in(loc), "Trying to get neighbors of invalid location.");
-  assertm(loc < (int)neighbors.size(), "Neighbors are not precomputed for this location.");
-  return neighbors[loc];
-}
 
 auto Instance::path_to_pointpath(const Path& path) const -> PointPath
 {

@@ -16,6 +16,8 @@
 #include "Instance.h"
 #include "utils.h"
 
+#define NUM_DIRECTIONS 4
+
 class EdgeConstraint
 {
 public:
@@ -39,7 +41,15 @@ public:
   EdgeConstraintTable(int num_locations);
   void add(int loc1, int loc2, int time);
   void remove(int loc1, int loc2, int time);
-  auto get(int loc1, int loc2, int time) const -> bool;
+  // auto get(int loc1, int loc2, int time) const -> bool;
+
+  inline auto get(int loc1, int loc2, int time) const -> bool
+  {
+    const int dir = find_direction(loc1, loc2) - 1;
+    assertm(dir >= 0 && dir <= NUM_DIRECTIONS, "Invalid direction.");
+
+    return edge_constraints[dir][loc2].find(time) != edge_constraints[loc1][loc2].end();
+  }
 
 private:
   // std::unordered_set<EdgeConstraint, EdgeConstraint::hash_edge_collision> edge_constraints;  // constraints for edges

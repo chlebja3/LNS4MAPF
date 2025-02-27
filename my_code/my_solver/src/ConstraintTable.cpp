@@ -11,7 +11,6 @@
 #include <climits>
 #include <iostream>
 
-#define NUM_DIRECTIONS 4
 
 EdgeConstraint::EdgeConstraint(const int from, const int to, const int t) : from(from), to(to), t(t){};
 
@@ -631,10 +630,3 @@ void EdgeConstraintTable::remove(int loc1, int loc2, int time)
   assertm(erased == 1, "Trying to erase an edge constraint that is not present.");
 }
 
-auto EdgeConstraintTable::get(int loc1, int loc2, int time) const -> bool
-{
-  const int dir = find_direction(loc1, loc2) - 1;
-  assertm(dir >= 0 && dir <= NUM_DIRECTIONS, "Invalid direction.");
-
-  return edge_constraints[dir][loc2].find(time) != edge_constraints[loc1][loc2].end();
-}

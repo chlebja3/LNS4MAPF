@@ -44,11 +44,25 @@ public:
   void calculate_optimal_paths();
   void calculate_optimal_paths_parallel();
 
-  void               calculate_heuristics();
-  void               precompute_neighbors();
-  [[nodiscard]] auto get_heuristic_manhattan(int agent_num, int loc) const -> int;
+  void calculate_heuristics();
+  void precompute_neighbors();
+  //[[nodiscard]] auto get_heuristic_manhattan(int agent_num, int loc) const -> int;
+  [[nodiscard]] inline auto get_heuristic_manhattan(const int agent_num, const int loc) const -> int
+  {
+
+    assertm(agent_num >= 0 && agent_num < (int)heuristic_manhattan.size(), "Agent number out of range of the heuristic vector.");
+    assertm(map_data.is_in(loc), "Trying to index a point that is not in the map.");
+    return heuristic_manhattan[agent_num][loc];
+  };
+
   [[nodiscard]] auto get_heuristic_euclidean(int agent_num, int loc) const -> double;
-  [[nodiscard]] auto get_neighbor_locations(int loc) const -> const std::vector<int>&;
+  //[[nodiscard]] auto get_neighbor_locations(int loc) const -> const std::vector<int>&;
+  [[nodiscard]] inline auto get_neighbor_locations(int loc) const -> const std::vector<int>&
+  {
+    assertm(map_data.is_in(loc), "Trying to get neighbors of invalid location.");
+    assertm(loc < (int)neighbors.size(), "Neighbors are not precomputed for this location.");
+    return neighbors[loc];
+  }
 
   [[nodiscard]] auto location_to_position(int location) const -> Point2d;
   [[nodiscard]] auto position_to_location(const Point2d& position) const -> int;

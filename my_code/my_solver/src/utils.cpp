@@ -284,16 +284,6 @@ auto get_base_path() -> std::string
 }
 
 
-auto safe_increase(int num) -> int
-{
-
-  if (num == INT_MAX)
-  {
-    return INT_MAX;
-  }
-  return num + 1;
-}
-
 auto fast_random_bool() -> bool
 {
   static unsigned int num   = 0;
