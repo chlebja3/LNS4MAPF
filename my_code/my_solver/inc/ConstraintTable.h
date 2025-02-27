@@ -59,23 +59,23 @@ public:
       -> std::pair<std::list<TimeInterval>::const_iterator, std::list<TimeInterval>::const_iterator>;
   [[nodiscard]] auto get_first_safe_interval(int location) const -> const std::list<TimeInterval>::const_iterator;
   [[nodiscard]] auto get_max_path_len_estimate() const -> int;
-  void               update_max_path_len_estimate();
+  void               update_latest_constraint_end_estimate();
 
   // old implementation
-  void               add_constraint_old(const TimePoint& timepoint);
-  void               add_constraints_old(const TimePointPath& path);
-  void               remove_constraint_old(const TimePoint& timepoint);
-  void               remove_constraints_old(const TimePointPath& path);
-  [[nodiscard]] auto get_first_safe_interval_old(int location) const -> TimeInterval;
-  [[nodiscard]] auto get_safe_interval_old(int location, int from, int time) const -> TimeInterval;
-  [[nodiscard]] auto get_safe_intervals_old(int location, int from, const TimeInterval& time_interval) const -> std::vector<TimeInterval>;
-  [[nodiscard]] auto get_last_dynamic_constraint_old() const -> int;
+  void add_constraint_old(const TimePoint& timepoint);
+  void add_constraints_old(const TimePointPath& path);
+  void remove_constraint_old(const TimePoint& timepoint);
+  void remove_constraints_old(const TimePointPath& path);
+  auto get_first_safe_interval_old(int location) const -> TimeInterval;
+  auto get_safe_interval_old(int location, int from, int time) const -> TimeInterval;
+  auto get_safe_intervals_old(int location, int from, const TimeInterval& time_interval) const -> std::vector<TimeInterval>;
+  auto get_last_dynamic_constraint_old() const -> int;
 
 private:
   std::vector<std::list<TimeInterval>> constraints;     // constraints for each position
   std::vector<std::list<TimeInterval>> safe_intervals;  // safe intervals for each position
   const Instance&                      instance;
-  int                                  max_path_len_estimate           = INT_MAX;
-  int                                  unlimited_safe_intervals        = 0;
-  int                                  latest_unlimited_interval_start = 0;
+  int                                  max_path_len_estimate = INT_MAX;
+  int                                  unlimited_safe_intervals;
+  int                                  latest_constraint_end = 0;
 };

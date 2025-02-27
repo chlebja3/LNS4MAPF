@@ -87,8 +87,9 @@ public:
   auto plan_old(int agent_num) -> TimePointPath;
 
 private:
-  void            initialize_iter_info();
-  void            update_iter_info(const sipp::SIPPNode& expanded, bool last_iter);
-  const Instance& instance;
-  sipp::NodePool  node_pool;
+  void             initialize_iter_info();
+  void             update_iter_info(const sipp::SIPPNode& expanded, bool last_iter);
+  const Instance&  instance;
+  sipp::NodePool   node_pool;
+  std::vector<int> known;  // known node database
 };

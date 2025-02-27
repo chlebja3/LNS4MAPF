@@ -24,7 +24,10 @@ SIPP::SIPP(const Instance& instance, const bool generate_iter_info)
     : constraint_table(ConstraintTable(instance)),
       generate_iter_info(generate_iter_info),
       instance(instance),
-      node_pool(NodePool(INITIAL_NODE_POOL_SIZE * instance.get_map_data().width * instance.get_map_data().height)){};
+      node_pool(NodePool(INITIAL_NODE_POOL_SIZE * instance.get_map_data().width * instance.get_map_data().height))
+{
+  known.resize(instance.get_map_data().width * instance.get_map_data().height, -1);
+};
 
 SIPPNode::SIPPNode(const int location, const TimeInterval& interval, const double g, const double h, SIPPNode const* const parent)
     : Node(g, h), time_point(location, interval), parent(parent){};
@@ -137,9 +140,8 @@ auto SIPP::plan_old(int agent_num) -> TimePointPath
   }
 
 
-  // create known nodes database
-  std::vector<int> known;
-  known.resize(map_data.width * map_data.height, -1);
+  // clear known nodes database
+  std::fill(known.begin(), known.end(), -1);
 
   // main loop
   while (!open_list.empty())
@@ -285,10 +287,8 @@ auto SIPP::plan(const int agent_num) -> TimePointPath
     }
   }
 
-
-  // create known nodes database
-  std::vector<int> known;
-  known.resize(map_data.width * map_data.height, -1);
+  // clear known nodes database
+  std::fill(known.begin(), known.end(), -1);
 
   // main loop
   while (!open_list.empty())
@@ -332,8 +332,8 @@ auto SIPP::plan(const int agent_num) -> TimePointPath
     known[current->time_point.location] = current->time_point.interval.t_max;
 
     // expand current node
-    std::vector<int> neighbors = instance.get_neighbor_locations(current->time_point.location);
-    for (auto& neighbor : neighbors)
+    const std::vector<int>& neighbors = instance.get_neighbor_locations(current->time_point.location);
+    for (const auto& neighbor : neighbors)
     {
       // std::cout << "Neighbor: " << neighbor << std::endl;
       // calculate the heuristic

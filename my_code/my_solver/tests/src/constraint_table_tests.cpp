@@ -79,8 +79,7 @@ TEST_F(ConstraintTableTest, SingleConstraint)
   table->add_constraint(tp);
 
   // test the estimate of the maximal path len
-  table->update_max_path_len_estimate();
-  EXPECT_EQ(table->get_max_path_len_estimate(), 15);
+  EXPECT_EQ(table->get_max_path_len_estimate(), 13);
 
   // test that the first safe interval is right
   auto first_si = table->get_first_safe_interval(7);
@@ -127,8 +126,7 @@ TEST_F(ConstraintTableTest, MultipleSingleConstraints)
   table->add_constraint(TimePoint(7, {10, 15}));
 
   // test the estimate of the maximal path len
-  table->update_max_path_len_estimate();
-  EXPECT_EQ(table->get_max_path_len_estimate(), 25);
+  EXPECT_EQ(table->get_max_path_len_estimate(), 23);
 
   std::list<TimeInterval>::const_iterator start, end;
   std::tie(start, end) = table->get_safe_intervals(7, {0, 20});
@@ -158,9 +156,9 @@ TEST_F(ConstraintTableTest, RemoveConstraint)
   table->add_constraint(tp);
   table->remove_constraint(tp);
 
+  table->update_latest_constraint_end_estimate();
   // test the estimate of the maximal path len
-  table->update_max_path_len_estimate();
-  EXPECT_EQ(table->get_max_path_len_estimate(), 9);
+  EXPECT_EQ(table->get_max_path_len_estimate(), 8);
 
   auto first_si = table->get_first_safe_interval(7);
   EXPECT_TRUE(first_si->t_min == 0 && first_si->t_max == INT_MAX);
@@ -183,6 +181,9 @@ TEST_F(ConstraintTableTest, GetSafeIntervalEmpty)
 {
   auto first_si = table->get_first_safe_interval(4);
   EXPECT_TRUE(first_si->t_min == 0 && first_si->t_max == INT_MAX) << "No constraints should mean an unlimited safe interval.";
+
+  // check the path len estimate
+  EXPECT_EQ(table->get_max_path_len_estimate(), 8);
 
   std::list<TimeInterval>::const_iterator start, end;
   std::tie(start, end) = table->get_safe_intervals(4, {0, INT_MAX});
@@ -215,8 +216,7 @@ TEST_F(ConstraintTableTest, DynamicAddRemove)
   table->remove_constraint(TimePoint(4, {2, 4}));
 
   // test the estimate of the maximal path len
-  table->update_max_path_len_estimate();
-  EXPECT_EQ(table->get_max_path_len_estimate(), 18);
+  EXPECT_EQ(table->get_max_path_len_estimate(), 16);
 
   std::list<TimeInterval>::const_iterator start, end;
   std::tie(start, end) = table->get_safe_intervals(4, {0, 10});
@@ -312,8 +312,7 @@ TEST_F(ConstraintTableTest, AddPathConstraints)
   table->add_constraints(path2);
 
   // test the estimate of the maximal path len
-  table->update_max_path_len_estimate();
-  EXPECT_EQ(table->get_max_path_len_estimate(), 20);
+  EXPECT_EQ(table->get_max_path_len_estimate(), 18);
 
   // test first edge conflict
   std::list<TimeInterval>::const_iterator start, end;

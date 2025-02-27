@@ -139,8 +139,7 @@ TEST(SIPPTest, NoPathDueToTimeConstraints)
   sipp.constraint_table.add_constraint(TimePoint(instance->position_to_location({4, 3}), {10, 20}));  // {4, 3}
 
   // test path len estimate
-  sipp.constraint_table.update_max_path_len_estimate();
-  EXPECT_EQ(sipp.constraint_table.get_max_path_len_estimate(), 21 + 5 * 5) << "Invalid path length estimate.";
+  EXPECT_EQ(sipp.constraint_table.get_max_path_len_estimate(), 20 + 5 * 5) << "Invalid path length estimate.";
 
   // plan path
   TimePointPath path = sipp.plan(0);

@@ -29,7 +29,8 @@ auto EdgeConstraint::hash_edge_collision::operator()(const EdgeConstraint& c) co
   return seed;
 }
 
-ConstraintTable::ConstraintTable(const Instance& instance) : instance(instance), max_path_len_estimate(INT_MAX)
+ConstraintTable::ConstraintTable(const Instance& instance)
+    : instance(instance), unlimited_safe_intervals(instance.get_map_data().free_cells)
 {
   // initialize the constraint vectors TODO static obstacles dont need constraint vectors
   const int num_cells = instance.get_map_data().width * instance.get_map_data().height;
@@ -43,6 +44,18 @@ void ConstraintTable::add_constraint(const TimePoint& timepoint)
 {
   // check the location is valid
   assertm(instance.get_map_data().is_in(timepoint.location), "Invalid location.");
+
+  // update unlimited safe interval number
+  if (timepoint.interval.t_max == INT_MAX)
+  {
+    unlimited_safe_intervals--;
+    assertm(unlimited_safe_intervals >= 0, "Invalid unlimited safe interval count.");
+  }
+  else
+  {
+    // update latest constraint end
+    latest_constraint_end = std::max(latest_constraint_end, timepoint.interval.t_max);
+  }
 
   std::list<TimeInterval>& cur_TI_list = safe_intervals[timepoint.location];
 
@@ -152,6 +165,15 @@ void ConstraintTable::remove_constraint(const TimePoint& timepoint)
 {
   // check the location is valid
   assertm(instance.get_map_data().is_in(timepoint.location), "Invalid location.");
+
+  // update unlimited safe interval number
+  if (timepoint.interval.t_max == INT_MAX)
+  {
+    unlimited_safe_intervals++;
+    assertm(unlimited_safe_intervals <= instance.get_map_data().free_cells, "Invalid unlimited safe interval count.");
+
+    // update latest constraint end TODO
+  }
 
   std::list<TimeInterval>& cur_TI_list = safe_intervals[timepoint.location];
 
@@ -269,6 +291,9 @@ void ConstraintTable::remove_constraints(const TimePointPath& path)
       edge_constraint_table.remove(path[i - 1].location, path[i].location, path[i].interval.t_min);
     }
   }
+
+  // update the latest constraint estimate
+  update_latest_constraint_end_estimate();
 }
 
 void ConstraintTable::remove_constraints_old(const TimePointPath& path)
@@ -540,17 +565,10 @@ auto ConstraintTable::get_last_dynamic_constraint_old() const -> int
   return last_dynamic_constraint;
 }
 
-
-auto ConstraintTable::get_max_path_len_estimate() const -> int
+void ConstraintTable::update_latest_constraint_end_estimate()
 {
-  return max_path_len_estimate;
-}
-
-void ConstraintTable::update_max_path_len_estimate()
-{
-  // find the start of the latest safe interval and add the number of unobstructed cells at that time
-  int free_cells  = 0;
-  int latest_time = 0;
+  // find the end of the latest safe interval and add the number of unobstructed cells at that time
+  latest_constraint_end = 0;
   for (const auto& safe_interval_list : safe_intervals)
   {
     const auto last = safe_interval_list.back();
@@ -558,28 +576,23 @@ void ConstraintTable::update_max_path_len_estimate()
     // safe interval reaches the end
     if (last.t_max == INT_MAX)
     {
-      free_cells++;
-      latest_time = std::max(latest_time, last.t_min);
+      latest_constraint_end = std::max(latest_constraint_end, last.t_min - 1);
     }
   }
+}
 
-  // if no free cells found, there is no estimate on the path len
-  if (free_cells == 0)
+[[nodiscard]] auto ConstraintTable::get_max_path_len_estimate() const -> int
+{
+  if (unlimited_safe_intervals == 0)
   {
-    max_path_len_estimate = INT_MAX;
+    return INT_MAX;
   }
-  else
+  // check for overflow
+  if (latest_constraint_end <= INT_MAX - unlimited_safe_intervals)
   {
-    // check for overflow
-    if (latest_time <= INT_MAX - free_cells)
-    {
-      max_path_len_estimate = latest_time + free_cells;
-    }
-    else
-    {
-      max_path_len_estimate = INT_MAX;
-    }
+    return latest_constraint_end + unlimited_safe_intervals;
   }
+  return INT_MAX;
 }
 
 void EdgeConstraintTable::add(int loc1, int loc2, int time)
