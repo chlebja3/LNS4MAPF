@@ -293,3 +293,16 @@ auto safe_increase(int num) -> int
   }
   return num + 1;
 }
+
+auto fast_random_bool() -> bool
+{
+  static unsigned int num   = 0;
+  static int          count = 0;
+  if (count % std::numeric_limits<int>::digits == 0)
+  {
+    num = std::rand();
+  }
+  const bool ret = (bool)((num >> count) & 1);
+  count++;
+  return ret;
+}

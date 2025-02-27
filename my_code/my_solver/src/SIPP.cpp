@@ -14,7 +14,6 @@
 
 #include "utils.h"
 
-#define MOVE_TIME 1               // time to move to the next cell
 #define NODE_POOL_MERGE_SIZE 500  // merge the extra list with the node pool vector only of there are more elements in the list
 #define INITIAL_NODE_POOL_SIZE 2  // the multiple of map size to use as initial node pool size
 
@@ -53,8 +52,9 @@ auto SIPPNode::compare_node_ptrs::operator()(SIPPNode const* n1, SIPPNode const*
     return true;
   }  // f1 == f2
   if (n1->h == n2->h)
-  {                          // tie
-    return rand() % 2 == 1;  // choose randomly
+  {  // tie
+    // return rand() % 2 == 1;  // choose randomly
+    return fast_random_bool();
   }
   return n1->h > n2->h;  // if f is the same, prefer nodes closer to the goal
 }
@@ -182,9 +182,13 @@ auto SIPP::plan_old(int agent_num) -> TimePointPath
     // add to known nodes
     known[current->time_point.location] = current->time_point.interval.t_max;
 
+    // calculate the time window to enter neighboring positions
+    const TimeInterval neighbor_time_interval(safe_increase(current->time_point.interval.t_min),
+                                              safe_increase(current->time_point.interval.t_max));
+
     // expand current node
-    std::vector<int> neighbors = instance.get_neighbor_locations(current->time_point.location);
-    for (auto& neighbor : neighbors)
+    const std::vector<int>& neighbors = instance.get_neighbor_locations(current->time_point.location);
+    for (const auto& neighbor : neighbors)
     {
       // std::cout << "Neighbor: " << neighbor << std::endl;
       // calculate the heuristic
@@ -192,8 +196,8 @@ auto SIPP::plan_old(int agent_num) -> TimePointPath
       const double h = instance.get_heuristic_manhattan(agent_num, neighbor);
 
       // retrieve the safe intervals for the neighbor
-      std::vector<TimeInterval> time_intervals = constraint_table.get_safe_intervals_old(
-          neighbor, current->time_point.location, sipp::neighbor_time_interval(current->time_point.interval));
+      std::vector<TimeInterval> time_intervals =
+          constraint_table.get_safe_intervals_old(neighbor, current->time_point.location, neighbor_time_interval);
 
       for (const TimeInterval& interval : time_intervals)
       {
@@ -331,6 +335,11 @@ auto SIPP::plan(const int agent_num) -> TimePointPath
     // add to known nodes
     known[current->time_point.location] = current->time_point.interval.t_max;
 
+
+    // calculate the time window to enter neighboring positions
+    const TimeInterval neighbor_time_interval(safe_increase(current->time_point.interval.t_min),
+                                              safe_increase(current->time_point.interval.t_max));
+
     // expand current node
     const std::vector<int>& neighbors = instance.get_neighbor_locations(current->time_point.location);
     for (const auto& neighbor : neighbors)
@@ -343,7 +352,7 @@ auto SIPP::plan(const int agent_num) -> TimePointPath
       // retrieve the safe intervals for the neighbor
 
       std::list<TimeInterval>::const_iterator start, end;
-      std::tie(start, end) = constraint_table.get_safe_intervals(neighbor, sipp::neighbor_time_interval(current->time_point.interval));
+      std::tie(start, end) = constraint_table.get_safe_intervals(neighbor, neighbor_time_interval);
 
       for (auto it = start; it != end; it++)
       {
@@ -451,18 +460,4 @@ auto sipp::extract_path(SIPPNode const* const final_node) -> TimePointPath
   }
   std::reverse(path.begin(), path.end());
   return path;
-}
-
-auto sipp::neighbor_time_interval(const TimeInterval& i) -> TimeInterval
-{
-  TimeInterval next_ti = i;
-  if (next_ti.t_max == INT_MAX)
-  {
-    next_ti.t_min += MOVE_TIME;  // increase only t_min, otherwise overflow would happen
-  }
-  else
-  {
-    next_ti = next_ti + MOVE_TIME;  // increase both t_min and t_max
-  }
-  return next_ti;
 }

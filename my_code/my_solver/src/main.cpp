@@ -51,6 +51,9 @@ auto main(int argc, char** argv) -> int
   int         agent_num  = vm["agentNum"].as<int>();
   bool        GUI        = vm["GUI"].as<bool>();
 
+  // initialize random seed
+  srand(0);
+
   // create the instance
   std::unique_ptr<Instance> instance = std::make_unique<Instance>(map_name, scene_name, agent_num);
 

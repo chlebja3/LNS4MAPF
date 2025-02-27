@@ -191,3 +191,6 @@ auto generate_random_color(int mix_r, int mix_g, int mix_b, double mix_ratio = 0
 auto get_base_path() -> std::string;
 
 auto safe_increase(int num) -> int;
+
+auto fast_random_bool() -> bool;
+

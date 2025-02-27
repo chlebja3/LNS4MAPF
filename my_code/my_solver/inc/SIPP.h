@@ -59,7 +59,6 @@ using PriorityQueue = std::priority_queue<const SIPPNode*, std::vector<const SIP
 // typedef std::unordered_set<TimePoint, TimePoint::hash_time_point> UnorderedSet;
 // typedef std::unordered_map<Point2d, int, Point2d::hash_point>     UnorderedMap;
 
-auto neighbor_time_interval(const TimeInterval& i) -> TimeInterval;
 auto extract_path(SIPPNode const* final_node) -> TimePointPath;
 
 }  // namespace sipp
