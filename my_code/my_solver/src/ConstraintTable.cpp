@@ -599,6 +599,11 @@ void ConstraintTable::update_latest_constraint_end_estimate()
 }
 
 
+auto ConstraintTable::get_min_reach_time(int goal) const -> int
+{
+  return safe_intervals[goal].back().t_min;
+}
+
 EdgeConstraintTable::EdgeConstraintTable(int num_locations)
 {
   // initialize the edge constraints

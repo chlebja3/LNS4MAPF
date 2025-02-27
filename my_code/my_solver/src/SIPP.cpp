@@ -43,20 +43,16 @@ auto SIPPNode::operator==(const SIPPNode& other) const -> bool
 auto SIPPNode::compare_node_ptrs::operator()(SIPPNode const* n1, SIPPNode const* n2) const -> bool
 {
   // compare f
-  if (n1->f < n2->f)
+  if (n1->f == n2->f)
   {
-    return false;
+    if (n1->h == n2->h)
+    {  // tie
+      // return rand() % 2 == 1;  // choose randomly
+      return fast_random_bool();
+    }
+    return n1->h > n2->h;  // if f is the same, prefer nodes closer to the goal
   }
-  if (n1->f > n2->f)
-  {
-    return true;
-  }  // f1 == f2
-  if (n1->h == n2->h)
-  {  // tie
-    // return rand() % 2 == 1;  // choose randomly
-    return fast_random_bool();
-  }
-  return n1->h > n2->h;  // if f is the same, prefer nodes closer to the goal
+  return n1->f > n2->f;
 }
 
 
@@ -267,6 +263,9 @@ auto SIPP::plan(const int agent_num) -> TimePointPath
   // estimate the maximum time the goal can be reached
   const int max_time = constraint_table.get_max_path_len_estimate();
 
+  // get the lowerbound on the path length
+  const int min_time = constraint_table.get_min_reach_time(goal);
+
   // std::cout << "Max time estimate is: " << max_time << std::endl;
 
   assertm(max_time >= 0, "Time can not be negative.");
@@ -397,8 +396,17 @@ auto SIPP::plan(const int agent_num) -> TimePointPath
 
         assertm(neighbor_time_point.interval.t_min > current->time_point.interval.t_min, "Invalid interval.");
 
-        // add to the open list
-        open_list.push(node_pool.add_node(SIPPNode(neighbor_time_point, neighbor_time_point.interval.t_min, h, current)));
+        // check whether the is goal reached in the minimal reach time
+        if (neighbor_time_point.location == goal && neighbor_time_point.interval.t_min == min_time)
+        {
+          // add with heuristic INT_MIN so that the node is selected next
+          open_list.push(node_pool.add_node(SIPPNode(neighbor_time_point, neighbor_time_point.interval.t_min, INT_MIN, current)));
+        }
+        else
+        {
+          // add to the open list
+          open_list.push(node_pool.add_node(SIPPNode(neighbor_time_point, neighbor_time_point.interval.t_min, h, current)));
+        }
 
         if (generate_iter_info)
         {
