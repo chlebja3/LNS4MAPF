@@ -46,8 +46,8 @@ public:
         return true;
       }  // f1 == f2
       if (n1->h == n2->h)
-      {                          // tie
-        return rand() % 2 == 1;  // choose randomly
+      {                             // tie
+        return fast_random_bool();  // choose randomly
       }
       return n1->h > n2->h;  // if f is the same, prefer nodes closer to the goal
     }
@@ -144,8 +144,9 @@ auto ASTAR::find_path(const int agent_num, const Instance& instance) -> Path
   // std::cout << ASTAR::generated_nodes << std::endl;
 
   // create known nodes database
-  std::vector<bool> known;
+  static std::vector<bool> known;
   known.resize(map_data.width * map_data.height, false);
+  std::fill(known.begin(), known.end(), false);
 
   // main loop
   while (!open_list.empty())
@@ -176,8 +177,8 @@ auto ASTAR::find_path(const int agent_num, const Instance& instance) -> Path
     known[current->location] = true;
 
     // expand current node
-    std::vector<int> neighbors = instance.get_neighbor_locations(current->location);
-    for (auto& neighbor : neighbors)
+    const std::vector<int>& neighbors = instance.get_neighbor_locations(current->location);
+    for (const auto& neighbor : neighbors)
     {
       // check whether neighbor already known
       if (known[neighbor])
