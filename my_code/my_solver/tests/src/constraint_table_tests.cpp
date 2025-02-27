@@ -317,9 +317,8 @@ TEST_F(ConstraintTableTest, AddPathConstraints)
 
   // test first edge conflict
   std::list<TimeInterval>::const_iterator start, end;
-  std::tie(start, end) = table->get_safe_intervals(4, {0, 3});
-  ASSERT_EQ(std::distance(start, end), 0) << "Expected no safe interval due to an edge conflict.";
-  // TODO TEST EDGE CONFLICT
+  std::vector<TimeInterval> safe_intervals = filter_time_intervals(table->get_safe_intervals(4, {0, 3}), {0, 3}, 7, 4, *table);
+  EXPECT_EQ(safe_intervals.size(), 0) << "Expected no safe interval due to an edge conflict.";
 
   // test going to 1, 1 from a non constrained position
   std::tie(start, end) = table->get_safe_intervals(4, {0, 10});
@@ -329,9 +328,9 @@ TEST_F(ConstraintTableTest, AddPathConstraints)
 
   // test second edge conflict
   std::tie(start, end) = table->get_safe_intervals(4, {5, 9});
-  ASSERT_EQ(std::distance(start, end), 1) << "Expected only one safe interval.";
-  EXPECT_EQ(*start, TimeInterval(5, 5));
-  // TODO TEST EDGE CONFLICT
+  safe_intervals       = filter_time_intervals(table->get_safe_intervals(4, {5, 9}), {5, 9}, 7, 4, *table);
+  EXPECT_EQ(safe_intervals.size(), 1) << "Expected only one safe interval.";
+  EXPECT_EQ(safe_intervals[0], TimeInterval(5, 5));
 }
 
 // check assert death when the time interval is wrong, because, there will be an edge conflict if an agent came from the location
@@ -342,13 +341,10 @@ TEST_F(ConstraintTableTest, WrongSafeInterval)
 #endif
 {
   std::vector<TimePoint> path1 = {TimePoint(4, {0, 1}), TimePoint(7, {2, 4})};
-  table->add_constraints(path1);
+  table->add_constraints_old(path1);
 
   // expect assert death
   EXPECT_DEATH(table->get_safe_intervals_old(4, 7, {0, 3}), "Invalid time interval, the from location will be in edge collision.");
-
-  // the other method TODO test edge collision
-  EXPECT_DEATH(table->get_safe_intervals(4, {0, 3}), "Invalid time interval, the from location will be in edge collision.");
 }
 
 // check assert death when the safe interval of to position is not right and there are more constraints in the list
@@ -364,9 +360,6 @@ TEST_F(ConstraintTableTest, WrongSafeIntervalMoreConstraints)
 
   // expect assert death
   EXPECT_DEATH(table->get_safe_intervals_old(4, 7, {0, 3}), "Invalid time interval, the from location will be in edge collision.");
-
-  // the other method
-  EXPECT_DEATH(table->get_safe_intervals(4, {0, 3}), "Invalid time interval, the from location will be in edge collision.");
 }
 
 // check that the edge conflict is resolved correctly when there are more constraints in the list
@@ -389,9 +382,8 @@ TEST_F(ConstraintTableTest, EdgeConflictMoreConstraints)
                                   TimePoint(4, {9, 10})};
   table->add_constraints(path1);
 
-  std::list<TimeInterval>::const_iterator start, end;
-  std::tie(start, end) = table->get_safe_intervals(4, {0, 2});
-  ASSERT_EQ(std::distance(start, end), 0) << "Expected no safe intervals due to edge conflict.";
+  std::vector<TimeInterval> safe_intervals = filter_time_intervals(table->get_safe_intervals(4, {0, 2}), {0, 2}, 7, 4, *table);
+  EXPECT_EQ(safe_intervals.size(), 0) << "Expected no safe intervals due to edge conflict.";
 }
 
 // test edge constraint table

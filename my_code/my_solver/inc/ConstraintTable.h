@@ -6,6 +6,7 @@
  */
 
 #pragma once
+#include <climits>
 #include <iostream>
 #include <list>
 #include <memory>
@@ -74,5 +75,7 @@ private:
   std::vector<std::list<TimeInterval>> constraints;     // constraints for each position
   std::vector<std::list<TimeInterval>> safe_intervals;  // safe intervals for each position
   const Instance&                      instance;
-  int                                  max_path_len_estimate;
+  int                                  max_path_len_estimate           = INT_MAX;
+  int                                  unlimited_safe_intervals        = 0;
+  int                                  latest_unlimited_interval_start = 0;
 };

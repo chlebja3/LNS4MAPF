@@ -189,3 +189,5 @@ auto generate_random_color(int mix_r, int mix_g, int mix_b, double mix_ratio = 0
  * @return The path to the project directory.
  */
 auto get_base_path() -> std::string;
+
+auto safe_increase(int num) -> int;

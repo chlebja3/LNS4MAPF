@@ -60,23 +60,13 @@ auto filter_time_intervals(std::pair<std::list<TimeInterval>::const_iterator, st
   std::tie(start, end) = start_goal;
   std::vector<TimeInterval> ret;
 
-  int reach_time = 0;
-  if (interval.t_min == INT_MAX)
-  {
-    reach_time = INT_MAX;
-  }
-  else
-  {
-    reach_time = interval.t_min + 1;
-  }
-
   for (auto it = start; it != end; it++)
   {
     TimeInterval new_interval(it->t_min, it->t_max);
     // modify the interval to be valid
-    if (new_interval.t_min < reach_time)
+    if (new_interval.t_min < interval.t_min)
     {
-      new_interval.t_min = reach_time;
+      new_interval.t_min = interval.t_min;
     }
     assertm(new_interval.t_min <= new_interval.t_max, "Modifying the time interval made it invalid.");
 

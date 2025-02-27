@@ -282,3 +282,14 @@ auto get_base_path() -> std::string
 {
   return std::filesystem::canonical("/proc/self/exe").parent_path().parent_path().string();  // Linux only
 }
+
+
+auto safe_increase(int num) -> int
+{
+
+  if (num == INT_MAX)
+  {
+    return INT_MAX;
+  }
+  return num + 1;
+}

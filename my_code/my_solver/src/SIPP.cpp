@@ -261,6 +261,8 @@ auto SIPP::plan(const int agent_num) -> TimePointPath
   // estimate the maximum time the goal can be reached
   const int max_time = constraint_table.get_max_path_len_estimate();
 
+  // std::cout << "Max time estimate is: " << max_time << std::endl;
+
   assertm(max_time >= 0, "Time can not be negative.");
 
   // create openlist
@@ -299,6 +301,8 @@ auto SIPP::plan(const int agent_num) -> TimePointPath
     // pop the node to be processed
     SIPPNode const* const current = open_list.top();
     open_list.pop();
+
+    // std::cout << "Current: " << current->time_point.location << ", " << current->time_point.interval << std::endl;
 
     // check whether node was expanded already (same position and tmax higher then current tmin)
     if (current->time_point.interval.t_min <= known[current->time_point.location])
@@ -343,7 +347,7 @@ auto SIPP::plan(const int agent_num) -> TimePointPath
 
       for (auto it = start; it != end; it++)
       {
-        // std::cout << "interval:" << interval << std::endl;
+        // std::cout << "interval:" << *it << std::endl;
 
         // skip intervals that start later then the maximum time to reach the goal
         if (it->t_min > max_time)
@@ -351,19 +355,12 @@ auto SIPP::plan(const int agent_num) -> TimePointPath
           continue;
         }
 
-        // if the earliest reachable time of the neighbor is greater than maximum time of the current node + travel time, then the neighbor
-        // is not reachable without collision
-        int reach_time = 0;
-        if (current->time_point.interval.t_min == INT_MAX)
-        {
-          reach_time = INT_MAX;
-        }
-        else
-        {
-          reach_time = current->time_point.interval.t_min + 1;
-        }
+        // calculate reach times
+        const int min_reach_time = safe_increase(current->time_point.interval.t_min);
+        const int max_reach_time = safe_increase(current->time_point.interval.t_max);
 
-        if (it->t_min > reach_time)
+        // skip nodes that can not be reached
+        if (it->t_min > max_reach_time)
         {
           continue;
         }
@@ -376,9 +373,9 @@ auto SIPP::plan(const int agent_num) -> TimePointPath
 
         TimePoint neighbor_time_point(neighbor, *it);
         // modify the interval to be valid
-        if (neighbor_time_point.interval.t_min < reach_time)
+        if (neighbor_time_point.interval.t_min < min_reach_time)
         {
-          neighbor_time_point.interval.t_min = reach_time;
+          neighbor_time_point.interval.t_min = min_reach_time;
         }
         assertm(neighbor_time_point.interval.t_min <= neighbor_time_point.interval.t_max, "Modifying the time interval made it invalid.");
 
