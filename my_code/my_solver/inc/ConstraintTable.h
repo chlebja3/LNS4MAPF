@@ -36,12 +36,14 @@ public:
 class EdgeConstraintTable
 {
 public:
+  EdgeConstraintTable(int num_locations);
   void add(int loc1, int loc2, int time);
   void remove(int loc1, int loc2, int time);
   auto get(int loc1, int loc2, int time) const -> bool;
 
 private:
-  std::unordered_set<EdgeConstraint, EdgeConstraint::hash_edge_collision> edge_constraints;  // constraints for edges
+  // std::unordered_set<EdgeConstraint, EdgeConstraint::hash_edge_collision> edge_constraints;  // constraints for edges
+  std::vector<std::vector<std::unordered_set<int>>> edge_constraints;
 };
 
 class ConstraintTable

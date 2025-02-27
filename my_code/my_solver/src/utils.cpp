@@ -300,7 +300,8 @@ auto fast_random_bool() -> bool
   static int          count = 0;
   if (count % std::numeric_limits<int>::digits == 0)
   {
-    num = std::rand();
+    num   = std::rand();
+    count = 0;
   }
   const bool ret = (bool)((num >> count) & 1);
   count++;

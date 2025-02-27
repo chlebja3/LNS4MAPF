@@ -11,6 +11,8 @@
 #include <climits>
 #include <iostream>
 
+#define NUM_DIRECTIONS 4
+
 EdgeConstraint::EdgeConstraint(const int from, const int to, const int t) : from(from), to(to), t(t){};
 
 
@@ -30,7 +32,9 @@ auto EdgeConstraint::hash_edge_collision::operator()(const EdgeConstraint& c) co
 }
 
 ConstraintTable::ConstraintTable(const Instance& instance)
-    : instance(instance), unlimited_safe_intervals(instance.get_map_data().free_cells)
+    : edge_constraint_table(instance.get_map_data().width * instance.get_map_data().height),
+      instance(instance),
+      unlimited_safe_intervals(instance.get_map_data().free_cells)
 {
   // initialize the constraint vectors TODO static obstacles dont need constraint vectors
   const int num_cells = instance.get_map_data().width * instance.get_map_data().height;
@@ -595,20 +599,42 @@ void ConstraintTable::update_latest_constraint_end_estimate()
   return INT_MAX;
 }
 
+
+EdgeConstraintTable::EdgeConstraintTable(int num_locations)
+{
+  // initialize the edge constraints
+  edge_constraints.resize(NUM_DIRECTIONS);
+  for (int i = 0; i < NUM_DIRECTIONS; i++)
+  {
+    edge_constraints[i].resize(num_locations);
+  }
+}
+
 void EdgeConstraintTable::add(int loc1, int loc2, int time)
 {
-  assertm(edge_constraints.find(EdgeConstraint(loc1, loc2, time)) == edge_constraints.end(), "Edge constraint already exists.");
+  // assertm(edge_constraints.find(EdgeConstraint(loc1, loc2, time)) == edge_constraints.end(), "Edge constraint already exists.");
   assertm(loc1 != loc2, "Invalid edge constraint.");
-  edge_constraints.insert(EdgeConstraint(loc1, loc2, time));
+  const int dir = find_direction(loc1, loc2) - 1;
+  assertm(dir >= 0 && dir <= NUM_DIRECTIONS, "Invalid direction.");
+  assertm(edge_constraints[dir][loc2].find(time) == edge_constraints[dir][loc2].end(), "Edge constraint already exists.");
+  // edge_constraints.insert(EdgeConstraint(loc1, loc2, time));
+  edge_constraints[dir][loc2].insert(time);
 }
 
 void EdgeConstraintTable::remove(int loc1, int loc2, int time)
 {
-  int erased = edge_constraints.erase(EdgeConstraint(loc1, loc2, time));
+  // int erased = edge_constraints.erase(EdgeConstraint(loc1, loc2, time));
+  const int dir = find_direction(loc1, loc2) - 1;
+  assertm(dir >= 0 && dir <= NUM_DIRECTIONS, "Invalid direction.");
+
+  int erased = edge_constraints[dir][loc2].erase(time);
   assertm(erased == 1, "Trying to erase an edge constraint that is not present.");
 }
 
 auto EdgeConstraintTable::get(int loc1, int loc2, int time) const -> bool
 {
-  return edge_constraints.find(EdgeConstraint(loc1, loc2, time)) != edge_constraints.end();
+  const int dir = find_direction(loc1, loc2) - 1;
+  assertm(dir >= 0 && dir <= NUM_DIRECTIONS, "Invalid direction.");
+
+  return edge_constraints[dir][loc2].find(time) != edge_constraints[loc1][loc2].end();
 }

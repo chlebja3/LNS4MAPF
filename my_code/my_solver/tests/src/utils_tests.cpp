@@ -483,12 +483,22 @@ TEST(test_utils, DirectionNone)
   EXPECT_EQ(find_direction(4, 4), Direction::NONE) << "Wrong direction.";
 }
 
+// test random bool generator
+TEST(test_utils, RandomBool)
+{
+  // generate 100 random bools and check, whether they are valid (just a simple test to test the  unit test environment)
+  for (int i = 0; i < 100; i++)
+  {
+    bool b = fast_random_bool();
+    EXPECT_TRUE(b == true || b == false) << "Invalid value.";
+  }
+}
 
 // Color Generation test
 
 // // Test intersection finding
 // generate 100 random colors and check, whether they are valid (just a simple test to test the  unit test environment)
-TEST(ColorGeneration, ValueCheck)
+TEST(test_utils, ColorGeneration)
 {
   for (int i = 0; i < 100; i++)
   {
@@ -499,3 +509,4 @@ TEST(ColorGeneration, ValueCheck)
     EXPECT_TRUE(inRange(col.a, 0, 255)) << "Invalid value in alpha channel.";
   }
 }
+
