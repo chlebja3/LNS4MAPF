@@ -8,7 +8,8 @@
 #include <utils.h>
 
 // #include <boost/heap/pairing_heap.hpp>
-#include <boost/heap/priority_queue.hpp>
+#include <boost/heap/d_ary_heap.hpp>
+// #include <boost/heap/priority_queue.hpp>
 // #include <queue>
 // #include <unordered_map>
 // #include <unordered_set>
@@ -56,7 +57,8 @@ private:
 
 
 // using PriorityQueue = std::priority_queue<const SIPPNode*, std::vector<const SIPPNode*>, SIPPNode::compare_node_ptrs>;
-using PriorityQueue = boost::heap::priority_queue<const SIPPNode*, boost::heap::compare<SIPPNode::compare_node_ptrs>>;
+// using PriorityQueue = boost::heap::priority_queue<const SIPPNode*, boost::heap::compare<SIPPNode::compare_node_ptrs>>;
+using PriorityQueue = boost::heap::d_ary_heap<const SIPPNode*, boost::heap::arity<2>, boost::heap::compare<SIPPNode::compare_node_ptrs>>;
 // using PriorityQueue = boost::heap::fibonacci_heap<const SIPPNode*, boost::heap::compare<SIPPNode::compare_node_ptrs>>;
 // using PriorityQueue = boost::heap::pairing_heap<const SIPPNode*, boost::heap::compare<SIPPNode::compare_node_ptrs>>;
 // typedef std::unordered_set<TimePoint, TimePoint::hash_time_point> UnorderedSet;

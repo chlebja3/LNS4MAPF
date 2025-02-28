@@ -136,7 +136,8 @@ auto ASTAR::find_path(const int agent_num, const Instance& instance) -> Path
 
   {
     // calculate the heuristic
-    const double h = instance.get_heuristic_manhattan(agent_num, start);
+    // const double h = instance.get_heuristic_manhattan(agent_num, start);
+    const double h = instance.get_heuristic_distance(agent_num, start);
 
     // add the start node to the priority queue
     open_list.push(node_pool.add_node(AstarNode(start, 0, h, nullptr)));
@@ -189,7 +190,8 @@ auto ASTAR::find_path(const int agent_num, const Instance& instance) -> Path
 
       // calculate heuristic
       // const double h = instance.get_heuristic_euclidean(agent_num, neighbor);
-      const double h = instance.get_heuristic_manhattan(agent_num, neighbor);
+      // const double h = instance.get_heuristic_manhattan(agent_num, neighbor);
+      const double h = instance.get_heuristic_distance(agent_num, neighbor);
 
       // add to the open list
       open_list.push(node_pool.add_node(AstarNode(neighbor, current->g + 1, h, current)));

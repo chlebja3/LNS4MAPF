@@ -896,6 +896,7 @@ void Visualizer::create_left_panel()
       ImGui::Text("\tExpanded interval: %s", ((std::string)cur_info.cur_expanded.interval).c_str());
       ImGui::Text("\tg: %lf", cur_info.g);
       ImGui::Text("\th: %lf", cur_info.h);
+      ImGui::Text("\th2: %lf", cur_info.h2);
       ImGui::Text("\tf: %lf", cur_info.g + cur_info.h);
       ImGui::Text("\tNum generated: %d", cur_info.generated);
       ImGui::Text("\tNum expanded: %d", cur_info.expanded);

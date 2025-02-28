@@ -302,7 +302,7 @@ void SIPP::initialize_iter_info()
 void SIPP::update_iter_info(const sipp::SIPPNode& expanded, const bool last_iter)
 {
   expanded_this_iter += 1;
-  iter_info.emplace_back(expanded.time_point, expanded.g, expanded.h, generated_this_iter, expanded_this_iter, iteration_num);
+  iter_info.emplace_back(expanded.time_point, expanded.g, expanded.h, expanded.h2, generated_this_iter, expanded_this_iter, iteration_num);
 
   if (last_iter)
   {
