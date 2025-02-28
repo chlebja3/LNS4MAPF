@@ -85,7 +85,6 @@ public:
   ~SIPP() = default;
 
   auto plan(int agent_num) -> TimePointPath;
-  auto plan_old(int agent_num) -> TimePointPath;
 
 private:
   void             initialize_iter_info();

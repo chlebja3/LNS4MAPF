@@ -12,6 +12,8 @@
 #include <climits>
 #include <filesystem>
 
+#include "ConstraintTable.h"
+
 
 std::string get_base_path_tests()
 {

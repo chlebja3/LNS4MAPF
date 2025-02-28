@@ -27,9 +27,10 @@ endif()
 
 # include directories
 include_directories("inc")
+include_directories("inc/old")
 
 # collect all source files
-file(GLOB SOURCES "src/*.cpp" )
+file(GLOB SOURCES "src/*.cpp" "src/old/*.cpp")
 #file(GLOB IMGUI_SOURCES "/third_party_libraries/imgui-sfml/imgui-SFML.cpp" "/third_party_libraries/imgui/*.cpp" "/third_party_libraries/imgui/*.h" "/third_party_libraries/imgui-sfml/*.h")
 
 # Manually specify ImGui and ImGui-SFML source files

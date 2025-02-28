@@ -28,11 +28,6 @@ public:
   EdgeConstraint(int from_, int to_, int t_);
 
   auto operator==(const EdgeConstraint& other) const -> bool;
-
-  struct hash_edge_collision
-  {
-    auto operator()(const EdgeConstraint& c) const -> size_t;
-  };
 };
 
 class EdgeConstraintTable
@@ -72,20 +67,9 @@ public:
   [[nodiscard]] auto get_first_safe_interval(int location) const -> const std::list<TimeInterval>::const_iterator;
   [[nodiscard]] auto get_max_path_len_estimate() const -> int;
   void               update_latest_constraint_end_estimate();
-  auto               get_min_reach_time(int goal) const -> int;
-
-  // old implementation
-  void add_constraint_old(const TimePoint& timepoint);
-  void add_constraints_old(const TimePointPath& path);
-  void remove_constraint_old(const TimePoint& timepoint);
-  void remove_constraints_old(const TimePointPath& path);
-  auto get_first_safe_interval_old(int location) const -> TimeInterval;
-  auto get_safe_interval_old(int location, int from, int time) const -> TimeInterval;
-  auto get_safe_intervals_old(int location, int from, const TimeInterval& time_interval) const -> std::vector<TimeInterval>;
-  auto get_last_dynamic_constraint_old() const -> int;
+  [[nodiscard]] auto get_min_reach_time(int goal) const -> int;
 
 private:
-  std::vector<std::list<TimeInterval>> constraints;     // constraints for each position
   std::vector<std::list<TimeInterval>> safe_intervals;  // safe intervals for each position
   const Instance&                      instance;
   int                                  max_path_len_estimate = INT_MAX;

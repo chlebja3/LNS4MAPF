@@ -10,10 +10,10 @@
 #include <climits>
 
 #include "Astar.h"
-#include "ConstraintTable.h"
 #include "Instance.h"
-#include "LNS.h"
-#include "SIPP.h"
+#include "old/ConstraintTable_old.h"
+#include "old/LNS_old.h"
+#include "old/SIPP_old.h"
 #include "test_utils.h"
 
 // SIPP tests
@@ -27,10 +27,10 @@ TEST(SIPPOldTest, BasicPathEmptyMap)
       std::make_unique<Instance>(base_path + "/tests/test_maps/empty_5_5.map", base_path + "/tests/test_scen/empty_5_5_scen_1.scen", 1);
 
   // create SIPP
-  SIPP sipp(*instance, false);
+  old::SIPP sipp(*instance, false);
 
   // from (0,0) to (4,4)
-  TimePointPath path = sipp.plan_old(0);
+  TimePointPath path = sipp.plan(0);
 
   ASSERT_EQ(path.size(), 9) << "SIPP failed to find a basic path!";
   EXPECT_EQ(path.front().location, instance->get_start_locations()[0]) << "Path does not start at the correct point!";
@@ -46,10 +46,10 @@ TEST(SIPPOldTest, StaticObstacleAvoidance)
       std::make_unique<Instance>(base_path + "/tests/test_maps/wall_5_5.map", base_path + "/tests/test_scen/wall_5_5_scen_1.scen", 1);
 
   // create SIPP
-  SIPP sipp(*instance, false);
+  old::SIPP sipp(*instance, false);
 
   // from (4,0) to (0,4)
-  TimePointPath path = sipp.plan_old(0);
+  TimePointPath path = sipp.plan(0);
 
   // check that the path size is correct
   ASSERT_EQ(path.size(), 9) << "SIPP failed to find a path around obstacles!";
@@ -74,7 +74,7 @@ TEST(SIPPOldTest, TimeConstraintHandling)
       std::make_unique<Instance>(base_path + "/tests/test_maps/empty_5_5.map", base_path + "/tests/test_scen/empty_5_5_scen_1.scen", 1);
 
   // create SIPP
-  SIPP sipp(*instance, false);
+  old::SIPP sipp(*instance, false);
 
   // Create a wall from time constraints
   for (int i = 0; i < 5; i++)
@@ -83,10 +83,10 @@ TEST(SIPPOldTest, TimeConstraintHandling)
     {
       continue;  // passage through (2,2)
     }
-    sipp.constraint_table.add_constraint_old(TimePoint(instance->position_to_location({i, 2}), {0, 20}));
+    sipp.constraint_table.add_constraint(TimePoint(instance->position_to_location({i, 2}), {0, 20}));
   }
 
-  TimePointPath path = sipp.plan_old(0);
+  TimePointPath path = sipp.plan(0);
 
   ASSERT_EQ(path.size(), 9) << "Path length invalid!";
 
@@ -112,9 +112,9 @@ TEST(SIPPOldTest, NoPathPossible)
       std::make_unique<Instance>(base_path + "/tests/test_maps/biparted_5_5.map", base_path + "/tests/test_scen/empty_5_5_scen_1.scen", 1);
 
   // create SIPP
-  SIPP sipp(*instance, false);
+  old::SIPP sipp(*instance, false);
 
-  TimePointPath path = sipp.plan_old(0);
+  TimePointPath path = sipp.plan(0);
 
   ASSERT_TRUE(path.empty()) << "SIPP should return an empty path when no path exists!";
 }
@@ -129,18 +129,18 @@ TEST(SIPPOldTest, NoPathDueToTimeConstraints)
       std::make_unique<Instance>(base_path + "/tests/test_maps/empty_5_5.map", base_path + "/tests/test_scen/empty_5_5_scen_1.scen", 1);
 
   // create SIPP
-  SIPP sipp(*instance, false);
+  old::SIPP sipp(*instance, false);
 
   // Add constraints that make it impossible to leave start until time 10
-  sipp.constraint_table.add_constraint_old(TimePoint(1, {0, 10}));  // {1, 0}
-  sipp.constraint_table.add_constraint_old(TimePoint(5, {0, 10}));  // {0, 1}
+  sipp.constraint_table.add_constraint(TimePoint(1, {0, 10}));  // {1, 0}
+  sipp.constraint_table.add_constraint(TimePoint(5, {0, 10}));  // {0, 1}
 
   // add constraints that make it impossible to reach the goal from time 10 to 20
-  sipp.constraint_table.add_constraint_old(TimePoint(instance->position_to_location({3, 4}), {10, 20}));  // {3, 4}
-  sipp.constraint_table.add_constraint_old(TimePoint(instance->position_to_location({4, 3}), {10, 20}));  // {4, 3}
+  sipp.constraint_table.add_constraint(TimePoint(instance->position_to_location({3, 4}), {10, 20}));  // {3, 4}
+  sipp.constraint_table.add_constraint(TimePoint(instance->position_to_location({4, 3}), {10, 20}));  // {4, 3}
 
   // plan path
-  TimePointPath path = sipp.plan_old(0);
+  TimePointPath path = sipp.plan(0);
 
   // check that path was found
   ASSERT_FALSE(path.empty()) << "SIPP returned no path!";
@@ -173,14 +173,14 @@ TEST(SIPPOldTest, DynamicObstacleAtGoal)
       std::make_unique<Instance>(base_path + "/tests/test_maps/empty_5_5.map", base_path + "/tests/test_scen/empty_5_5_scen_1.scen", 1);
 
   // create SIPP
-  SIPP sipp(*instance, false);
+  old::SIPP sipp(*instance, false);
 
   // from (0,0) to (4,4)
 
   // add a constraint that blocks the goal after time 20
-  sipp.constraint_table.add_constraint_old(TimePoint(instance->get_goal_locations()[0], {20, 30}));
+  sipp.constraint_table.add_constraint(TimePoint(instance->get_goal_locations()[0], {20, 30}));
 
-  TimePointPath path = sipp.plan_old(0);
+  TimePointPath path = sipp.plan(0);
 
   // the path should be found
   ASSERT_FALSE(path.empty()) << "SIPP should find a path when the goal is blocked after possible arrival time!";
@@ -200,16 +200,16 @@ TEST(SIPPOldTest, EdgeConstraintsAtGoal)
       std::make_unique<Instance>(base_path + "/tests/test_maps/dummy_3_3.map", base_path + "/tests/test_scen/dummy_3_3_scen_2.scen", 1);
 
   // create SIPP
-  SIPP sipp(*instance, false);
+  old::SIPP sipp(*instance, false);
 
   // from (2, 0) to (2, 1)
 
   // add edge constraints at the goal so that the agent has to go around
-  sipp.constraint_table.add_constraints_old({TimePoint(5, {0, 0}), TimePoint(2, {1, 1}), TimePoint(1, {2, 2}), TimePoint(0, {3, 3}),
-                                             TimePoint(3, {4, 4}), TimePoint(6, {5, 5}), TimePoint(7, {6, 6}), TimePoint(8, {7, 7})});
+  sipp.constraint_table.add_constraints({TimePoint(5, {0, 0}), TimePoint(2, {1, 1}), TimePoint(1, {2, 2}), TimePoint(0, {3, 3}),
+                                         TimePoint(3, {4, 4}), TimePoint(6, {5, 5}), TimePoint(7, {6, 6}), TimePoint(8, {7, 7})});
 
 
-  TimePointPath path = sipp.plan_old(0);
+  TimePointPath path = sipp.plan(0);
 
   // check that the path has the right length
   ASSERT_EQ(path.size(), 8) << "SIPP should find a path.";
@@ -228,7 +228,7 @@ TEST(SIPPOldTest, SamePathAsAStar1)
       std::make_unique<Instance>(base_path + "/tests/test_maps/empty_5_5.map", base_path + "/tests/test_scen/empty_5_5_scen_1.scen", 1);
 
   // create SIPP
-  SIPP sipp(*instance, false);
+  old::SIPP sipp(*instance, false);
 
   // from (0,0) to (4,4)
 
@@ -239,7 +239,7 @@ TEST(SIPPOldTest, SamePathAsAStar1)
   ASSERT_FALSE(path_astar.empty()) << "A* should find a path when no constraints are present!";
 
   // plan path by SIPP
-  TimePointPath path_sipp = sipp.plan_old(0);
+  TimePointPath path_sipp = sipp.plan(0);
 
   // assert that SIPP found a path
   ASSERT_FALSE(path_sipp.empty()) << "SIPP should find a path when no constraints are present!";
@@ -263,7 +263,7 @@ TEST(SIPPOldTest, SamePathAsAStar2)
       std::make_unique<Instance>(base_path + "/tests/test_maps/den520d.map", base_path + "/tests/test_scen/den520d-random-0.scen", 1);
 
   // create SIPP
-  SIPP sipp(*instance, false);
+  old::SIPP sipp(*instance, false);
 
   // from (0,0) to (4,4)
 
@@ -274,7 +274,7 @@ TEST(SIPPOldTest, SamePathAsAStar2)
   ASSERT_FALSE(path_astar.empty()) << "A* should find a path when no constraints are present!";
 
   // plan path by SIPP
-  TimePointPath path_sipp = sipp.plan_old(0);
+  TimePointPath path_sipp = sipp.plan(0);
 
   // assert that SIPP found a path
   ASSERT_FALSE(path_sipp.empty()) << "SIPP should find a path when no constraints are present!";
@@ -297,10 +297,10 @@ TEST(SIPPOldTest, PrioritizedPlanning1agent)
       std::make_unique<Instance>(base_path + "/tests/test_maps/dummy_3_3.map", base_path + "/tests/test_scen/dummy_3_3_scen_1.scen", 1);
 
   // create LNS
-  LNS lns(*instance, false);
+  old::LNS lns(*instance, false);
 
   // plan path by Prioritized Planning
-  Solution sol = lns.PrioritizedPlanningOld();
+  Solution sol = lns.PrioritizedPlanning();
 
   // check solution validity
   EXPECT_TRUE(sol.is_valid(*instance)) << "Solution is invalid!";
@@ -315,10 +315,10 @@ TEST(SIPPOldTest, PrioritizedPlanningEmpty2agents)
       std::make_unique<Instance>(base_path + "/tests/test_maps/empty_5_5.map", base_path + "/tests/test_scen/empty_5_5_scen_1.scen", 2);
 
   // create LNS
-  LNS lns(*instance, false);
+  old::LNS lns(*instance, false);
 
   // plan path by Prioritized Planning
-  Solution sol = lns.PrioritizedPlanningOld();
+  Solution sol = lns.PrioritizedPlanning();
 
   // check solution validity
   EXPECT_TRUE(sol.is_valid(*instance)) << "Solution is invalid!";
@@ -334,10 +334,10 @@ TEST(SIPPOldTest, PrioritizedPlanning)
       std::make_unique<Instance>(base_path + "/tests/test_maps/den520d.map", base_path + "/tests/test_scen/den520d-random-0.scen", 100);
 
   // create LNS
-  LNS lns(*instance, false);
+  old::LNS lns(*instance, false);
 
   // plan path by Prioritized Planning
-  Solution sol = lns.PrioritizedPlanningOld();
+  Solution sol = lns.PrioritizedPlanning();
 
   // check solution validity
   EXPECT_TRUE(sol.is_valid(*instance)) << "Solution is invalid!";
