@@ -28,9 +28,9 @@ public:
 
 
   // constructors
-  SIPPNode(int location, const TimeInterval& interval, double g_, double h_, SIPPNode const* parent_);
+  SIPPNode(int location, const TimeInterval& interval, double g_, double h_, double h2_, SIPPNode const* parent_);
 
-  SIPPNode(const TimePoint& time_point_, double g_, double h_, SIPPNode const* parent_);
+  SIPPNode(const TimePoint& time_point_, double g_, double h_, double h2_, SIPPNode const* parent_);
 
   auto operator==(const SIPPNode& other) const -> bool;
 
@@ -38,6 +38,7 @@ public:
   {
     auto operator()(SIPPNode const* n1, SIPPNode const* n2) const -> bool;
   };
+  double h2;
 };
 
 class NodePool

@@ -28,13 +28,13 @@ SIPP::SIPP(const Instance& instance_, const bool generate_iter_info_)
   known.resize(instance.get_map_data().width * instance.get_map_data().height, -1);
 }
 
-SIPPNode::SIPPNode(int location, const TimeInterval& interval, double g_, double h_, SIPPNode const* parent_)
-    : Node(g_, h_), time_point(location, interval), parent(parent_)
+SIPPNode::SIPPNode(int location, const TimeInterval& interval, double g_, double h_, double h2_, SIPPNode const* parent_)
+    : Node(g_, h_), time_point(location, interval), parent(parent_), h2(h2_)
 {
 }
 
-SIPPNode::SIPPNode(const TimePoint& time_point_, double g_, double h_, SIPPNode const* parent_)
-    : Node(g_, h_), time_point(time_point_), parent(parent_)
+SIPPNode::SIPPNode(const TimePoint& time_point_, double g_, double h_, double h2_, SIPPNode const* parent_)
+    : Node(g_, h_), time_point(time_point_), parent(parent_), h2(h2_)
 {
 }
 
@@ -51,8 +51,12 @@ auto SIPPNode::compare_node_ptrs::operator()(SIPPNode const* n1, SIPPNode const*
   {
     if (n1->h == n2->h)
     {  // tie
-      // return rand() % 2 == 1;  // choose randomly
-      return fast_random_bool();
+      if (n1->h2 == n2->h2)
+      {
+        // if tie even in the second heuristic, choose randomly
+        return fast_random_bool();
+      }
+      return n1->h2 > n2->h2;
     }
     return n1->h > n2->h;  // if f is the same, prefer nodes closer to the goal
   }
@@ -63,7 +67,7 @@ auto SIPPNode::compare_node_ptrs::operator()(SIPPNode const* n1, SIPPNode const*
 NodePool::NodePool(const int size)
 {
   // initialize the pool with dummy nodes
-  pool.resize(size, SIPPNode(0, {0, 0}, 0, 0, nullptr));
+  pool.resize(size, SIPPNode(0, {0, 0}, 0, 0, 0, nullptr));
   end = 0;
 }
 
@@ -118,6 +122,7 @@ auto SIPP::plan(const int agent_num) -> TimePointPath
 
   // get the lowerbound on the path length
   const int min_time = constraint_table.get_min_reach_time(goal);
+  // std::cout << "Agent: " << agent_num << ", min time: " << min_time << std::endl;
 
   // std::cout << "Max time estimate is: " << max_time << std::endl;
 
@@ -133,10 +138,11 @@ auto SIPP::plan(const int agent_num) -> TimePointPath
   {
     // const double h = instance.get_heuristic_euclidean(agent_num, start);
     // const double h = instance.get_heuristic_manhattan(agent_num, start);
-    const double h = instance.get_heuristic_distance(agent_num, start);
+    const double h2 = instance.get_heuristic_distance(agent_num, start);
+    const double h1 = std::max((double)min_time, h2);
 
     // create the start node
-    open_list.push(node_pool.add_node(SIPPNode(start, *time_interval_start, 0, h, nullptr)));
+    open_list.push(node_pool.add_node(SIPPNode(start, *time_interval_start, 0, h1, h2, nullptr)));
 
     if (generate_iter_info)
     {
@@ -201,7 +207,7 @@ auto SIPP::plan(const int agent_num) -> TimePointPath
       // calculate the heuristic
       // const double h = instance.get_heuristic_euclidean(agent_num, neighbor);
       // const double h = instance.get_heuristic_manhattan(agent_num, neighbor);
-      const double h = instance.get_heuristic_distance(agent_num, neighbor);
+      const double h2 = instance.get_heuristic_distance(agent_num, neighbor);
 
       // retrieve the safe intervals for the neighbor
 
@@ -252,16 +258,19 @@ auto SIPP::plan(const int agent_num) -> TimePointPath
         assertm(neighbor_time_point.interval.t_min > current->time_point.interval.t_min, "Invalid interval.");
 
         // check whether the is goal reached in the minimal reach time
-        if (neighbor_time_point.location == goal && neighbor_time_point.interval.t_min == min_time)
-        {
-          // add with heuristic INT_MIN so that the node is selected next
-          open_list.push(node_pool.add_node(SIPPNode(neighbor_time_point, neighbor_time_point.interval.t_min, INT_MIN, current)));
-        }
-        else
-        {
-          // add to the open list
-          open_list.push(node_pool.add_node(SIPPNode(neighbor_time_point, neighbor_time_point.interval.t_min, h, current)));
-        }
+        // if (neighbor_time_point.location == goal && neighbor_time_point.interval.t_min == min_time)
+        //{
+        //  // add with heuristic INT_MIN so that the node is selected next
+        //  open_list.push(node_pool.add_node(SIPPNode(neighbor_time_point, neighbor_time_point.interval.t_min, INT_MIN, INT_MIN,
+        //  current)));
+        //}
+        // else
+        //{
+        //  // add to the open list
+        //  open_list.push(node_pool.add_node(SIPPNode(neighbor_time_point, neighbor_time_point.interval.t_min, h, current)));
+        //}
+        const double h1 = std::max((double)min_time, neighbor_time_point.interval.t_min + h2) - neighbor_time_point.interval.t_min;
+        open_list.push(node_pool.add_node(SIPPNode(neighbor_time_point, neighbor_time_point.interval.t_min, h1, h2, current)));
 
         if (generate_iter_info)
         {
