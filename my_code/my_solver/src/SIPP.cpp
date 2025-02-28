@@ -124,6 +124,7 @@ auto SIPP::plan_old(int agent_num) -> TimePointPath
   // calculate the heuristic of the start node
   {
     // const double h = instance.get_heuristic_euclidean(agent_num, start);
+    // const double h = instance.get_heuristic_manhattan(agent_num, start);
     const double h = instance.get_heuristic_manhattan(agent_num, start);
 
     // create the start node
@@ -279,7 +280,8 @@ auto SIPP::plan(const int agent_num) -> TimePointPath
   // calculate the heuristic of the start node
   {
     // const double h = instance.get_heuristic_euclidean(agent_num, start);
-    const double h = instance.get_heuristic_manhattan(agent_num, start);
+    // const double h = instance.get_heuristic_manhattan(agent_num, start);
+    const double h = instance.get_heuristic_distance(agent_num, start);
 
     // create the start node
     open_list.push(node_pool.add_node(SIPPNode(start, *time_interval_start, 0, h, nullptr)));
@@ -346,7 +348,8 @@ auto SIPP::plan(const int agent_num) -> TimePointPath
       // std::cout << "Neighbor: " << neighbor << std::endl;
       // calculate the heuristic
       // const double h = instance.get_heuristic_euclidean(agent_num, neighbor);
-      const double h = instance.get_heuristic_manhattan(agent_num, neighbor);
+      // const double h = instance.get_heuristic_manhattan(agent_num, neighbor);
+      const double h = instance.get_heuristic_distance(agent_num, neighbor);
 
       // retrieve the safe intervals for the neighbor
 

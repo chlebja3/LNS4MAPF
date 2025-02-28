@@ -55,6 +55,14 @@ public:
     return heuristic_manhattan[agent_num][loc];
   };
 
+  [[nodiscard]] inline auto get_heuristic_distance(const int agent_num, const int loc) const -> int
+  {
+
+    assertm(agent_num >= 0 && agent_num < (int)heuristic_manhattan.size(), "Agent number out of range of the heuristic vector.");
+    assertm(map_data.is_in(loc), "Trying to index a point that is not in the map.");
+    return heuristic_distance[agent_num][loc];
+  };
+
   [[nodiscard]] auto get_heuristic_euclidean(int agent_num, int loc) const -> double;
   //[[nodiscard]] auto get_neighbor_locations(int loc) const -> const std::vector<int>&;
   [[nodiscard]] inline auto get_neighbor_locations(int loc) const -> const std::vector<int>&
@@ -80,6 +88,8 @@ private:
   // function to load a scene
   void load_scene();
 
+  void calculate_distance_heuristic();
+
   bool                          initialized = false;
   std::string                   map_fname;
   std::string                   scene_fname;
@@ -95,5 +105,6 @@ private:
   // heuristics
   std::vector<std::vector<int>>    heuristic_manhattan;
   std::vector<std::vector<double>> heuristic_euclidean;
+  std::vector<std::vector<int>>    heuristic_distance;
 };
 

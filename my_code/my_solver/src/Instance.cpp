@@ -34,8 +34,8 @@ void Instance::initialize()
 {
   load_map();
   load_scene();
-  calculate_heuristics();
   precompute_neighbors();
+  calculate_heuristics();
   initialized = true;
 }
 
@@ -315,13 +315,16 @@ void Instance::calculate_heuristics()
   assertm(map_data.free_cells > 0 && map_data.free_cells <= (int)map_data.data.size(), "Invalid free cell count.");
 
   // clear the vectors
-  heuristic_euclidean.clear();
+  // heuristic_euclidean.clear();
   heuristic_manhattan.clear();
+  heuristic_distance.clear();
 
   // preallocate vectors for the heuristics
-  const std::vector<int>    manhattan_initializer(map_data.width * map_data.height, 0);
+  const std::vector<int>    int_initializer(map_data.width * map_data.height, -1);
   const std::vector<double> euclidean_initializer(map_data.width * map_data.height, 0.0);
-  heuristic_manhattan.resize(num_of_agents, manhattan_initializer);
+
+  heuristic_manhattan.resize(num_of_agents, int_initializer);
+  heuristic_distance.resize(num_of_agents, int_initializer);
   heuristic_euclidean.resize(num_of_agents, euclidean_initializer);
 
 
@@ -338,6 +341,9 @@ void Instance::calculate_heuristics()
       }
     }
   }
+
+  // precompute the distance heuristic
+  calculate_distance_heuristic();
 };
 
 void Instance::precompute_neighbors()
@@ -379,6 +385,45 @@ auto Instance::get_heuristic_euclidean(const int agent_num, const int loc) const
   assertm(map_data.is_in(loc), "Trying to index a point that is not in the map.");
   return heuristic_euclidean[agent_num][loc];
 };
+
+void Instance::calculate_distance_heuristic()
+{
+  // calculate distance from each goal for each position
+  for (int i = 0; i < (int)goal_locations.size(); i++)
+  {
+    const int         goal = goal_locations[i];
+    std::vector<int>& curr = heuristic_distance[i];
+
+    // by default the first integer is used as priority, and the elements with highest priority are popped first
+    std::priority_queue<std::pair<int, int>> open_list;
+
+    // create first node which is the goal
+    curr[goal] = 0;
+    open_list.push({0, goal});
+
+    // find distance from the goal for each position
+    while (!open_list.empty())
+    {
+      // pop the element with the highest priority
+      int priority, location;
+      std::tie(priority, location) = open_list.top();
+      open_list.pop();
+
+      // find the neighbor locations
+      const std::vector<int>& neighbors = get_neighbor_locations(location);
+      for (int neighbor : neighbors)
+      {
+        // if the neighbor is not visited yet and is free cell
+        if (curr[neighbor] == -1 && map_data.index(neighbor) == 0)
+        {
+          // calculate the distance
+          curr[neighbor] = curr[location] + 1;
+          open_list.push({-curr[neighbor], neighbor});  // use negative priority to get the elements closest to goal first
+        }
+      }
+    }
+  }
+}
 
 
 auto Instance::path_to_pointpath(const Path& path) const -> PointPath
