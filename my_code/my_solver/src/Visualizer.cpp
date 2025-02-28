@@ -45,7 +45,7 @@ Visualizer::Visualizer(const Instance& instance_, SharedData& shared_data_)
       sipp_vis([this](Visualization& vis) { this->sipp_visualization_update(vis); })
 {
   // generate random colors for the agents
-  for (int i = 0; i < (int)instance.get_start_positions().size(); i++)
+  for (int i = 0; i < (int)instance.get_start_locations().size(); i++)
   {
     agents_colors.push_back(generate_random_color(UCHAR_MAX, UCHAR_MAX, UCHAR_MAX, 0.25));
   }

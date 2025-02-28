@@ -31,13 +31,24 @@ public:
   void print_agents() const;
 
   // function to obtain the map data
-  [[nodiscard]] auto get_map_data() const -> const Map&;
+  [[nodiscard]] inline auto get_map_data() const -> const Map&
+  {
+    return map_data;
+  }
 
   // functions to obtain the agent starts, goals and optimal paths
-  [[nodiscard]] auto get_start_positions() const -> const std::vector<Point2d>&;
-  [[nodiscard]] auto get_start_locations() const -> const std::vector<int>&;
+  [[nodiscard]] auto        get_start_positions() const -> const std::vector<Point2d>&;
+  [[nodiscard]] inline auto get_start_locations() const -> const std::vector<int>&
+  {
+    return start_locations;
+  }
+
   [[nodiscard]] auto get_goal_positions() const -> const std::vector<Point2d>&;
-  [[nodiscard]] auto get_goal_locations() const -> const std::vector<int>&;
+  [[nodiscard]] auto get_goal_locations() const -> const std::vector<int>&
+  {
+    return goal_locations;
+  }
+
   [[nodiscard]] auto get_optimal_paths() const -> const std::vector<Path>&;
 
   // function to calculate the optimal paths ignoring the other agents

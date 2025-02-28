@@ -240,29 +240,14 @@ void Instance::print_map() const
   map_data.print();
 }
 
-auto Instance::get_map_data() const -> const Map&
-{
-  return map_data;
-}
-
 auto Instance::get_start_positions() const -> const std::vector<Point2d>&
 {
   return start_positions;
 }
 
-auto Instance::get_start_locations() const -> const std::vector<int>&
-{
-  return start_locations;
-}
-
 auto Instance::get_goal_positions() const -> const std::vector<Point2d>&
 {
   return goal_positions;
-}
-
-auto Instance::get_goal_locations() const -> const std::vector<int>&
-{
-  return goal_locations;
 }
 
 void Instance::calculate_optimal_paths()
