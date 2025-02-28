@@ -12,11 +12,11 @@
 
 #include "SIPP.h"
 
-LNS::LNS(const Instance& instance, const bool is_visualisation) : Solver("LNS", instance), is_visualisation(is_visualisation)
+LNS::LNS(const Instance& instance_, const bool is_visualisation_) : Solver("LNS", instance_), is_visualisation(is_visualisation_)
 {
   // SIPP's lifetime can not be longer than LNS's lifetime, because then map_data might be deleted before SIPP
   planner = std::make_unique<SIPP>(instance, is_visualisation);
-};
+}
 
 void LNS::solve()
 {

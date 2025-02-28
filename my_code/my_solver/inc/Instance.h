@@ -18,7 +18,7 @@ public:
 
   // constructor
   Instance() = default;
-  Instance(const std::string& map_fname, const std::string& scene_fname, int num_of_agents = 0);
+  Instance(std::string map_fname_, std::string scene_fname_, int num_of_agents_ = 0);
 
   void               initialize(const std::string& map_fname, const std::string& scene_fname, int num_of_agents = 0);
   void               initialize();

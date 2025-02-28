@@ -16,6 +16,7 @@
 #include <iostream>
 #include <memory>
 #include <stdexcept>
+#include <utility>
 
 #include "IconsFontAwesome5.h"
 #include "imgui-SFML.h"
@@ -37,16 +38,16 @@
 #define FRAME_RATE 60
 #define DEFAULT_ANTIALIASING_LEVEL 8.0F
 
-Visualizer::Visualizer(const Instance& instance, SharedData& shared_data)
-    : instance(instance),
-      shared_data(shared_data),
+Visualizer::Visualizer(const Instance& instance_, SharedData& shared_data_)
+    : instance(instance_),
+      shared_data(shared_data_),
       solution_vis([this](Visualization& vis) { this->solution_visualization_update(vis); }),
       sipp_vis([this](Visualization& vis) { this->sipp_visualization_update(vis); })
 {
   // generate random colors for the agents
   for (int i = 0; i < (int)instance.get_start_positions().size(); i++)
   {
-    agents_colors.push_back(generate_random_color(255, 255, 255, 0.25));
+    agents_colors.push_back(generate_random_color(UCHAR_MAX, UCHAR_MAX, UCHAR_MAX, 0.25));
   }
 
   // create the map texture
@@ -508,7 +509,7 @@ void Visualizer::update_path(const int agent_num, const Path& path)
       min_y = std::min(segment_start_pt.y, segment_end_pt.y);
       max_x = std::max(segment_start_pt.x, segment_end_pt.x);
       max_y = std::max(segment_start_pt.y, segment_end_pt.y);
-      assertm(max_x - min_x > 0 != max_y - min_y > 0, "Segment must be either horizontal or vertical.");
+      assertm((max_x - min_x > 0) != (max_y - min_y > 0), "Segment must be either horizontal or vertical.");
 
       // calculate the corners of the rectangle
       sf::Vector2f left_upper =
@@ -1083,7 +1084,9 @@ void Visualizer::sipp_visualization_update(const Visualization& vis)
   update_cell_rectangles_active(vis.time);
 }
 
-Visualization::Visualization(std::function<void(Visualization& vis)> update_func) : update_func(update_func){};
+Visualization::Visualization(std::function<void(Visualization& vis)> update_func_) : update_func(std::move(update_func_))
+{
+}
 
 void Visualization::reset()
 {

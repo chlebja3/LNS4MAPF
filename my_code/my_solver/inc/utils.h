@@ -30,7 +30,7 @@ class Node
 public:
   double g, h, f;
 
-  Node(double g, double h);
+  Node(double g_, double h_);
   virtual ~Node() = default;  // make Node an abstract class
 
   // compare
@@ -43,7 +43,7 @@ class Point2d
 {
 public:
   int x, y;
-  Point2d(int x, int y);
+  Point2d(int x_, int y_);
   ~Point2d() = default;
 
   /**
@@ -112,7 +112,7 @@ class TimeInterval
 public:
   int t_min, t_max;
 
-  TimeInterval(int t_min, int t_max);
+  TimeInterval(int t_min_, int t_max_);
 
   auto        operator==(const TimeInterval& other) const -> bool;
   auto        operator+(int x) const -> TimeInterval;

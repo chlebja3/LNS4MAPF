@@ -16,7 +16,7 @@ public:
   const int       generated;
   const int       expanded;
   const int       iteration_num;
-  SIPPIterationInfo(const TimePoint& cur_expanded, double g, double h, int generated, int expanded, int iteration_num);
+  SIPPIterationInfo(const TimePoint& cur_expanded_, double g_, double h_, int generated_, int expanded_, int iteration_num_);
 };
 
 using SIPPInfo = std::vector<SIPPIterationInfo>;

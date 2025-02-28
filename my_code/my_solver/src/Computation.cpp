@@ -12,8 +12,8 @@
 
 #include "LNS.h"
 
-Computation::Computation(const Instance& instance, SharedData& shared_data, const bool is_visualization)
-    : instance(instance), shared_data(shared_data), is_visualization(is_visualization)
+Computation::Computation(const Instance& instance_, SharedData& shared_data_, bool is_visualization_)
+    : instance(instance_), shared_data(shared_data_), is_visualization(is_visualization_)
 {
   std::cout << "Initialized computation." << std::endl;
   running = false;

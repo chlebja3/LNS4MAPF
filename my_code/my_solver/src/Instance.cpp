@@ -13,11 +13,12 @@
 #include <fstream>
 #include <iostream>
 #include <stdexcept>
+#include <utility>
 
 #include "Astar.h"
 
-Instance::Instance(const std::string& map_fname, const std::string& scene_fname, int num_of_agents)
-    : num_of_agents(num_of_agents), map_fname(map_fname), scene_fname(scene_fname)
+Instance::Instance(std::string map_fname_, std::string scene_fname_, int num_of_agents_)
+    : num_of_agents(num_of_agents_), map_fname(std::move(map_fname_)), scene_fname(std::move(scene_fname_))
 {
   initialize();
 }
@@ -48,7 +49,8 @@ void Instance::load_map()
 {
   // reset the map data
   Map new_map;
-  int num_of_cols, num_of_rows = 0;
+  int num_of_cols = 0;
+  int num_of_rows = 0;
 
   // open the map file
   std::ifstream map_file(map_fname.c_str());
@@ -344,7 +346,7 @@ void Instance::calculate_heuristics()
 
   // precompute the distance heuristic
   calculate_distance_heuristic();
-};
+}
 
 void Instance::precompute_neighbors()
 {
@@ -384,7 +386,7 @@ auto Instance::get_heuristic_euclidean(const int agent_num, const int loc) const
   assertm(agent_num >= 0 && agent_num < (int)heuristic_euclidean.size(), "Agent number out of range of the heuristic vector.");
   assertm(map_data.is_in(loc), "Trying to index a point that is not in the map.");
   return heuristic_euclidean[agent_num][loc];
-};
+}
 
 void Instance::calculate_distance_heuristic()
 {
@@ -410,8 +412,8 @@ void Instance::calculate_distance_heuristic()
       open_list.pop();
 
       // find the neighbor locations
-      const std::vector<int>& neighbors = get_neighbor_locations(location);
-      for (int neighbor : neighbors)
+      const std::vector<int>& curr_neighbors = get_neighbor_locations(location);
+      for (int neighbor : curr_neighbors)
       {
         // if the neighbor is not visited yet and is free cell
         if (curr[neighbor] == -1 && map_data.index(neighbor) == 0)

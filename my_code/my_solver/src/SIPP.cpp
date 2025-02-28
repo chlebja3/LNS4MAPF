@@ -19,20 +19,24 @@
 
 using namespace sipp;
 
-SIPP::SIPP(const Instance& instance, const bool generate_iter_info)
-    : constraint_table(ConstraintTable(instance)),
-      generate_iter_info(generate_iter_info),
-      instance(instance),
+SIPP::SIPP(const Instance& instance_, const bool generate_iter_info_)
+    : constraint_table(ConstraintTable(instance_)),
+      generate_iter_info(generate_iter_info_),
+      instance(instance_),
       node_pool(NodePool(INITIAL_NODE_POOL_SIZE * instance.get_map_data().width * instance.get_map_data().height))
 {
   known.resize(instance.get_map_data().width * instance.get_map_data().height, -1);
-};
+}
 
-SIPPNode::SIPPNode(const int location, const TimeInterval& interval, const double g, const double h, SIPPNode const* const parent)
-    : Node(g, h), time_point(location, interval), parent(parent){};
+SIPPNode::SIPPNode(int location, const TimeInterval& interval, double g_, double h_, SIPPNode const* parent_)
+    : Node(g_, h_), time_point(location, interval), parent(parent_)
+{
+}
 
-SIPPNode::SIPPNode(const TimePoint& time_point, const double g, const double h, SIPPNode const* const parent)
-    : Node(g, h), time_point(time_point), parent(parent){};
+SIPPNode::SIPPNode(const TimePoint& time_point_, double g_, double h_, SIPPNode const* parent_)
+    : Node(g_, h_), time_point(time_point_), parent(parent_)
+{
+}
 
 
 auto SIPPNode::operator==(const SIPPNode& other) const -> bool
@@ -353,10 +357,10 @@ auto SIPP::plan(const int agent_num) -> TimePointPath
 
       // retrieve the safe intervals for the neighbor
 
-      std::list<TimeInterval>::const_iterator start, end;
-      std::tie(start, end) = constraint_table.get_safe_intervals(neighbor, neighbor_time_interval);
+      std::list<TimeInterval>::const_iterator sf_start, sf_end;
+      std::tie(sf_start, sf_end) = constraint_table.get_safe_intervals(neighbor, neighbor_time_interval);
 
-      for (auto it = start; it != end; it++)
+      for (auto it = sf_start; it != sf_end; it++)
       {
         // std::cout << "interval:" << *it << std::endl;
 

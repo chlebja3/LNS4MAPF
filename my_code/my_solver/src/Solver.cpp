@@ -11,6 +11,7 @@
 #include <fstream>
 #include <iostream>
 #include <unordered_set>
+#include <utility>
 
 auto Solution::is_valid(const Instance& instance) const -> bool
 {
@@ -252,4 +253,6 @@ void Solution::load(const std::string& filename, const Instance& instance)
 }
 
 
-Solver::Solver(const std::string& name, const Instance& instance) : name(name), instance(instance){};
+Solver::Solver(std::string name_, const Instance& instance_) : name(std::move(name_)), instance(instance_)
+{
+}

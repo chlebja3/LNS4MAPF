@@ -37,7 +37,7 @@ public:
   const Instance&   instance;
 
   // constructor
-  Solver(const std::string& name, const Instance& instance);
+  Solver(std::string name_, const Instance& instance_);
 
   // virtual destructor
   virtual ~Solver() = default;

@@ -27,7 +27,7 @@ public:
   int                                     iteration_counter = 0;
   float                                   speed             = 2.0;
   std::function<void(Visualization& vis)> update_func;
-  explicit Visualization(std::function<void(Visualization& vis)> update_func);
+  explicit Visualization(std::function<void(Visualization& vis)> update_func_);
   void start();
   void reset();
   void pause();
@@ -42,7 +42,7 @@ class Visualizer
 {
 public:
   // constructor and destructor
-  Visualizer(const Instance& instance, SharedData& shared_data);
+  Visualizer(const Instance& instance_, SharedData& shared_data_);
   ~Visualizer();
 
   // manage the underlying thread

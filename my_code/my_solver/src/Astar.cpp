@@ -24,8 +24,9 @@ public:
   int              location;
   AstarNode const* parent;  // pointer to const parent
 
-  AstarNode(const int location, const double g, const double h, AstarNode const* const parent)
-      : Node(g, h), location(location), parent(parent){};
+  AstarNode(int location_, double g_, double h_, AstarNode const* parent_) : Node(g_, h_), location(location_), parent(parent_)
+  {
+  }
 
   auto operator==(const AstarNode& other) const -> bool
   {

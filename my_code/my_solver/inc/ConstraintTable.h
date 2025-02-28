@@ -25,7 +25,7 @@ public:
   int to;
   int t;
 
-  EdgeConstraint(int from, int to, int t);
+  EdgeConstraint(int from_, int to_, int t_);
 
   auto operator==(const EdgeConstraint& other) const -> bool;
 
@@ -38,12 +38,12 @@ public:
 class EdgeConstraintTable
 {
 public:
-  EdgeConstraintTable(int num_locations);
+  explicit EdgeConstraintTable(int num_locations);
   void add(int loc1, int loc2, int time);
   void remove(int loc1, int loc2, int time);
   // auto get(int loc1, int loc2, int time) const -> bool;
 
-  inline auto get(int loc1, int loc2, int time) const -> bool
+  [[nodiscard]] inline auto get(int loc1, int loc2, int time) const -> bool
   {
     const int dir = find_direction(loc1, loc2) - 1;
     assertm(dir >= 0 && dir <= NUM_DIRECTIONS, "Invalid direction.");
@@ -59,7 +59,7 @@ private:
 class ConstraintTable
 {
 public:
-  explicit ConstraintTable(const Instance& instance);
+  explicit ConstraintTable(const Instance& instance_);
   EdgeConstraintTable edge_constraint_table;
 
   // new implementation

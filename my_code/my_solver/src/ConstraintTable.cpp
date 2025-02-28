@@ -12,7 +12,9 @@
 #include <iostream>
 
 
-EdgeConstraint::EdgeConstraint(const int from, const int to, const int t) : from(from), to(to), t(t){};
+EdgeConstraint::EdgeConstraint(int from_, int to_, int t_) : from(from_), to(to_), t(t_)
+{
+}
 
 
 auto EdgeConstraint::operator==(const EdgeConstraint& other) const -> bool
@@ -30,10 +32,10 @@ auto EdgeConstraint::hash_edge_collision::operator()(const EdgeConstraint& c) co
   return seed;
 }
 
-ConstraintTable::ConstraintTable(const Instance& instance)
-    : edge_constraint_table(instance.get_map_data().width * instance.get_map_data().height),
-      instance(instance),
-      unlimited_safe_intervals(instance.get_map_data().free_cells)
+ConstraintTable::ConstraintTable(const Instance& instance_)
+    : edge_constraint_table(instance_.get_map_data().width * instance_.get_map_data().height),
+      instance(instance_),
+      unlimited_safe_intervals(instance_.get_map_data().free_cells)
 {
   // initialize the constraint vectors TODO static obstacles dont need constraint vectors
   const int num_cells = instance.get_map_data().width * instance.get_map_data().height;

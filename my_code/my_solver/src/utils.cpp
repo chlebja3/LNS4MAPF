@@ -16,7 +16,9 @@
 #define MIN_BRIGHTNESS 20
 #define MAX_BRIGHTNESS 230
 
-Node::Node(const double g, const double h) : g(g), h(h), f(g + h){};
+Node::Node(const double g_, const double h_) : g(g_), h(h_), f(g_ + h_)
+{
+}
 
 auto Node::operator>(const Node& other) -> bool
 {
@@ -34,7 +36,9 @@ auto Node::operator==(const Node& other) -> bool
 }
 
 
-Point2d::Point2d(int x, int y) : x(x), y(y){};
+Point2d::Point2d(int x_, int y_) : x(x_), y(y_)
+{
+}
 
 auto Point2d::operator+(const Point2d& other) const -> Point2d
 {
@@ -109,7 +113,9 @@ auto find_direction(const int start, const int end) -> Direction
   return Direction::NONE;
 }
 
-TimeInterval::TimeInterval(const int t_min, const int t_max) : t_min(t_min), t_max(t_max){};
+TimeInterval::TimeInterval(const int t_min_, const int t_max_) : t_min(t_min_), t_max(t_max_)
+{
+}
 
 auto TimeInterval::operator==(const TimeInterval& other) const -> bool
 {
@@ -131,7 +137,9 @@ auto overlap(const TimeInterval& i1, const TimeInterval& i2) -> bool
   return !(i1.t_max < i2.t_min || i2.t_max < i1.t_min);
 }
 
-TimePoint::TimePoint(const int location, const TimeInterval& interval) : location(location), interval(interval){};
+TimePoint::TimePoint(const int location_, const TimeInterval& interval_) : location(location_), interval(interval_)
+{
+}
 
 auto TimePoint::operator==(const TimePoint& other) const -> bool
 {
