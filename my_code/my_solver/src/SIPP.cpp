@@ -26,7 +26,8 @@ SIPP::SIPP(const Instance& instance_, const bool generate_iter_info_)
       instance(instance_),
       node_pool(NodePool(INITIAL_NODE_POOL_SIZE * instance.get_map_data().width * instance.get_map_data().height))
 {
-  known.resize(instance.get_map_data().width * instance.get_map_data().height, -1);
+  known_max.resize(instance.get_map_data().width * instance.get_map_data().height, -1);
+  known_min.resize(instance.get_map_data().width * instance.get_map_data().height, -1);
 }
 
 SIPPNode::SIPPNode(int location, const TimeInterval& interval, double g_, double h_, double h2_, SIPPNode const* parent_)
@@ -135,34 +136,28 @@ auto SIPP::plan(const int agent_num) -> TimePointPath
   const int  start    = instance.get_start_locations()[agent_num];
   const int  goal     = instance.get_goal_locations()[agent_num];
 
-  // check whether start and goal inside the map
+  // check whether start and goal inside the map and not obstructed
   assertm(map_data.is_in(start) && map_data.is_in(goal), "Start or goal outside the map.");
-
-  // check whether start and goal not obstructed
   assertm(map_data.index(start) == 0 && map_data.index(goal) == 0, "Start or goal obstructed.");
 
-  // estimate the maximum time the goal can be reached
-  const int max_time = constraint_table.get_max_path_len_estimate();
-
-  // get the lowerbound on the path length
+  // estimate the minimum and maximum time the goal can be reached
   const int min_time = constraint_table.get_min_reach_time(goal);
-  // std::cout << "Agent: " << agent_num << ", min time: " << min_time << std::endl;
+  const int max_time = constraint_table.get_max_path_len_estimate();
+  assertm(min_time >= 0 && max_time >= 0, "Time can not be negative.");
 
+  // std::cout << "Agent: " << agent_num << ", min time: " << min_time << std::endl;
+  // std::cout << "Min time estimate is: " << min_time << std::endl;
   // std::cout << "Max time estimate is: " << max_time << std::endl;
 
-  assertm(max_time >= 0, "Time can not be negative.");
 
   // create openlist
   sipp::PriorityQueue open_list;
-  // sipp::PriorityQueueSuboptimal open_list;
 
   // retrieve the first safe interval
   auto time_interval_start = constraint_table.get_first_safe_interval(start);
 
   // calculate the heuristic of the start node
   {
-    // const double h = instance.get_heuristic_euclidean(agent_num, start);
-    // const double h = instance.get_heuristic_manhattan(agent_num, start);
     const double h2 = instance.get_heuristic_distance(agent_num, start);
     const double h1 = std::max((double)min_time, h2);
 
@@ -176,7 +171,8 @@ auto SIPP::plan(const int agent_num) -> TimePointPath
   }
 
   // clear known nodes database
-  std::fill(known.begin(), known.end(), -1);
+  std::fill(known_min.begin(), known_min.end(), INT_MAX);
+  std::fill(known_max.begin(), known_max.end(), -1);
 
   // main loop
   while (!open_list.empty())
@@ -190,10 +186,12 @@ auto SIPP::plan(const int agent_num) -> TimePointPath
     SIPPNode const* const current = open_list.top();
     open_list.pop();
 
-    // std::cout << "Current: " << current->time_point.location << ", " << current->time_point.interval << std::endl;
+    // std::cout << "\tCurrent: " << instance.location_to_position(current->time_point.location) << ", " << current->time_point.interval
+    //          << ", f: " << current->f << std::endl;
 
     // check whether node was expanded already (same position and tmax higher then current tmin)
-    if (current->time_point.interval.t_min <= known[current->time_point.location])
+    if (current->time_point.interval.t_min >= known_min[current->time_point.location] &&
+        current->time_point.interval.t_min <= known_max[current->time_point.location])
     {
       continue;
     }
@@ -217,61 +215,44 @@ auto SIPP::plan(const int agent_num) -> TimePointPath
     }
 
     // add to known nodes
-    known[current->time_point.location] = current->time_point.interval.t_max;
-
+    known_min[current->time_point.location] = std::min(current->time_point.interval.t_min, known_min[current->time_point.location]);
+    known_max[current->time_point.location] = std::max(current->time_point.interval.t_max, known_max[current->time_point.location]);
+    // std::cout << "Known min: " << known_min[current->time_point.location] << std::endl;
 
     // calculate the time window to enter neighboring positions
-    const TimeInterval neighbor_time_interval(safe_increase(current->time_point.interval.t_min),
-                                              safe_increase(current->time_point.interval.t_max));
+    const TimeInterval neighbor_entry_time_interval(safe_increase(current->time_point.interval.t_min),
+                                                    safe_increase(current->time_point.interval.t_max));
 
     // expand current node
     const std::vector<int>& neighbors = instance.get_neighbor_locations(current->time_point.location);
     for (const auto& neighbor : neighbors)
     {
-      // std::cout << "Neighbor: " << neighbor << std::endl;
       // calculate the heuristic
       // const double h = instance.get_heuristic_euclidean(agent_num, neighbor);
       // const double h = instance.get_heuristic_manhattan(agent_num, neighbor);
       const double h2 = instance.get_heuristic_distance(agent_num, neighbor);
+      // std::cout << "Neighbor: " << instance.location_to_position(neighbor) << ", h2: " << h2 << std::endl;
 
       // retrieve the safe intervals for the neighbor
 
       std::list<TimeInterval>::const_iterator sf_start, sf_end;
-      std::tie(sf_start, sf_end) = constraint_table.get_safe_intervals(neighbor, neighbor_time_interval);
+      std::tie(sf_start, sf_end) = constraint_table.get_safe_intervals(neighbor, neighbor_entry_time_interval);
 
       for (auto it = sf_start; it != sf_end; it++)
       {
-        // std::cout << "interval:" << *it << std::endl;
-
-        // skip intervals that start later then the maximum time to reach the goal
-        if (it->t_min > max_time)
-        {
-          continue;
-        }
-
-        // calculate reach times
-        const int min_reach_time = safe_increase(current->time_point.interval.t_min);
-        const int max_reach_time = safe_increase(current->time_point.interval.t_max);
-
-        // skip nodes that can not be reached
-        if (it->t_min > max_reach_time)
-        {
-          continue;
-        }
-
-        // check whether known
-        if (it->t_min <= known[neighbor])
-        {
-          continue;
-        }
-
         TimePoint neighbor_time_point(neighbor, *it);
         // modify the interval to be valid
-        if (neighbor_time_point.interval.t_min < min_reach_time)
+        if (it->t_min < neighbor_entry_time_interval.t_min)
         {
-          neighbor_time_point.interval.t_min = min_reach_time;
+          neighbor_time_point.interval.t_min = neighbor_entry_time_interval.t_min;
         }
         assertm(neighbor_time_point.interval.t_min <= neighbor_time_point.interval.t_max, "Modifying the time interval made it invalid.");
+
+        // skip intervals that start later then the maximum time to reach the goal
+        if (neighbor_time_point.interval.t_min > max_time)
+        {
+          continue;
+        }
 
         // check edge collision
         if (constraint_table.edge_constraint_table.get(neighbor_time_point.location, current->time_point.location,
@@ -279,6 +260,18 @@ auto SIPP::plan(const int agent_num) -> TimePointPath
         {
           continue;
         }
+
+        assertm(neighbor_time_point.interval.t_min <= neighbor_entry_time_interval.t_max, "Unreachable interval among neighbors.");
+
+        assertm(neighbor_time_point.interval.t_min <= min_time || known_min[neighbor] == INT_MAX ||
+                    neighbor_time_point.interval.t_min >= known_min[neighbor],
+                "The heuristic can be non consistent only for nodes starting before the goal obstruction time.");
+        // check whether known
+        if (neighbor_time_point.interval.t_min >= known_min[neighbor] && neighbor_time_point.interval.t_min <= known_max[neighbor])
+        {
+          continue;
+        }
+
 
         assertm(neighbor_time_point.interval.t_min > current->time_point.interval.t_min, "Invalid interval.");
 
@@ -296,6 +289,7 @@ auto SIPP::plan(const int agent_num) -> TimePointPath
         //}
         const double h1 = std::max((double)min_time, neighbor_time_point.interval.t_min + h2) - neighbor_time_point.interval.t_min;
         open_list.push(node_pool.add_node(SIPPNode(neighbor_time_point, neighbor_time_point.interval.t_min, h1, h2, current)));
+        // std::cout << "interval:" << neighbor_time_point.interval << ", h1: " << h1 << ", h2: " << h2 << std::endl;
 
         if (generate_iter_info)
         {
@@ -315,7 +309,6 @@ auto SIPP::plan(const int agent_num) -> TimePointPath
 
   return TimePointPath();
 }
-
 
 void SIPP::initialize_iter_info()
 {

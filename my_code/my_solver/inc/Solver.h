@@ -21,12 +21,15 @@ public:
 
   // paths of the agents
   std::vector<Path> paths;
+  std::vector<int>  delays;
 
   int cost;
-  int delay;  // cost - distance
+  int sum_of_delays;  // cost - distance
+  int sum_of_costs;
 
   [[nodiscard]] auto is_valid(const Instance& instance) const -> bool;
   void               load(const std::string& filename, const Instance& instance);
+  void               calculate_cost(const Instance& instance);
 };
 
 class Solver

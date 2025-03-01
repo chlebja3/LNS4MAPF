@@ -31,5 +31,10 @@ public:
 
 private:
   std::unique_ptr<SIPP> planner;
+  int                   iteration_num = 0;
+  int                   max_iter;
+  double                initial_solution_time;
+  double                time_limit;
+  double                curr_time;
 };
 

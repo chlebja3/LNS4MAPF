@@ -7,13 +7,12 @@
 
 #include "LNS.h"
 
-#include <chrono>
 #include <numeric>
 #include <random>
 
 #include "SIPP.h"
+#include "utils.h"
 
-using dsec = std::chrono::duration<double>;
 
 LNS::LNS(const Instance& instance_, const bool is_visualisation_) : Solver("LNS", instance_), is_visualisation(is_visualisation_)
 {
@@ -24,22 +23,40 @@ LNS::LNS(const Instance& instance_, const bool is_visualisation_) : Solver("LNS"
 void LNS::solve()
 {
   // start measuring time
-  std::chrono::high_resolution_clock::time_point start_find_initial_solution = std::chrono::high_resolution_clock::now();
+  Time::time_point start_find_initial_solution = Time::now();
 
   // calculate initial solution
   bool found = find_initial_solution();
+  assertm(found, "Could not find the initial solution");
+  assertm(solution.is_valid(instance), "Found invalid solution");
 
-  double initial_solution_time = ((dsec)(std::chrono::high_resolution_clock::now() - start_find_initial_solution)).count();
+  initial_solution_time = ((dsec)(Time::now() - start_find_initial_solution)).count();
   std::cout << "Initial solution found in " << initial_solution_time << " second." << std::endl;
-  // check whether solution valid
+
+  curr_time = initial_solution_time;
 
   // improve the solution
+  while (iteration_num < max_iter && curr_time < time_limit)
+  {
+    iteration_num++;
+
+    // destroy operator
+
+    // repair operator
+
+    // accept only improving solutions
+  }
 }
 
 auto LNS::find_initial_solution() -> bool
 {
   // create initial solution
   solution = PrioritizedPlanning();
+  if (solution.feasible)
+  {
+    solution.calculate_cost(instance);
+  }
+  std::cout << "Solution has sum of costs: " << solution.sum_of_costs << "sol has delay: " << solution.sum_of_delays << std::endl;
   return solution.feasible;
 }
 

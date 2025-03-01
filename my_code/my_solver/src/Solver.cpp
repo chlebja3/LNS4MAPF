@@ -252,6 +252,22 @@ void Solution::load(const std::string& filename, const Instance& instance)
   sol_file.close();
 }
 
+void Solution::calculate_cost(const Instance& instance)
+{
+  delays.resize(paths.size(), 0);
+  sum_of_delays = 0;
+  sum_of_costs  = 0;
+
+  for (int i = 0; i < (int)paths.size(); i++)
+  {
+    sum_of_costs += (int)paths[i].size() - 1;
+    const int delay = (int)paths[i].size() - 1 - instance.get_heuristic_distance(i, instance.get_start_locations()[i]);
+    assertm(delay >= 0, "Delay can not be negative.");
+    sum_of_delays += delay;
+    delays[i] = delay;
+  }
+}
+
 
 Solver::Solver(std::string name_, const Instance& instance_) : name(std::move(name_)), instance(instance_)
 {

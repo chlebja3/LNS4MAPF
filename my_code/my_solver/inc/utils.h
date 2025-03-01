@@ -8,12 +8,17 @@
 #pragma once
 #include <SFML/Graphics.hpp>
 #include <cassert>
+#include <chrono>
 #include <climits>
 #include <cstdint>
 #include <vector>
 
 // Use (void) to silence unused warnings.
 #define assertm(exp, msg) assert((void(msg), exp))
+
+// time measuring
+using dsec = std::chrono::duration<double>;
+using Time = std::chrono::high_resolution_clock;
 
 enum Direction
 {

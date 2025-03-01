@@ -102,5 +102,6 @@ private:
   void             update_iter_info(const sipp::SIPPNode& expanded, bool last_iter);
   const Instance&  instance;
   sipp::NodePool   node_pool;
-  std::vector<int> known;  // known node database
+  std::vector<int> known_max;  // known node database
+  std::vector<int> known_min;  // known node database
 };
