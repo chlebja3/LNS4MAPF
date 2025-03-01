@@ -308,8 +308,11 @@ void EdgeConstraintTable::add(int loc1, int loc2, int time)
   assertm(loc1 != loc2, "Invalid edge constraint.");
   const int dir = find_direction(loc1, loc2) - 1;
   assertm(dir >= 0 && dir <= NUM_DIRECTIONS, "Invalid direction.");
-  assertm(edge_constraints[dir][loc2].find(time) == edge_constraints[dir][loc2].end(), "Edge constraint already exists.");
-  edge_constraints[dir][loc2].insert(time);
+  // assertm(edge_constraints[dir][loc2].find(time) == edge_constraints[dir][loc2].end(), "Edge constraint already exists.");
+  assertm(std::find(edge_constraints[dir][loc2].begin(), edge_constraints[dir][loc2].end(), time) == edge_constraints[dir][loc2].end(),
+          "Edge constraint already exists.");
+  // edge_constraints[dir][loc2].insert(time);     // unordered set implementation
+  edge_constraints[dir][loc2].push_back(time);  // vector implementation
 }
 
 void EdgeConstraintTable::remove(int loc1, int loc2, int time)
@@ -317,7 +320,9 @@ void EdgeConstraintTable::remove(int loc1, int loc2, int time)
   const int dir = find_direction(loc1, loc2) - 1;
   assertm(dir >= 0 && dir <= NUM_DIRECTIONS, "Invalid direction.");
 
-  int erased = edge_constraints[dir][loc2].erase(time);
-  assertm(erased == 1, "Trying to erase an edge constraint that is not present.");
+  // int erased = edge_constraints[dir][loc2].erase(time);
+  // assertm(erased == 1, "Trying to erase an edge constraint that is not present.");
+  edge_constraints[dir][loc2].erase(std::remove(edge_constraints[dir][loc2].begin(), edge_constraints[dir][loc2].end(), time),
+                                    edge_constraints[dir][loc2].end());
 }
 

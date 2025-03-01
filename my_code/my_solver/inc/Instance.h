@@ -117,5 +117,7 @@ private:
   std::vector<std::vector<int>>    heuristic_manhattan;
   std::vector<std::vector<double>> heuristic_euclidean;
   std::vector<std::vector<int>>    heuristic_distance;
+
+  int sum_of_distances = 0;
 };
 

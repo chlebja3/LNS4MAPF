@@ -17,7 +17,7 @@ class Solution
 // struct to store a solution of the mapf problem
 {
 public:
-  bool feasible;
+  bool feasible = true;
 
   // paths of the agents
   std::vector<Path> paths;

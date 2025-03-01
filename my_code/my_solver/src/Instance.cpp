@@ -252,6 +252,7 @@ auto Instance::get_goal_positions() const -> const std::vector<Point2d>&
 
 void Instance::calculate_optimal_paths()
 {
+  sum_of_distances = 0;
   optimal_paths.clear();
   optimal_paths.reserve(num_of_agents);
   // calculate the optimal paths one by one
@@ -260,7 +261,9 @@ void Instance::calculate_optimal_paths()
     // find the optimal path for each agent not considering other agents
     Path p = ASTAR::find_path(i, *this);
     optimal_paths.push_back(p);
+    sum_of_distances += (int)p.size() - 1;
   }
+  std::cout << "Sum of distances: " << sum_of_distances << std::endl;
 }
 
 // old function, do not use!

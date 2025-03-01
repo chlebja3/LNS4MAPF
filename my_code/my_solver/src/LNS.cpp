@@ -7,10 +7,13 @@
 
 #include "LNS.h"
 
+#include <chrono>
 #include <numeric>
 #include <random>
 
 #include "SIPP.h"
+
+using dsec = std::chrono::duration<double>;
 
 LNS::LNS(const Instance& instance_, const bool is_visualisation_) : Solver("LNS", instance_), is_visualisation(is_visualisation_)
 {
@@ -20,16 +23,24 @@ LNS::LNS(const Instance& instance_, const bool is_visualisation_) : Solver("LNS"
 
 void LNS::solve()
 {
+  // start measuring time
+  std::chrono::high_resolution_clock::time_point start_find_initial_solution = std::chrono::high_resolution_clock::now();
+
   // calculate initial solution
-  find_initial_solution();
+  bool found = find_initial_solution();
+
+  double initial_solution_time = ((dsec)(std::chrono::high_resolution_clock::now() - start_find_initial_solution)).count();
+  std::cout << "Initial solution found in " << initial_solution_time << " second." << std::endl;
+  // check whether solution valid
 
   // improve the solution
 }
 
-void LNS::find_initial_solution()
+auto LNS::find_initial_solution() -> bool
 {
   // create initial solution
   solution = PrioritizedPlanning();
+  return solution.feasible;
 }
 
 auto LNS::PrioritizedPlanning() -> Solution
@@ -73,6 +84,7 @@ auto LNS::PrioritizedPlanning() -> Solution
     if (tp_path.empty())
     {
       std::cout << "Unable to find initial solution by prioritized planning. " << std::endl;
+      sol.feasible = false;
       return sol;
     }
 

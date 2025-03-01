@@ -43,12 +43,15 @@ public:
     const int dir = find_direction(loc1, loc2) - 1;
     assertm(dir >= 0 && dir <= NUM_DIRECTIONS, "Invalid direction.");
 
-    return edge_constraints[dir][loc2].find(time) != edge_constraints[loc1][loc2].end();
+    // return edge_constraints[dir][loc2].find(time) != edge_constraints[dir][loc2].end(); // unordered set implementation
+    return std::find(edge_constraints[dir][loc2].begin(), edge_constraints[dir][loc2].end(), time) !=
+           edge_constraints[dir][loc2].end();  // vector implementation
   }
 
 private:
   // std::unordered_set<EdgeConstraint, EdgeConstraint::hash_edge_collision> edge_constraints;  // constraints for edges
-  std::vector<std::vector<std::unordered_set<int>>> edge_constraints;
+  // std::vector<std::vector<std::unordered_set<int>>> edge_constraints; // unordered set implementation
+  std::vector<std::vector<std::vector<int>>> edge_constraints;  // vector implementation
 };
 
 class ConstraintTable

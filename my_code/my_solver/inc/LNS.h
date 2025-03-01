@@ -24,7 +24,7 @@ public:
   // solve method
   void solve() override;
 
-  void find_initial_solution();
+  auto find_initial_solution() -> bool;
   auto PrioritizedPlanning() -> Solution;
 
   [[nodiscard]] auto get_num_of_generated_nodes() const -> int;
