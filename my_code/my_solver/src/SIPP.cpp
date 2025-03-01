@@ -16,6 +16,7 @@
 
 #define NODE_POOL_MERGE_SIZE 500  // merge the extra list with the node pool vector only of there are more elements in the list
 #define INITIAL_NODE_POOL_SIZE 2  // the multiple of map size to use as initial node pool size
+#define SUBOPTIMALITY 0
 
 using namespace sipp;
 
@@ -56,9 +57,32 @@ auto SIPPNode::compare_node_ptrs::operator()(SIPPNode const* n1, SIPPNode const*
         // if tie even in the second heuristic, choose randomly
         return fast_random_bool();
       }
+      return n1->h2 > n2->h2;  // if f is the same and h is the same prefer nodes closer to goal
+    }
+    return n1->h > n2->h;  // if f is the same, prefer earlier intervals
+  }
+  return n1->f > n2->f;
+}
+
+auto SIPPNode::compare_node_ptrs_suboptimal::operator()(SIPPNode const* n1, SIPPNode const* n2) const -> bool
+{
+  // compare f
+  if (std::abs(n1->f - n2->f) <= SUBOPTIMALITY)
+  {
+    if (n1->h == n2->h)
+    {  // tie
+      if (n1->h2 == n2->h2)
+      {
+        if (n1->f == n2->f)
+        {
+          // if tie, choose randomly
+          return fast_random_bool();
+        }
+        return n1->f > n2->f;
+      }
       return n1->h2 > n2->h2;
     }
-    return n1->h > n2->h;  // if f is the same, prefer nodes closer to the goal
+    return n1->h > n2->h;
   }
   return n1->f > n2->f;
 }
@@ -130,6 +154,7 @@ auto SIPP::plan(const int agent_num) -> TimePointPath
 
   // create openlist
   sipp::PriorityQueue open_list;
+  // sipp::PriorityQueueSuboptimal open_list;
 
   // retrieve the first safe interval
   auto time_interval_start = constraint_table.get_first_safe_interval(start);

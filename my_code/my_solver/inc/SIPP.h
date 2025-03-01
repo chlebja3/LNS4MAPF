@@ -39,6 +39,12 @@ public:
   {
     auto operator()(SIPPNode const* n1, SIPPNode const* n2) const -> bool;
   };
+
+  struct compare_node_ptrs_suboptimal
+  {
+    auto operator()(SIPPNode const* n1, SIPPNode const* n2) const -> bool;
+  };
+
   double h2;
 };
 
@@ -59,6 +65,8 @@ private:
 // using PriorityQueue = std::priority_queue<const SIPPNode*, std::vector<const SIPPNode*>, SIPPNode::compare_node_ptrs>;
 // using PriorityQueue = boost::heap::priority_queue<const SIPPNode*, boost::heap::compare<SIPPNode::compare_node_ptrs>>;
 using PriorityQueue = boost::heap::d_ary_heap<const SIPPNode*, boost::heap::arity<2>, boost::heap::compare<SIPPNode::compare_node_ptrs>>;
+using PriorityQueueSuboptimal =
+    boost::heap::d_ary_heap<const SIPPNode*, boost::heap::arity<2>, boost::heap::compare<SIPPNode::compare_node_ptrs_suboptimal>>;
 // using PriorityQueue = boost::heap::fibonacci_heap<const SIPPNode*, boost::heap::compare<SIPPNode::compare_node_ptrs>>;
 // using PriorityQueue = boost::heap::pairing_heap<const SIPPNode*, boost::heap::compare<SIPPNode::compare_node_ptrs>>;
 // typedef std::unordered_set<TimePoint, TimePoint::hash_time_point> UnorderedSet;
