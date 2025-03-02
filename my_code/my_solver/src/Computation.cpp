@@ -12,14 +12,13 @@
 
 #include "LNS.h"
 
-Computation::Computation(const Instance& instance_, SharedData& shared_data_, bool is_visualization_)
-    : instance(instance_), shared_data(shared_data_), is_visualization(is_visualization_)
+Computation::Computation(const Instance& instance_, SharedData& shared_data_, bool is_visualization_, double w_ = 1.0)
+    : instance(instance_), shared_data(shared_data_), running(false), is_visualization(is_visualization_), w(w_)
 {
   std::cout << "Initialized computation." << std::endl;
-  running = false;
 
   // initialize the solver
-  solver = std::make_unique<LNS>(instance, is_visualization);
+  solver = std::make_unique<LNS>(instance, is_visualization, w);
 }
 
 Computation::~Computation()
@@ -56,7 +55,8 @@ void Computation::run()
 
   shared_data.update_paths(solver->solution.paths, solver->sipp_info);
 
-  std::cout << "Initial solution found, number of nodes: " << solver->get_num_of_generated_nodes() << std::endl;
+  std::cout << "Initial solution found, generated nodes: " << solver->get_num_of_generated_nodes()
+            << ", expanded nodes: " << solver->get_num_of_expanded_nodes() << std::endl;
 
   // while (running)
   // {

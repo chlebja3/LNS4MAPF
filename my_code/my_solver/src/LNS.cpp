@@ -14,7 +14,8 @@
 #include "utils.h"
 
 
-LNS::LNS(const Instance& instance_, const bool is_visualisation_) : Solver("LNS", instance_), is_visualisation(is_visualisation_)
+LNS::LNS(const Instance& instance_, bool is_visualisation_, double w_)
+    : Solver("LNS", instance_), is_visualisation(is_visualisation_), w(w_)
 {
   // SIPP's lifetime can not be longer than LNS's lifetime, because then map_data might be deleted before SIPP
   planner = std::make_unique<SIPP>(instance, is_visualisation);
@@ -56,7 +57,7 @@ auto LNS::find_initial_solution() -> bool
   {
     solution.calculate_cost(instance);
   }
-  std::cout << "Solution has sum of costs: " << solution.sum_of_costs << "sol has delay: " << solution.sum_of_delays << std::endl;
+  std::cout << "Solution has sum of costs: " << solution.sum_of_costs << ", sol has delay: " << solution.sum_of_delays << std::endl;
   return solution.feasible;
 }
 
@@ -88,7 +89,21 @@ auto LNS::PrioritizedPlanning() -> Solution
     // std::cout << "planning agent: " << agent_id << std::endl;
 
     // plan path for agent
-    TimePointPath tp_path = planner->plan(agent_id);
+    TimePointPath tp_path;
+    if (w == 1.0)
+    {
+      // optimal sipp
+      tp_path = planner->plan(agent_id);
+    }
+    else if (w > 1.0)
+    {
+      // suboptimal sipp
+      tp_path = planner->plan_suboptimal(agent_id, w);
+    }
+    else
+    {
+      throw std::runtime_error("SIPP suboptimality factor must be >= 1");
+    }
 
     // get the visualization info
     if (is_visualisation)
@@ -117,4 +132,9 @@ auto LNS::PrioritizedPlanning() -> Solution
 auto LNS::get_num_of_generated_nodes() const -> int
 {
   return planner->generated_all_iter;
+}
+
+auto LNS::get_num_of_expanded_nodes() const -> int
+{
+  return planner->expanded_all_iter;
 }

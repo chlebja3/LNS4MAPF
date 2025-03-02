@@ -16,7 +16,7 @@ public:
   std::vector<SIPPInfo> sipp_info;
 
   // constructor
-  LNS(const Instance& instance, bool is_visualisation);
+  LNS(const Instance& instance, bool is_visualisation, double w_ = 1.0);
 
   // Destructor
   ~LNS() override = default;
@@ -28,6 +28,7 @@ public:
   auto PrioritizedPlanning() -> Solution;
 
   [[nodiscard]] auto get_num_of_generated_nodes() const -> int;
+  [[nodiscard]] auto get_num_of_expanded_nodes() const -> int;
 
 private:
   std::unique_ptr<SIPP> planner;
@@ -36,5 +37,6 @@ private:
   double                initial_solution_time;
   double                time_limit;
   double                curr_time;
+  double                w;
 };
 

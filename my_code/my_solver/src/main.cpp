@@ -24,7 +24,9 @@ auto main(int argc, char** argv) -> int
   po::options_description desc("Allowed options");
   desc.add_options()("help,h", "Show help message")("map,m", po::value<std::string>()->required(), "file with the map")(
       "agents,a", po::value<std::string>()->required(), "input file for agents")(
-      "agentNum,k", po::value<int>()->default_value(0), "number of agents")("GUI,G", po::value<bool>()->default_value(true));
+      "agentNum,k", po::value<int>()->default_value(0), "number of agents")("GUI,G", po::value<bool>()->default_value(true),
+                                                                            "whether to tun the graphical user interface")(
+      "sipp_suboptimality,w", po::value<double>()->default_value(1.0), "suboptimality factor for suboptimal sipp");
 
   // Parse command-line arguments
   po::variables_map vm;
@@ -46,10 +48,11 @@ auto main(int argc, char** argv) -> int
     return 1;
   }
 
-  std::string map_name   = vm["map"].as<std::string>();
-  std::string scene_name = vm["agents"].as<std::string>();
-  int         agent_num  = vm["agentNum"].as<int>();
-  bool        GUI        = vm["GUI"].as<bool>();
+  const std::string map_name   = vm["map"].as<std::string>();
+  const std::string scene_name = vm["agents"].as<std::string>();
+  const int         agent_num  = vm["agentNum"].as<int>();
+  const bool        GUI        = vm["GUI"].as<bool>();
+  const double      w          = vm["sipp_suboptimality"].as<double>();
 
   // initialize random seed
   srand(0);
@@ -65,7 +68,7 @@ auto main(int argc, char** argv) -> int
   std::unique_ptr<SharedData> shared_data = std::make_unique<SharedData>();
 
   // create the computation object
-  Computation computation(*instance, *shared_data, GUI);
+  Computation computation(*instance, *shared_data, GUI, w);
 
   // start the computation thread
   computation.start();

@@ -42,7 +42,8 @@ public:
 
   struct compare_node_ptrs_suboptimal
   {
-    auto operator()(SIPPNode const* n1, SIPPNode const* n2) const -> bool;
+    auto       operator()(SIPPNode const* n1, SIPPNode const* n2) const -> bool;
+    static int max_suboptimality_absolute;
   };
 
   double h2;
@@ -96,6 +97,7 @@ public:
   ~SIPP() = default;
 
   auto plan(int agent_num) -> TimePointPath;
+  auto plan_suboptimal(int agent_num, double w = 1.0) -> TimePointPath;
 
 private:
   void             initialize_iter_info();
