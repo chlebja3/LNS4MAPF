@@ -51,4 +51,22 @@ static void BM_PP_den520_scen2(benchmark::State& state)
 }
 BENCHMARK(BM_PP_den520_scen2)->Arg(1)->Arg(10)->Arg(100)->Arg(500);
 
+static void BM_PP_den520_scen3(benchmark::State& state)
+{
+  BM_SIPP_helper(state, "den520d.map", "den520d-random-3.scen");
+}
+BENCHMARK(BM_PP_den520_scen3)->Arg(1)->Arg(10)->Arg(100)->Arg(500);
+
+static void BM_PP_den520_scen4(benchmark::State& state)
+{
+  BM_SIPP_helper(state, "den520d.map", "den520d-random-4.scen");
+}
+BENCHMARK(BM_PP_den520_scen4)->Arg(1)->Arg(10)->Arg(100)->Arg(500);
+
+static void BM_PP_den520_scen5(benchmark::State& state)
+{
+  BM_SIPP_helper(state, "den520d.map", "den520d-random-5.scen");
+}
+BENCHMARK(BM_PP_den520_scen5)->Arg(1)->Arg(10)->Arg(100)->Arg(500);
+
 BENCHMARK_MAIN();

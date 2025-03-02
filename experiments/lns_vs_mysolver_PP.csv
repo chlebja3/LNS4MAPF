@@ -1,0 +1,16 @@
+runtime,solution cost,initial solution cost,lower bound,sum of distance,iterations,group size,runtime of initial solution,restart times,area under curve,LL expanded nodes,LL generated,LL reopened,LL runs,preprocessing runtime,solver name,instance name,
+2.48184,104592,104592,90940,90940,1,0,2.48184,0,98260500,1714146,743372,1387060,500,1.96187,LNS(PP,PP),../../MAPF-benchmark/mapf-scen-random/scen-random/den520d-random-0.scen
+0.583244,96424,96424,84864,84864,1,0,0.583244,0,83225300,265696,615387,13697,500,1.96323,LNS(PP,PP),../../MAPF-benchmark/mapf-scen-random/scen-random/den520d-random-1.scen
+0.747028,103344,103344,88713,88713,1,0,0.747028,0,105332000,352573,749630,41456,500,2.00979,LNS(PP,PP),../../MAPF-benchmark/mapf-scen-random/scen-random/den520d-random-2.scen
+1.74042,98675,98675,85138,85138,1,0,1.74042,0,97442800,1142319,679154,841755,500,1.93131,LNS(PP,PP),../../MAPF-benchmark/mapf-scen-random/scen-random/den520d-random-3.scen
+0.553028,95132,95132,84321,84321,1,0,0.553028,0,77833200,249751,557452,28633,500,1.94162,LNS(PP,PP),../../MAPF-benchmark/mapf-scen-random/scen-random/den520d-random-4.scen
+0.645738,99800,99800,85369,85369,1,0,0.645738,0,103894000,311094,669772,23427,500,1.9528,LNS(PP,PP),../../MAPF-benchmark/mapf-scen-random/scen-random/den520d-random-5.scen
+,,,,,,,,,,,,,,,,,
+,Solution cost,,Expanded nodes,,Generated nodes ,,Reopened nodes,,Runtime,,,,,,,,
+,LNS,My solver,LNS,My Solver,LNS,My Solver,LNS,My Solver,LNS,My Solver,,,,,,,
+Scen 0,104592,102579,1714146,266824,743372,897800,1387060,0,2.48184,0.268724247,,,,,,,
+Scen 1,96424,95946,265696,225949,615387,760637,13697,0,0.583244,0.159282932,,,,,,,
+Scen 2,103344,100039,352573,297750,749630,972023,41456,0,0.747028,0.240176326,,,,,,,
+Scen 3,98675,97255,1142319,263805,679154,891218,841755,0,1.74042,0.161434537,,,,,,,
+Scen 4,95132,94085,249751,223765,557452,759585,28633,0,0.553028,0.151003178,,,,,,,
+Scen 5,99800,98579,311094,257652,669772,842554,23427,0,0.645738,0.172199437,,,,,,,
