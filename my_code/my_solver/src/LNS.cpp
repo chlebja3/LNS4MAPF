@@ -15,7 +15,11 @@
 
 
 LNS::LNS(const Instance& instance_, bool is_visualisation_, double w_)
-    : Solver("LNS", instance_), is_visualisation(is_visualisation_), w(w_)
+    : Solver("LNS", instance_),
+      is_visualisation(is_visualisation_),
+      w(w_),
+      destroy_operator(Operator([this](Solution& sol) { destroy_random(sol); })),
+      repair_operator(Operator([this](Solution& sol) { repair_default(sol); }))
 {
   // SIPP's lifetime can not be longer than LNS's lifetime, because then map_data might be deleted before SIPP
   planner = std::make_unique<SIPP>(instance, is_visualisation);
@@ -41,11 +45,30 @@ void LNS::solve()
   {
     iteration_num++;
 
+    // copy solution
+    Solution perturbed_sol = solution;
+
     // destroy operator
+    destroy_operator.apply(perturbed_sol);
 
     // repair operator
+    repair_operator.apply(perturbed_sol);
+
+    // accept only feasible solutions
+    if (!perturbed_sol.feasible)
+    {
+      continue;
+    }
 
     // accept only improving solutions
+    perturbed_sol.calculate_cost(instance);
+    if (perturbed_sol.sum_of_delays >= solution.sum_of_delays)
+    {
+      continue;
+    }
+
+    // remember the perturbed solution
+    solution = std::move(perturbed_sol);
   }
 }
 

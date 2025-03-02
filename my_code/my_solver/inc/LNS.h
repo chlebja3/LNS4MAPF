@@ -9,6 +9,22 @@
 #include "SIPP.h"
 #include "Solver.h"
 
+class Operator
+{
+public:
+  explicit Operator(std::function<void(Solution& sol)> func_) : func(func_)
+  {
+  }
+
+  void apply(Solution& solution)
+  {
+    func(solution);
+  }
+
+private:
+  const std::function<void(Solution& sol)> func;
+};
+
 class LNS : public Solver
 {
 public:
@@ -31,6 +47,9 @@ public:
   [[nodiscard]] auto get_num_of_expanded_nodes() const -> int;
 
 private:
+  void destroy_random(Solution& sol);
+  void repair_default(Solution& sol);
+
   std::unique_ptr<SIPP> planner;
   int                   iteration_num = 0;
   int                   max_iter;
@@ -38,5 +57,6 @@ private:
   double                time_limit;
   double                curr_time;
   double                w;
+  Operator              destroy_operator;
+  Operator              repair_operator;
 };
-
