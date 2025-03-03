@@ -87,7 +87,7 @@ auto LNS::find_initial_solution() -> bool
 auto LNS::PrioritizedPlanning() -> Solution
 {
   Solution sol;
-  sol.paths.resize(instance.num_of_agents, Path());
+  sol.paths.resize(instance.num_of_agents, TimePointPath());
   const int agent_num = instance.num_of_agents;
 
   // create a sequence from 0 to agent_num
@@ -143,11 +143,14 @@ auto LNS::PrioritizedPlanning() -> Solution
       return sol;
     }
 
+    // check validity
+    assertm(instance.check_timepointpath_validity(tp_path), "SIPP planned an invalid timepointpath.");
+
     // update the constraint table
     planner->constraint_table.add_constraints(tp_path);
 
-    // convert to Path and add to the solution TODO not needed
-    sol.paths[agent_id] = timepointpath_to_path(tp_path);
+    // add to the solution
+    sol.paths[agent_id] = tp_path;
   }
   return sol;
 }
@@ -160,4 +163,37 @@ auto LNS::get_num_of_generated_nodes() const -> int
 auto LNS::get_num_of_expanded_nodes() const -> int
 {
   return planner->expanded_all_iter;
+}
+
+void LNS::destroy_random(Solution& sol) const
+{
+  // TODO optimize
+  constexpr int    neighborhood_size = 4;
+  std::vector<int> path_idcs(sol.paths.size());
+  std::iota(path_idcs.begin(), path_idcs.end(), 0);
+  std::random_shuffle(path_idcs.begin(), path_idcs.end());
+  assertm((int)path_idcs.size() > neighborhood_size, "Not enough paths for the destroy operator.");
+  sol.destroyed_paths =
+      std::vector(std::make_move_iterator(path_idcs.begin()), std::make_move_iterator(path_idcs.begin() + neighborhood_size));
+  sol.feasible = false;
+}
+
+void LNS::repair_default(Solution& sol) const
+{
+  assertm(!sol.feasible, "Can not repair a feasible solution");
+  assertm((int)sol.destroyed_paths.size() > 0, "There are no destroyed paths in the solution to be repaired.");
+  // remove the destroyed paths
+  for (auto& it : sol.destroyed_paths)
+  {
+    planner->constraint_table.remove_constraints(sol.paths[it]);
+    sol.paths[it].clear();
+  }
+
+  // replan
+  for (auto& it : sol.destroyed_paths)
+  {
+    TimePointPath tp_path = planner->plan(it);
+    planner->constraint_table.add_constraints(tp_path);
+    sol.paths[it] = tp_path;
+  }
 }

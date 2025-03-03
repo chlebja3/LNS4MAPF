@@ -377,6 +377,154 @@ TEST(TimeIntervalIntersectionTest, LengthOne)
   EXPECT_FALSE(overlap(i2, i1)) << "Intervals should not intersect.";
 }
 
+// TimePointPath related tests
+// test timepointpath interval overlap
+TEST(test_utils, timepointpath_interval_overlap)
+{
+  // generate a simple timepointpath
+  TimePointPath tp_path;
+  tp_path.push_back({3, {0, 10}});
+  tp_path.push_back({6, {3, 6}});
+  tp_path.push_back({7, {6, 6}});
+  tp_path.push_back({8, {7, INT_MAX}});
+
+  EXPECT_EQ(check_timepointpath_interval_no_overlap(tp_path), false) << "There should be overlap.";
+
+  // fix the overlap
+  fix_timepointpath_interval_overlap(tp_path);
+
+  EXPECT_EQ(check_timepointpath_interval_no_overlap(tp_path), true) << "There should not be any overlap after the fix.";
+
+  // check that the intervals are correct
+  EXPECT_EQ(tp_path[0].interval, TimeInterval(0, 2)) << "Wrong interval.";
+  EXPECT_EQ(tp_path[1].interval, TimeInterval(3, 5)) << "Wrong interval.";
+  EXPECT_EQ(tp_path[2].interval, TimeInterval(6, 6)) << "Wrong interval.";
+  EXPECT_EQ(tp_path[3].interval, TimeInterval(7, INT_MAX)) << "Wrong interval.";
+}
+
+// Test case: no overlap
+TEST(test_utils, timepointpath_no_overlap)
+{
+  // generate a simple timepointpath
+  TimePointPath tp_path;
+  tp_path.push_back({3, {0, 2}});
+  tp_path.push_back({6, {3, 5}});
+  tp_path.push_back({7, {6, 6}});
+  tp_path.push_back({8, {7, INT_MAX}});
+
+  EXPECT_EQ(check_timepointpath_interval_no_overlap(tp_path), true) << "There should not be overlap.";
+}
+
+// Test case: empty path
+TEST(test_utils, timepointpath_empty)
+{
+  EXPECT_EQ(check_timepointpath_interval_no_overlap(TimePointPath()), true) << "There should not be overlap.";
+}
+
+// test timepointpath validity check function
+TEST(test_utils, timepointpath_validity_check_simple_valid)
+{
+  // generate a simple timepointpath
+  TimePointPath tp_path;
+  tp_path.push_back({3, {0, 2}});
+  tp_path.push_back({6, {3, 5}});
+  tp_path.push_back({7, {6, 6}});
+  tp_path.push_back({8, {7, INT_MAX}});
+
+  EXPECT_EQ(is_valid_timepointpath(tp_path), true) << "Path should be valid.";
+}
+
+TEST(test_utils, timepointpath_validity_check_simple_invalid_end)
+{
+  // generate a simple timepointpath
+  TimePointPath tp_path;
+  tp_path.push_back({3, {0, 2}});
+  tp_path.push_back({6, {3, 5}});
+  tp_path.push_back({7, {6, 6}});
+  tp_path.push_back({8, {7, 9}});
+
+  EXPECT_EQ(is_valid_timepointpath(tp_path), false) << "Path should not be valid.";
+}
+
+TEST(test_utils, timepointpath_validity_check_simple_invalid_overlap)
+{
+  // generate a simple timepointpath
+  TimePointPath tp_path;
+  tp_path.push_back({3, {0, 2}});
+  tp_path.push_back({6, {3, 5}});
+  tp_path.push_back({7, {6, 7}});
+  tp_path.push_back({8, {7, INT_MAX}});
+
+  EXPECT_EQ(is_valid_timepointpath(tp_path), false) << "Path should not be valid.";
+}
+
+TEST(test_utils, timepointpath_validity_check_simple_invalid_gap)
+{
+  // generate a simple timepointpath
+  TimePointPath tp_path;
+  tp_path.push_back({3, {0, 1}});
+  tp_path.push_back({6, {3, 5}});
+  tp_path.push_back({7, {6, 7}});
+  tp_path.push_back({8, {7, INT_MAX}});
+
+  EXPECT_EQ(is_valid_timepointpath(tp_path), false) << "Path should not be valid.";
+}
+
+TEST(test_utils, timepointpath_validity_check_random)
+{
+  // generate random timepointpaths
+  for (int i = 0; i < 5; i++)
+  {
+    TimePointPath tp_path = generate_random_timepointpath(100);
+    EXPECT_EQ(is_valid_timepointpath(tp_path), false) << "Path should not be valid.";
+
+    fix_timepointpath_interval_overlap(tp_path);
+    EXPECT_EQ(is_valid_timepointpath(tp_path), true) << "Path should be valid.";
+  }
+}
+
+// test the instance timepointpath validity check, which also check validity of locations
+TEST(test_utils, timepointpath_validity_check_locations_valid)
+{
+  // load instance
+  std::string               base_path = get_base_path_tests();  // path to my_solver
+  std::unique_ptr<Instance> instance =
+      std::make_unique<Instance>(base_path + "/tests/test_maps/empty_3_3.map", base_path + "/tests/test_scen/dummy_3_3_scen_1.scen", 1);
+
+  // generate a simple timepointpath
+  TimePointPath tp_path;
+  tp_path.push_back({3, {0, 2}});
+  tp_path.push_back({6, {3, 5}});
+  tp_path.push_back({7, {6, 6}});
+  tp_path.push_back({8, {7, INT_MAX}});
+
+  EXPECT_EQ(instance->check_timepointpath_validity(tp_path), true) << "Path should be valid.";
+}
+
+TEST(test_utils, timepointpath_validity_check_locations_invalid)
+{
+  // load instance
+  std::string               base_path = get_base_path_tests();  // path to my_solver
+  std::unique_ptr<Instance> instance =
+      std::make_unique<Instance>(base_path + "/tests/test_maps/empty_5_5.map", base_path + "/tests/test_scen/empty_5_5_scen_1.scen", 1);
+
+  // generate a simple timepointpath
+  TimePointPath tp_path;
+  tp_path.push_back({3, {0, 2}});
+  tp_path.push_back({1, {3, INT_MAX}});
+
+  EXPECT_EQ(instance->check_timepointpath_validity(tp_path), false) << "Path should not be valid, jump.";
+
+  TimePointPath tp_path2;
+  tp_path2.push_back({24, {0, 2}});
+  tp_path2.push_back({25, {3, INT_MAX}});
+  EXPECT_EQ(instance->check_timepointpath_validity(tp_path2), false) << "Path should not be valid, out of bounds.";
+
+  TimePointPath tp_path3;
+  tp_path3.push_back({4, {0, 2}});
+  tp_path3.push_back({5, {3, INT_MAX}});
+  EXPECT_EQ(instance->check_timepointpath_validity(tp_path3), false) << "Path should not be valid, locations not next to each other.";
+}
 
 // Test conversion from timepointpath to Path simple
 TEST(test_utils, timepointpath_to_path_simple)
@@ -425,6 +573,72 @@ TEST(test_utils, timepointpath_to_path_random)
       EXPECT_EQ(path[t], it->location) << "Wrong location at time " << t;
     }
   }
+}
+
+// test conversion from path to timepointpath
+TEST(test_utils, path_to_timepointpath_simple)
+{
+  // generate a simple path
+  Path          path    = {3, 3, 3, 6, 6, 6, 7, 8};
+  TimePointPath tp_path = path_to_timepointpath(path);
+
+  // check that the path has the right length
+  ASSERT_EQ(tp_path.size(), 4) << "Wrong path length.";
+
+  // check that the path has the right time intervals
+  for (int i = 0; i < (int)tp_path.size(); i++)
+  {
+    // check that the location is correct during the whole interval
+    for (int t = tp_path[i].interval.t_min; t <= tp_path[i].interval.t_max; t++)
+    {
+      EXPECT_EQ(tp_path[i].location, path[t]) << "Wrong location at time " << t;
+      // dont check the last interval
+      if (tp_path[i].interval.t_max == INT_MAX)
+      {
+        break;
+      }
+    }
+  }
+}
+
+// special case empty path
+TEST(test_utils, path_to_timepointpath_empty)
+{
+  // generate an empty path
+  Path path;
+
+  // convert to timepointpath
+  TimePointPath tp_path = path_to_timepointpath(path);
+
+  // check that the path is empty
+  EXPECT_TRUE(tp_path.empty()) << "Path should be empty.";
+}
+
+// test that path to timepointpath to path gives the same path
+TEST(test_utils, path_to_timepointpath_to_path)
+{
+  Path path({1, 1, 1, 2, 2, 3, 2, 7, 7, 7, 7, 7, 7, 8, 8, 7, 8, 7, 8, 3, 3, 8, 13, 13, 13, 12, 11});
+
+  // convert to timepointpath and back
+  Path path2 = timepointpath_to_path(path_to_timepointpath(path));
+
+  // check equality
+  EXPECT_EQ(path, path2) << "Paths are not equal.";
+}
+
+// test timepointpath to path to timepointpath
+TEST(test_utils, timepointpath_to_path_to_timepointpath)
+{
+  // generate a random timepointpath
+  const int     len     = 10;
+  TimePointPath tp_path = generate_random_timepointpath(len);
+  fix_timepointpath_interval_overlap(tp_path);
+
+  // convert to path and back
+  TimePointPath tp_path2 = path_to_timepointpath(timepointpath_to_path(tp_path));
+
+  // check equality
+  EXPECT_EQ(tp_path, tp_path2) << "Paths are not equal.";
 }
 
 // Test find_direction

@@ -37,7 +37,7 @@ void LNS::find_initial_solution()
 auto LNS::PrioritizedPlanning() -> Solution
 {
   Solution sol;
-  sol.paths.resize(instance.num_of_agents, Path());
+  sol.paths.resize(instance.num_of_agents, TimePointPath());
   const int agent_num = instance.num_of_agents;
 
   // create a sequence from 0 to agent_num
@@ -82,7 +82,7 @@ auto LNS::PrioritizedPlanning() -> Solution
     planner->constraint_table.add_constraints(tp_path);
 
     // convert to Path and add to the solution TODO not needed
-    sol.paths[agent_id] = timepointpath_to_path(tp_path);
+    sol.paths[agent_id] = tp_path;
   }
   return sol;
 }

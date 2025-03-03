@@ -269,6 +269,109 @@ auto timepointpath_to_path(const TimePointPath& tp_path) -> Path
   return path;
 }
 
+auto path_to_timepointpath(const Path& path) -> TimePointPath
+{
+  if (path.empty())
+  {
+    return TimePointPath();
+  }
+
+  TimePointPath tp_path;
+  TimePoint     curr(path.front(), {0, -1});
+  for (int it : path)
+  {
+    // if the new location is not the same as the last location, create new interval
+    if (it != curr.location)
+    {
+      tp_path.push_back(curr);
+
+      // set the new location
+      curr.location       = it;
+      curr.interval.t_min = curr.interval.t_max + 1;
+      curr.interval.t_max = curr.interval.t_min;
+    }
+    else
+    {
+      curr.interval.t_max++;
+    }
+  }
+  // the agent stays on the last position
+  curr.interval.t_max = INT_MAX;
+  tp_path.push_back(curr);
+  return tp_path;
+}
+
+auto check_timepointpath_interval_no_overlap(const TimePointPath& tp_path) -> bool
+{
+  // paths with 0 or 1 interval can not have overlaps
+  if (tp_path.size() <= 1)
+  {
+    return true;
+  }
+
+  // check for overlaps
+  for (auto it = tp_path.begin(); it != std::prev(tp_path.end()); it++)
+  {
+    if (overlap(it->interval, std::next(it)->interval))
+    {
+      return false;
+    }
+  }
+  return true;
+}
+
+void fix_timepointpath_interval_overlap(TimePointPath& tp_path)
+{
+  // paths with 0 or 1 interval can not have overlaps
+  if (tp_path.size() >= 2)
+  {
+    // check for overlaps
+    for (auto it = tp_path.begin(); it != std::prev(tp_path.end()); it++)
+    {
+      it->interval.t_max = std::next(it)->interval.t_min - 1;
+    }
+  }
+}
+
+auto is_valid_timepointpath(const TimePointPath& tp_path) -> bool
+{
+  // special case - empty path
+  if (tp_path.empty())
+  {
+    return true;
+  }
+
+  // check that each interval has smaller t_min than t_max
+  for (const auto& it : tp_path)
+  {
+    if (it.interval.t_min > it.interval.t_max)
+    {
+      return false;
+    }
+  }
+
+  // check that the agent stays at its last position
+  if (tp_path.back().interval.t_max != INT_MAX)
+  {
+    return false;
+  }
+
+  if ((int)tp_path.size() >= 2)
+  {
+    // check that each interval starts after the previous one ends
+    for (auto it = tp_path.begin(); it != std::prev(tp_path.end()); it++)
+    {
+      if (it->interval.t_max != std::next(it)->interval.t_min - 1)
+      {
+        return false;
+      }
+    }
+  }
+
+  // check whether the locations are neighbors
+  return true;
+}
+
 // based on https://stackoverflow.com/questions/43044/algorithm-to-randomly-generate-an-aesthetically-pleasing-color-palette
 auto generate_random_color(const int mix_r, const int mix_g, const int mix_b, const double mix_ratio) -> sf::Color
 {

@@ -173,7 +173,11 @@ using Path          = std::vector<int>;
 using PointPath     = std::vector<Point2d>;
 using TimePointPath = std::vector<TimePoint>;
 
-auto timepointpath_to_path(const TimePointPath& path) -> Path;
+auto timepointpath_to_path(const TimePointPath& tp_path) -> Path;
+auto path_to_timepointpath(const Path& path) -> TimePointPath;
+auto check_timepointpath_interval_no_overlap(const TimePointPath& tp_path) -> bool;
+void fix_timepointpath_interval_overlap(TimePointPath& tp_path);
+auto is_valid_timepointpath(const TimePointPath& tp_path) -> bool;
 
 /**
  * @brief Generate a random color. To make the color palette look more visually pleasing, the random color is mixed with (mix_r, mix_g,

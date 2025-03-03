@@ -425,3 +425,35 @@ auto Instance::path_to_pointpath(const Path& path) const -> PointPath
   }
   return ret;
 }
+
+
+auto Instance::check_timepointpath_validity(const TimePointPath& tp_path) const -> bool
+{
+  // check whether all locations are neighbors
+  if (tp_path.size() >= 2)
+  {
+    // check first location
+    if (!map_data.is_in(tp_path.front().location))
+    {
+      return false;
+    }
+
+    // check other locations
+    for (int i = 0; i < (int)tp_path.size() - 1; i++)
+    {
+      Point2d p1 = location_to_position(tp_path[i].location);
+      Point2d p2 = location_to_position(tp_path[i + 1].location);
+      if (!map_data.is_in(p2))
+      {
+        return false;
+      }
+
+      if (std::abs(p1.x - p2.x) + std::abs(p1.y - p2.y) != 1)
+      {
+        return false;
+      }
+    }
+  }
+  // perform the other validity checks
+  return is_valid_timepointpath(tp_path);
+}

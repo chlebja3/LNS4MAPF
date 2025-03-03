@@ -22,35 +22,48 @@ auto Solution::is_valid(const Instance& instance) const -> bool
     return false;
   }
 
-  // check that each path starts and ends in the correct position and find the longest path
-  int T_max = 0;
+  std::vector<Path> converted_paths(paths.size());
   for (int i = 0; i < (int)paths.size(); i++)
   {
+    // check validity of each timepointpath
+    if (!instance.check_timepointpath_validity(paths[i]))
+    {
+      return false;
+    }
+
+    // convert the path
+    converted_paths[i] = timepointpath_to_path(paths[i]);
+  }
+
+  // check that each path starts and ends in the correct position and find the longest path
+  int T_max = 0;
+  for (int i = 0; i < (int)converted_paths.size(); i++)
+  {
     // check that no path has length 0
-    if (paths[i].empty())
+    if (converted_paths[i].empty())
     {
       std::cout << "Empty path." << std::endl;
       return false;
     }
 
     // check that the path starts in the start position
-    if (!(paths[i].front() == instance.get_start_locations()[i]))
+    if (!(converted_paths[i].front() == instance.get_start_locations()[i]))
     {
       std::cout << "Path does not start in the start position." << std::endl;
       return false;
     }
 
     // check that the path ends in the goal position
-    if (!(paths[i].back() == instance.get_goal_locations()[i]))
+    if (!(converted_paths[i].back() == instance.get_goal_locations()[i]))
     {
       std::cout << "Path does not end in the goal position." << std::endl;
       return false;
     }
 
     // remember the length of the longest path
-    if ((int)paths[i].size() > T_max)
+    if ((int)converted_paths[i].size() > T_max)
     {
-      T_max = paths[i].size();
+      T_max = converted_paths[i].size();
     }
   }
   //  std::cout << "Max length of path: " << T_max << std::endl;
@@ -61,7 +74,7 @@ auto Solution::is_valid(const Instance& instance) const -> bool
     // create reservation set for each time step to check for dynamic coliisions
     std::unordered_set<int, std::hash<int>> occupied;
 
-    for (const auto& path : paths)
+    for (const auto& path : converted_paths)
     {
       int       idx          = t;
       const int cur_path_len = (int)path.size();
@@ -112,14 +125,14 @@ auto Solution::is_valid(const Instance& instance) const -> bool
   }
 
   // check that the agents do not swap edges
-  for (int i = 0; i < (int)paths.size(); i++)
+  for (int i = 0; i < (int)converted_paths.size(); i++)
   {
-    for (int j = i + 1; j < (int)paths.size(); j++)
+    for (int j = i + 1; j < (int)converted_paths.size(); j++)
     {
       for (int t = 1; t < T_max; t++)
       {
-        const int cur_path_len_i = (int)paths[i].size();
-        const int cur_path_len_j = (int)paths[j].size();
+        const int cur_path_len_i = (int)converted_paths[i].size();
+        const int cur_path_len_j = (int)converted_paths[j].size();
 
         // paths that are already finished at time t
         if (t >= cur_path_len_i || t >= cur_path_len_j)
@@ -127,7 +140,7 @@ auto Solution::is_valid(const Instance& instance) const -> bool
           continue;
         }
 
-        if (paths[i][t] == paths[j][t - 1] && paths[i][t - 1] == paths[j][t])
+        if (converted_paths[i][t] == converted_paths[j][t - 1] && converted_paths[i][t - 1] == converted_paths[j][t])
         {
           std::cout << "Agents swap edges." << std::endl;
           return false;
@@ -245,7 +258,7 @@ void Solution::load(const std::string& filename, const Instance& instance)
       path.push_back(instance.position_to_location(Point2d(x, y)));
     }
     // add the path to the solution
-    paths.push_back(path);
+    paths.push_back(path_to_timepointpath(path));
   }
 
   // close the file
@@ -260,8 +273,8 @@ void Solution::calculate_cost(const Instance& instance)
 
   for (int i = 0; i < (int)paths.size(); i++)
   {
-    sum_of_costs += (int)paths[i].size() - 1;
-    const int delay = (int)paths[i].size() - 1 - instance.get_heuristic_distance(i, instance.get_start_locations()[i]);
+    sum_of_costs += (int)paths[i].back().interval.t_min;
+    const int delay = (int)paths[i].back().interval.t_min - instance.get_heuristic_distance(i, instance.get_start_locations()[i]);
     assertm(delay >= 0, "Delay can not be negative.");
     sum_of_delays += delay;
     delays[i] = delay;

@@ -20,8 +20,9 @@ public:
   bool feasible = true;
 
   // paths of the agents
-  std::vector<Path> paths;
-  std::vector<int>  delays;
+  std::vector<TimePointPath> paths;
+  std::vector<int>           delays;
+  std::vector<int>           destroyed_paths;
 
   int cost;
   int sum_of_delays;  // cost - distance

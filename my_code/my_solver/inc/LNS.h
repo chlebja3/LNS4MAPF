@@ -47,8 +47,8 @@ public:
   [[nodiscard]] auto get_num_of_expanded_nodes() const -> int;
 
 private:
-  void destroy_random(Solution& sol);
-  void repair_default(Solution& sol);
+  void destroy_random(Solution& sol) const;
+  void repair_default(Solution& sol) const;
 
   std::unique_ptr<SIPP> planner;
   int                   iteration_num = 0;
