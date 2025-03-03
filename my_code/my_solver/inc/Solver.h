@@ -27,6 +27,7 @@ public:
   int cost;
   int sum_of_delays;  // cost - distance
   int sum_of_costs;
+  int makespan;
 
   [[nodiscard]] auto is_valid(const Instance& instance) const -> bool;
   void               load(const std::string& filename, const Instance& instance);

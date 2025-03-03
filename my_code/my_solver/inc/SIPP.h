@@ -97,6 +97,7 @@ public:
   ~SIPP() = default;
 
   auto plan(int agent_num) -> TimePointPath;
+  auto plan_mapflns_heuristic(int agent_num) -> TimePointPath;
   auto plan_suboptimal(int agent_num, double w = 1.0) -> TimePointPath;
 
 private:

@@ -270,13 +270,16 @@ void Solution::calculate_cost(const Instance& instance)
   delays.resize(paths.size(), 0);
   sum_of_delays = 0;
   sum_of_costs  = 0;
+  makespan      = paths[0].back().interval.t_min;
 
   for (int i = 0; i < (int)paths.size(); i++)
   {
-    sum_of_costs += (int)paths[i].back().interval.t_min;
-    const int delay = (int)paths[i].back().interval.t_min - instance.get_heuristic_distance(i, instance.get_start_locations()[i]);
-    assertm(delay >= 0, "Delay can not be negative.");
+    makespan = std::max(makespan, paths[i].back().interval.t_min);
+    sum_of_costs += paths[i].back().interval.t_min;
+    const int delay = paths[i].back().interval.t_min - instance.get_heuristic_distance(i, instance.get_start_locations()[i]);
     sum_of_delays += delay;
+    assertm(delay >= 0, "Delay can not be negative.");
+    assertm(sum_of_costs >= delay && sum_of_costs >= makespan, "Sum of costs should be greater than delay and makespan.");
     delays[i] = delay;
   }
 }
