@@ -69,6 +69,9 @@ find_package(SFML REQUIRED COMPONENTS graphics window system )
 
 find_package(OpenGL REQUIRED)  # Ensure OpenGL is found
 
+# Find nlohman json
+find_package(nlohmann_json REQUIRED)
+
 # Add include directories for ImGui and ImGui-SFML
 include_directories(third_party_libraries/imgui third_party_libraries/imgui-sfml)
 
@@ -84,8 +87,8 @@ add_executable(simple_MAPF_solver src/main.cpp)
 target_include_directories(MAPF_lib PRIVATE "third_party_libraries/imgui" "third_party_libraries/imgui-sfml")
 
 # link the libraries
-target_link_libraries(MAPF_lib ${Boost_LIBRARIES} Eigen3::Eigen sfml-graphics sfml-window sfml-system OpenGL::GL)
-target_link_libraries(simple_MAPF_solver ${Boost_LIBRARIES} MAPF_lib sfml-graphics sfml-window sfml-system OpenGL::GL )
+target_link_libraries(MAPF_lib ${Boost_LIBRARIES} Eigen3::Eigen sfml-graphics sfml-window sfml-system OpenGL::GL nlohmann_json::nlohmann_json)
+target_link_libraries(simple_MAPF_solver MAPF_lib)
 
 # Add subdirectory for tests
 if (${ENABLE_TESTS})

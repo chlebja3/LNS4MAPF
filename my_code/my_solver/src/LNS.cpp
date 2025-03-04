@@ -116,8 +116,8 @@ auto LNS::PrioritizedPlanning() -> Solution
     if (w == 1.0)
     {
       // optimal sipp
-      // tp_path = planner->plan(agent_id);
-      tp_path = planner->plan_mapflns_heuristic(agent_id);
+      tp_path = planner->plan(agent_id);
+      // tp_path = planner->plan_mapflns_heuristic(agent_id);
     }
     else if (w > 1.0)
     {

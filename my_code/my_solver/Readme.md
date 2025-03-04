@@ -6,6 +6,8 @@ SFML 2.5.1
 
 Boost 1.71.0
 
+nlohmann-json3-dev 3.7.3-1
+
 For tests and benchmarks (should be fetched automatically by CMake if not installed):
 
 google-test 1.10.0
