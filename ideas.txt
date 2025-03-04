@@ -79,3 +79,8 @@ prohlednout implementaci sippu
 # update google test v1.16.0
 
 # constraint table on demand aktualizace
+# possible edge collision binary strom
+# experimenty pro priste:
+# porovnat moji heuristiku (a jeji varianty) s oficialni heuristikou (bez maxima s constrainem), pak s jejich realnou heuristikou, vliv vah suboptimalniho sippu, optionally taky manhattanskou distance, merit cas vypoctu, pocet expandovanych uzlu, makespan, sum of costs, pocet opakovani krat pocet scen aby byl 50, sipp + prioritized planning, mozna taky preprocessing, ruzne pocty agentu
+
+# kazdy experiment vlastni file - input a parametry, parametry algoritmu a pak vsechny vysledky, yaml, vysledky potom do databaze 
