@@ -283,8 +283,3 @@ void Solution::calculate_cost(const Instance& instance)
     delays[i] = delay;
   }
 }
-
-
-Solver::Solver(std::string name_, const Instance& instance_) : name(std::move(name_)), instance(instance_)
-{
-}

@@ -7,9 +7,11 @@
 #pragma once
 #include <utils.h>
 
+#include <random>
+
 // #include <boost/heap/pairing_heap.hpp>
-#include <boost/heap/d_ary_heap.hpp>
-// #include <boost/heap/priority_queue.hpp>
+// #include <boost/heap/d_ary_heap.hpp>
+#include <boost/heap/priority_queue.hpp>
 // #include <queue>
 // #include <unordered_map>
 // #include <unordered_set>
@@ -26,27 +28,50 @@ class SIPPNode : public Node
 public:
   TimePoint       time_point;
   SIPPNode const* parent;
+  double          h2;
 
 
   // constructors
-  SIPPNode(int location, const TimeInterval& interval, double g_, double h_, double h2_, SIPPNode const* parent_);
+  SIPPNode(int location, const TimeInterval& interval, double g_, double h_, double h2_, SIPPNode const* parent_)
+      : Node(g_, h_), time_point(location, interval), parent(parent_), h2(h2_)
+  {
+  }
 
-  SIPPNode(const TimePoint& time_point_, double g_, double h_, double h2_, SIPPNode const* parent_);
+  SIPPNode(const TimePoint& time_point_, double g_, double h_, double h2_, SIPPNode const* parent_)
+      : Node(g_, h_), time_point(time_point_), parent(parent_), h2(h2_)
+  {
+  }
 
   auto operator==(const SIPPNode& other) const -> bool;
+};
 
-  struct compare_node_ptrs
+class SIPPNodeComparator
+{
+public:
+  std::mt19937*                       rnd_generator;
+  mutable std::bernoulli_distribution dist;
+
+  explicit SIPPNodeComparator(std::mt19937* rnd_generator_) : rnd_generator(rnd_generator_), dist(0.5)
   {
-    auto operator()(SIPPNode const* n1, SIPPNode const* n2) const -> bool;
-  };
+  }
 
-  struct compare_node_ptrs_suboptimal
+  auto operator()(SIPPNode const* n1, SIPPNode const* n2) const -> bool;
+};
+
+
+class SIPPNodeComparatorSuboptimal
+{
+public:
+  std::mt19937*                       rnd_generator;
+  mutable std::bernoulli_distribution dist;
+  int                                 max_suboptimality_absolute;
+
+  SIPPNodeComparatorSuboptimal(std::mt19937* rnd_generator_, int max_suboptimality_absolute_)
+      : rnd_generator(rnd_generator_), dist(0.5), max_suboptimality_absolute(max_suboptimality_absolute_)
   {
-    auto       operator()(SIPPNode const* n1, SIPPNode const* n2) const -> bool;
-    static int max_suboptimality_absolute;
-  };
+  }
 
-  double h2;
+  auto operator()(SIPPNode const* n1, SIPPNode const* n2) const -> bool;
 };
 
 class NodePool
@@ -63,11 +88,10 @@ private:
 };
 
 
-// using PriorityQueue = std::priority_queue<const SIPPNode*, std::vector<const SIPPNode*>, SIPPNode::compare_node_ptrs>;
-// using PriorityQueue = boost::heap::priority_queue<const SIPPNode*, boost::heap::compare<SIPPNode::compare_node_ptrs>>;
-using PriorityQueue = boost::heap::d_ary_heap<const SIPPNode*, boost::heap::arity<2>, boost::heap::compare<SIPPNode::compare_node_ptrs>>;
-using PriorityQueueSuboptimal =
-    boost::heap::d_ary_heap<const SIPPNode*, boost::heap::arity<2>, boost::heap::compare<SIPPNode::compare_node_ptrs_suboptimal>>;
+// using PriorityQueue = std::priority_queue<const SIPPNode*, std::vector<const SIPPNode*>, SIPPNodeComparator>;
+using PriorityQueue = boost::heap::priority_queue<const SIPPNode*, boost::heap::compare<SIPPNodeComparator>>;
+// using PriorityQueue = boost::heap::d_ary_heap<const SIPPNode*, boost::heap::arity<2>, boost::heap::compare<SIPPNodeComparator>>;
+using PriorityQueueSuboptimal = boost::heap::priority_queue<const SIPPNode*, boost::heap::compare<SIPPNodeComparatorSuboptimal>>;
 // using PriorityQueue = boost::heap::fibonacci_heap<const SIPPNode*, boost::heap::compare<SIPPNode::compare_node_ptrs>>;
 // using PriorityQueue = boost::heap::pairing_heap<const SIPPNode*, boost::heap::compare<SIPPNode::compare_node_ptrs>>;
 // typedef std::unordered_set<TimePoint, TimePoint::hash_time_point> UnorderedSet;
@@ -91,7 +115,7 @@ public:
   bool generate_iter_info = false;
 
   // constructor
-  SIPP(const Instance& instance, bool generate_iter_info);
+  SIPP(const Instance& instance_, std::mt19937& rnd_generator_, bool generate_iter_info);
 
   // destructor
   ~SIPP() = default;
@@ -107,4 +131,5 @@ private:
   sipp::NodePool   node_pool;
   std::vector<int> known_max;  // known node database
   std::vector<int> known_min;  // known node database
+  std::mt19937&    rnd_generator;
 };

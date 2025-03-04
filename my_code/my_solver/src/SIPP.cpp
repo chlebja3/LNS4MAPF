@@ -11,34 +11,24 @@
 #include <climits>
 #include <cmath>
 #include <memory>
+#include <random>
 
 #include "utils.h"
 
 #define NODE_POOL_MERGE_SIZE 500  // merge the extra list with the node pool vector only of there are more elements in the list
 #define INITIAL_NODE_POOL_SIZE 2  // the multiple of map size to use as initial node pool size
 
-int sipp::SIPPNode::compare_node_ptrs_suboptimal::max_suboptimality_absolute = 0;
-
 using namespace sipp;
 
-SIPP::SIPP(const Instance& instance_, const bool generate_iter_info_)
+SIPP::SIPP(const Instance& instance_, std::mt19937& rnd_generator_, const bool generate_iter_info_)
     : constraint_table(ConstraintTable(instance_)),
       generate_iter_info(generate_iter_info_),
       instance(instance_),
-      node_pool(NodePool(INITIAL_NODE_POOL_SIZE * instance.get_map_data().width * instance.get_map_data().height))
+      node_pool(NodePool(INITIAL_NODE_POOL_SIZE * instance.get_map_data().width * instance.get_map_data().height)),
+      rnd_generator(rnd_generator_)
 {
   known_max.resize(instance.get_map_data().width * instance.get_map_data().height, -1);
   known_min.resize(instance.get_map_data().width * instance.get_map_data().height, -1);
-}
-
-SIPPNode::SIPPNode(int location, const TimeInterval& interval, double g_, double h_, double h2_, SIPPNode const* parent_)
-    : Node(g_, h_), time_point(location, interval), parent(parent_), h2(h2_)
-{
-}
-
-SIPPNode::SIPPNode(const TimePoint& time_point_, double g_, double h_, double h2_, SIPPNode const* parent_)
-    : Node(g_, h_), time_point(time_point_), parent(parent_), h2(h2_)
-{
 }
 
 
@@ -47,7 +37,7 @@ auto SIPPNode::operator==(const SIPPNode& other) const -> bool
   return g == other.g && h == other.h && time_point == other.time_point;
 }
 
-auto SIPPNode::compare_node_ptrs::operator()(SIPPNode const* n1, SIPPNode const* n2) const -> bool
+auto SIPPNodeComparator::operator()(SIPPNode const* n1, SIPPNode const* n2) const -> bool
 {
   // compare f
   if (n1->f == n2->f)
@@ -57,7 +47,7 @@ auto SIPPNode::compare_node_ptrs::operator()(SIPPNode const* n1, SIPPNode const*
       if (n1->h2 == n2->h2)
       {
         // if tie even in the second heuristic, choose randomly
-        return fast_random_bool();
+        return dist(*rnd_generator);
       }
       return n1->h2 > n2->h2;  // if f is the same and h is the same prefer nodes closer to goal
     }
@@ -66,7 +56,7 @@ auto SIPPNode::compare_node_ptrs::operator()(SIPPNode const* n1, SIPPNode const*
   return n1->f > n2->f;
 }
 
-auto SIPPNode::compare_node_ptrs_suboptimal::operator()(SIPPNode const* n1, SIPPNode const* n2) const -> bool
+auto SIPPNodeComparatorSuboptimal::operator()(SIPPNode const* n1, SIPPNode const* n2) const -> bool
 {
   // compare f
   if (std::abs(n1->f - n2->f) <= max_suboptimality_absolute)
@@ -153,7 +143,7 @@ auto SIPP::plan(const int agent_num) -> TimePointPath
 
 
   // create openlist
-  sipp::PriorityQueue open_list;
+  sipp::PriorityQueue open_list{SIPPNodeComparator(&rnd_generator)};
 
   // retrieve the first safe interval
   auto time_interval_start = constraint_table.get_first_safe_interval(start);
@@ -340,14 +330,8 @@ auto SIPP::plan_suboptimal(const int agent_num, double w) -> TimePointPath
   const int max_time = constraint_table.get_max_path_len_estimate();
   assertm(min_time >= 0 && max_time >= 0, "Time can not be negative.");
 
-  // std::cout << "Agent: " << agent_num << ", min time: " << min_time << std::endl;
-  // std::cout << "Min time estimate is: " << min_time << std::endl;
-  // std::cout << "Max time estimate is: " << max_time << std::endl;
-
-
   // create openlist
-  sipp::SIPPNode::compare_node_ptrs_suboptimal::max_suboptimality_absolute = suboptimality_absolute;
-  sipp::PriorityQueueSuboptimal open_list;
+  sipp::PriorityQueueSuboptimal open_list{SIPPNodeComparatorSuboptimal(&rnd_generator, suboptimality_absolute)};
 
   // retrieve the first safe interval
   auto time_interval_start = constraint_table.get_first_safe_interval(start);
@@ -525,7 +509,7 @@ auto SIPP::plan_mapflns_heuristic(int agent_num) -> TimePointPath
   assertm(min_time >= 0 && max_time >= 0, "Time can not be negative.");
 
   // create openlist
-  sipp::PriorityQueue open_list;
+  sipp::PriorityQueue open_list{SIPPNodeComparator(&rnd_generator)};
 
   // retrieve the first safe interval
   auto time_interval_start = constraint_table.get_first_safe_interval(start);

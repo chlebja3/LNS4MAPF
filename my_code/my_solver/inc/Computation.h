@@ -8,6 +8,7 @@
 #pragma once
 #include <atomic>
 #include <memory>
+#include <random>
 #include <thread>
 
 #include "Instance.h"
@@ -18,7 +19,7 @@ class Computation
 {
 public:
   // constructor and destructor
-  Computation(const Instance& instance_, SharedData& shared_data_, bool is_visualization_, double w_);
+  Computation(const Instance& instance_, SharedData& shared_data_, bool is_visualization_, double w_, int seed);
   ~Computation();
 
   // manage the underlying thread
@@ -37,4 +38,6 @@ private:
   std::atomic<bool>    running;
   const bool           is_visualization;
   double               w;
+  int                  seed;
+  std::mt19937         rnd_generator;
 };

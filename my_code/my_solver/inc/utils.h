@@ -179,18 +179,6 @@ auto check_timepointpath_interval_no_overlap(const TimePointPath& tp_path) -> bo
 void fix_timepointpath_interval_overlap(TimePointPath& tp_path);
 auto is_valid_timepointpath(const TimePointPath& tp_path) -> bool;
 
-/**
- * @brief Generate a random color. To make the color palette look more visually pleasing, the random color is mixed with (mix_r, mix_g,
- * mix_b).
- *
- * @param mix_r The red channel value of the mix color, recommended value is 255.
- * @param mix_g The green channel value of the mix color, recommended value is 255.
- * @param mix_b The blue channel value of the mix color, recommended value is 255.
- * @param mix_ratio The ratio at which to blend the randomly generated color with the mix color.
- *
- * @return A random color.
- */
-auto generate_random_color(int mix_r, int mix_g, int mix_b, double mix_ratio = 0.5) -> sf::Color;
 
 /**
  * @brief Get the path to the project directory, assuming the project is run from the build directory. This function is useful for loading

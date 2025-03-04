@@ -7,6 +7,7 @@
 
 #pragma once
 #include <memory>
+#include <random>
 #include <string>
 #include <vector>
 
@@ -42,7 +43,10 @@ public:
   const Instance&   instance;
 
   // constructor
-  Solver(std::string name_, const Instance& instance_);
+  Solver(std::string name_, const Instance& instance_, std::mt19937& rnd_generator_)
+      : name(std::move(name_)), instance(instance_), rnd_generator(rnd_generator_)
+  {
+  }
 
   // virtual destructor
   virtual ~Solver() = default;
@@ -50,5 +54,6 @@ public:
   // pure virtual function solve
   virtual void solve() = 0;
 
-  Solution solution;  // the so far best solution
+  Solution      solution;  // the so far best solution
+  std::mt19937& rnd_generator;
 };

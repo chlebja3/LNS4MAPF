@@ -12,13 +12,23 @@
 
 #include "LNS.h"
 
-Computation::Computation(const Instance& instance_, SharedData& shared_data_, bool is_visualization_, double w_ = 1.0)
-    : instance(instance_), shared_data(shared_data_), running(false), is_visualization(is_visualization_), w(w_)
+Computation::Computation(const Instance& instance_, SharedData& shared_data_, bool is_visualization_, double w_ = 1.0, int seed_ = -1)
+    : instance(instance_), shared_data(shared_data_), running(false), is_visualization(is_visualization_), w(w_), seed(seed_)
 {
-  std::cout << "Initialized computation." << std::endl;
+  // initialized the random generator
+  if (seed < 0)
+  {
+    // random device to generate a random seed
+    std::random_device rd;
+    rnd_generator = std::mt19937(rd());
+  }
+  else
+  {
+    rnd_generator = std::mt19937(seed);
+  }
 
   // initialize the solver
-  solver = std::make_unique<LNS>(instance, is_visualization, w);
+  solver = std::make_unique<LNS>(instance, rnd_generator, is_visualization, w);
 }
 
 Computation::~Computation()

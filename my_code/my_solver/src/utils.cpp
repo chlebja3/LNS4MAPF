@@ -13,9 +13,6 @@
 #include <filesystem>
 #include <iostream>
 
-#define MIN_BRIGHTNESS 20
-#define MAX_BRIGHTNESS 230
-
 Node::Node(const double g_, const double h_) : g(g_), h(h_), f(g_ + h_)
 {
 }
@@ -370,22 +367,6 @@ auto is_valid_timepointpath(const TimePointPath& tp_path) -> bool
 
   // check whether the locations are neighbors
   return true;
-}
-
-// based on https://stackoverflow.com/questions/43044/algorithm-to-randomly-generate-an-aesthetically-pleasing-color-palette
-auto generate_random_color(const int mix_r, const int mix_g, const int mix_b, const double mix_ratio) -> sf::Color
-{
-  while (true)
-  {
-    const int r = (int)std::round((std::rand() % 256) * (1 - mix_ratio) + mix_r * mix_ratio);
-    const int g = (int)std::round((std::rand() % 256) * (1 - mix_ratio) + mix_g * mix_ratio);
-    const int b = (int)std::round((std::rand() % 256) * (1 - mix_ratio) + mix_b * mix_ratio);
-    // make sure the color is not too similar to black or white
-    if (MIN_BRIGHTNESS <= (r + g + b) / 3 && (r + g + b) / 3 <= MAX_BRIGHTNESS)
-    {
-      return sf::Color(r, g, b);
-    }
-  }
 }
 
 // Function to get the directory of the running executable

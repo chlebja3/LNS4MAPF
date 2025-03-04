@@ -26,7 +26,9 @@ auto main(int argc, char** argv) -> int
       "agents,a", po::value<std::string>()->required(), "input file for agents")(
       "agentNum,k", po::value<int>()->default_value(0), "number of agents")("GUI,G", po::value<bool>()->default_value(true),
                                                                             "whether to tun the graphical user interface")(
-      "sipp_suboptimality,w", po::value<double>()->default_value(1.0), "suboptimality factor for suboptimal sipp");
+      "sipp_suboptimality,w", po::value<double>()->default_value(1.0), "suboptimality factor for suboptimal sipp")(
+      "seed,s", po::value<int>()->default_value(-1),
+      "seed of the random generators for reproducability, to achieve non reproducible random behavior, use negative value");
 
   // Parse command-line arguments
   po::variables_map vm;
@@ -53,9 +55,7 @@ auto main(int argc, char** argv) -> int
   const int         agent_num  = vm["agentNum"].as<int>();
   const bool        GUI        = vm["GUI"].as<bool>();
   const double      w          = vm["sipp_suboptimality"].as<double>();
-
-  // initialize random seed
-  srand(0);
+  const int         seed       = vm["seed"].as<int>();
 
   // create the instance
   std::unique_ptr<Instance> instance = std::make_unique<Instance>(map_name, scene_name, agent_num);
@@ -68,7 +68,7 @@ auto main(int argc, char** argv) -> int
   std::unique_ptr<SharedData> shared_data = std::make_unique<SharedData>();
 
   // create the computation object
-  Computation computation(*instance, *shared_data, GUI, w);
+  Computation computation(*instance, *shared_data, GUI, w, seed);
 
   // start the computation thread
   computation.start();
@@ -76,7 +76,7 @@ auto main(int argc, char** argv) -> int
   // create the visualization object
   if (GUI)
   {
-    Visualizer visualizer(*instance, *shared_data);
+    Visualizer visualizer(*instance, *shared_data, seed + 1);  // use different seed for visualizer than for computation
     visualizer.start();
     // wait for the visualization thread to finish
     visualizer.join_thread();

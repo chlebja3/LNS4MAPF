@@ -707,20 +707,3 @@ TEST(test_utils, RandomBool)
     EXPECT_TRUE(b == true || b == false) << "Invalid value.";
   }
 }
-
-// Color Generation test
-
-// // Test intersection finding
-// generate 100 random colors and check, whether they are valid (just a simple test to test the  unit test environment)
-TEST(test_utils, ColorGeneration)
-{
-  for (int i = 0; i < 100; i++)
-  {
-    sf::Color col = generate_random_color(255, 255, 255, 0.25);
-    EXPECT_TRUE(inRange(col.r, 0, 255)) << "Invalid value in red channel.";
-    EXPECT_TRUE(inRange(col.g, 0, 255)) << "Invalid value in green channel.";
-    EXPECT_TRUE(inRange(col.b, 0, 255)) << "Invalid value in blue channel.";
-    EXPECT_TRUE(inRange(col.a, 0, 255)) << "Invalid value in alpha channel.";
-  }
-}
-

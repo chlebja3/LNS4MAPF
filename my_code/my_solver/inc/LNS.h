@@ -6,6 +6,8 @@
  */
 
 #pragma once
+#include <random>
+
 #include "SIPP.h"
 #include "Solver.h"
 
@@ -32,7 +34,7 @@ public:
   std::vector<SIPPInfo> sipp_info;
 
   // constructor
-  LNS(const Instance& instance, bool is_visualisation, double w_ = 1.0);
+  LNS(const Instance& instance_, std::mt19937& rnd_generator_, bool is_visualisation_, double w_ = 1.0);
 
   // Destructor
   ~LNS() override = default;

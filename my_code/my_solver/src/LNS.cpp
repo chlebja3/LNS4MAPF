@@ -14,15 +14,15 @@
 #include "utils.h"
 
 
-LNS::LNS(const Instance& instance_, bool is_visualisation_, double w_)
-    : Solver("LNS", instance_),
+LNS::LNS(const Instance& instance_, std::mt19937& rnd_generator_, bool is_visualisation_, double w_)
+    : Solver("LNS", instance_, rnd_generator_),
       is_visualisation(is_visualisation_),
       w(w_),
       destroy_operator(Operator([this](Solution& sol) { destroy_random(sol); })),
       repair_operator(Operator([this](Solution& sol) { repair_default(sol); }))
 {
   // SIPP's lifetime can not be longer than LNS's lifetime, because then map_data might be deleted before SIPP
-  planner = std::make_unique<SIPP>(instance, is_visualisation);
+  planner = std::make_unique<SIPP>(instance, rnd_generator, is_visualisation);
 }
 
 void LNS::solve()
@@ -95,7 +95,7 @@ auto LNS::PrioritizedPlanning() -> Solution
   std::iota(priorities.begin(), priorities.end(), 0);
 
   // shuffle the sequence to get random priorities
-  std::random_shuffle(priorities.begin(), priorities.end());
+  std::shuffle(priorities.begin(), priorities.end(), rnd_generator);
 
   // initialize iter info
   if (is_visualisation)

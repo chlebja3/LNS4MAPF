@@ -37,13 +37,31 @@
 #define ICON_SIZE 20.0f
 #define FRAME_RATE 60
 #define DEFAULT_ANTIALIASING_LEVEL 8.0F
+// random color generation
+#define MIN_BRIGHTNESS 20
+#define MAX_BRIGHTNESS 230
 
-Visualizer::Visualizer(const Instance& instance_, SharedData& shared_data_)
+
+Visualizer::Visualizer(const Instance& instance_, SharedData& shared_data_, int seed_)
     : instance(instance_),
       shared_data(shared_data_),
       solution_vis([this](Visualization& vis) { this->solution_visualization_update(vis); }),
-      sipp_vis([this](Visualization& vis) { this->sipp_visualization_update(vis); })
+      sipp_vis([this](Visualization& vis) { this->sipp_visualization_update(vis); }),
+      seed(seed_)
 {
+  // initialized the random generator
+  if (seed - 1 < 0)  // visualizer gets a seed with +1
+  {
+    // random device to generate a random seed
+    std::random_device rd;
+    rnd_generator = std::mt19937(rd());
+  }
+  else
+  {
+    rnd_generator = std::mt19937(seed);
+  }
+
+
   // generate random colors for the agents
   for (int i = 0; i < (int)instance.get_start_locations().size(); i++)
   {
@@ -1083,6 +1101,24 @@ void Visualizer::solution_visualization_update(const Visualization& vis)
 void Visualizer::sipp_visualization_update(const Visualization& vis)
 {
   update_cell_rectangles_active(vis.time);
+}
+
+
+// based on https://stackoverflow.com/questions/43044/algorithm-to-randomly-generate-an-aesthetically-pleasing-color-palette
+auto Visualizer::generate_random_color(const int mix_r, const int mix_g, const int mix_b, const double mix_ratio) -> sf::Color
+{
+  static std::uniform_int_distribution<int> rnd_dist(0, UCHAR_MAX - 1);
+  while (true)
+  {
+    const int r = (int)std::round((rnd_dist(rnd_generator)) * (1 - mix_ratio) + mix_r * mix_ratio);
+    const int g = (int)std::round((rnd_dist(rnd_generator)) * (1 - mix_ratio) + mix_g * mix_ratio);
+    const int b = (int)std::round((rnd_dist(rnd_generator)) * (1 - mix_ratio) + mix_b * mix_ratio);
+    // make sure the color is not too similar to black or white
+    if (MIN_BRIGHTNESS <= (r + g + b) / 3 && (r + g + b) / 3 <= MAX_BRIGHTNESS)
+    {
+      return sf::Color(r, g, b);
+    }
+  }
 }
 
 Visualization::Visualization(std::function<void(Visualization& vis)> update_func_) : update_func(std::move(update_func_))
