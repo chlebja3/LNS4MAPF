@@ -330,12 +330,13 @@ void Instance::calculate_heuristics()
   heuristic_euclidean.resize(num_of_agents, euclidean_initializer);
 
 
-  // fill the vectors
+// fill the vectors
+#pragma omp parallel for collapse(2)
   for (int i = 0; i < num_of_agents; i++)  // iterate over agents
   {
-    const Point2d& goal = goal_positions[i];
     for (int y = 0; y < map_data.height; y++)  // iterate over all positions
     {
+      const Point2d& goal = goal_positions[i];
       for (int x = 0; x < map_data.width; x++)
       {
         heuristic_manhattan[i][y * map_data.width + x] = abs(goal.x - x) + abs(goal.y - y);
@@ -391,6 +392,7 @@ auto Instance::get_heuristic_euclidean(const int agent_num, const int loc) const
 void Instance::calculate_distance_heuristic()
 {
   // calculate distance from each goal for each position
+#pragma omp parallel for
   for (int i = 0; i < (int)goal_locations.size(); i++)
   {
     const int         goal = goal_locations[i];
