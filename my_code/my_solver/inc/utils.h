@@ -29,6 +29,21 @@ enum Direction
   LEFT
 };
 
+enum SIPP_implementation
+{
+  SIPP_mine,
+  SIPP_suboptimal,
+  SIPP_mapf_lns,
+  SIPP_default
+};
+
+enum INFO_type
+{
+  no_info,
+  visualisation,
+  experiment
+};
+
 
 class Node
 {

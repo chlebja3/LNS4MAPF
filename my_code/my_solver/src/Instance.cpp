@@ -33,11 +33,18 @@ void Instance::initialize(const std::string& map_fname_, const std::string& scen
 
 void Instance::initialize()
 {
+  assertm(!initialized, "Instance already initialized.");
   load_map();
   load_scene();
   precompute_neighbors();
   calculate_heuristics();
   initialized = true;
+}
+
+void Instance::reset()
+{
+  assertm(initialized, "Instance already reset.");
+  initialized = false;
 }
 
 auto Instance::is_initialized() const -> bool

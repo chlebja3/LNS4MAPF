@@ -112,10 +112,10 @@ public:
   int             iteration_num       = 0;
   SIPPInfo        iter_info;
 
-  bool generate_iter_info = false;
+  INFO_type info_type;
 
   // constructor
-  SIPP(const Instance& instance_, std::mt19937& rnd_generator_, bool generate_iter_info);
+  SIPP(const Instance& instance_, std::mt19937& rnd_generator_, INFO_type info_type_);
 
   // destructor
   ~SIPP() = default;

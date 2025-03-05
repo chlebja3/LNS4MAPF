@@ -30,11 +30,11 @@ private:
 class LNS : public Solver
 {
 public:
-  bool                  is_visualisation;
+  INFO_type             info_type;
   std::vector<SIPPInfo> sipp_info;
 
   // constructor
-  LNS(const Instance& instance_, std::mt19937& rnd_generator_, bool is_visualisation_, double w_ = 1.0);
+  LNS(const Instance& instance_, std::mt19937& rnd_generator_, INFO_type info_type_, double w_ = 1.0);
 
   // Destructor
   ~LNS() override = default;

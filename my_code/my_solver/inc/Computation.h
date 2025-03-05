@@ -19,7 +19,7 @@ class Computation
 {
 public:
   // constructor and destructor
-  Computation(const Instance& instance_, SharedData& shared_data_, bool is_visualization_, double w_, int seed);
+  Computation(const Instance& instance_, SharedData& shared_data_, INFO_type info_type_, double w_, int seed);
   ~Computation();
 
   // manage the underlying thread
@@ -36,7 +36,7 @@ private:
   const Instance&      instance;
   SharedData&          shared_data;
   std::atomic<bool>    running;
-  const bool           is_visualization;
+  const INFO_type      info_type;
   double               w;
   int                  seed;
   std::mt19937         rnd_generator;

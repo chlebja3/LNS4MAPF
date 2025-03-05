@@ -14,15 +14,15 @@
 #include "utils.h"
 
 
-LNS::LNS(const Instance& instance_, std::mt19937& rnd_generator_, bool is_visualisation_, double w_)
+LNS::LNS(const Instance& instance_, std::mt19937& rnd_generator_, INFO_type info_type_, double w_)
     : Solver("LNS", instance_, rnd_generator_),
-      is_visualisation(is_visualisation_),
+      info_type(info_type_),
       w(w_),
       destroy_operator(Operator([this](Solution& sol) { destroy_random(sol); })),
       repair_operator(Operator([this](Solution& sol) { repair_default(sol); }))
 {
   // SIPP's lifetime can not be longer than LNS's lifetime, because then map_data might be deleted before SIPP
-  planner = std::make_unique<SIPP>(instance, rnd_generator, is_visualisation);
+  planner = std::make_unique<SIPP>(instance, rnd_generator, info_type);
 }
 
 void LNS::solve()
@@ -98,7 +98,7 @@ auto LNS::PrioritizedPlanning() -> Solution
   std::shuffle(priorities.begin(), priorities.end(), rnd_generator);
 
   // initialize iter info
-  if (is_visualisation)
+  if (info_type == INFO_type::visualisation)
   {
     sipp_info.clear();
     sipp_info.resize(agent_num);
@@ -109,7 +109,6 @@ auto LNS::PrioritizedPlanning() -> Solution
   {
     // get agent with priority i
     int agent_id = priorities[i];
-    // std::cout << "planning agent: " << agent_id << std::endl;
 
     // plan path for agent
     TimePointPath tp_path;
@@ -119,18 +118,15 @@ auto LNS::PrioritizedPlanning() -> Solution
       tp_path = planner->plan(agent_id);
       // tp_path = planner->plan_mapflns_heuristic(agent_id);
     }
-    else if (w > 1.0)
+    else
     {
+      assertm(w > 1.0, "SIPP suboptimality factor must be 1.0 or more");
       // suboptimal sipp
       tp_path = planner->plan_suboptimal(agent_id, w);
     }
-    else
-    {
-      throw std::runtime_error("SIPP suboptimality factor must be >= 1");
-    }
 
     // get the visualization info
-    if (is_visualisation)
+    if (info_type == INFO_type::visualisation)
     {
       sipp_info[agent_id] = std::move(planner->iter_info);
       planner->iter_info.clear();

@@ -88,6 +88,7 @@ public:
   [[nodiscard]] auto path_to_pointpath(const Path& path) const -> PointPath;
 
   [[nodiscard]] auto check_timepointpath_validity(const TimePointPath& tp_path) const -> bool;
+  void               reset();
 
 
 private:

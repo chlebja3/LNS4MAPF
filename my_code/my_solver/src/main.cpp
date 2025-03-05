@@ -68,7 +68,17 @@ auto main(int argc, char** argv) -> int
   std::unique_ptr<SharedData> shared_data = std::make_unique<SharedData>();
 
   // create the computation object
-  Computation computation(*instance, *shared_data, GUI, w, seed);
+  INFO_type info_type;
+  if (GUI)
+  {
+    info_type = INFO_type::visualisation;
+  }
+  else
+  {
+    info_type = INFO_type::no_info;
+  }
+
+  Computation computation(*instance, *shared_data, info_type, w, seed);
 
   // start the computation thread
   computation.start();

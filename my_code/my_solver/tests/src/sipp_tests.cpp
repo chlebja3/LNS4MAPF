@@ -28,7 +28,7 @@ TEST(SIPPTest, BasicPathEmptyMap)
 
   // create SIPP
   std::mt19937 rnd_generator(0);
-  SIPP         sipp(*instance, rnd_generator, false);
+  SIPP         sipp(*instance, rnd_generator, INFO_type::no_info);
 
   // from (0,0) to (4,4)
   TimePointPath path = sipp.plan(0);
@@ -48,7 +48,7 @@ TEST(SIPPTest, StaticObstacleAvoidance)
 
   // create SIPP
   std::mt19937 rnd_generator(0);
-  SIPP         sipp(*instance, rnd_generator, false);
+  SIPP         sipp(*instance, rnd_generator, INFO_type::no_info);
 
   // from (4,0) to (0,4)
   TimePointPath path = sipp.plan(0);
@@ -77,7 +77,7 @@ TEST(SIPPTest, TimeConstraintHandling)
 
   // create SIPP
   std::mt19937 rnd_generator(0);
-  SIPP         sipp(*instance, rnd_generator, false);
+  SIPP         sipp(*instance, rnd_generator, INFO_type::no_info);
 
   // Create a wall from time constraints
   for (int i = 0; i < 5; i++)
@@ -116,7 +116,7 @@ TEST(SIPPTest, NoPathPossible)
 
   // create SIPP
   std::mt19937 rnd_generator(0);
-  SIPP         sipp(*instance, rnd_generator, false);
+  SIPP         sipp(*instance, rnd_generator, INFO_type::no_info);
 
   TimePointPath path = sipp.plan(0);
 
@@ -133,7 +133,7 @@ TEST(SIPPTest, NoPathDueToTimeConstraints)
 
   // create SIPP
   std::mt19937 rnd_generator(0);
-  SIPP         sipp(*instance, rnd_generator, false);
+  SIPP         sipp(*instance, rnd_generator, INFO_type::no_info);
 
   // Add constraints that make it impossible to leave start until time 10
   sipp.constraint_table.add_constraint(TimePoint(1, {0, 10}));  // {1, 0}
@@ -181,7 +181,7 @@ TEST(SIPPTest, DynamicObstacleAtGoal)
 
   // create SIPP
   std::mt19937 rnd_generator(0);
-  SIPP         sipp(*instance, rnd_generator, false);
+  SIPP         sipp(*instance, rnd_generator, INFO_type::no_info);
 
   // add a constraint that blocks the goal after time 20
   sipp.constraint_table.add_constraint(TimePoint(instance->get_goal_locations()[0], {20, 30}));
@@ -206,7 +206,7 @@ TEST(SIPPTest, EdgeConstraintsAtGoal)
 
   // create SIPP
   std::mt19937 rnd_generator(0);
-  SIPP         sipp(*instance, rnd_generator, false);
+  SIPP         sipp(*instance, rnd_generator, INFO_type::no_info);
 
   // from (2, 0) to (2, 1)
 
@@ -236,7 +236,7 @@ TEST(SIPPTest, SamePathAsAStar1)
 
   // create SIPP
   std::mt19937 rnd_generator(0);
-  SIPP         sipp(*instance, rnd_generator, false);
+  SIPP         sipp(*instance, rnd_generator, INFO_type::no_info);
 
   // from (0,0) to (4,4)
 
@@ -272,7 +272,7 @@ TEST(SIPPTest, SamePathAsAStar2)
 
   // create SIPP
   std::mt19937 rnd_generator(0);
-  SIPP         sipp(*instance, rnd_generator, false);
+  SIPP         sipp(*instance, rnd_generator, INFO_type::no_info);
 
   // from (0,0) to (4,4)
 
@@ -307,7 +307,7 @@ TEST(SIPPTest, PrioritizedPlanning1agent)
   // create LNS
 
   auto rnd_generator = std::mt19937(0);
-  LNS  lns(*instance, rnd_generator, false);
+  LNS  lns(*instance, rnd_generator, INFO_type::no_info);
 
   // plan path by Prioritized Planning
   Solution sol = lns.PrioritizedPlanning();
@@ -326,7 +326,7 @@ TEST(SIPPTest, PrioritizedPlanningEmpty2agents)
 
   // create LNS
   auto rnd_generator = std::mt19937(0);
-  LNS  lns(*instance, rnd_generator, false);
+  LNS  lns(*instance, rnd_generator, INFO_type::no_info);
 
   // plan path by Prioritized Planning
   Solution sol = lns.PrioritizedPlanning();
@@ -345,7 +345,7 @@ TEST(SIPPTest, PrioritizedPlanning)
 
   // create LNS
   auto rnd_generator = std::mt19937(0);
-  LNS  lns(*instance, rnd_generator, false);
+  LNS  lns(*instance, rnd_generator, INFO_type::no_info);
 
   // plan path by Prioritized Planning
   Solution sol = lns.PrioritizedPlanning();
