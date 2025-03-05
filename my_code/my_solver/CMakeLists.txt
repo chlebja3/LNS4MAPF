@@ -73,7 +73,7 @@ find_package(OpenGL REQUIRED)  # Ensure OpenGL is found
 find_package(nlohmann_json REQUIRED)
 
 # Add include directories for ImGui and ImGui-SFML
-include_directories(third_party_libraries/imgui third_party_libraries/imgui-sfml)
+include_directories(third_party_libraries/imgui third_party_libraries/imgui-sfml third_party_libraries)
 
 # add include directories
 include_directories( ${Boost_INCLUDE_DIRS} )
