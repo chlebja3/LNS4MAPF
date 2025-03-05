@@ -62,7 +62,7 @@ auto main(int argc, char** argv) -> int
 
   // calculate the optimal paths neglecting the other agents
   // instance->calculate_optimal_paths_parallel(); // old, dont use
-  instance->calculate_optimal_paths();
+  // instance->calculate_optimal_paths();
 
   // create the shared datastructure
   std::unique_ptr<SharedData> shared_data = std::make_unique<SharedData>();

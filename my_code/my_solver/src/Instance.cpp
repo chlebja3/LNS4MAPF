@@ -38,6 +38,12 @@ void Instance::initialize()
   load_scene();
   precompute_neighbors();
   calculate_heuristics();
+  // calculate sum of distances
+  sum_of_distances = 0;
+  for (int i = 0; i < num_of_agents; i++)
+  {
+    sum_of_distances += get_heuristic_distance(i, start_locations[i]);
+  }
   initialized = true;
 }
 
@@ -259,7 +265,6 @@ auto Instance::get_goal_positions() const -> const std::vector<Point2d>&
 
 void Instance::calculate_optimal_paths()
 {
-  sum_of_distances = 0;
   optimal_paths.clear();
   optimal_paths.reserve(num_of_agents);
   // calculate the optimal paths one by one

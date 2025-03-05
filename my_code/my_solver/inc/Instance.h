@@ -74,13 +74,17 @@ public:
     return heuristic_distance[agent_num][loc];
   };
 
-  [[nodiscard]] auto get_heuristic_euclidean(int agent_num, int loc) const -> double;
-  //[[nodiscard]] auto get_neighbor_locations(int loc) const -> const std::vector<int>&;
+  [[nodiscard]] auto        get_heuristic_euclidean(int agent_num, int loc) const -> double;
   [[nodiscard]] inline auto get_neighbor_locations(int loc) const -> const std::vector<int>&
   {
     assertm(map_data.is_in(loc), "Trying to get neighbors of invalid location.");
     assertm(loc < (int)neighbors.size(), "Neighbors are not precomputed for this location.");
     return neighbors[loc];
+  }
+
+  [[nodiscard]] auto get_sum_of_distances() const -> int
+  {
+    return sum_of_distances;
   }
 
   [[nodiscard]] auto location_to_position(int location) const -> Point2d;

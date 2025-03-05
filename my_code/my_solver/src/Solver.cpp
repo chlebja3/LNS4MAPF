@@ -267,6 +267,8 @@ void Solution::load(const std::string& filename, const Instance& instance)
 
 void Solution::calculate_cost(const Instance& instance)
 {
+  assertm(feasible, "Can not calculate cost of infeasible solution");
+  assertm(!paths.empty(), "Can not calculate cost of an empty solution.");
   delays.resize(paths.size(), 0);
   sum_of_delays = 0;
   sum_of_costs  = 0;

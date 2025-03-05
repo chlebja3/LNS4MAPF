@@ -90,6 +90,11 @@ target_include_directories(MAPF_lib PRIVATE "third_party_libraries/imgui" "third
 target_link_libraries(MAPF_lib ${Boost_LIBRARIES} Eigen3::Eigen sfml-graphics sfml-window sfml-system OpenGL::GL nlohmann_json::nlohmann_json)
 target_link_libraries(simple_MAPF_solver MAPF_lib)
 
+# experiments
+add_executable(sipp_pp_experiment src/experiments/sipp_pp.cpp)
+target_link_libraries(sipp_pp_experiment MAPF_lib)
+
+
 # Add subdirectory for tests
 if (${ENABLE_TESTS})
   enable_testing()
