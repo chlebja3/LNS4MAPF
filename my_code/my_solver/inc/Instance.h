@@ -18,10 +18,12 @@ public:
 
   // constructor
   Instance() = default;
-  Instance(std::string map_fname_, std::string scene_fname_, int num_of_agents_ = 0);
+  Instance(std::string map_fname_, std::string scene_fname_, int num_of_agents_ = 0, bool calculate_manhattan = false,
+           bool calculate_euclidean = false);
 
-  void               initialize(const std::string& map_fname, const std::string& scene_fname, int num_of_agents = 0);
-  void               initialize();
+  void initialize(const std::string& map_fname, const std::string& scene_fname, int num_of_agents = 0, bool calculate_manhattan = false,
+                  bool calculate_euclidean = false);
+  void initialize(bool calculate_manhattan, bool calculate_euclidean);
   [[nodiscard]] auto is_initialized() const -> bool;
 
   // function to print the map
@@ -55,7 +57,7 @@ public:
   void calculate_optimal_paths();
   void calculate_optimal_paths_parallel();
 
-  void calculate_heuristics();
+  void calculate_heuristics(bool calculate_manhattan, bool calculate_euclidean);
   void precompute_neighbors();
   //[[nodiscard]] auto get_heuristic_manhattan(int agent_num, int loc) const -> int;
   [[nodiscard]] inline auto get_heuristic_manhattan(const int agent_num, const int loc) const -> int
@@ -69,7 +71,7 @@ public:
   [[nodiscard]] inline auto get_heuristic_distance(const int agent_num, const int loc) const -> int
   {
 
-    assertm(agent_num >= 0 && agent_num < (int)heuristic_manhattan.size(), "Agent number out of range of the heuristic vector.");
+    assertm(agent_num >= 0 && agent_num < (int)heuristic_distance.size(), "Agent number out of range of the heuristic vector.");
     assertm(map_data.is_in(loc), "Trying to index a point that is not in the map.");
     return heuristic_distance[agent_num][loc];
   };

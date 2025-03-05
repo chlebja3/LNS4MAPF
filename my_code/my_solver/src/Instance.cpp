@@ -17,27 +17,28 @@
 
 #include "Astar.h"
 
-Instance::Instance(std::string map_fname_, std::string scene_fname_, int num_of_agents_)
+Instance::Instance(std::string map_fname_, std::string scene_fname_, int num_of_agents_, bool calculate_manhattan, bool calculate_euclidean)
     : num_of_agents(num_of_agents_), map_fname(std::move(map_fname_)), scene_fname(std::move(scene_fname_))
 {
-  initialize();
+  initialize(calculate_manhattan, calculate_euclidean);
 }
 
-void Instance::initialize(const std::string& map_fname_, const std::string& scene_fname_, int num_of_agents_)
+void Instance::initialize(const std::string& map_fname_, const std::string& scene_fname_, int num_of_agents_, bool calculate_manhattan,
+                          bool calculate_euclidean)
 {
   map_fname     = map_fname_;
   scene_fname   = scene_fname_;
   num_of_agents = num_of_agents_;
-  initialize();
+  initialize(calculate_manhattan, calculate_euclidean);
 }
 
-void Instance::initialize()
+void Instance::initialize(bool calculate_manhattan, bool calculate_euclidean)
 {
   assertm(!initialized, "Instance already initialized.");
   load_map();
   load_scene();
   precompute_neighbors();
-  calculate_heuristics();
+  calculate_heuristics(calculate_manhattan, calculate_euclidean);
   // calculate sum of distances
   sum_of_distances = 0;
   for (int i = 0; i < num_of_agents; i++)
@@ -308,7 +309,7 @@ auto Instance::get_optimal_paths() const -> const std::vector<Path>&
 }
 
 
-void Instance::calculate_heuristics()
+void Instance::calculate_heuristics(bool calculate_manhattan, bool calculate_euclidean)
 {
 
   // check map validity
@@ -316,36 +317,50 @@ void Instance::calculate_heuristics()
   assertm((int)map_data.data.size() == map_data.width * map_data.height, "Map size invalid");
   assertm(map_data.free_cells > 0 && map_data.free_cells <= (int)map_data.data.size(), "Invalid free cell count.");
 
-  // clear the vectors
-  // heuristic_euclidean.clear();
-  heuristic_manhattan.clear();
-  heuristic_distance.clear();
-
-  // preallocate vectors for the heuristics
-  const std::vector<int>    int_initializer(map_data.width * map_data.height, -1);
-  const std::vector<double> euclidean_initializer(map_data.width * map_data.height, 0.0);
-
-  heuristic_manhattan.resize(num_of_agents, int_initializer);
-  heuristic_distance.resize(num_of_agents, int_initializer);
-  heuristic_euclidean.resize(num_of_agents, euclidean_initializer);
-
-
-// fill the vectors
-#pragma omp parallel for collapse(2)
-  for (int i = 0; i < num_of_agents; i++)  // iterate over agents
+  if (calculate_euclidean)
   {
-    for (int y = 0; y < map_data.height; y++)  // iterate over all positions
+    // clear the vectors
+    heuristic_euclidean.clear();
+    // preallocate vectors for the heuristics
+    const std::vector<double> euclidean_initializer(map_data.width * map_data.height, 0.0);
+    heuristic_euclidean.resize(num_of_agents, euclidean_initializer);
+  }
+
+  const std::vector<int> int_initializer(map_data.width * map_data.height, -1);
+  if (calculate_manhattan)
+  {
+    heuristic_manhattan.clear();
+    heuristic_manhattan.resize(num_of_agents, int_initializer);
+  }
+
+
+  // fill the vectors
+  if (calculate_euclidean || calculate_manhattan)
+  {
+#pragma omp parallel for collapse(2)
+    for (int i = 0; i < num_of_agents; i++)  // iterate over agents
     {
-      const Point2d& goal = goal_positions[i];
-      for (int x = 0; x < map_data.width; x++)
+      for (int y = 0; y < map_data.height; y++)  // iterate over all positions
       {
-        heuristic_manhattan[i][y * map_data.width + x] = abs(goal.x - x) + abs(goal.y - y);
-        heuristic_euclidean[i][y * map_data.width + x] = std::hypot(goal.x - x, goal.y - y);
+        const Point2d& goal = goal_positions[i];
+        for (int x = 0; x < map_data.width; x++)
+        {
+          if (calculate_manhattan)
+          {
+            heuristic_manhattan[i][y * map_data.width + x] = abs(goal.x - x) + abs(goal.y - y);
+          }
+          if (calculate_euclidean)
+          {
+            heuristic_euclidean[i][y * map_data.width + x] = std::hypot(goal.x - x, goal.y - y);
+          }
+        }
       }
     }
   }
 
   // precompute the distance heuristic
+  heuristic_distance.clear();
+  heuristic_distance.resize(num_of_agents, int_initializer);
   calculate_distance_heuristic();
 }
 
