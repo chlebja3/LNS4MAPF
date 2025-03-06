@@ -1,0 +1,98 @@
+/*
+ * Author: Jan Chleboun
+ * Date: 06-03-2025
+ * Email: chlebja3@fel.cvut.cz
+ * Description:
+ */
+
+#include "experiment_utils.h"
+
+auto get_mapf_benchmark_path() -> std::string
+{
+  return std::filesystem::canonical("/proc/self/exe").parent_path().parent_path().parent_path().parent_path().string() +
+         "/MAPF-benchmark";  // Linux only
+}
+
+auto get_scene_names(const std::string& map_name, int runs_per_map) -> std::vector<std::string>
+{
+  std::vector<std::string> scen_files;  // will be returned
+
+  // find path to the scene directory
+  std::string scen_dir_path = get_mapf_benchmark_path() + "/mapf-scen-random/scen-random/";
+
+  // iterate over all files in the scene directory
+  for (const auto& entry : std::filesystem::directory_iterator(scen_dir_path))
+  {
+    std::string filename = entry.path().filename().string();
+    // Check if the filename starts with map name
+    if (filename.rfind(map_name, 0) == 0)
+    {
+      // add to the scene files
+      scen_files.push_back(filename);
+
+      // check whether enough scenes were found
+      if ((int)scen_files.size() >= runs_per_map)
+      {
+        break;
+      }
+    }
+  }
+  return scen_files;
+}
+
+auto create_progress_bar(std::string name, int max_iter) -> indicators::ProgressBar
+{
+  return indicators::ProgressBar{indicators::option::BarWidth{PROGRESS_BAR_WIDTH},
+                                 indicators::option::Start{"["},
+                                 indicators::option::Fill{"■"},
+                                 indicators::option::Lead{"■"},
+                                 indicators::option::Remainder{" "},
+                                 indicators::option::End{" ]"},
+                                 indicators::option::ForegroundColor{indicators::Color::white},
+                                 indicators::option::ShowElapsedTime{true},
+                                 indicators::option::MaxProgress{max_iter},
+                                 indicators::option::ShowRemainingTime{true},
+                                 indicators::option::PrefixText{name},
+                                 indicators::option::FontStyles{std::vector<indicators::FontStyle>{indicators::FontStyle::bold}}};
+}
+
+auto load_instances(const std::vector<std::string>& scenes, const std::string& map_name, int agent_num)
+    -> std::pair<std::vector<Instance>, std::vector<std::pair<double, double>>>
+{
+  const std::string                      map_path = get_mapf_benchmark_path() + "/mapf-map/" + map_name + ".map";
+  std::vector<std::pair<double, double>> preprocessing_times(scenes.size());
+  std::vector<Instance>                  ret(scenes.size());
+  Clock                                  clock;
+
+  for (int i = 0; i < (int)scenes.size(); i++)
+  {
+    const std::string scene_name = scenes[i];
+    // create the instance
+    const std::string scene_path = get_mapf_benchmark_path() + "/mapf-scen-random/scen-random/" + scene_name;
+    clock.start();
+    ret[i]                 = Instance(map_path, scene_path, agent_num);
+    preprocessing_times[i] = clock.end();
+  }
+  return {ret, preprocessing_times};
+}
+
+void save_experiment(nlohmann::json& experiment_res, const std::string& map_name, const std::string& scene_name,
+                     const std::string& experiment_name, const std::string& algorithm_name)
+{
+  // choose a file name that does not exist yet
+  int                      num                 = 0;
+  const std::string        scene_name_stripped = scene_name.substr(map_name.size() + 1, scene_name.find('.') - map_name.size() - 1);
+  static const std::string result_dir_path     = get_base_path() + "/experiments/sipp_pp/";
+  std::string filename = result_dir_path + experiment_name + "_" + map_name + "_" + scene_name_stripped + "_" + algorithm_name + "_" +
+                         std::to_string(num) + ".json";
+  while (std::filesystem::exists(filename))
+  {
+    num++;
+    filename = result_dir_path + experiment_name + "_" + map_name + "_" + scene_name_stripped + "_" + algorithm_name + "_" +
+               std::to_string(num) + ".json";
+  }
+
+  std::ofstream file(filename);
+  file << experiment_res.dump(4);  // Pretty print
+  file.close();
+}

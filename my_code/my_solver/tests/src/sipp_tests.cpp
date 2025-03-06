@@ -13,6 +13,7 @@
 #include "Instance.h"
 #include "LNS.h"
 #include "SIPP.h"
+#include "magic_enum/magic_enum.hpp"
 #include "test_utils.h"
 
 // SIPP tests
@@ -309,10 +310,12 @@ TEST(SIPPTest, PrioritizedPlanning1agent)
   LNS  lns(*instance, rnd_generator, INFO_type::no_info);
 
   // plan path by Prioritized Planning
-  Solution sol = lns.PrioritizedPlanning();
-
-  // check solution validity
-  EXPECT_TRUE(sol.is_valid(*instance)) << "Solution is invalid!";
+  for (auto algo : magic_enum::enum_values<SIPP_implementation>())
+  {
+    Solution sol = lns.PrioritizedPlanning(algo);
+    // check solution validity
+    EXPECT_TRUE(sol.is_valid(*instance)) << "Solution is invalid!";
+  }
 }
 
 // Prioritized Planning with empty map and 2 agents
@@ -328,10 +331,13 @@ TEST(SIPPTest, PrioritizedPlanningEmpty2agents)
   LNS  lns(*instance, rnd_generator, INFO_type::no_info);
 
   // plan path by Prioritized Planning
-  Solution sol = lns.PrioritizedPlanning();
+  for (auto algo : magic_enum::enum_values<SIPP_implementation>())
+  {
+    Solution sol = lns.PrioritizedPlanning(algo);
 
-  // check solution validity
-  EXPECT_TRUE(sol.is_valid(*instance)) << "Solution is invalid!";
+    // check solution validity
+    EXPECT_TRUE(sol.is_valid(*instance)) << "Solution is invalid!";
+  }
 }
 
 // Test Prioritized Planning
@@ -347,8 +353,10 @@ TEST(SIPPTest, PrioritizedPlanning)
   LNS  lns(*instance, rnd_generator, INFO_type::no_info);
 
   // plan path by Prioritized Planning
-  Solution sol = lns.PrioritizedPlanning();
-
-  // check solution validity
-  EXPECT_TRUE(sol.is_valid(*instance)) << "Solution is invalid!";
+  for (auto algo : magic_enum::enum_values<SIPP_implementation>())
+  {
+    Solution sol = lns.PrioritizedPlanning(algo);
+    // check solution validity
+    EXPECT_TRUE(sol.is_valid(*instance)) << "Solution is invalid!";
+  }
 }

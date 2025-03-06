@@ -75,7 +75,7 @@ void LNS::solve()
 auto LNS::find_initial_solution() -> bool
 {
   // create initial solution
-  solution = PrioritizedPlanning();
+  solution = PrioritizedPlanning(SIPP_implementation::SIPP_mine);
   if (solution.feasible)
   {
     solution.calculate_cost(instance);
@@ -84,7 +84,7 @@ auto LNS::find_initial_solution() -> bool
   return solution.feasible;
 }
 
-auto LNS::PrioritizedPlanning() -> Solution
+auto LNS::PrioritizedPlanning(SIPP_implementation sipp_implementation) -> Solution
 {
   Solution sol;
   sol.paths.resize(instance.num_of_agents, TimePointPath());
@@ -112,17 +112,28 @@ auto LNS::PrioritizedPlanning() -> Solution
 
     // plan path for agent
     TimePointPath tp_path;
-    if (w == 1.0)
+    if (sipp_implementation == SIPP_implementation::SIPP_suboptimal)
     {
-      // optimal sipp
-      tp_path = planner->plan(agent_id);
-      // tp_path = planner->plan_mapflns_heuristic(agent_id);
+      assertm(w >= 1.0, "SIPP suboptimality factor must be 1.0 or more.");
+      // suboptimal sipp
+      tp_path = planner->plan_suboptimal(agent_id, w);
     }
     else
     {
-      assertm(w > 1.0, "SIPP suboptimality factor must be 1.0 or more");
-      // suboptimal sipp
-      tp_path = planner->plan_suboptimal(agent_id, w);
+      assertm(w == 1.0, "Suboptimality factor must be 1 for optimal algorithms.");
+      // optimal sipp
+      if (sipp_implementation == SIPP_implementation::SIPP_mine)
+      {
+        tp_path = planner->plan(agent_id);
+      }
+      else if (sipp_implementation == SIPP_implementation::SIPP_mapf_lns)
+      {
+        tp_path = planner->plan_mapflns_heuristic(agent_id);
+      }
+      else
+      {
+        throw std::runtime_error("Not implemented yet");
+      }
     }
 
     // get the visualization info

@@ -13,6 +13,25 @@
 #include <filesystem>
 #include <iostream>
 
+void Clock::start()
+{
+  // wall time
+  wall_time_start = Time::now();
+  // cpu time
+  clock_gettime(CLOCK_PROCESS_CPUTIME_ID, &cpu_time_start);
+  initialized = true;
+}
+
+auto Clock::end() -> std::pair<double, double>
+{
+  initialized        = false;
+  double   wall_time = ((dsec)(Time::now() - wall_time_start)).count();
+  timespec ts{};
+  clock_gettime(CLOCK_PROCESS_CPUTIME_ID, &ts);
+  auto cpu_time = (double)(ts.tv_sec - cpu_time_start.tv_sec + (ts.tv_nsec - cpu_time_start.tv_nsec) / 1e9);
+  return {wall_time, cpu_time};
+}
+
 Node::Node(const double g_, const double h_) : g(g_), h(h_), f(g_ + h_)
 {
 }

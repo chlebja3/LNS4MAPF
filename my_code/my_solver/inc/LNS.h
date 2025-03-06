@@ -43,7 +43,7 @@ public:
   void solve() override;
 
   auto find_initial_solution() -> bool;
-  auto PrioritizedPlanning() -> Solution;
+  auto PrioritizedPlanning(SIPP_implementation sipp_implementation) -> Solution;
 
   [[nodiscard]] auto get_num_of_generated_nodes() const -> int;
   [[nodiscard]] auto get_num_of_expanded_nodes() const -> int;

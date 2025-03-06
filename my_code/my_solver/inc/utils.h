@@ -18,7 +18,7 @@
 
 // time measuring
 using dsec = std::chrono::duration<double>;
-using Time = std::chrono::high_resolution_clock;
+using Time = std::chrono::steady_clock;
 
 enum Direction
 {
@@ -34,7 +34,6 @@ enum SIPP_implementation
   SIPP_mine,
   SIPP_suboptimal,
   SIPP_mapf_lns,
-  SIPP_default
 };
 
 enum INFO_type
@@ -42,6 +41,18 @@ enum INFO_type
   no_info,
   visualisation,
   experiment
+};
+
+class Clock
+{
+public:
+  void start();
+  auto end() -> std::pair<double, double>;
+
+private:
+  bool             initialized = false;
+  Time::time_point wall_time_start;
+  timespec         cpu_time_start{};
 };
 
 
