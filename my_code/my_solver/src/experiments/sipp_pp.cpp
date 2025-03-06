@@ -14,6 +14,7 @@
 #include "Instance.h"
 #include "LNS.h"
 #include "indicators/indicators.hpp"
+#include "utils.h"
 
 #define RUNS_PER_MAP 1
 
@@ -183,13 +184,14 @@ auto main(int argc, char** argv) -> int
         // choose a file name that does not exist yet
         int               num                 = 0;
         const std::string scene_name_stripped = scene_name.substr(map_name.size() + 1, scene_name.find('.') - map_name.size() - 1);
-        std::string       filename =
-            experiment_name + "_" + map_name + "_" + scene_name_stripped + "_" + algorithm_name + "_" + std::to_string(num) + ".json";
+        const std::string result_dir_path     = get_base_path() + "/experiments/sipp_pp/";
+        std::string filename = result_dir_path + experiment_name + "_" + map_name + "_" + scene_name_stripped + "_" + algorithm_name + "_" +
+                               std::to_string(num) + ".json";
         while (std::filesystem::exists(filename))
         {
           num++;
-          filename =
-              experiment_name + "_" + map_name + "_" + scene_name_stripped + "_" + algorithm_name + "_" + std::to_string(num) + ".json";
+          filename = result_dir_path + experiment_name + "_" + map_name + "_" + scene_name_stripped + "_" + algorithm_name + "_" +
+                     std::to_string(num) + ".json";
         }
 
         std::ofstream file(filename);
