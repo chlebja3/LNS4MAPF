@@ -9,7 +9,6 @@
 
 #include <climits>
 
-#include "Astar.h"
 #include "ConstraintTable.h"
 #include "Instance.h"
 #include "LNS.h"
@@ -241,7 +240,7 @@ TEST(SIPPTest, SamePathAsAStar1)
   // from (0,0) to (4,4)
 
   // plan path by ASTAR
-  Path path_astar = ASTAR::find_path(0, *instance);
+  Path path_astar = find_path_distance_gradient(0, *instance);
 
   // assert that astar found a path
   ASSERT_FALSE(path_astar.empty()) << "A* should find a path when no constraints are present!";
@@ -277,7 +276,7 @@ TEST(SIPPTest, SamePathAsAStar2)
   // from (0,0) to (4,4)
 
   // plan path by ASTAR
-  Path path_astar = ASTAR::find_path(0, *instance);
+  Path path_astar = find_path_distance_gradient(0, *instance);
 
   // assert that astar found a path
   ASSERT_FALSE(path_astar.empty()) << "A* should find a path when no constraints are present!";

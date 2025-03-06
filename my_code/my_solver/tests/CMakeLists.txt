@@ -41,8 +41,6 @@ include_directories("inc")
 target_link_libraries(unit_tests PRIVATE MAPF_lib GTest::gtest_main gmock)
 
 # Create a benchmark tests
-add_executable(astar_bm src/benchmarks/astar_bm.cpp src/test_utils.cpp)
-target_link_libraries(astar_bm PRIVATE MAPF_lib benchmark::benchmark benchmark::benchmark_main)
 
 # Create a benchmark for path conversion
 add_executable(path_conv_bm src/benchmarks/path_conv_bm.cpp src/test_utils.cpp)

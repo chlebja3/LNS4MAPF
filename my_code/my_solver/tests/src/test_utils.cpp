@@ -84,3 +84,33 @@ auto filter_time_intervals(std::pair<std::list<TimeInterval>::const_iterator, st
   return ret;
 }
 
+auto find_path_distance_gradient(int agent_num, const Instance& instance) -> Path
+{
+  Path ret;
+  int  start = instance.get_start_locations()[agent_num];
+  ret.push_back(start);
+  int curr      = start;
+  int curr_dist = instance.get_heuristic_distance(agent_num, curr);
+  while (curr_dist > 0)
+  {
+    // find neighbor locations
+    const std::vector<int>& neighbors = instance.get_neighbor_locations(curr);
+    bool                    improved  = false;
+    // iterate over the neighbors
+    for (int neighbor : neighbors)
+    {
+      // check if the neighbor is closer to the goal
+      if (instance.get_heuristic_distance(agent_num, neighbor) < curr_dist)
+      {
+        curr      = neighbor;
+        curr_dist = instance.get_heuristic_distance(agent_num, curr);
+        ret.push_back(curr);
+        improved = true;
+        break;
+      }
+    }
+    assertm(improved, "No neighbor was closer to the goal.");
+  }
+  return ret;
+}
+

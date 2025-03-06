@@ -95,8 +95,8 @@ TEST(InstanceTest, ManhattanDistance)
 {
   // load instance
   std::string               base_path = get_base_path_tests();  // path to my_solver
-  std::unique_ptr<Instance> instance =
-      std::make_unique<Instance>(base_path + "/tests/test_maps/dummy_3_3.map", base_path + "/tests/test_scen/dummy_3_3_scen_1.scen", 3);
+  std::unique_ptr<Instance> instance  = std::make_unique<Instance>(base_path + "/tests/test_maps/dummy_3_3.map",
+                                                                  base_path + "/tests/test_scen/dummy_3_3_scen_1.scen", 3, true);
 
   // expected heuristics for each agent
   std::vector<std::vector<int>> expected_heuristics = {
@@ -116,8 +116,8 @@ TEST(InstanceTest, EuclideanDistance)
 {
   // load instance
   std::string               base_path = get_base_path_tests();  // path to my_solver
-  std::unique_ptr<Instance> instance =
-      std::make_unique<Instance>(base_path + "/tests/test_maps/dummy_3_3.map", base_path + "/tests/test_scen/dummy_3_3_scen_1.scen", 3);
+  std::unique_ptr<Instance> instance  = std::make_unique<Instance>(base_path + "/tests/test_maps/dummy_3_3.map",
+                                                                  base_path + "/tests/test_scen/dummy_3_3_scen_1.scen", 3, false, true);
 
   // expected heuristics for each agent
   std::vector<std::vector<double>> expected_heuristics = {

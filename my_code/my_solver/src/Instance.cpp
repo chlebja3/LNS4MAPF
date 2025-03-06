@@ -15,8 +15,6 @@
 #include <stdexcept>
 #include <utility>
 
-#include "Astar.h"
-
 Instance::Instance(std::string map_fname_, std::string scene_fname_, int num_of_agents_, bool calculate_manhattan, bool calculate_euclidean)
     : num_of_agents(num_of_agents_), map_fname(std::move(map_fname_)), scene_fname(std::move(scene_fname_))
 {
@@ -262,45 +260,6 @@ auto Instance::get_start_positions() const -> const std::vector<Point2d>&
 auto Instance::get_goal_positions() const -> const std::vector<Point2d>&
 {
   return goal_positions;
-}
-
-void Instance::calculate_optimal_paths()
-{
-  optimal_paths.clear();
-  optimal_paths.reserve(num_of_agents);
-  // calculate the optimal paths one by one
-  for (int i = 0; i < num_of_agents; i++)
-  {
-    // find the optimal path for each agent not considering other agents
-    Path p = ASTAR::find_path(i, *this);
-    optimal_paths.push_back(p);
-    sum_of_distances += (int)p.size() - 1;
-  }
-  std::cout << "Sum of distances: " << sum_of_distances << std::endl;
-}
-
-// old function, do not use!
-void Instance::calculate_optimal_paths_parallel()
-{
-  optimal_paths.clear();
-  optimal_paths.reserve(num_of_agents);
-  // calculate the optimal paths one by one
-
-  // prepare the vector with future paths
-  std::vector<std::future<Path>> futures;
-
-  // calculate asynchronously the paths
-  futures.reserve(num_of_agents);
-  for (int i = 0; i < num_of_agents; i++)
-  {
-    futures.push_back(std::async(std::launch::async, [this, i]() { return ASTAR::find_path(i, *this); }));
-  }
-
-  // wait for the paths and save them
-  for (int i = 0; i < num_of_agents; i++)
-  {
-    optimal_paths.push_back(futures[i].get());
-  }
 }
 
 auto Instance::get_optimal_paths() const -> const std::vector<Path>&

@@ -53,10 +53,6 @@ public:
 
   [[nodiscard]] auto get_optimal_paths() const -> const std::vector<Path>&;
 
-  // function to calculate the optimal paths ignoring the other agents
-  void calculate_optimal_paths();
-  void calculate_optimal_paths_parallel();
-
   void calculate_heuristics(bool calculate_manhattan, bool calculate_euclidean);
   void precompute_neighbors();
   //[[nodiscard]] auto get_heuristic_manhattan(int agent_num, int loc) const -> int;

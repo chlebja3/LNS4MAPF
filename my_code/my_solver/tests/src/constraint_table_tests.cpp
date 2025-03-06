@@ -8,7 +8,6 @@
 
 #include <climits>
 
-#include "Astar.h"
 #include "ConstraintTable.h"
 #include "Instance.h"
 #include "LNS.h"
