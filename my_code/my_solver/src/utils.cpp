@@ -408,3 +408,29 @@ auto fast_random_bool() -> bool
   count++;
   return ret;
 }
+
+auto any_to_str(const std::any& value) -> std::string
+{
+  // int
+  if (value.type() == typeid(int))
+  {
+    return std::to_string(std::any_cast<int>(value));
+  }
+  // float
+  if (value.type() == typeid(float))
+  {
+    return std::to_string(std::any_cast<float>(value));
+  }
+  // double
+  if (value.type() == typeid(double))
+  {
+    return std::to_string(std::any_cast<double>(value));
+  }
+  // bool
+  if (value.type() == typeid(bool))
+  {
+    return std::to_string(static_cast<int>(std::any_cast<bool>(value)));
+  }
+  // unknown type
+  throw std::runtime_error("Unsupported parameter type: " + std::string(value.type().name()));
+}

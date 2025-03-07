@@ -39,6 +39,10 @@ public:
   {
     parameters.push_back(param);
   }
+
+  [[nodiscard]] auto get_name() const -> std::string;
+
+  [[nodiscard]] auto get_parameters_str() const -> std::vector<std::pair<std::string, std::string>>;
 };
 
 auto get_mapf_benchmark_path() -> std::string;
@@ -54,4 +58,4 @@ void save_experiment(nlohmann::json& experiment_res, const std::string& map_name
                      const std::string& experiment_name, const std::string& algorithm_name);
 
 auto what_can_be_skipped(const std::string& experiment_name, const std::vector<std::string>& maps, const std::vector<int>& agent_nums,
-                         int runs_per_map) -> std::vector<bool>;
+                         int runs_per_map, std::vector<Algorithm>& algorithms) -> std::vector<bool>;

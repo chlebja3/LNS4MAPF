@@ -101,7 +101,7 @@ void save_experiment(nlohmann::json& experiment_res, const std::string& map_name
 }
 
 auto what_can_be_skipped(const std::string& experiment_name, const std::vector<std::string>& maps, const std::vector<int>& agent_nums,
-                         int runs_per_map) -> std::vector<bool>
+                         int runs_per_map, std::vector<Algorithm>& algorithms) -> std::vector<bool>
 {
   std::vector<bool> skips;
   const std::string result_dir_path = get_base_path() + "/experiments/" + experiment_name + "/";
@@ -114,7 +114,7 @@ auto what_can_be_skipped(const std::string& experiment_name, const std::vector<s
     {
       std::filesystem::create_directory(map_dir);
       // cant skip files for which the directory did not exist
-      skips.resize(skips.size() + agent_nums.size() * runs_per_map * magic_enum::enum_count<SIPP_implementation>(), false);
+      skips.resize(skips.size() + agent_nums.size() * runs_per_map * algorithms.size(), false);
       continue;
     }
 
@@ -128,9 +128,9 @@ auto what_can_be_skipped(const std::string& experiment_name, const std::vector<s
         const std::string& scene_name          = scenes[idx];
         const std::string  scene_name_stripped = scene_name.substr(map_name.size() + 1, scene_name.find('.') - map_name.size() - 1);
 
-        for (auto algo : magic_enum::enum_values<SIPP_implementation>())
+        for (const auto& algo : algorithms)
         {
-          const std::string algorithm_name = (std::string)magic_enum::enum_name(algo);
+          const std::string algorithm_name = algo.get_name();
           const std::string filename = map_dir + "/" + experiment_name + "_" + map_name + "_" + scene_name_stripped + "_" + algorithm_name +
                                        "_" + std::to_string((int)std::floor(k / scenes.size())) + ".json";
           // check whether the file exists
@@ -147,4 +147,40 @@ auto what_can_be_skipped(const std::string& experiment_name, const std::vector<s
     }
   }
   return skips;
+}
+
+
+[[nodiscard]] auto Algorithm::get_name() const -> std::string
+{
+  // convert the enum to string
+  std::string ret = std::visit([](auto&& arg) -> std::string { return std::string(magic_enum::enum_name(arg)); }, type);
+
+  // if there are no parameters, return the string
+  if (parameters.empty())
+  {
+    return ret;
+  }
+
+  // else add the parameters to the string representation
+  for (const auto& param : parameters)
+  {
+    // add the parameter name
+    ret += "_" + param.first + "_";
+
+    // convert the parameter value to string
+    std::string param_val_str = any_to_str(param.second);
+
+    ret += param_val_str;
+  }
+  return ret;
+}
+
+[[nodiscard]] auto Algorithm::get_parameters_str() const -> std::vector<std::pair<std::string, std::string>>
+{
+  std::vector<std::pair<std::string, std::string>> ret(parameters.size());
+  for (int i = 0; i < static_cast<int>(parameters.size()); i++)
+  {
+    ret[i] = std::make_pair(parameters[i].first, any_to_str(parameters[i].second));
+  }
+  return ret;
 }

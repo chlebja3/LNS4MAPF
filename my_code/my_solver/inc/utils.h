@@ -7,6 +7,7 @@
 
 #pragma once
 #include <SFML/Graphics.hpp>
+#include <any>
 #include <cassert>
 #include <chrono>
 #include <climits>
@@ -226,3 +227,4 @@ inline auto safe_increase(int num) -> int
 
 auto fast_random_bool() -> bool;
 
+auto any_to_str(const std::any& value) -> std::string;
