@@ -7,6 +7,9 @@
 
 #include "experiment_utils.h"
 
+#include "magic_enum/magic_enum.hpp"
+#include "utils.h"
+
 auto get_mapf_benchmark_path() -> std::string
 {
   return std::filesystem::canonical("/proc/self/exe").parent_path().parent_path().parent_path().parent_path().string() +
@@ -82,7 +85,7 @@ void save_experiment(nlohmann::json& experiment_res, const std::string& map_name
   // choose a file name that does not exist yet
   int                      num                 = 0;
   const std::string        scene_name_stripped = scene_name.substr(map_name.size() + 1, scene_name.find('.') - map_name.size() - 1);
-  static const std::string result_dir_path     = get_base_path() + "/experiments/sipp_pp/";
+  static const std::string result_dir_path     = get_base_path() + "/experiments/" + experiment_name + "/" + map_name + "/";
   std::string filename = result_dir_path + experiment_name + "_" + map_name + "_" + scene_name_stripped + "_" + algorithm_name + "_" +
                          std::to_string(num) + ".json";
   while (std::filesystem::exists(filename))
@@ -95,4 +98,53 @@ void save_experiment(nlohmann::json& experiment_res, const std::string& map_name
   std::ofstream file(filename);
   file << experiment_res.dump(4);  // Pretty print
   file.close();
+}
+
+auto what_can_be_skipped(const std::string& experiment_name, const std::vector<std::string>& maps, const std::vector<int>& agent_nums,
+                         int runs_per_map) -> std::vector<bool>
+{
+  std::vector<bool> skips;
+  const std::string result_dir_path = get_base_path() + "/experiments/" + experiment_name + "/";
+
+  // iterate over the maps
+  for (const std::string& map_name : maps)
+  {
+    const std::string map_dir = result_dir_path + map_name;
+    if (!std::filesystem::exists(map_dir))
+    {
+      std::filesystem::create_directory(map_dir);
+      // cant skip files for which the directory did not exist
+      skips.resize(skips.size() + agent_nums.size() * runs_per_map * magic_enum::enum_count<SIPP_implementation>(), false);
+      continue;
+    }
+
+    const std::vector<std::string> scenes = get_scene_names(map_name, runs_per_map);
+    // iterate over the agent numbers
+    for (int j = 0; j < (int)agent_nums.size(); j++)
+    {
+      for (int k = 0; k < runs_per_map; k++)
+      {
+        const int          idx                 = k % (int)scenes.size();
+        const std::string& scene_name          = scenes[idx];
+        const std::string  scene_name_stripped = scene_name.substr(map_name.size() + 1, scene_name.find('.') - map_name.size() - 1);
+
+        for (auto algo : magic_enum::enum_values<SIPP_implementation>())
+        {
+          const std::string algorithm_name = (std::string)magic_enum::enum_name(algo);
+          const std::string filename = map_dir + "/" + experiment_name + "_" + map_name + "_" + scene_name_stripped + "_" + algorithm_name +
+                                       "_" + std::to_string((int)std::floor(k / scenes.size())) + ".json";
+          // check whether the file exists
+          if (std::filesystem::exists(filename))
+          {
+            skips.push_back(true);
+          }
+          else
+          {
+            skips.push_back(false);
+          }
+        }
+      }
+    }
+  }
+  return skips;
 }

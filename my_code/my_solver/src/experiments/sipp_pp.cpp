@@ -15,6 +15,7 @@
 #include "utils.h"
 
 #define RUNS_PER_MAP 1
+#define EXPERIMENT_NAME "sipp_pp"
 
 #define MAPS  \
   {           \
@@ -45,21 +46,58 @@ auto main(int argc, char** argv) -> int
   indicators::ProgressBar bar4 = create_progress_bar("Algo:\t\t", magic_enum::enum_count<SIPP_implementation>());
   indicators::MultiProgress<indicators::ProgressBar, 3> bars(bar1, bar2, bar3);
 
+  // precalculate what can be skipped
+  std::vector<bool> skips                   = what_can_be_skipped(EXPERIMENT_NAME, maps, agent_nums, RUNS_PER_MAP);
+  int               skipped_maps            = 0;
+  int               skipped_agent_nums      = 0;
+  int               skipped_runs            = 0;
+  int               skipped_implementations = 0;
 
   // iterate over all maps
   for (int i = 0; i < (int)maps.size(); i++)
   {
     // update the progress bar iteration number display
     bars.set_option<0>(indicators::option::PostfixText{std::to_string(i) + "/" + std::to_string(maps.size())});
+
+    // skip maps that weere already solved
+    const int start_offset_map = i * agent_nums.size() * RUNS_PER_MAP * magic_enum::enum_count<SIPP_implementation>();
+    const int end_offset_map   = (i + 1) * agent_nums.size() * RUNS_PER_MAP * magic_enum::enum_count<SIPP_implementation>();
+    if (std::all_of(skips.begin() + start_offset_map, skips.begin() + end_offset_map, [](bool b) { return b; }))
+    {
+      bars.tick<0>();
+      bars.set_progress<1>(agent_nums.size());
+      bars.set_progress<2>((size_t)RUNS_PER_MAP);
+      skipped_maps++;
+      skipped_agent_nums += (int)agent_nums.size();
+      skipped_runs += (int)agent_nums.size() * RUNS_PER_MAP;
+      skipped_implementations += (int)agent_nums.size() * RUNS_PER_MAP * magic_enum::enum_count<SIPP_implementation>();
+      continue;
+    }
+
     const std::string map_name = maps[i];
+
+    const std::vector<std::string> scenes = get_scene_names(map_name, RUNS_PER_MAP);
 
     // iterate over agent numbers
     for (int j = 0; j < (int)agent_nums.size(); j++)
     {
       // update the progress bar iteration number display
       bars.set_option<1>(indicators::option::PostfixText{std::to_string(j) + "/" + std::to_string(agent_nums.size())});
-      int                            agent_num = agent_nums[j];
-      const std::vector<std::string> scenes    = get_scene_names(map_name, RUNS_PER_MAP);
+
+      // skip agent_nums that were already solved
+      const int start_offset_an = start_offset_map + j * RUNS_PER_MAP * magic_enum::enum_count<SIPP_implementation>();
+      const int end_offset_an   = start_offset_map + (j + 1) * RUNS_PER_MAP * magic_enum::enum_count<SIPP_implementation>();
+      if (std::all_of(skips.begin() + start_offset_an, skips.begin() + end_offset_an, [](bool b) { return b; }))
+      {
+        bars.tick<1>();
+        bars.set_progress<2>((size_t)RUNS_PER_MAP);
+        skipped_agent_nums++;
+        skipped_runs += RUNS_PER_MAP;
+        skipped_implementations += RUNS_PER_MAP * magic_enum::enum_count<SIPP_implementation>();
+        continue;
+      }
+
+      int agent_num = agent_nums[j];
 
       // load all instances
       auto [instances, preprocessing_times] = load_instances(scenes, map_name, agent_num);
@@ -69,6 +107,17 @@ auto main(int argc, char** argv) -> int
       {
         // update the progress bar iteration number display
         bars.set_option<2>(indicators::option::PostfixText{std::to_string(k) + "/" + std::to_string(RUNS_PER_MAP)});
+
+        // skip runs that were already solved
+        const int start_offset_run = start_offset_an + k * magic_enum::enum_count<SIPP_implementation>();
+        const int end_offset_run   = start_offset_an + (k + 1) * magic_enum::enum_count<SIPP_implementation>();
+        if (std::all_of(skips.begin() + start_offset_run, skips.begin() + end_offset_run, [](bool b) { return b; }))
+        {
+          bars.tick<2>();
+          skipped_runs++;
+          skipped_implementations += magic_enum::enum_count<SIPP_implementation>();
+          continue;
+        }
 
         // choose instance
         assertm(scenes.size() == instances.size(), "The size of scenes and instances must be the same.");
@@ -82,8 +131,18 @@ auto main(int argc, char** argv) -> int
         }
 
         // iterate over all implementations
-        for (auto algo : magic_enum::enum_values<SIPP_implementation>())
+        for (int l = 0; l < (int)magic_enum::enum_count<SIPP_implementation>(); l++)
         {
+
+          // skip already solved
+          if (skips[start_offset_run + l])
+          {
+            skipped_implementations++;
+            continue;
+          }
+
+          const SIPP_implementation algo = magic_enum::enum_value<SIPP_implementation>(l);
+
           // generate a random seed
           int seed = dist(nondeterministic_rnd_generator);
 
@@ -107,9 +166,8 @@ auto main(int argc, char** argv) -> int
           }
 
           // write the results of the experiment
-          const std::string experiment_name = "sipp_pp";
-          const std::string algorithm_name  = (std::string)magic_enum::enum_name(algo);
-          nlohmann::json    experiment_res  = {{"experiment_name", experiment_name},
+          const std::string algorithm_name = (std::string)magic_enum::enum_name(algo);
+          nlohmann::json    experiment_res = {{"experiment_name", EXPERIMENT_NAME},
                                            {"map_name", map_name},
                                            {"scene_name", scene_name},
                                            {"num_agents", agent_num},
@@ -128,7 +186,7 @@ auto main(int argc, char** argv) -> int
                                            {"seed", seed}};
 
           // save the experiment
-          save_experiment(experiment_res, map_name, scene_name, experiment_name, algorithm_name);
+          save_experiment(experiment_res, map_name, scene_name, EXPERIMENT_NAME, algorithm_name);
         }
         bars.tick<2>();
       }
@@ -139,5 +197,15 @@ auto main(int argc, char** argv) -> int
     bars.tick<0>();
   }
   bars.set_option<0>(indicators::option::PostfixText{std::to_string(maps.size()) + "/" + std::to_string(maps.size())});
+  // mark all progress bars as finished
+  bars.set_progress<0>(maps.size());
+  bars.set_progress<1>(agent_nums.size());
+  bars.set_progress<2>((size_t)RUNS_PER_MAP);
+
+  std::cout << "Experiment finished. Skipped: " << skipped_maps << "/" << maps.size() << " maps, " << skipped_agent_nums << "/"
+            << maps.size() * agent_nums.size() << " agent_nums, " << skipped_runs << "/" << maps.size() * agent_nums.size() * RUNS_PER_MAP
+            << " runs, " << skipped_implementations << "/"
+            << (int)maps.size() * (int)agent_nums.size() * (int)RUNS_PER_MAP * (int)magic_enum::enum_count<SIPP_implementation>()
+            << " implementations." << std::endl;
 }
 

@@ -28,3 +28,6 @@ auto load_instances(const std::vector<std::string>& scenes, const std::string& m
 
 void save_experiment(nlohmann::json& experiment_res, const std::string& map_name, const std::string& scene_name,
                      const std::string& experiment_name, const std::string& algorithm_name);
+
+auto what_can_be_skipped(const std::string& experiment_name, const std::vector<std::string>& maps, const std::vector<int>& agent_nums,
+                         int runs_per_map) -> std::vector<bool>;
