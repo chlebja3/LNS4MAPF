@@ -5,17 +5,41 @@
  * Description:
  */
 
+#include <any>
 #include <filesystem>
 #include <fstream>
 #include <iostream>
 #include <memory>
 #include <nlohmann/json.hpp>
 #include <random>
+#include <variant>
 
 #include "Instance.h"
 #include "indicators/indicators.hpp"
 #include "utils.h"
 #define PROGRESS_BAR_WIDTH 100
+
+using AlgorithmType = std::variant<SIPP_implementation>;
+
+class Algorithm
+{
+public:
+  AlgorithmType                                 type;
+  std::vector<std::pair<std::string, std::any>> parameters;
+
+  // Variadic constructor accepting any number of parameters of any type
+  template <typename... Args>
+  explicit Algorithm(AlgorithmType type_, Args&&... args) : type(type_)
+  {
+    (parameters.emplace_back(std::forward<Args>(args)), ...);
+  }
+
+  template <typename T>
+  void add_parameter(const T& param)
+  {
+    parameters.push_back(param);
+  }
+};
 
 auto get_mapf_benchmark_path() -> std::string;
 

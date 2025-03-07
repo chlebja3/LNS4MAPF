@@ -27,6 +27,11 @@
     500             \
   }
 
+#define SUBOPTIMALITIES       \
+  {                           \
+    1.0, 1.01, 1.05, 1.1, 1.5 \
+  }
+
 
 auto main(int argc, char** argv) -> int
 {
@@ -53,6 +58,28 @@ auto main(int argc, char** argv) -> int
   int               skipped_runs            = 0;
   int               skipped_implementations = 0;
 
+  // prepare the algorithms
+  std::vector<Algorithm> algos;
+  for (const auto& algo_type : magic_enum::enum_values<SIPP_implementation>())
+  {
+    if (algo_type == SIPP_implementation::SIPP_suboptimal)
+    {
+      for (double w : SUBOPTIMALITIES)
+      {
+        algos.emplace_back(algo_type, std::make_pair("w", w));
+      }
+    }
+    else
+    {
+      algos.emplace_back(algo_type);
+    }
+  }
+  // print all algorithm
+  for (const auto& algo : algos)
+  {
+    std::cout << magic_enum::enum_name(std::get<SIPP_implementation>(algo.type)) << std::endl;
+  }
+
   // iterate over all maps
   for (int i = 0; i < (int)maps.size(); i++)
   {
@@ -60,7 +87,7 @@ auto main(int argc, char** argv) -> int
     bars.set_option<0>(indicators::option::PostfixText{std::to_string(i) + "/" + std::to_string(maps.size())});
 
     // skip maps that weere already solved
-    const int start_offset_map = i * agent_nums.size() * RUNS_PER_MAP * magic_enum::enum_count<SIPP_implementation>();
+    const int start_offset_map = i * (int)agent_nums.size() * RUNS_PER_MAP * magic_enum::enum_count<SIPP_implementation>();
     const int end_offset_map   = (i + 1) * agent_nums.size() * RUNS_PER_MAP * magic_enum::enum_count<SIPP_implementation>();
     if (std::all_of(skips.begin() + start_offset_map, skips.begin() + end_offset_map, [](bool b) { return b; }))
     {
@@ -149,7 +176,7 @@ auto main(int argc, char** argv) -> int
           // create the seeded random generator (for experiment reproducibility)
           auto rnd_generator = std::mt19937(seed);
 
-          // create solver TODO iterate over implementations
+          // create solver
           LNS solver(instance, rnd_generator, INFO_type::experiment, 1.0);
 
           // find the solution
