@@ -409,6 +409,16 @@ auto fast_random_bool() -> bool
   return ret;
 }
 
+auto double_to_str(double num, char separating_char) -> std::string
+{
+  std::stringstream stream;
+  stream << std::fixed << std::setprecision(2) << num;
+  std::string ret = stream.str();
+  // replace . with -
+  std::replace(ret.begin(), ret.end(), '.', separating_char);
+  return ret;
+}
+
 auto any_to_str(const std::any& value) -> std::string
 {
   // int
@@ -419,12 +429,12 @@ auto any_to_str(const std::any& value) -> std::string
   // float
   if (value.type() == typeid(float))
   {
-    return std::to_string(std::any_cast<float>(value));
+    return double_to_str(std::any_cast<float>(value));
   }
   // double
   if (value.type() == typeid(double))
   {
-    return std::to_string(std::any_cast<double>(value));
+    return double_to_str(std::any_cast<double>(value));
   }
   // bool
   if (value.type() == typeid(bool))

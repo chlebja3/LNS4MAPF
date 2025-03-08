@@ -122,7 +122,7 @@ auto main(int argc, char** argv) -> int
 
       int agent_num = agent_nums[j];
 
-      // load all instances
+      // load all instances TODO load only instances that will not be skipped
       auto [instances, preprocessing_times] = load_instances(scenes, map_name, agent_num);
 
       // make sure every map gets enough runs
