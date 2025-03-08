@@ -306,12 +306,12 @@ TEST(SIPPTest, PrioritizedPlanning1agent)
 
   // create LNS
 
-  auto rnd_generator = std::mt19937(0);
-  LNS  lns(*instance, rnd_generator, INFO_type::no_info);
 
   // plan path by Prioritized Planning
   for (auto algo : magic_enum::enum_values<SIPP_implementation>())
   {
+    auto     rnd_generator = std::mt19937(0);
+    LNS      lns(*instance, rnd_generator, INFO_type::no_info);
     Solution sol = lns.PrioritizedPlanning(algo);
     // check solution validity
     EXPECT_TRUE(sol.is_valid(*instance)) << "Solution is invalid!";
@@ -326,13 +326,13 @@ TEST(SIPPTest, PrioritizedPlanningEmpty2agents)
   std::unique_ptr<Instance> instance =
       std::make_unique<Instance>(base_path + "/tests/test_maps/empty_5_5.map", base_path + "/tests/test_scen/empty_5_5_scen_1.scen", 2);
 
-  // create LNS
-  auto rnd_generator = std::mt19937(0);
-  LNS  lns(*instance, rnd_generator, INFO_type::no_info);
 
   // plan path by Prioritized Planning
   for (auto algo : magic_enum::enum_values<SIPP_implementation>())
   {
+    // create LNS
+    auto     rnd_generator = std::mt19937(0);
+    LNS      lns(*instance, rnd_generator, INFO_type::no_info);
     Solution sol = lns.PrioritizedPlanning(algo);
 
     // check solution validity
@@ -348,13 +348,13 @@ TEST(SIPPTest, PrioritizedPlanning)
   std::unique_ptr<Instance> instance =
       std::make_unique<Instance>(base_path + "/tests/test_maps/den520d.map", base_path + "/tests/test_scen/den520d-random-0.scen", 100);
 
-  // create LNS
-  auto rnd_generator = std::mt19937(0);
-  LNS  lns(*instance, rnd_generator, INFO_type::no_info);
 
   // plan path by Prioritized Planning
   for (auto algo : magic_enum::enum_values<SIPP_implementation>())
   {
+    // create LNS
+    auto     rnd_generator = std::mt19937(0);
+    LNS      lns(*instance, rnd_generator, INFO_type::no_info);
     Solution sol = lns.PrioritizedPlanning(algo);
     // check solution validity
     EXPECT_TRUE(sol.is_valid(*instance)) << "Solution is invalid!";

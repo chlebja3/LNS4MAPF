@@ -68,7 +68,7 @@ auto SIPPNodeComparatorSuboptimal::operator()(SIPPNode const* n1, SIPPNode const
         if (n1->f == n2->f)
         {
           // if tie, choose randomly
-          return fast_random_bool();
+          return dist(*rnd_generator);
         }
         return n1->f > n2->f;
       }
@@ -323,6 +323,7 @@ auto SIPP::plan_suboptimal(const int agent_num, double w) -> TimePointPath
 
   // calculate the absolute suboptimality factor
   const int suboptimality_absolute = std::floor((w - 1.0) * instance.get_heuristic_distance(agent_num, start));
+  assertm(w != 1.0 || suboptimality_absolute == 0, "Absolute suboptimality must be 0 when w is 1.0");
 
   // estimate the minimum and maximum time the goal can be reached
   const int min_time = constraint_table.get_min_reach_time(goal);

@@ -27,6 +27,8 @@ auto main(int argc, char** argv) -> int
       "agentNum,k", po::value<int>()->default_value(0), "number of agents")("GUI,G", po::value<bool>()->default_value(true),
                                                                             "whether to tun the graphical user interface")(
       "sipp_suboptimality,w", po::value<double>()->default_value(1.0), "suboptimality factor for suboptimal sipp")(
+      "sipp_implementation,si", po::value<std::string>()->default_value("SIPP_mine"),
+      "implementation of SIPP (SIPP_mine, SIPP_mapf_lns, SIPP_suboptimal)")(
       "seed,s", po::value<int>()->default_value(-1),
       "seed of the random generators for reproducability, to achieve non reproducible random behavior, use negative value");
 
@@ -52,6 +54,7 @@ auto main(int argc, char** argv) -> int
 
   const std::string map_name   = vm["map"].as<std::string>();
   const std::string scene_name = vm["agents"].as<std::string>();
+  const std::string sipp_algo  = vm["sipp_implementation"].as<std::string>();
   const int         agent_num  = vm["agentNum"].as<int>();
   const bool        GUI        = vm["GUI"].as<bool>();
   const double      w          = vm["sipp_suboptimality"].as<double>();
