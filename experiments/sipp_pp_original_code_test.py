@@ -4,6 +4,8 @@ import re
 import numpy as np
 import tqdm
 import os
+import sqlite3
+import pandas as pd
 
 def construct_experiment(solver_path, map_path, scen_path, output_file_name, agent_num, seed):
     """ Construct the input of subprocess.check_output to perform the experiment"""
@@ -16,7 +18,7 @@ def construct_scen_path(scen_dir, map_name, k):
 
 # parameters
 agent_nums = [500] # number of agents
-num_runs = 50
+num_runs = 52
 results_file = "results"
 mapf_benchmark_dir = "../MAPF-benchmark/"
 scen_dir = mapf_benchmark_dir + "mapf-scen-random/scen-random/"
@@ -24,6 +26,8 @@ solver_path2 = "../papers/MAPF-LNS2/lns"
 
 map_names = ["den520d"]
 
+conn = sqlite3.connect("experiment_database.db")
+cursor = conn.cursor()
 
 # list all maps
 for map_name in tqdm.tqdm(map_names, desc="maps", position=0):
@@ -33,11 +37,21 @@ for map_name in tqdm.tqdm(map_names, desc="maps", position=0):
     # list all scenes
     scenes = [f for f in os.listdir(scen_dir) if f.startswith(map_name)]
 
+
+
     for agent_num in tqdm.tqdm(agent_nums, desc="agent nums", position=1):
         for i in tqdm.tqdm(range(num_runs), desc="runs", position=2, leave=False):
-
             scen_path = construct_scen_path(scen_dir, map_name, i % len(scenes))
-            seed = np.random.randint(0, high=1000000000)
+
+            # find the seed
+            scen_name = "random-" + str(i % len(scenes))
+            experiment_name = "sipp_pp_" + map_name + "_" + scen_name + "_SIPP_mapf_lns_" + str(int(i/len(scenes))) + ".json"
+            df = pd.read_sql_query(f"SELECT * FROM experiments WHERE file_name = '{experiment_name}'", conn)
+            seeds = df["seed"]
+            if (len(seeds) != 1):
+                print("ERROR: Wrong seeds", seeds, experiment_name)
+                exit(1)
+            seed = seeds[0]
             exp = construct_experiment(solver_path2, map_path, scen_path, "results_lns2", agent_num, seed)
             try:
                 res = subprocess.check_output(exp)[:-1].decode('UTF-8')
