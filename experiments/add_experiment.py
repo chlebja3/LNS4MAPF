@@ -10,7 +10,7 @@ CREATE TABLE IF NOT EXISTS experiments (
     experiment_id INTEGER PRIMARY KEY,
     experiment_name TEXT,
     map_name TEXT,
-    scen_name TEXT,
+    scene_name TEXT,
     num_agents INTEGER
 )
 """)
@@ -19,14 +19,14 @@ experiment = {
     "experiment_id": 1,
     "experiment_name": "dummy",
     "map_name": "A",
-    "scen_name": "B",
+    "scene_name": "B",
     "num_agents": 10,
 }
 
 # Insert into table
 cursor.execute("""
-INSERT INTO experiments (experiment_id, experiment_name, map_name, scen_name, num_agents)
-VALUES (:experiment_id, :experiment_name, :map_name, :scen_name, :num_agents)
+INSERT INTO experiments (experiment_id, experiment_name, map_name, scene_name, num_agents)
+VALUES (:experiment_id, :experiment_name, :map_name, :scene_name, :num_agents)
 """, experiment)
 
 # Save changes
