@@ -5,12 +5,9 @@ import numpy as np
 import tqdm
 import os
 
-def construct_experiment(solver_path, map_path, scen_path, output_file_name, agent_num):
+def construct_experiment(solver_path, map_path, scen_path, output_file_name, agent_num, seed):
     """ Construct the input of subprocess.check_output to perform the experiment"""
-    if solver_path == "../papers/MAPF-LNS/lns":
-        return [solver_path, '-m', map_path, '-a', scen_path, "-o", output_file_name + ".csv", "-k", str(agent_num), "--initAlgo", "PP", "--maxIterations",  str(0)]
-    else:
-        return [solver_path, '-m', map_path, '-a', scen_path, "-o", output_file_name + ".csv", "-k", str(agent_num), "--initAlgo", "PP", "--maxIterations",  str(0), "--initLNS", "0"]
+    return [solver_path, '-m', map_path, '-a', scen_path, "-o", output_file_name + ".csv", "-k", str(agent_num), "--initAlgo", "PP", "--maxIterations",  str(0), "--initLNS", "0", "--seed", str(seed)]
 
 
 def construct_scen_path(scen_dir, map_name, k):
@@ -23,10 +20,10 @@ num_runs = 50
 results_file = "results"
 mapf_benchmark_dir = "../MAPF-benchmark/"
 scen_dir = mapf_benchmark_dir + "mapf-scen-random/scen-random/"
-solver_path = "../papers/MAPF-LNS/lns"
 solver_path2 = "../papers/MAPF-LNS2/lns"
 
 map_names = ["den520d"]
+
 
 # list all maps
 for map_name in tqdm.tqdm(map_names, desc="maps", position=0):
@@ -40,8 +37,8 @@ for map_name in tqdm.tqdm(map_names, desc="maps", position=0):
         for i in tqdm.tqdm(range(num_runs), desc="runs", position=2, leave=False):
 
             scen_path = construct_scen_path(scen_dir, map_name, i % len(scenes))
-
-            exp = construct_experiment(solver_path2, map_path, scen_path, "results_lns2", agent_num)
+            seed = np.random.randint(0, high=1000000000)
+            exp = construct_experiment(solver_path2, map_path, scen_path, "results_lns2", agent_num, seed)
             try:
                 res = subprocess.check_output(exp)[:-1].decode('UTF-8')
             except:

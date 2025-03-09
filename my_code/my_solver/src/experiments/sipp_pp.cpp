@@ -14,22 +14,22 @@
 #include "magic_enum/magic_enum.hpp"
 #include "utils.h"
 
-#define RUNS_PER_MAP 1
+#define RUNS_PER_MAP 50
 #define EXPERIMENT_NAME "sipp_pp"
 
-#define MAPS    \
-  {             \
-    "empty-8-8" \
+#define MAPS  \
+  {           \
+    "den520d" \
   }
 
 #define NUMS_AGENTS \
   {                 \
-    20              \
+    500             \
   }
 
-#define SUBOPTIMALITIES \
-  {                     \
-    1.0                 \
+#define SUBOPTIMALITIES       \
+  {                           \
+    1.0, 1.01, 1.05, 1.1, 1.5 \
   }
 
 
