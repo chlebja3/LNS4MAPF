@@ -1,0 +1,51 @@
+# an experiment to compare original implementation and improved implementation
+import subprocess
+import re
+import numpy as np
+import tqdm
+import os
+
+def construct_experiment(solver_path, map_path, scen_path, output_file_name, agent_num):
+    """ Construct the input of subprocess.check_output to perform the experiment"""
+    if solver_path == "../papers/MAPF-LNS/lns":
+        return [solver_path, '-m', map_path, '-a', scen_path, "-o", output_file_name + ".csv", "-k", str(agent_num), "--initAlgo", "PP", "--maxIterations",  str(0)]
+    else:
+        return [solver_path, '-m', map_path, '-a', scen_path, "-o", output_file_name + ".csv", "-k", str(agent_num), "--initAlgo", "PP", "--maxIterations",  str(0), "--initLNS", "0"]
+
+
+def construct_scen_path(scen_dir, map_name, k):
+    """ Construct the path to a scen file """
+    return scen_dir + map_name + "-random-" + str(k) + ".scen"
+
+# parameters
+agent_nums = [500] # number of agents
+num_runs = 50
+results_file = "results"
+mapf_benchmark_dir = "../MAPF-benchmark/"
+scen_dir = mapf_benchmark_dir + "mapf-scen-random/scen-random/"
+solver_path = "../papers/MAPF-LNS/lns"
+solver_path2 = "../papers/MAPF-LNS2/lns"
+
+map_names = ["den520d"]
+
+# list all maps
+for map_name in tqdm.tqdm(map_names, desc="maps", position=0):
+    # print("Map:", map_name)
+    map_path = mapf_benchmark_dir + "mapf-map/" + map_name + ".map"
+
+    # list all scenes
+    scenes = [f for f in os.listdir(scen_dir) if f.startswith(map_name)]
+
+    for agent_num in tqdm.tqdm(agent_nums, desc="agent nums", position=1):
+        for i in tqdm.tqdm(range(num_runs), desc="runs", position=2, leave=False):
+
+            scen_path = construct_scen_path(scen_dir, map_name, i % len(scenes))
+
+            exp = construct_experiment(solver_path2, map_path, scen_path, "results_lns2", agent_num)
+            try:
+                res = subprocess.check_output(exp)[:-1].decode('UTF-8')
+            except:
+                print("Solver returned error for map: ", map_name, ", scene: ", s)
+                print(" ".join(map(str, exp)))
+
+
