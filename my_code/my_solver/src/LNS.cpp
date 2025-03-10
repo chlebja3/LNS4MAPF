@@ -57,6 +57,8 @@ void LNS::solve()
     // accept only feasible solutions
     if (!perturbed_sol.feasible)
     {
+      discard_solution(perturbed_sol, solution);
+      std::cout << "Discarded infeasible solution." << std::endl;
       continue;
     }
 
@@ -64,10 +66,13 @@ void LNS::solve()
     perturbed_sol.calculate_cost(instance);
     if (perturbed_sol.sum_of_delays >= solution.sum_of_delays)
     {
+      discard_solution(perturbed_sol, solution);
+      // std::cout << "Discarded worse solution, difference: " << perturbed_sol.sum_of_costs - solution.sum_of_costs << std::endl;
       continue;
     }
 
     // remember the perturbed solution
+    std::cout << "Solution improved by: " << solution.sum_of_delays - perturbed_sol.sum_of_delays << std::endl;
     solution = std::move(perturbed_sol);
   }
 }
@@ -183,6 +188,7 @@ void LNS::destroy_random(Solution& sol) const
   assertm((int)path_idcs.size() > neighborhood_size, "Not enough paths for the destroy operator.");
   sol.destroyed_paths =
       std::vector(std::make_move_iterator(path_idcs.begin()), std::make_move_iterator(path_idcs.begin() + neighborhood_size));
+  assertm(sol.destroyed_paths.size() > 0, "No paths were destroyed.");
   sol.feasible = false;
 }
 
@@ -193,15 +199,40 @@ void LNS::repair_default(Solution& sol) const
   // remove the destroyed paths
   for (auto& it : sol.destroyed_paths)
   {
+    // std::cout << "Removing path: " << it << std::endl;
     planner->constraint_table.remove_constraints(sol.paths[it]);
     sol.paths[it].clear();
   }
+  sol.feasible = true;
 
   // replan
   for (auto& it : sol.destroyed_paths)
   {
     TimePointPath tp_path = planner->plan(it);
+    if (tp_path.empty())
+    {
+      sol.feasible = false;
+      return;
+    }
     planner->constraint_table.add_constraints(tp_path);
     sol.paths[it] = tp_path;
+  }
+}
+
+void LNS::discard_solution(const Solution& sol, const Solution& prev_sol)
+{
+  for (auto& it : sol.destroyed_paths)
+  {
+    // remove the destroyed paths
+    if (!sol.paths[it].empty())
+    {
+      planner->constraint_table.remove_constraints(sol.paths[it]);
+    }
+  }
+
+  // restore the old paths
+  for (auto& it : sol.destroyed_paths)
+  {
+    planner->constraint_table.add_constraints(prev_sol.paths[it]);
   }
 }

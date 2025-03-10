@@ -60,19 +60,20 @@ void Computation::join_thread()
 
 void Computation::run()
 {
+  solver->solve();
   // get the initial solution
-  solver->find_initial_solution();
+  // solver->find_initial_solution();
 
-  std::vector<Path> converted_paths(solver->solution.paths.size());
-  for (int i = 0; i < (int)solver->solution.paths.size(); i++)
-  {
-    converted_paths[i] = timepointpath_to_path(solver->solution.paths[i]);
-  }
+  // std::vector<Path> converted_paths(solver->solution.paths.size());
+  // for (int i = 0; i < (int)solver->solution.paths.size(); i++)
+  // {
+  //   converted_paths[i] = timepointpath_to_path(solver->solution.paths[i]);
+  // }
 
-  shared_data.update_paths(converted_paths, solver->sipp_info);
+  // shared_data.update_paths(converted_paths, solver->sipp_info);
 
-  std::cout << "Initial solution found, generated nodes: " << solver->get_num_of_generated_nodes()
-            << ", expanded nodes: " << solver->get_num_of_expanded_nodes() << std::endl;
+  // std::cout << "Initial solution found, generated nodes: " << solver->get_num_of_generated_nodes()
+  //           << ", expanded nodes: " << solver->get_num_of_expanded_nodes() << std::endl;
 
   // while (running)
   // {

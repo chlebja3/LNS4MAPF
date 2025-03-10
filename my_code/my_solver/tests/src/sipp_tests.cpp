@@ -360,3 +360,33 @@ TEST(SIPPTest, PrioritizedPlanning)
     EXPECT_TRUE(sol.is_valid(*instance)) << "Solution is invalid!";
   }
 }
+
+TEST(SIPPTest, SameAfterDestroy)
+{
+  // load instance
+  std::string               base_path = get_base_path_tests();  // path to my_solver
+  std::unique_ptr<Instance> instance =
+      std::make_unique<Instance>(base_path + "/tests/test_maps/den520d.map", base_path + "/tests/test_scen/den520d-random-0.scen", 200);
+
+
+  // plan path by Prioritized Planning
+  for (auto algo : magic_enum::enum_values<SIPP_implementation>())
+  {
+    // create LNS
+    auto     rnd_generator = std::mt19937(0);
+    LNS      lns(*instance, rnd_generator, INFO_type::no_info);
+    Solution sol = lns.PrioritizedPlanning(algo);
+    // check solution validity
+    EXPECT_TRUE(sol.is_valid(*instance)) << "Solution is invalid!";
+    int           agent_num = 100;
+    TimePointPath path0     = sol.paths[agent_num];
+    // remove the path
+    lns.planner->constraint_table.remove_constraints(path0);
+
+    // replan
+    TimePointPath path1 = lns.planner->plan(agent_num);
+
+    // expect the same path
+    EXPECT_EQ(path0.back().interval.t_min, path1.back().interval.t_min) << "Paths should have the same length!";
+  }
+}

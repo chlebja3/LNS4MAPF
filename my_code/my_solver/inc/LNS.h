@@ -32,6 +32,7 @@ class LNS : public Solver
 public:
   INFO_type             info_type;
   std::vector<SIPPInfo> sipp_info;
+  std::unique_ptr<SIPP> planner;
 
   // constructor
   LNS(const Instance& instance_, std::mt19937& rnd_generator_, INFO_type info_type_, double w_ = 1.0);
@@ -47,18 +48,18 @@ public:
 
   [[nodiscard]] auto get_num_of_generated_nodes() const -> int;
   [[nodiscard]] auto get_num_of_expanded_nodes() const -> int;
+  void               discard_solution(const Solution& sol, const Solution& prev_sol);
 
 private:
   void destroy_random(Solution& sol) const;
   void repair_default(Solution& sol) const;
 
-  std::unique_ptr<SIPP> planner;
-  int                   iteration_num = 0;
-  int                   max_iter;
-  double                initial_solution_time;
-  double                time_limit;
-  double                curr_time;
-  double                w;
-  Operator              destroy_operator;
-  Operator              repair_operator;
+  int      iteration_num = 0;
+  int      max_iter      = 1000;
+  double   initial_solution_time;
+  double   time_limit = 5;
+  double   curr_time;
+  double   w;
+  Operator destroy_operator;
+  Operator repair_operator;
 };

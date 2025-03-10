@@ -14,7 +14,7 @@
 #include "magic_enum/magic_enum.hpp"
 #include "utils.h"
 
-#define RUNS_PER_MAP 50
+#define RUNS_PER_MAP 52
 #define EXPERIMENT_NAME "sipp_pp"
 
 #define MAPS  \
@@ -35,7 +35,7 @@
 
 auto main(int argc, char** argv) -> int
 {
-  assertm(true, "Experiments should be compiled in Release mode to have reliable results!");
+  assertm(false, "Experiments should be compiled in Release mode to have reliable results!");
   const std::vector<std::string> maps(MAPS);
   const std::vector<int>         agent_nums(NUMS_AGENTS);
 

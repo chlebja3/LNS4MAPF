@@ -124,12 +124,28 @@ void ConstraintTable::remove_constraint(const TimePoint& timepoint)
     unlimited_safe_intervals++;
     assertm(unlimited_safe_intervals <= instance.get_map_data().free_cells, "Invalid unlimited safe interval count.");
 
-    // update latest constraint end TODO
+    // update latest constraint end TODO (done in remove constraints)
   }
 
   std::list<TimeInterval>& cur_TI_list = safe_intervals[timepoint.location];
 
-  // find intervals that will be affected by the removal
+  // firstly handle constraints after the last safe interval (there is no safe interval after the constraint)
+  assertm(timepoint.interval.t_min != cur_TI_list.back().t_max, "Constraint start overlaps with last safe interval end.");
+
+  if (timepoint.interval.t_min > cur_TI_list.back().t_max)
+  {
+    // if the last safe interval precedes directly, extend it
+    if (cur_TI_list.back().t_max == timepoint.interval.t_min - 1)
+    {
+      cur_TI_list.back().t_max = timepoint.interval.t_max;
+      return;
+    }
+    // otherwise add a new safe interval
+    cur_TI_list.push_back(timepoint.interval);
+    return;
+  }
+
+  // find interval after the constraint
   auto it = cur_TI_list.begin();
   while (it != cur_TI_list.end())
   {
@@ -155,7 +171,7 @@ void ConstraintTable::remove_constraint(const TimePoint& timepoint)
           {
             prev->t_max = timepoint.interval.t_max;
           }
-          break;
+          return;
         }
       }
 
@@ -163,15 +179,16 @@ void ConstraintTable::remove_constraint(const TimePoint& timepoint)
       if (timepoint.interval.t_max != INT_MAX && it->t_min == timepoint.interval.t_max + 1)
       {
         it->t_min = timepoint.interval.t_min;
-        break;
+        return;
       }
 
       // no interval can be extended, therefore insert a new interval
       cur_TI_list.insert(it, timepoint.interval);
-      break;
+      return;
     }
     it++;
   }
+  throw std::runtime_error("Did not remove any constraint.");
 }
 
 void ConstraintTable::add_constraints(const TimePointPath& path)
@@ -259,7 +276,6 @@ auto ConstraintTable::get_safe_intervals(int location, const TimeInterval& time_
 
 void ConstraintTable::update_latest_constraint_end_estimate()
 {
-  // find the end of the latest safe interval and add the number of unobstructed cells at that time
   latest_constraint_end = 0;
   for (const auto& safe_interval_list : safe_intervals)
   {
@@ -320,9 +336,15 @@ void EdgeConstraintTable::remove(int loc1, int loc2, int time)
   const int dir = find_direction(loc1, loc2) - 1;
   assertm(dir >= 0 && dir <= NUM_DIRECTIONS, "Invalid direction.");
 
-  // int erased = edge_constraints[dir][loc2].erase(time);
-  // assertm(erased == 1, "Trying to erase an edge constraint that is not present.");
+// int erased = edge_constraints[dir][loc2].erase(time);
+// assertm(erased == 1, "Trying to erase an edge constraint that is not present.");
+#ifndef NDEBUG
+  int constraints_before = edge_constraints[dir][loc2].size();
+  // std::cout << "Constraints before: " << constraints_before << std::endl;
+#endif
   edge_constraints[dir][loc2].erase(std::remove(edge_constraints[dir][loc2].begin(), edge_constraints[dir][loc2].end(), time),
                                     edge_constraints[dir][loc2].end());
+  // std::cout << "Constraints after: " << edge_constraints[dir][loc2].size() << std::endl;
+  assertm(constraints_before - edge_constraints[dir][loc2].size() == 1, "Should erase exactly one edge constraint.");
 }
 
