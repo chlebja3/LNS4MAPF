@@ -170,9 +170,10 @@ auto main(int argc, char** argv) -> int
           const Algorithm& algo = algorithms[l];
 
           // create the seeded random generator (for experiment reproducibility)
-          auto   rnd_generator = std::mt19937(seed);
-          double w             = 1.0;
-          if (std::get<SIPP_implementation>(algo.type) == SIPP_implementation::SIPP_suboptimal)
+          auto                      rnd_generator       = std::mt19937(seed);
+          double                    w                   = 1.0;
+          const SIPP_implementation sipp_implementation = std::get<SIPP_implementation>(algo.type);
+          if (sipp_implementation == SIPP_implementation::SIPP_suboptimal)
           {
             for (const auto& it : algo.parameters)
             {
@@ -184,12 +185,13 @@ auto main(int argc, char** argv) -> int
           }
 
           // create solver
-          LNS solver(instance, rnd_generator, INFO_type::experiment, w);
+          LNS_settings lns_settings(1, 1, {sipp_implementation, INFO_type::experiment, w});
+          LNS          solver(instance, rnd_generator, lns_settings);
 
           // find the solution
           Clock clock;
           clock.start();
-          Solution sol                             = solver.PrioritizedPlanning(std::get<SIPP_implementation>(algo.type));
+          Solution sol                             = solver.PrioritizedPlanning(sipp_implementation);
           auto [pp_duration_wall, pp_duration_cpu] = clock.end();
           solver.solution                          = sol;
 

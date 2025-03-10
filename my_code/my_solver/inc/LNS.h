@@ -11,6 +11,18 @@
 #include "SIPP.h"
 #include "Solver.h"
 
+class LNS_settings
+{
+public:
+  LNS_settings(int max_iter_, double time_limit_, SIPP_settings sipp_settings_)
+      : max_iter(max_iter_), time_limit(time_limit_), sipp_settings(sipp_settings_)
+  {
+  }
+  int           max_iter;
+  double        time_limit;
+  SIPP_settings sipp_settings;
+};
+
 class Operator
 {
 public:
@@ -30,12 +42,11 @@ private:
 class LNS : public Solver
 {
 public:
-  INFO_type             info_type;
   std::vector<SIPPInfo> sipp_info;
   std::unique_ptr<SIPP> planner;
 
   // constructor
-  LNS(const Instance& instance_, std::mt19937& rnd_generator_, INFO_type info_type_, double w_ = 1.0);
+  LNS(const Instance& instance_, std::mt19937& rnd_generator_, const LNS_settings& settings_);
 
   // Destructor
   ~LNS() override = default;
@@ -54,12 +65,10 @@ private:
   void destroy_random(Solution& sol) const;
   void repair_default(Solution& sol) const;
 
-  int      iteration_num = 0;
-  int      max_iter      = 1000;
-  double   initial_solution_time;
-  double   time_limit = 5;
-  double   curr_time;
-  double   w;
-  Operator destroy_operator;
-  Operator repair_operator;
+  const LNS_settings& settings;
+  int                 iteration_num = 0;
+  double              initial_solution_time;
+  double              curr_time;
+  Operator            destroy_operator;
+  Operator            repair_operator;
 };

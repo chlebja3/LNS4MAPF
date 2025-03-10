@@ -20,6 +20,19 @@
 #include "ConstraintTable.h"
 #include "IterInfo.h"
 
+class SIPP_settings
+{
+public:
+  SIPP_settings(SIPP_implementation implementation_, INFO_type info_type_, double w_)
+      : implementation(implementation_), info_type(info_type_), w(w_)
+  {
+  }
+
+  SIPP_implementation implementation;
+  INFO_type           info_type;
+  double              w;
+};
+
 namespace sipp
 {
 
@@ -112,10 +125,8 @@ public:
   int             iteration_num       = 0;
   SIPPInfo        iter_info;
 
-  INFO_type info_type;
-
   // constructor
-  SIPP(const Instance& instance_, std::mt19937& rnd_generator_, INFO_type info_type_);
+  SIPP(const Instance& instance_, std::mt19937& rnd_generator_, const SIPP_settings& settings_);
 
   // destructor
   ~SIPP() = default;
@@ -125,11 +136,12 @@ public:
   auto plan_suboptimal(int agent_num, double w = 1.0) -> TimePointPath;
 
 private:
-  void             initialize_iter_info();
-  void             update_iter_info(const sipp::SIPPNode& expanded, bool last_iter);
-  const Instance&  instance;
-  sipp::NodePool   node_pool;
-  std::vector<int> known_max;  // known node database
-  std::vector<int> known_min;  // known node database
-  std::mt19937&    rnd_generator;
+  void                 initialize_iter_info();
+  void                 update_iter_info(const sipp::SIPPNode& expanded, bool last_iter);
+  const Instance&      instance;
+  sipp::NodePool       node_pool;
+  std::vector<int>     known_max;  // known node database
+  std::vector<int>     known_min;  // known node database
+  std::mt19937&        rnd_generator;
+  const SIPP_settings& settings;
 };

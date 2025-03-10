@@ -12,8 +12,8 @@
 
 #include "LNS.h"
 
-Computation::Computation(const Instance& instance_, SharedData& shared_data_, INFO_type info_type_, double w_ = 1.0, int seed_ = -1)
-    : instance(instance_), shared_data(shared_data_), running(false), info_type(info_type_), w(w_), seed(seed_)
+Computation::Computation(const Instance& instance_, SharedData& shared_data_, LNS_settings lns_settings_, int seed_ = -1)
+    : instance(instance_), shared_data(shared_data_), running(false), seed(seed_), lns_settings(lns_settings_)
 {
   // initialized the random generator
   if (seed < 0)
@@ -28,7 +28,7 @@ Computation::Computation(const Instance& instance_, SharedData& shared_data_, IN
   }
 
   // initialize the solver
-  solver = std::make_unique<LNS>(instance, rnd_generator, info_type, w);
+  solver = std::make_unique<LNS>(instance, rnd_generator, lns_settings);
 }
 
 Computation::~Computation()
@@ -82,5 +82,6 @@ void Computation::run()
   //   if (i >= 1) running = false;
   //   std::this_thread::sleep_for(std::chrono::seconds(3));
   // }
+  std::cout << "Final solution has sum of costs: " << solver->solution.sum_of_costs << std::endl;
   std::cout << "Computation thread ended" << std::endl;
 }

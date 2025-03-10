@@ -20,12 +20,12 @@
 
 using namespace sipp;
 
-SIPP::SIPP(const Instance& instance_, std::mt19937& rnd_generator_, INFO_type info_type_)
+SIPP::SIPP(const Instance& instance_, std::mt19937& rnd_generator_, const SIPP_settings& settings_)
     : constraint_table(ConstraintTable(instance_)),
-      info_type(info_type_),
       instance(instance_),
       node_pool(NodePool(INITIAL_NODE_POOL_SIZE * instance.get_map_data().width * instance.get_map_data().height)),
-      rnd_generator(rnd_generator_)
+      rnd_generator(rnd_generator_),
+      settings(settings_)
 {
   known_max.resize(instance.get_map_data().width * instance.get_map_data().height, -1);
   known_min.resize(instance.get_map_data().width * instance.get_map_data().height, -1);
@@ -118,7 +118,7 @@ void NodePool::merge_extra()
 
 auto SIPP::plan(const int agent_num) -> TimePointPath
 {
-  if (info_type != INFO_type::no_info)
+  if (settings.info_type != INFO_type::no_info)
   {
     initialize_iter_info();
   }
@@ -156,7 +156,7 @@ auto SIPP::plan(const int agent_num) -> TimePointPath
     // create the start node
     open_list.push(node_pool.add_node(SIPPNode(start, *time_interval_start, 0, h1, h2, nullptr)));
 
-    if (info_type != INFO_type::no_info)
+    if (settings.info_type != INFO_type::no_info)
     {
       generated_this_iter++;
     }
@@ -169,7 +169,7 @@ auto SIPP::plan(const int agent_num) -> TimePointPath
   // main loop
   while (!open_list.empty())
   {
-    if (info_type != INFO_type::no_info)
+    if (settings.info_type != INFO_type::no_info)
     {
       iteration_num++;
     }
@@ -198,7 +198,7 @@ auto SIPP::plan(const int agent_num) -> TimePointPath
       node_pool.merge_extra();
 
       // generate last iteration info
-      if (info_type != INFO_type::no_info)
+      if (settings.info_type != INFO_type::no_info)
       {
         update_iter_info(*current, true);
       }
@@ -283,7 +283,7 @@ auto SIPP::plan(const int agent_num) -> TimePointPath
         open_list.push(node_pool.add_node(SIPPNode(neighbor_time_point, neighbor_time_point.interval.t_min, h1, h2, current)));
         // std::cout << "interval:" << neighbor_time_point.interval << ", h1: " << h1 << ", h2: " << h2 << std::endl;
 
-        if (info_type != INFO_type::no_info)
+        if (settings.info_type != INFO_type::no_info)
         {
           generated_this_iter++;
         }
@@ -291,7 +291,7 @@ auto SIPP::plan(const int agent_num) -> TimePointPath
     }
 
     // save the iteration info
-    if (info_type != INFO_type::no_info)
+    if (settings.info_type != INFO_type::no_info)
     {
       update_iter_info(*current, false);
     }
@@ -307,7 +307,7 @@ auto SIPP::plan_suboptimal(const int agent_num, double w) -> TimePointPath
 {
   assertm(w >= 1.0, "Suboptimality factor must be more than 1");
 
-  if (info_type != INFO_type::no_info)
+  if (settings.info_type != INFO_type::no_info)
   {
     initialize_iter_info();
   }
@@ -345,7 +345,7 @@ auto SIPP::plan_suboptimal(const int agent_num, double w) -> TimePointPath
     // create the start node
     open_list.push(node_pool.add_node(SIPPNode(start, *time_interval_start, 0, h1, h2, nullptr)));
 
-    if (info_type != INFO_type::no_info)
+    if (settings.info_type != INFO_type::no_info)
     {
       generated_this_iter++;
     }
@@ -358,7 +358,7 @@ auto SIPP::plan_suboptimal(const int agent_num, double w) -> TimePointPath
   // main loop
   while (!open_list.empty())
   {
-    if (info_type != INFO_type::no_info)
+    if (settings.info_type != INFO_type::no_info)
     {
       iteration_num++;
     }
@@ -387,7 +387,7 @@ auto SIPP::plan_suboptimal(const int agent_num, double w) -> TimePointPath
       node_pool.merge_extra();
 
       // generate last iteration info
-      if (info_type != INFO_type::no_info)
+      if (settings.info_type != INFO_type::no_info)
       {
         update_iter_info(*current, true);
       }
@@ -469,7 +469,7 @@ auto SIPP::plan_suboptimal(const int agent_num, double w) -> TimePointPath
         open_list.push(node_pool.add_node(SIPPNode(neighbor_time_point, neighbor_time_point.interval.t_min, h1, h2, current)));
         // std::cout << "interval:" << neighbor_time_point.interval << ", h1: " << h1 << ", h2: " << h2 << std::endl;
 
-        if (info_type != INFO_type::no_info)
+        if (settings.info_type != INFO_type::no_info)
         {
           generated_this_iter++;
         }
@@ -477,7 +477,7 @@ auto SIPP::plan_suboptimal(const int agent_num, double w) -> TimePointPath
     }
 
     // save the iteration info
-    if (info_type != INFO_type::no_info)
+    if (settings.info_type != INFO_type::no_info)
     {
       update_iter_info(*current, false);
     }
@@ -491,7 +491,7 @@ auto SIPP::plan_suboptimal(const int agent_num, double w) -> TimePointPath
 
 auto SIPP::plan_mapflns_heuristic(int agent_num) -> TimePointPath
 {
-  if (info_type != INFO_type::no_info)
+  if (settings.info_type != INFO_type::no_info)
   {
     initialize_iter_info();
   }
@@ -522,7 +522,7 @@ auto SIPP::plan_mapflns_heuristic(int agent_num) -> TimePointPath
     // create the start node
     open_list.push(node_pool.add_node(SIPPNode(start, *time_interval_start, 0, h, h, nullptr)));
 
-    if (info_type != INFO_type::no_info)
+    if (settings.info_type != INFO_type::no_info)
     {
       generated_this_iter++;
     }
@@ -535,7 +535,7 @@ auto SIPP::plan_mapflns_heuristic(int agent_num) -> TimePointPath
   // main loop
   while (!open_list.empty())
   {
-    if (info_type != INFO_type::no_info)
+    if (settings.info_type != INFO_type::no_info)
     {
       iteration_num++;
     }
@@ -564,7 +564,7 @@ auto SIPP::plan_mapflns_heuristic(int agent_num) -> TimePointPath
       node_pool.merge_extra();
 
       // generate last iteration info
-      if (info_type != INFO_type::no_info)
+      if (settings.info_type != INFO_type::no_info)
       {
         update_iter_info(*current, true);
       }
@@ -636,7 +636,7 @@ auto SIPP::plan_mapflns_heuristic(int agent_num) -> TimePointPath
         const double h1 = std::max(h2, current->f - neighbor_time_point.interval.t_min);
         open_list.push(node_pool.add_node(SIPPNode(neighbor_time_point, neighbor_time_point.interval.t_min, h1, h1, current)));
 
-        if (info_type != INFO_type::no_info)
+        if (settings.info_type != INFO_type::no_info)
         {
           generated_this_iter++;
         }
@@ -644,7 +644,7 @@ auto SIPP::plan_mapflns_heuristic(int agent_num) -> TimePointPath
     }
 
     // save the iteration info
-    if (info_type != INFO_type::no_info)
+    if (settings.info_type != INFO_type::no_info)
     {
       update_iter_info(*current, false);
     }
@@ -667,7 +667,7 @@ void SIPP::update_iter_info(const sipp::SIPPNode& expanded, const bool last_iter
   expanded_this_iter += 1;
 
   // store information about the expanded node for visualization only
-  if (info_type == INFO_type::visualisation)
+  if (settings.info_type == INFO_type::visualisation)
   {
     iter_info.emplace_back(expanded.time_point, expanded.g, expanded.h, expanded.h2, generated_this_iter, expanded_this_iter,
                            iteration_num);

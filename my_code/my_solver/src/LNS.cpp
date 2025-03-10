@@ -14,15 +14,14 @@
 #include "utils.h"
 
 
-LNS::LNS(const Instance& instance_, std::mt19937& rnd_generator_, INFO_type info_type_, double w_)
+LNS::LNS(const Instance& instance_, std::mt19937& rnd_generator_, const LNS_settings& settings_)
     : Solver("LNS", instance_, rnd_generator_),
-      info_type(info_type_),
-      w(w_),
+      settings(settings_),
       destroy_operator(Operator([this](Solution& sol) { destroy_random(sol); })),
       repair_operator(Operator([this](Solution& sol) { repair_default(sol); }))
 {
   // SIPP's lifetime can not be longer than LNS's lifetime, because then map_data might be deleted before SIPP
-  planner = std::make_unique<SIPP>(instance, rnd_generator, info_type);
+  planner = std::make_unique<SIPP>(instance, rnd_generator, settings.sipp_settings);
 }
 
 void LNS::solve()
@@ -41,7 +40,7 @@ void LNS::solve()
   curr_time = initial_solution_time;
 
   // improve the solution
-  while (iteration_num < max_iter && curr_time < time_limit)
+  while (iteration_num < settings.max_iter && curr_time < settings.time_limit)
   {
     iteration_num++;
 
@@ -103,7 +102,7 @@ auto LNS::PrioritizedPlanning(SIPP_implementation sipp_implementation) -> Soluti
   std::shuffle(priorities.begin(), priorities.end(), rnd_generator);
 
   // initialize iter info
-  if (info_type == INFO_type::visualisation)
+  if (settings.sipp_settings.info_type == INFO_type::visualisation)
   {
     sipp_info.clear();
     sipp_info.resize(agent_num);
@@ -119,13 +118,13 @@ auto LNS::PrioritizedPlanning(SIPP_implementation sipp_implementation) -> Soluti
     TimePointPath tp_path;
     if (sipp_implementation == SIPP_implementation::SIPP_suboptimal)
     {
-      assertm(w >= 1.0, "SIPP suboptimality factor must be 1.0 or more.");
+      assertm(settings.sipp_settings.w >= 1.0, "SIPP suboptimality factor must be 1.0 or more.");
       // suboptimal sipp
-      tp_path = planner->plan_suboptimal(agent_id, w);
+      tp_path = planner->plan_suboptimal(agent_id, settings.sipp_settings.w);
     }
     else
     {
-      assertm(w == 1.0, "Suboptimality factor must be 1 for optimal algorithms.");
+      assertm(settings.sipp_settings.w == 1.0, "Suboptimality factor must be 1 for optimal algorithms.");
       // optimal sipp
       if (sipp_implementation == SIPP_implementation::SIPP_mine)
       {
@@ -142,7 +141,7 @@ auto LNS::PrioritizedPlanning(SIPP_implementation sipp_implementation) -> Soluti
     }
 
     // get the visualization info
-    if (info_type == INFO_type::visualisation)
+    if (settings.sipp_settings.info_type == INFO_type::visualisation)
     {
       sipp_info[agent_id] = std::move(planner->iter_info);
       planner->iter_info.clear();
@@ -181,7 +180,7 @@ auto LNS::get_num_of_expanded_nodes() const -> int
 void LNS::destroy_random(Solution& sol) const
 {
   // TODO optimize
-  constexpr int    neighborhood_size = 4;
+  constexpr int    neighborhood_size = 20;
   std::vector<int> path_idcs(sol.paths.size());
   std::iota(path_idcs.begin(), path_idcs.end(), 0);
   std::random_shuffle(path_idcs.begin(), path_idcs.end());
@@ -221,7 +220,7 @@ void LNS::repair_default(Solution& sol) const
 
 void LNS::discard_solution(const Solution& sol, const Solution& prev_sol)
 {
-  for (auto& it : sol.destroyed_paths)
+  for (const auto& it : sol.destroyed_paths)
   {
     // remove the destroyed paths
     if (!sol.paths[it].empty())
@@ -231,7 +230,7 @@ void LNS::discard_solution(const Solution& sol, const Solution& prev_sol)
   }
 
   // restore the old paths
-  for (auto& it : sol.destroyed_paths)
+  for (const auto& it : sol.destroyed_paths)
   {
     planner->constraint_table.add_constraints(prev_sol.paths[it]);
   }
