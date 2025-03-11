@@ -22,6 +22,7 @@ public:
 
   // paths of the agents
   std::vector<TimePointPath> paths;
+  mutable std::vector<Path>  converted_paths;
   std::vector<int>           delays;
   std::vector<int>           destroyed_paths;
 
@@ -33,6 +34,7 @@ public:
   [[nodiscard]] auto is_valid(const Instance& instance) const -> bool;
   void               load(const std::string& filename, const Instance& instance);
   void               calculate_cost(const Instance& instance);
+  void               convert_paths() const;
 };
 
 class Solver

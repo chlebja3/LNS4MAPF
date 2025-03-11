@@ -22,7 +22,8 @@ auto Solution::is_valid(const Instance& instance) const -> bool
     return false;
   }
 
-  std::vector<Path> converted_paths(paths.size());
+  convert_paths();
+
   for (int i = 0; i < (int)paths.size(); i++)
   {
     // check validity of each timepointpath
@@ -283,5 +284,17 @@ void Solution::calculate_cost(const Instance& instance)
     assertm(delay >= 0, "Delay can not be negative.");
     assertm(sum_of_costs >= delay && sum_of_costs >= makespan, "Sum of costs should be greater than delay and makespan.");
     delays[i] = delay;
+  }
+}
+
+void Solution::convert_paths() const
+{
+  if (converted_paths.empty())
+  {
+    converted_paths.resize(paths.size());
+    for (int i = 0; i < (int)paths.size(); i++)
+    {
+      converted_paths[i] = timepointpath_to_path(paths[i]);
+    }
   }
 }

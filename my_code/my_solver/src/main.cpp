@@ -20,7 +20,7 @@
 // create program options namespace
 namespace po = boost::program_options;
 
-constexpr int    DEFAULT_MAX_ITER   = 100;
+constexpr int    DEFAULT_MAX_ITER   = 10;
 constexpr double DEFAULT_TIME_LIMIT = 30.0;
 
 

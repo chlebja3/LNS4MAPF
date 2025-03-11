@@ -180,23 +180,9 @@ void Visualizer::run()
       std::vector<LNSIterationInfo> new_lns_info = shared_data.consume_lns_info();
       assertm(!new_lns_info.empty(), "Received empty LNS info");
       lns_info.insert(lns_info.end(), std::make_move_iterator(new_lns_info.begin()), std::make_move_iterator(new_lns_info.end()));
-      // assertm(instance.num_of_agents == (int)agents_paths.size(), "Number of paths should be the same as the number of agents.");
-
-      // int max_path_len = 0;
-      // // construct the path visualizations and find the new length of the visualization
-      // for (int i = 0; i < instance.num_of_agents; i++)
-      // {
-      //   update_path(i, agents_paths[i]);
-      //   max_path_len = std::max(max_path_len, (int)agents_paths[i].size() - 1);
-      // }
-
-      // // update the visualization
-      // solution_vis.new_data(max_path_len);
-
-      // if (log.empty())
-      // {
-      //   log.emplace_back("Prioritized planning finished.");
-      // }
+      lns_vis.max_time = static_cast<int>(lns_info.size()) - 1;
+      std::cout << "New max time: " << lns_vis.max_time << std::endl;
+      lns_vis.update();
     }
 
     // process the events
@@ -383,6 +369,11 @@ void Visualizer::draw_goals(sf::RenderWindow& window)
 
 void Visualizer::update_cell_rectangles_active(int time)
 {
+  if (selected_agent == -1)
+  {
+    return;
+  }
+
   //  set all cells to inactive
   for (auto& row : cell_rectangles_active)
   {
@@ -390,9 +381,9 @@ void Visualizer::update_cell_rectangles_active(int time)
   }
 
   // find all active rectangles
-  for (int i = 0; i < std::min(time, (int)sipp_info[selected_agent].size()); i++)
+  for (int i = 0; i < std::min(time, (int)(*sipp_info).size()); i++)
   {
-    const Point2d cur_pos                        = instance.location_to_position(sipp_info[selected_agent][i].cur_expanded.location);
+    const Point2d cur_pos                        = instance.location_to_position((*sipp_info)[i].cur_expanded.location);
     cell_rectangles_active[cur_pos.y][cur_pos.x] = true;
     // draw only until time
     if (i == time)
@@ -464,16 +455,16 @@ void Visualizer::draw_cell_rectangles(sf::RenderWindow& window)
   }
 
   // draw the currently expanded
-  if (selected_agent >= 0 && sipp_vis.time < (int)sipp_info[selected_agent].size())
+  if (selected_agent >= 0 && sipp_vis.time < (int)(*sipp_info).size())
   {
-    const Point2d& cur_pos  = instance.location_to_position(sipp_info[selected_agent][sipp_vis.time].cur_expanded.location);
+    const Point2d& cur_pos  = instance.location_to_position((*sipp_info)[sipp_vis.time].cur_expanded.location);
     curr_expanded_rectangle = cell_rectangles[cur_pos.y][cur_pos.x];
     curr_expanded_rectangle.setFillColor(sf::Color::Yellow);
     window.draw(curr_expanded_rectangle);
   }
 }
 
-void Visualizer::update_path(const int agent_num, const Path& path)
+void Visualizer::update_path_vis(const int agent_num, const Path& path)
 {
   assertm(agent_num >= 0 && agent_num < (int)agents_colors.size() && agent_num < instance.num_of_agents, "Invalid agent number.");
 
@@ -561,13 +552,13 @@ void Visualizer::update_path(const int agent_num, const Path& path)
   agents_paths_vis[agent_num] = path_vis;
 }
 
-void Visualizer::update_all_paths(int time)
+void Visualizer::update_all_path_vis(int time)
 {
-  for (int i = 0; i < (int)agents_paths.size(); i++)
+  for (int i = 0; i < (int)(*agents_paths).size(); i++)
   {
     // calculate the start index of the path according to the visualization time
-    int idx = std::min((int)agents_paths[i].size() - 1, time);
-    update_path(i, Path(agents_paths[i].begin() + idx, agents_paths[i].end()));
+    int idx = std::min((int)(*agents_paths)[i].size() - 1, time);
+    update_path_vis(i, Path((*agents_paths)[i].begin() + idx, (*agents_paths)[i].end()));
   }
 }
 
@@ -582,6 +573,24 @@ void Visualizer::draw_paths(sf::RenderWindow& window)
     window.draw(it);
   }
 }
+
+void Visualizer::update_all_paths(int time)
+{
+  agents_paths = &lns_info[time].sol.converted_paths;
+  assertm(instance.num_of_agents == (int)(*agents_paths).size(), "Number of paths should be the same as the number of agents.");
+
+  int max_path_len = 0;
+  // construct the path visualizations and find the new length of the visualization
+  for (int i = 0; i < instance.num_of_agents; i++)
+  {
+    update_path_vis(i, (*agents_paths)[i]);
+    max_path_len = std::max(max_path_len, (int)(*agents_paths)[i].size() - 1);
+  }
+
+  // update the visualization
+  solution_vis.new_data(max_path_len);
+}
+
 
 void Visualizer::create_docking_space(void)
 {
@@ -780,7 +789,7 @@ void Visualizer::process_events(sf::RenderWindow& window, sf::View& view)
             if (agents_circles[i].getGlobalBounds().contains(translated_pos))
             {
               selected_agent = i;
-              sipp_vis.new_data(sipp_info[selected_agent].size());
+              update_sipp_info();
               return;
             }
           }
@@ -842,13 +851,13 @@ void Visualizer::create_left_panel()
     ImGui::Text("\tStart: %s", ((std::string)instance.get_start_positions()[selected_agent]).c_str());
     ImGui::Text("\tGoal: %s", ((std::string)instance.get_goal_positions()[selected_agent]).c_str());
     // sipp visualization
-    create_visualization_playback_bar("Sipp visualization:", sipp_vis);
+    create_visualization_playback_bar("Sipp visualization:", sipp_vis, 20);
 
     // sipp node info
     if (sipp_vis.time > 0)
     {
       ImGui::Text("SIPP node info:");
-      const SIPPIterationInfo& cur_info = sipp_info[selected_agent][sipp_vis.time - 1];
+      const SIPPIterationInfo& cur_info = (*sipp_info)[sipp_vis.time - 1];
 
       ImGui::Text("\tIteration num: %d", cur_info.iteration_num);
       ImGui::Text("\tExpanded position: %s", ((std::string)instance.location_to_position(cur_info.cur_expanded.location)).c_str());
@@ -868,19 +877,33 @@ void Visualizer::create_right_panel()
 {
   ImGui::Begin("Right Panel", nullptr, ImGuiWindowFlags_NoResize);
   // Solution visualization
-  create_visualization_playback_bar("Solution visualization:", solution_vis);
+  create_visualization_playback_bar("Solution visualization:", solution_vis, 0);
 
   // LNS visualization
-  create_visualization_playback_bar("LNS visualization:", lns_vis);
+  create_visualization_playback_bar("LNS visualization:", lns_vis, 10);
+
+  ImGui::Text("LNS info:");
+  const LNSIterationInfo& cur_info = lns_info[lns_vis.time];
+
+  ImGui::Text("\tIteration num: %d", cur_info.iteration_num);
+  ImGui::Text("\tAccepted: %d", cur_info.accepted);
+  ImGui::Text("\tImprovement: %d", cur_info.improvement);
+  // create a stringstrem from all destroyed agents
+  std::stringstream ss;
+  for (const auto& it : cur_info.sol.destroyed_paths)
+  {
+    ss << it << " ";
+  }
+  ImGui::Text("\tDestroyed: %s", ss.str().c_str());
+
+
   ImGui::End();
 }
 
-void Visualizer::create_visualization_playback_bar(std::string vis_name, Visualization& vis)
+void Visualizer::create_visualization_playback_bar(std::string vis_name, Visualization& vis, int id)
 {
   // TODO rewrite vsualizations to use this method
   ImGui::Text(vis_name.c_str());
-  static int id = 0;
-
   // Set button background color to transparent
   ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(1.0F, 1.0F, 1.0F, 0.0F));
 
@@ -998,21 +1021,21 @@ void Visualizer::create_menu_bar()
 
 auto Visualizer::get_agent_position(const int agent_num, const int time) const -> const Point2d
 {
-  assertm(agent_num < (int)agents_paths.size(), "Agent number outside of the range.");
+  assertm(agent_num < (int)(*agents_paths).size(), "Agent number outside of the range.");
   // if path empty, return the start position
-  if (agents_paths[agent_num].empty())
+  if ((*agents_paths)[agent_num].empty())
   {
     return instance.get_start_positions()[agent_num];
   }
-  const int idx = std::min((int)agents_paths[agent_num].size() - 1, time);
-  return instance.location_to_position(agents_paths[agent_num][idx]);
+  const int idx = std::min((int)(*agents_paths)[agent_num].size() - 1, time);
+  return instance.location_to_position((*agents_paths)[agent_num][idx]);
 }
 
 auto Visualizer::get_agent_location(const int agent_num, const int time) const -> int
 {
-  assertm(agent_num < (int)agents_paths.size(), "Agent number outside of the range.");
-  const int idx = std::min((int)agents_paths[agent_num].size() - 1, time);
-  return agents_paths[agent_num][idx];
+  assertm(agent_num < (int)(*agents_paths).size(), "Agent number outside of the range.");
+  const int idx = std::min((int)(*agents_paths)[agent_num].size() - 1, time);
+  return (*agents_paths)[agent_num][idx];
 }
 
 auto Visualizer::get_agent_positions(const int time) const -> std::vector<Point2d>
@@ -1020,8 +1043,8 @@ auto Visualizer::get_agent_positions(const int time) const -> std::vector<Point2
   std::vector<Point2d> agent_positions;
 
   // find the current position for each agent
-  agent_positions.reserve((int)agents_paths.size());
-  for (int i = 0; i < (int)agents_paths.size(); i++)
+  agent_positions.reserve((int)(*agents_paths).size());
+  for (int i = 0; i < (int)(*agents_paths).size(); i++)
   {
     agent_positions.push_back(get_agent_position(i, time));
   }
@@ -1033,8 +1056,8 @@ auto Visualizer::get_agent_locations(const int time) const -> std::vector<int>
   std::vector<int> agent_positions;
 
   // find the current position for each agent
-  agent_positions.reserve((int)agents_paths.size());
-  for (int i = 0; i < (int)agents_paths.size(); i++)
+  agent_positions.reserve((int)(*agents_paths).size());
+  for (int i = 0; i < (int)(*agents_paths).size(); i++)
   {
     agent_positions.push_back(get_agent_location(i, time));
   }
@@ -1043,7 +1066,7 @@ auto Visualizer::get_agent_locations(const int time) const -> std::vector<int>
 
 void Visualizer::solution_visualization_update(const Visualization& vis)
 {
-  update_all_paths(vis.time);
+  update_all_path_vis(vis.time);
   update_agent_circles(get_agent_positions(vis.time));
 }
 
@@ -1055,7 +1078,15 @@ void Visualizer::sipp_visualization_update(const Visualization& vis)
 
 void Visualizer::lns_visualization_update(const Visualization& vis)
 {
-  // TODO
+  // reset other visualizations
+  update_all_paths(vis.time);
+  solution_vis.reset();
+  // update sipp info
+  if (selected_agent != -1)
+  {
+    update_sipp_info();
+    sipp_vis.reset();
+  }
 }
 
 // based on https://stackoverflow.com/questions/43044/algorithm-to-randomly-generate-an-aesthetically-pleasing-color-palette
@@ -1072,6 +1103,35 @@ auto Visualizer::generate_random_color(const int mix_r, const int mix_g, const i
     {
       return sf::Color(r, g, b);
     }
+  }
+}
+
+void Visualizer::update_sipp_info()
+{
+  if (selected_agent == -1)
+  {
+    sipp_info = nullptr;
+  }
+  else
+  {
+    // iterate over lns info in the reversed order, find the latest iteration before current visualization time where selected agent was
+    // replanned
+    int offset = static_cast<int>(lns_info.size()) - 1 - lns_vis.time;
+    for (auto info = lns_info.crbegin() + offset; info != lns_info.crend(); info++)
+    {
+      const auto it = std::find(info->sol.destroyed_paths.begin(), info->sol.destroyed_paths.end(), selected_agent);
+      if (it != info->sol.destroyed_paths.end())
+      {
+        int idx = it - info->sol.destroyed_paths.begin();
+        assertm(idx >= 0 && idx < static_cast<int>(info->sipp_info.size()), "Invalid idx");
+        sipp_info = &(info->sipp_info[idx]);
+        sipp_vis.new_data((*sipp_info).size());
+        return;
+      }
+    }
+    // use the first iteration
+    sipp_info = &(lns_info[0].sipp_info[selected_agent]);
+    sipp_vis.new_data((*sipp_info).size());
   }
 }
 

@@ -43,8 +43,8 @@ private:
 class LNS : public Solver
 {
 public:
-  std::vector<SIPPInfo> sipp_info;
-  std::unique_ptr<SIPP> planner;
+  mutable std::vector<SIPPInfo> sipp_info;
+  std::unique_ptr<SIPP>         planner;
 
   // constructor
   LNS(const Instance& instance_, std::mt19937& rnd_generator_, SharedData* shared_data_, const LNS_settings& settings_);

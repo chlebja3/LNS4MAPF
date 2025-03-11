@@ -86,7 +86,13 @@ void LNS::solve()
     // construct LNS iteration info and add to the shared data
     if (settings.sipp_settings.info_type == INFO_type::visualisation)
     {
-      LNSIterationInfo lns_info(iteration_num, accepted, improvement, sipp_info);
+      // get the pointer to the original perturbed solution (which might have been moved)
+      Solution* sol = &solution;
+      if (!accepted)
+      {
+        sol = &perturbed_sol;
+      }
+      LNSIterationInfo lns_info(iteration_num, accepted, improvement, sipp_info, *sol);
       sipp_info.clear();
       shared_data->update_lns_info(lns_info);
     }
@@ -105,7 +111,7 @@ auto LNS::find_initial_solution() -> bool
   // construct LNS iteration info and add to the shared data
   if (settings.sipp_settings.info_type == INFO_type::visualisation)
   {
-    LNSIterationInfo lns_info(0, solution.feasible, 0, sipp_info);
+    LNSIterationInfo lns_info(0, solution.feasible, 0, sipp_info, solution);
     sipp_info.clear();
     shared_data->update_lns_info(lns_info);
   }
@@ -211,6 +217,13 @@ void LNS::repair_default(Solution& sol) const
 {
   assertm(!sol.feasible, "Can not repair a feasible solution");
   assertm((int)sol.destroyed_paths.size() > 0, "There are no destroyed paths in the solution to be repaired.");
+
+  if (settings.sipp_settings.info_type == INFO_type::visualisation)
+  {
+    sipp_info.clear();
+    sipp_info.resize(sol.destroyed_paths.size());
+  }
+
   // remove the destroyed paths
   for (auto& it : sol.destroyed_paths)
   {
@@ -221,16 +234,25 @@ void LNS::repair_default(Solution& sol) const
   sol.feasible = true;
 
   // replan
-  for (auto& it : sol.destroyed_paths)
+  for (int i = 0; i < static_cast<int>(sol.destroyed_paths.size()); i++)
   {
-    TimePointPath tp_path = planner->plan(it);
+    int           path_idx = sol.destroyed_paths[i];
+    TimePointPath tp_path  = planner->plan(path_idx);
     if (tp_path.empty())
     {
       sol.feasible = false;
       return;
     }
+
+    // get the visualization info
+    if (settings.sipp_settings.info_type == INFO_type::visualisation)
+    {
+      sipp_info[i] = std::move(planner->iter_info);
+      planner->iter_info.clear();
+    }
+
     planner->constraint_table.add_constraints(tp_path);
-    sol.paths[it] = tp_path;
+    sol.paths[path_idx] = tp_path;
   }
 }
 

@@ -58,9 +58,11 @@ public:
 
   void update_agent_circles(const std::vector<Point2d>& positions);
   void update_goal_circles(const std::vector<Point2d>& positions);
-  void update_path(int agent_num, const Path& path);
+  void update_path_vis(int agent_num, const Path& path);
   void update_all_paths(int time);
+  void update_all_path_vis(int time);
   void update_cell_rectangles_active(int time);
+  void update_sipp_info();
   void create_cell_rectangles();
   auto get_agent_position(int agent_num, int time) const -> const Point2d;
   auto get_agent_location(int agent_num, int time) const -> int;
@@ -95,7 +97,7 @@ private:
   void        create_left_panel();
   void        create_right_panel();
   void        create_bottom_panel();
-  static void create_visualization_playback_bar(std::string vis_name, Visualization& vis);
+  static void create_visualization_playback_bar(std::string vis_name, Visualization& vis, int id);
   // draw the agents
   void            draw_agents(sf::RenderWindow& window);
   void            draw_goals(sf::RenderWindow& window);
@@ -116,10 +118,10 @@ private:
   std::vector<sf::CircleShape>                 goal_circles;
   std::vector<sf::Color>                       agents_colors;
   std::vector<sf::VertexArray>                 agents_paths_vis;
-  std::vector<Path>                            agents_paths;
+  std::vector<Path> const*                     agents_paths = nullptr;
   std::vector<std::vector<sf::RectangleShape>> cell_rectangles;
   std::vector<std::vector<bool>>               cell_rectangles_active;
-  std::vector<SIPPInfo>                        sipp_info;
+  SIPPInfo const*                              sipp_info;
   std::vector<LNSIterationInfo>                lns_info;
   int                                          selected_agent = -1;
   bool                                         is_moving      = false;

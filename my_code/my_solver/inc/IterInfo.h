@@ -5,6 +5,9 @@
  * Description:
  */
 #pragma once
+#include <utility>
+
+#include "Solver.h"
 #include "utils.h"
 
 class SIPPIterationInfo
@@ -29,9 +32,15 @@ public:
   bool                  accepted;
   int                   improvement;
   std::vector<SIPPInfo> sipp_info;
-  LNSIterationInfo(int iteration_num_, bool accepted_, int improvement_, std::vector<SIPPInfo>& sipp_info_)
-      : iteration_num(iteration_num_), accepted(accepted_), improvement(improvement_), sipp_info(std::move(sipp_info_))
+  Solution              sol;
+  LNSIterationInfo(int iteration_num_, bool accepted_, int improvement_, std::vector<SIPPInfo>& sipp_info_, Solution sol_)
+      : iteration_num(iteration_num_),
+        accepted(accepted_),
+        improvement(improvement_),
+        sipp_info(std::move(sipp_info_)),
+        sol(std::move(sol_))
   {
+    sol.convert_paths();
   }
 };
 
