@@ -14,16 +14,16 @@
 class SharedData
 {
 public:
-  std::atomic<bool> are_new_paths;
+  std::atomic<bool> is_new_info;
+  std::atomic<bool> is_end;
 
   SharedData();
 
-  void update_paths(const std::vector<Path>& new_paths, std::vector<SIPPInfo>& sipp_info);
+  void update_lns_info(LNSIterationInfo new_info);
 
-  auto consume_paths() -> std::pair<std::vector<Path>, std::vector<SIPPInfo>>;
+  auto consume_lns_info() -> std::vector<LNSIterationInfo>;
 
 private:
-  std::mutex            paths_mtx;
-  std::vector<Path>     paths;
-  std::vector<SIPPInfo> sipp_info;
+  std::mutex                    mtx;
+  std::vector<LNSIterationInfo> lns_info;
 };

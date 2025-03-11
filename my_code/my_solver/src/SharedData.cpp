@@ -8,37 +8,33 @@
 
 #include <iostream>
 
-SharedData::SharedData() : are_new_paths(false)
+SharedData::SharedData() : is_new_info(false), is_end(false)
 {
   std::cout << "Initialized shared data." << std::endl;
 }
 
-void SharedData::update_paths(const std::vector<Path>& new_paths, std::vector<SIPPInfo>& new_sipp_info)
+void SharedData::update_lns_info(LNSIterationInfo new_info)
 {
   // lock  the mutex
-  std::lock_guard<std::mutex> lock(paths_mtx);
-
-  // update the paths
-  paths = new_paths;
-
-  // update the info
-  sipp_info = std::move(new_sipp_info);
-  new_sipp_info.clear();
+  std::lock_guard<std::mutex> lock(mtx);
+  lns_info.push_back(std::move(new_info));
 
   // signal that new data arrived
-  are_new_paths.store(true, std::memory_order_release);
+  is_new_info.store(true, std::memory_order_release);
 }
 
-auto SharedData::consume_paths() -> std::pair<std::vector<Path>, std::vector<SIPPInfo>>
+auto SharedData::consume_lns_info() -> std::vector<LNSIterationInfo>
 {
-  assertm(are_new_paths, "Trying to consume paths when there are no paths.");
+  assertm(is_new_info.load(std::memory_order_acquire), "Trying to consume paths when there are no paths.");
   // lock  the mutex
-  std::lock_guard<std::mutex> lock(paths_mtx);
+  std::lock_guard<std::mutex> lock(mtx);
 
   // signal that the paths have been consumed
-  are_new_paths.store(false, std::memory_order_release);
+  is_new_info.store(false, std::memory_order_release);
 
   // return the paths (which consumes them)
-  return {std::move(paths), std::move(sipp_info)};
+  std::vector<LNSIterationInfo> ret = std::move(lns_info);
+  lns_info.clear();
+  return ret;
 }
 

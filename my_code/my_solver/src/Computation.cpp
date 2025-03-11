@@ -12,7 +12,7 @@
 
 #include "LNS.h"
 
-Computation::Computation(const Instance& instance_, SharedData& shared_data_, LNS_settings lns_settings_, int seed_ = -1)
+Computation::Computation(const Instance& instance_, SharedData* shared_data_, LNS_settings lns_settings_, int seed_ = -1)
     : instance(instance_), shared_data(shared_data_), running(false), seed(seed_), lns_settings(lns_settings_)
 {
   // initialized the random generator
@@ -28,7 +28,7 @@ Computation::Computation(const Instance& instance_, SharedData& shared_data_, LN
   }
 
   // initialize the solver
-  solver = std::make_unique<LNS>(instance, rnd_generator, lns_settings);
+  solver = std::make_unique<LNS>(instance, rnd_generator, shared_data, lns_settings);
 }
 
 Computation::~Computation()

@@ -14,8 +14,9 @@
 #include "utils.h"
 
 
-LNS::LNS(const Instance& instance_, std::mt19937& rnd_generator_, const LNS_settings& settings_)
+LNS::LNS(const Instance& instance_, std::mt19937& rnd_generator_, SharedData* shared_data_, const LNS_settings& settings_)
     : Solver("LNS", instance_, rnd_generator_),
+      shared_data(shared_data_),
       settings(settings_),
       destroy_operator(Operator([this](Solution& sol) { destroy_random(sol); })),
       repair_operator(Operator([this](Solution& sol) { repair_default(sol); }))
@@ -53,26 +54,42 @@ void LNS::solve()
     // repair operator
     repair_operator.apply(perturbed_sol);
 
+
     // accept only feasible solutions
+    bool accepted    = false;
+    int  improvement = 0;
     if (!perturbed_sol.feasible)
     {
       discard_solution(perturbed_sol, solution);
       std::cout << "Discarded infeasible solution." << std::endl;
-      continue;
     }
-
-    // accept only improving solutions
-    perturbed_sol.calculate_cost(instance);
-    if (perturbed_sol.sum_of_delays >= solution.sum_of_delays)
+    else
     {
-      discard_solution(perturbed_sol, solution);
-      // std::cout << "Discarded worse solution, difference: " << perturbed_sol.sum_of_costs - solution.sum_of_costs << std::endl;
-      continue;
+      // accept only improving solutions
+      perturbed_sol.calculate_cost(instance);
+      improvement = solution.sum_of_delays - perturbed_sol.sum_of_delays;
+
+      if (improvement <= 0)
+      {
+        discard_solution(perturbed_sol, solution);
+        // std::cout << "Discarded worse solution, difference: " << perturbed_sol.sum_of_costs - solution.sum_of_costs << std::endl;
+      }
+      else
+      {
+        accepted = true;
+        // remember the perturbed solution
+        std::cout << "Solution improved by: " << solution.sum_of_delays - perturbed_sol.sum_of_delays << std::endl;
+        solution = std::move(perturbed_sol);
+      }
     }
 
-    // remember the perturbed solution
-    std::cout << "Solution improved by: " << solution.sum_of_delays - perturbed_sol.sum_of_delays << std::endl;
-    solution = std::move(perturbed_sol);
+    // construct LNS iteration info and add to the shared data
+    if (settings.sipp_settings.info_type == INFO_type::visualisation)
+    {
+      LNSIterationInfo lns_info(iteration_num, accepted, improvement, sipp_info);
+      sipp_info.clear();
+      shared_data->update_lns_info(lns_info);
+    }
   }
 }
 
@@ -84,6 +101,15 @@ auto LNS::find_initial_solution() -> bool
   {
     solution.calculate_cost(instance);
   }
+
+  // construct LNS iteration info and add to the shared data
+  if (settings.sipp_settings.info_type == INFO_type::visualisation)
+  {
+    LNSIterationInfo lns_info(0, solution.feasible, 0, sipp_info);
+    sipp_info.clear();
+    shared_data->update_lns_info(lns_info);
+  }
+
   std::cout << "Solution has sum of costs: " << solution.sum_of_costs << ", sol has delay: " << solution.sum_of_delays << std::endl;
   return solution.feasible;
 }
@@ -167,23 +193,13 @@ auto LNS::PrioritizedPlanning(SIPP_implementation sipp_implementation) -> Soluti
   return sol;
 }
 
-auto LNS::get_num_of_generated_nodes() const -> int
-{
-  return planner->generated_all_iter;
-}
-
-auto LNS::get_num_of_expanded_nodes() const -> int
-{
-  return planner->expanded_all_iter;
-}
-
 void LNS::destroy_random(Solution& sol) const
 {
   // TODO optimize
   constexpr int    neighborhood_size = 20;
   std::vector<int> path_idcs(sol.paths.size());
   std::iota(path_idcs.begin(), path_idcs.end(), 0);
-  std::random_shuffle(path_idcs.begin(), path_idcs.end());
+  std::shuffle(path_idcs.begin(), path_idcs.end(), rnd_generator);
   assertm((int)path_idcs.size() > neighborhood_size, "Not enough paths for the destroy operator.");
   sol.destroyed_paths =
       std::vector(std::make_move_iterator(path_idcs.begin()), std::make_move_iterator(path_idcs.begin() + neighborhood_size));
@@ -218,7 +234,7 @@ void LNS::repair_default(Solution& sol) const
   }
 }
 
-void LNS::discard_solution(const Solution& sol, const Solution& prev_sol)
+void LNS::discard_solution(const Solution& sol, const Solution& prev_sol) const
 {
   for (const auto& it : sol.destroyed_paths)
   {

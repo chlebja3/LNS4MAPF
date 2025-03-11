@@ -186,7 +186,7 @@ auto main(int argc, char** argv) -> int
 
           // create solver
           LNS_settings lns_settings(1, 1, {sipp_implementation, INFO_type::experiment, w});
-          LNS          solver(instance, rnd_generator, lns_settings);
+          LNS          solver(instance, rnd_generator, nullptr, lns_settings);
 
           // find the solution
           Clock clock;

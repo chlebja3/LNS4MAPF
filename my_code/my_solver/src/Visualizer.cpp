@@ -47,6 +47,7 @@ Visualizer::Visualizer(const Instance& instance_, SharedData& shared_data_, int 
       shared_data(shared_data_),
       solution_vis([this](Visualization& vis) { this->solution_visualization_update(vis); }),
       sipp_vis([this](Visualization& vis) { this->sipp_visualization_update(vis); }),
+      lns_vis([this](Visualization& vis) { this->lns_visualization_update(vis); }),
       seed(seed_)
 {
   // initialized the random generator
@@ -170,27 +171,32 @@ void Visualizer::run()
     {
       sipp_vis.next_iteration();
     }
-    else if (shared_data.are_new_paths.load(std::memory_order_acquire))
+    else if (lns_vis.is_playing)
     {
-      // get the new paths from the shared structure
-      std::tie(agents_paths, sipp_info) = shared_data.consume_paths();
-      assertm(instance.num_of_agents == (int)agents_paths.size(), "Number of paths should be the same as the number of agents.");
+      lns_vis.next_iteration();
+    }
+    else if (shared_data.is_new_info.load(std::memory_order_acquire))
+    {
+      std::vector<LNSIterationInfo> new_lns_info = shared_data.consume_lns_info();
+      assertm(!new_lns_info.empty(), "Received empty LNS info");
+      lns_info.insert(lns_info.end(), std::make_move_iterator(new_lns_info.begin()), std::make_move_iterator(new_lns_info.end()));
+      // assertm(instance.num_of_agents == (int)agents_paths.size(), "Number of paths should be the same as the number of agents.");
 
-      int max_path_len = 0;
-      // construct the path visualizations and find the new length of the visualization
-      for (int i = 0; i < instance.num_of_agents; i++)
-      {
-        update_path(i, agents_paths[i]);
-        max_path_len = std::max(max_path_len, (int)agents_paths[i].size() - 1);
-      }
+      // int max_path_len = 0;
+      // // construct the path visualizations and find the new length of the visualization
+      // for (int i = 0; i < instance.num_of_agents; i++)
+      // {
+      //   update_path(i, agents_paths[i]);
+      //   max_path_len = std::max(max_path_len, (int)agents_paths[i].size() - 1);
+      // }
 
-      // update the visualization
-      solution_vis.new_data(max_path_len);
+      // // update the visualization
+      // solution_vis.new_data(max_path_len);
 
-      if (log.empty())
-      {
-        log.emplace_back("Prioritized planning finished.");
-      }
+      // if (log.empty())
+      // {
+      //   log.emplace_back("Prioritized planning finished.");
+      // }
     }
 
     // process the events
@@ -835,73 +841,8 @@ void Visualizer::create_left_panel()
     ImGui::Text("\tCurrent position: %s", ((std::string)get_agent_position(selected_agent, solution_vis.time)).c_str());
     ImGui::Text("\tStart: %s", ((std::string)instance.get_start_positions()[selected_agent]).c_str());
     ImGui::Text("\tGoal: %s", ((std::string)instance.get_goal_positions()[selected_agent]).c_str());
-    // sipp info
-    ImGui::Text("Sipp visualization:");
-
-    // Set button background color to transparent
-    ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(1.0F, 1.0F, 1.0F, 0.0F));
-
-    // calculate the width of the slider label
-    const float time_text_width = ImGui::CalcTextSize("Time: ").x + ImGui::GetStyle().ItemSpacing.x;
-
-    // Get the width of the remaining space in the panel after adding the slider label
-    const float panel_size      = ImGui::GetContentRegionAvail().x;
-    float       available_width = panel_size - time_text_width;
-
-    // create the slider
-    ImGui::Text("Time: ");
-    ImGui::SameLine();
-    ImGui::SetNextItemWidth(available_width);
-    if (ImGui::SliderInt("##time_slider2", &sipp_vis.time, 0,
-                         sipp_vis.max_time))  // ##time_slider means that the slider name is not displayed
-    {
-      // slider changed
-      sipp_vis.update();
-    }
-
-    // calculate the width of button array
-    const int num_buttons = 5;
-    float     total_width = num_buttons * ImGui::CalcTextSize(ICON_FA_PLAY).x + 2 * num_buttons * ImGui::GetStyle().FramePadding.x +
-                        (num_buttons - 1) * ImGui::GetStyle().ItemSpacing.x;
-
-    // center the playback buttons
-    float start_x = time_text_width + (available_width - total_width) * 0.5F;
-    if (start_x + total_width > panel_size)
-    {
-      start_x = panel_size - total_width;
-    }
-    ImGui::SetCursorPosX(start_x);
-
-    if (ImGui::Button(ICON_FA_PLAY))
-    {
-      sipp_vis.start();
-    }
-    ImGui::SameLine();
-
-    if (ImGui::Button(ICON_FA_STOP))
-    {
-      sipp_vis.reset();
-    }
-    ImGui::SameLine();
-
-    if (ImGui::Button(ICON_FA_STEP_BACKWARD))
-    {
-      sipp_vis.step_backward();
-    }
-    ImGui::SameLine();
-
-    if (ImGui::Button(ICON_FA_PAUSE))
-    {
-      sipp_vis.pause();
-    }
-    ImGui::SameLine();
-
-    if (ImGui::Button(ICON_FA_STEP_FORWARD))
-    {
-      sipp_vis.step_forward();
-    }
-
-    ImGui::PopStyleColor(1);
+    // sipp visualization
+    create_visualization_playback_bar("Sipp visualization:", sipp_vis);
 
     // sipp node info
     if (sipp_vis.time > 0)
@@ -926,8 +867,19 @@ void Visualizer::create_left_panel()
 void Visualizer::create_right_panel()
 {
   ImGui::Begin("Right Panel", nullptr, ImGuiWindowFlags_NoResize);
+  // Solution visualization
+  create_visualization_playback_bar("Solution visualization:", solution_vis);
 
-  ImGui::Text("Solution visualization:");
+  // LNS visualization
+  create_visualization_playback_bar("LNS visualization:", lns_vis);
+  ImGui::End();
+}
+
+void Visualizer::create_visualization_playback_bar(std::string vis_name, Visualization& vis)
+{
+  // TODO rewrite vsualizations to use this method
+  ImGui::Text(vis_name.c_str());
+  static int id = 0;
 
   // Set button background color to transparent
   ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(1.0F, 1.0F, 1.0F, 0.0F));
@@ -943,16 +895,16 @@ void Visualizer::create_right_panel()
   ImGui::Text("Time: ");
   ImGui::SameLine();
   ImGui::SetNextItemWidth(available_width);
-  if (ImGui::SliderInt("##time_slider", &solution_vis.time, 0,
-                       solution_vis.max_time))  // ##time_slider means that the slider name is not displayed
+  if (ImGui::SliderInt((std::string("##") + std::to_string(id++)).c_str(), &vis.time, 0,
+                       vis.max_time))  // ##time_slider means that the slider name is not displayed
   {
     // slider changed
-    solution_vis.update();
+    vis.update();
   }
 
   // calculate the width of button array
-  const int num_buttons = 5;
-  float     total_width = num_buttons * ImGui::CalcTextSize(ICON_FA_PLAY).x + 2 * num_buttons * ImGui::GetStyle().FramePadding.x +
+  constexpr int num_buttons = 5;
+  float         total_width = num_buttons * ImGui::CalcTextSize(ICON_FA_PLAY).x + 2 * num_buttons * ImGui::GetStyle().FramePadding.x +
                       (num_buttons - 1) * ImGui::GetStyle().ItemSpacing.x;
 
   // center the playback buttons
@@ -963,38 +915,36 @@ void Visualizer::create_right_panel()
   }
   ImGui::SetCursorPosX(start_x);
 
-  if (ImGui::Button(ICON_FA_PLAY))
+  if (ImGui::Button((std::string(ICON_FA_PLAY "##xx") + std::to_string(id++)).c_str()))
   {
-    solution_vis.start();
+    vis.start();
   }
   ImGui::SameLine();
 
-  if (ImGui::Button(ICON_FA_STOP))
+  if (ImGui::Button((std::string(ICON_FA_STOP "##xx") + std::to_string(id++)).c_str()))
   {
-    solution_vis.reset();
+    vis.reset();
   }
   ImGui::SameLine();
 
-  if (ImGui::Button(ICON_FA_STEP_BACKWARD))
+  if (ImGui::Button((std::string(ICON_FA_STEP_BACKWARD "##xx") + std::to_string(id++)).c_str()))
   {
-    solution_vis.step_backward();
+    vis.step_backward();
   }
   ImGui::SameLine();
 
-  if (ImGui::Button(ICON_FA_PAUSE))
+  if (ImGui::Button((std::string(ICON_FA_PAUSE "##xx") + std::to_string(id++)).c_str()))
   {
-    solution_vis.pause();
+    vis.pause();
   }
   ImGui::SameLine();
 
-  if (ImGui::Button(ICON_FA_STEP_FORWARD))
+  if (ImGui::Button((std::string(ICON_FA_STEP_FORWARD "##xx") + std::to_string(id++)).c_str()))
   {
-    solution_vis.step_forward();
+    vis.step_forward();
   }
 
   ImGui::PopStyleColor(1);
-
-  ImGui::End();
 }
 
 
@@ -1103,6 +1053,10 @@ void Visualizer::sipp_visualization_update(const Visualization& vis)
   update_cell_rectangles_active(vis.time);
 }
 
+void Visualizer::lns_visualization_update(const Visualization& vis)
+{
+  // TODO
+}
 
 // based on https://stackoverflow.com/questions/43044/algorithm-to-randomly-generate-an-aesthetically-pleasing-color-palette
 auto Visualizer::generate_random_color(const int mix_r, const int mix_g, const int mix_b, const double mix_ratio) -> sf::Color

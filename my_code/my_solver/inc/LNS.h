@@ -9,6 +9,7 @@
 #include <random>
 
 #include "SIPP.h"
+#include "SharedData.h"
 #include "Solver.h"
 
 class LNS_settings
@@ -46,7 +47,7 @@ public:
   std::unique_ptr<SIPP> planner;
 
   // constructor
-  LNS(const Instance& instance_, std::mt19937& rnd_generator_, const LNS_settings& settings_);
+  LNS(const Instance& instance_, std::mt19937& rnd_generator_, SharedData* shared_data_, const LNS_settings& settings_);
 
   // Destructor
   ~LNS() override = default;
@@ -57,14 +58,21 @@ public:
   auto find_initial_solution() -> bool;
   auto PrioritizedPlanning(SIPP_implementation sipp_implementation) -> Solution;
 
-  [[nodiscard]] auto get_num_of_generated_nodes() const -> int;
-  [[nodiscard]] auto get_num_of_expanded_nodes() const -> int;
-  void               discard_solution(const Solution& sol, const Solution& prev_sol);
+  [[nodiscard]] auto get_num_of_generated_nodes() const -> int
+  {
+    return planner->generated_all_iter;
+  }
+  [[nodiscard]] auto get_num_of_expanded_nodes() const -> int
+  {
+    return planner->expanded_all_iter;
+  }
+  void discard_solution(const Solution& sol, const Solution& prev_sol) const;
 
 private:
   void destroy_random(Solution& sol) const;
   void repair_default(Solution& sol) const;
 
+  SharedData*         shared_data;
   const LNS_settings& settings;
   int                 iteration_num = 0;
   double              initial_solution_time;

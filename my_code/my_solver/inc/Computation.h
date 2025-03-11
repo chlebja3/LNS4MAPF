@@ -19,7 +19,7 @@ class Computation
 {
 public:
   // constructor and destructor
-  Computation(const Instance& instance_, SharedData& shared_data_, LNS_settings lns_settings_, int seed);
+  Computation(const Instance& instance_, SharedData* shared_data_, LNS_settings lns_settings_, int seed);
   ~Computation();
 
   // manage the underlying thread
@@ -34,7 +34,7 @@ private:
   std::unique_ptr<LNS> solver;
   std::thread          comp_thread;
   const Instance&      instance;
-  SharedData&          shared_data;
+  SharedData*          shared_data;
   std::atomic<bool>    running;
   int                  seed;
   std::mt19937         rnd_generator;

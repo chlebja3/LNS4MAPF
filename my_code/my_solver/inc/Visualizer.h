@@ -68,6 +68,7 @@ public:
   auto get_agent_locations(int time) const -> std::vector<int>;
   void solution_visualization_update(const Visualization& vis);
   void sipp_visualization_update(const Visualization& vis);
+  void lns_visualization_update(const Visualization& vis);
 
 
 private:
@@ -91,9 +92,10 @@ private:
    */
   auto generate_random_color(int mix_r, int mix_g, int mix_b, double mix_ratio = 0.5) -> sf::Color;
 
-  void create_left_panel();
-  void create_right_panel();
-  void create_bottom_panel();
+  void        create_left_panel();
+  void        create_right_panel();
+  void        create_bottom_panel();
+  static void create_visualization_playback_bar(std::string vis_name, Visualization& vis);
   // draw the agents
   void            draw_agents(sf::RenderWindow& window);
   void            draw_goals(sf::RenderWindow& window);
@@ -118,6 +120,7 @@ private:
   std::vector<std::vector<sf::RectangleShape>> cell_rectangles;
   std::vector<std::vector<bool>>               cell_rectangles_active;
   std::vector<SIPPInfo>                        sipp_info;
+  std::vector<LNSIterationInfo>                lns_info;
   int                                          selected_agent = -1;
   bool                                         is_moving      = false;
   sf::Vector2i                                 last_click_pos;
@@ -131,6 +134,7 @@ private:
   // Visualizations
   Visualization solution_vis;
   Visualization sipp_vis;
+  Visualization lns_vis;
   int           seed;
   std::mt19937  rnd_generator;
 };

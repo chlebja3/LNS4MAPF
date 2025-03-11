@@ -107,7 +107,7 @@ auto main(int argc, char** argv) -> int
 
 
   // create the computation object
-  Computation computation(*instance, *shared_data, lns_settings, seed);
+  Computation computation(*instance, shared_data.get(), lns_settings, seed);
 
   // start the computation thread
   computation.start();
