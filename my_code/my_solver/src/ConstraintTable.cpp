@@ -11,12 +11,6 @@
 #include <climits>
 #include <iostream>
 
-
-EdgeConstraint::EdgeConstraint(int from_, int to_, int t_) : from(from_), to(to_), t(t_)
-{
-}
-
-
 auto EdgeConstraint::operator==(const EdgeConstraint& other) const -> bool
 {
   return from == other.from && to == other.to && t == other.t;

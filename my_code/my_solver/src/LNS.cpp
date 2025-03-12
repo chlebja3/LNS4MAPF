@@ -202,7 +202,8 @@ auto LNS::PrioritizedPlanning(SIPP_implementation sipp_implementation) -> Soluti
 void LNS::destroy_random(Solution& sol) const
 {
   // TODO optimize
-  constexpr int    neighborhood_size = 10;
+  constexpr int neighborhood_size = 10;
+  assertm(neighborhood_size >= 0 && neighborhood_size <= instance.num_of_agents, "Invalid neighborhood size.");
   std::vector<int> path_idcs(sol.paths.size());
   std::iota(path_idcs.begin(), path_idcs.end(), 0);
   std::shuffle(path_idcs.begin(), path_idcs.end(), rnd_generator);
@@ -211,6 +212,167 @@ void LNS::destroy_random(Solution& sol) const
       std::vector(std::make_move_iterator(path_idcs.begin()), std::make_move_iterator(path_idcs.begin() + neighborhood_size));
   assertm(sol.destroyed_paths.size() > 0, "No paths were destroyed.");
   sol.feasible = false;
+}
+
+void LNS::destroy_randomwalk(Solution& sol) const
+{
+  constexpr int neighborhood_size = 10;
+  assertm(neighborhood_size >= 0 && neighborhood_size <= instance.num_of_agents, "Invalid neighborhood size.");
+  // if neighborhood size the same as number of agents or more, return all agents
+  if (neighborhood_size >= instance.num_of_agents)
+  {
+    // TODO pass neighborhood size
+    destroy_random(sol);
+    return;
+  }
+
+  // the tabu list
+  static std::unordered_set<int> tabu_list;
+
+  // find the most delayed agent that is not on the tabu list
+  assertm(static_cast<int>(sol.delays.size()) == instance.num_of_agents,
+          "The length of delay list must be the same as the numebr of agents.");
+
+  int max_delay    = 0;
+  int most_delayed = -1;
+  for (int i = 0; i < instance.num_of_agents; i++)
+  {
+    // skip agents in tabu list
+    if (tabu_list.find(i) != tabu_list.end())
+    {
+      continue;
+    }
+
+    if (sol.delays[i] > max_delay)
+    {
+      max_delay    = sol.delays[i];
+      most_delayed = i;
+    }
+  }
+
+  // check, whether to reset tabu list
+  if (max_delay == 0)
+  {
+    assertm(!tabu_list.empty(), "Tabu list is empty and theres no delayed agent.");
+    // reset the tabu list and try again
+    tabu_list.clear();
+    destroy_randomwalk(sol);
+    return;
+  }
+
+  assertm(max_delay > 0, "Max delay is invalid.");
+  assertm(most_delayed >= 0 && most_delayed < instance.num_of_agents && sol.delays[most_delayed] == max_delay,
+          "Invalid id of most delayed agent");
+
+  std::vector<int> chosen     = {most_delayed};
+  int              upperbound = sol.paths[most_delayed].back().interval.t_min - 1;
+
+  // build the list of agents for each location and time which will be used in the random walk
+  std::vector<std::vector<int>> location_time_to_agentnum;  // [location][time]
+  location_time_to_agentnum.resize(instance.get_map_data().width * instance.get_map_data().height, std::vector<int>(upperbound, -1));
+  std::vector<std::vector<std::vector<int>>> edge_collisions;  // [dir][to][time]
+  edge_collisions.resize(magic_enum::enum_count<Direction>() - 1);
+  for (auto it : edge_collisions)
+  {
+    it.resize(instance.get_map_data().width * instance.get_map_data().height, std::vector<int>(upperbound, -1));
+  }
+
+  // TODO parallelize and move into a separate function
+  for (int agent_num = 0; agent_num < static_cast<int>(sol.paths.size()); agent_num++)
+  {
+    const TimePointPath path = sol.paths[agent_num];
+    for (auto tp = path.cbegin(); tp != path.cend(); tp++)
+    {
+      // add edge collision
+      if (tp != path.cbegin())
+      {
+        const int dir = static_cast<int>(find_direction(std::prev(tp)->location, tp->location)) - 1;  // dont consider NONE direction
+        edge_collisions[dir][tp->location][tp->interval.t_min] = agent_num;
+      }
+
+      for (int t = tp->interval.t_min; t <= tp->interval.t_max; t++)
+      {
+        location_time_to_agentnum[tp->location][t] = agent_num;
+      }
+    }
+  }
+  // remember, to handle edge conflicts, as here only cell conflicts are handled
+
+  // TODO perform the random walk
+}
+
+auto LNS::create_collision_vectors(const Solution& sol, int upperbound) const
+    -> std::pair<std::vector<std::vector<int>>, std::vector<std::vector<std::vector<int>>>>
+{
+  assertm(sol.feasible, "Infeasible solution");
+  assertm(static_cast<int>(sol.paths.size()) == instance.num_of_agents, "Not enough paths");
+  // build the list of agents for each location and time which will be used in the random walk
+  std::vector<std::vector<int>> location_time_to_agentnum;  // [location][time]
+  location_time_to_agentnum.resize(instance.get_map_data().width * instance.get_map_data().height, std::vector<int>(upperbound, -1));
+  std::vector<std::vector<std::vector<int>>> edge_collisions;  // [dir][to][time]
+  edge_collisions.resize(magic_enum::enum_count<Direction>() - 1);
+  for (auto& edge_collision : edge_collisions)
+  {
+    edge_collision.resize(instance.get_map_data().width * instance.get_map_data().height, std::vector<int>(upperbound, -1));
+  }
+
+  // TODO parallelize and move into a separate function
+  for (int agent_num = 0; agent_num < static_cast<int>(sol.paths.size()); agent_num++)
+  {
+    const TimePointPath path = sol.paths[agent_num];
+    for (auto tp = path.cbegin(); tp != path.cend(); tp++)
+    {
+      assertm(tp->location >= 0 && tp->location < static_cast<int>(location_time_to_agentnum.size()), "Invalid location");
+      assertm(tp->location < static_cast<int>(edge_collisions[0].size()), "Invalid location");
+      // add edge collision
+      if (tp != path.cbegin())
+      {
+        const int dir = static_cast<int>(find_direction(std::prev(tp)->location, tp->location)) - 1;  // dont consider NONE direction
+        assertm(dir >= 0 && dir < static_cast<int>(edge_collisions.size()), "Invalid direction");
+        assertm(tp->interval.t_min >= 0 && tp->interval.t_min < static_cast<int>(edge_collisions[dir][tp->location].size()),
+                "Invalid time");
+        edge_collisions[dir][tp->location][tp->interval.t_min] = agent_num;
+      }
+
+      for (int t = tp->interval.t_min; t <= std::min(tp->interval.t_max, upperbound - 1); t++)
+      {
+        assertm(t >= 0 && t < static_cast<int>(location_time_to_agentnum[tp->location].size()), "Invalid time");
+        location_time_to_agentnum[tp->location][t] = agent_num;
+      }
+    }
+  }
+  return {location_time_to_agentnum, edge_collisions};
+}
+
+void LNS::random_walk(int agent_num, int start_location, int start_time, int upperbound,
+                      std::vector<std::vector<int>>& location_time_to_agentnum)
+{
+  int curr = start_location;
+  for (int t = start_time; t < upperbound; t++)
+  {
+    std::vector<int> next_locations = instance.get_neighbor_locations(curr);
+    next_locations.push_back(curr);  // agent can also stay
+    std::shuffle(next_locations.begin(), next_locations.end(), rnd_generator);
+    for (auto loc : next_locations)
+    {
+      int next_h_val = instance.get_heuristic_distance(agent_num, loc);
+      // if lowerbound on the time to reach goal smaller than limit, accept the move
+      if (t + 1 + next_h_val < upperbound)
+      {
+        // TODO get agent that is in conflict and add it to the neighborhood
+        int agent = location_time_to_agentnum[loc][t + 1];
+
+        // if no conflict, check for edge conflicts
+        if (agent == -1)
+        {
+        }
+
+        curr = loc;
+        break;
+      }
+    }
+    // TODO test whether enough agents selected
+  }
 }
 
 void LNS::repair_default(Solution& sol) const

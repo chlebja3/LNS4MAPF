@@ -67,9 +67,14 @@ public:
     return planner->expanded_all_iter;
   }
   void discard_solution(const Solution& sol, const Solution& prev_sol) const;
+  auto create_collision_vectors(const Solution& sol, int upperbound) const
+      -> std::pair<std::vector<std::vector<int>>, std::vector<std::vector<std::vector<int>>>>;
 
 private:
   void destroy_random(Solution& sol) const;
+  void destroy_randomwalk(Solution& sol) const;
+  void random_walk(int agent_num, int start_location, int start_time, int upperbound,
+                   std::vector<std::vector<int>>& location_time_to_agentnum);
   void repair_default(Solution& sol) const;
 
   SharedData*         shared_data;

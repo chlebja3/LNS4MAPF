@@ -26,7 +26,9 @@ public:
   int to;
   int t;
 
-  EdgeConstraint(int from_, int to_, int t_);
+  EdgeConstraint(int from_, int to_, int t_) : from(from_), to(to_), t(t_)
+  {
+  }
 
   auto operator==(const EdgeConstraint& other) const -> bool;
 };
