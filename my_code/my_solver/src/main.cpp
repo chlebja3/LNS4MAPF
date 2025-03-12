@@ -81,7 +81,7 @@ auto main(int argc, char** argv) -> int
   std::unique_ptr<SharedData> shared_data = std::make_unique<SharedData>();
 
   // create the info type
-  INFO_type info_type = no_info;
+  INFO_type info_type = INFO_type::no_info;
   if (GUI)
   {
     info_type = INFO_type::visualisation;

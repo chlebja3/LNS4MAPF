@@ -289,12 +289,10 @@ void Solution::calculate_cost(const Instance& instance)
 
 void Solution::convert_paths() const
 {
-  if (converted_paths.empty())
+  converted_paths.clear();
+  converted_paths.resize(paths.size());
+  for (int i = 0; i < (int)paths.size(); i++)
   {
-    converted_paths.resize(paths.size());
-    for (int i = 0; i < (int)paths.size(); i++)
-    {
-      converted_paths[i] = timepointpath_to_path(paths[i]);
-    }
+    converted_paths[i] = timepointpath_to_path(paths[i]);
   }
 }

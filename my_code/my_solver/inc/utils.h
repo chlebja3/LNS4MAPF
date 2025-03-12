@@ -21,23 +21,23 @@
 using dsec = std::chrono::duration<double>;
 using Time = std::chrono::steady_clock;
 
-enum Direction
+enum class Direction
 {
-  NONE,
-  UP,
-  RIGHT,
-  DOWN,
-  LEFT
+  NONE  = 0,
+  UP    = 1,
+  RIGHT = 2,
+  DOWN  = 3,
+  LEFT  = 4
 };
 
-enum SIPP_implementation
+enum class SIPP_implementation
 {
   SIPP_mine,
   SIPP_suboptimal,
   SIPP_mapf_lns,
 };
 
-enum INFO_type
+enum class INFO_type
 {
   no_info,
   visualisation,

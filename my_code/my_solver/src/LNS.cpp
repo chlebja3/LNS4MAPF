@@ -202,7 +202,7 @@ auto LNS::PrioritizedPlanning(SIPP_implementation sipp_implementation) -> Soluti
 void LNS::destroy_random(Solution& sol) const
 {
   // TODO optimize
-  constexpr int    neighborhood_size = 20;
+  constexpr int    neighborhood_size = 10;
   std::vector<int> path_idcs(sol.paths.size());
   std::iota(path_idcs.begin(), path_idcs.end(), 0);
   std::shuffle(path_idcs.begin(), path_idcs.end(), rnd_generator);

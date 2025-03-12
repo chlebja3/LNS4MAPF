@@ -40,7 +40,7 @@
 // random color generation
 #define MIN_BRIGHTNESS 20
 #define MAX_BRIGHTNESS 230
-
+#define COLOR_GREY sf::Color(150, 150, 150, 255)
 
 Visualizer::Visualizer(const Instance& instance_, SharedData& shared_data_, int seed_)
     : instance(instance_),
@@ -367,28 +367,39 @@ void Visualizer::draw_goals(sf::RenderWindow& window)
   }
 }
 
-void Visualizer::update_cell_rectangles_active(int time)
+void Visualizer::update_cell_rectangles_highlights()
 {
-  if (selected_agent == -1)
+  //  set all cells to inactive
+  for (auto& row : cell_rectangles_highlights)
   {
-    return;
+    std::fill(row.begin(), row.end(), Highlight::NONE);
   }
 
-  //  set all cells to inactive
-  for (auto& row : cell_rectangles_active)
+  // highlight the destroyed paths from previous iterations
+  if (highlight_destroyed)
   {
-    std::fill(row.begin(), row.end(), 0);
+    for (auto it : lns_info[lns_vis.time].sol.destroyed_paths)
+    {
+      for (auto pos : lns_info[std::max(0, lns_vis.time - 1)].sol.converted_paths[it])
+      {
+        const Point2d cur_pos                            = instance.location_to_position(pos);
+        cell_rectangles_highlights[cur_pos.y][cur_pos.x] = Highlight::LNS_DESTROYED;
+      }
+    }
   }
 
   // find all active rectangles
-  for (int i = 0; i < std::min(time, (int)(*sipp_info).size()); i++)
+  if (selected_agent != -1)
   {
-    const Point2d cur_pos                        = instance.location_to_position((*sipp_info)[i].cur_expanded.location);
-    cell_rectangles_active[cur_pos.y][cur_pos.x] = true;
-    // draw only until time
-    if (i == time)
+    for (int i = 0; i < std::min(sipp_vis.time, (int)(*sipp_info).size()); i++)
     {
-      break;
+      const Point2d cur_pos                            = instance.location_to_position((*sipp_info)[i].cur_expanded.location);
+      cell_rectangles_highlights[cur_pos.y][cur_pos.x] = Highlight::SIPP_EXPANDED;
+      // draw only until time
+      if (i == sipp_vis.time)
+      {
+        break;
+      }
     }
   }
 }
@@ -402,11 +413,11 @@ void Visualizer::create_cell_rectangles()
 
   // clear the previous rectangles
   cell_rectangles.clear();
-  cell_rectangles_active.clear();
+  cell_rectangles_highlights.clear();
 
   // resize the vectors
   cell_rectangles.resize(height);
-  cell_rectangles_active.resize(height);
+  cell_rectangles_highlights.resize(height);
 
   // create a rectangle shape to initialize the rectangles
   sf::RectangleShape rec(sf::Vector2f(CELL_SIZE, CELL_SIZE));
@@ -417,7 +428,7 @@ void Visualizer::create_cell_rectangles()
   for (int y = 0; y < height; y++)
   {
     // initialize the row of rectangles
-    cell_rectangles_active[y].resize(width, false);
+    cell_rectangles_highlights[y].resize(width, Highlight::NONE);
     cell_rectangles[y].resize(width, rec);
 
     for (int x = 0; x < width; x++)
@@ -431,7 +442,7 @@ void Visualizer::create_cell_rectangles()
       else
       {
         // free cells grey
-        cell_rectangles[y][x].setFillColor(sf::Color(150, 150, 150, 255));
+        cell_rectangles[y][x].setFillColor(COLOR_GREY);
       }
     }
   }
@@ -439,18 +450,26 @@ void Visualizer::create_cell_rectangles()
 
 void Visualizer::draw_cell_rectangles(sf::RenderWindow& window)
 {
-  assertm((int)cell_rectangles.size() > 0, "No cell rectangles.");
-  assertm((int)cell_rectangles.size() == (int)cell_rectangles_active.size(),
-          "Size of the rectangles vector and counts vector must be the same.");
-  for (int i = 0; i < (int)cell_rectangles.size(); i++)
+  assertm(static_cast<int>(cell_rectangles.size()) > 0, "No cell rectangles.");
+  assertm(cell_rectangles.size() == cell_rectangles_highlights.size(), "Size of the rectangles vector and counts vector must be the same.");
+  for (int i = 0; i < static_cast<int>(cell_rectangles.size()); i++)
   {
     assertm((int)cell_rectangles[i].size() > 0, "No cell rectangles.");
     for (int j = 0; j < (int)cell_rectangles[i].size(); j++)
     {
-      if (cell_rectangles_active[i][j])
+      if (cell_rectangles_highlights[i][j] == Highlight::NONE)
       {
-        window.draw(cell_rectangles[i][j]);
+        continue;
       }
+      if (cell_rectangles_highlights[i][j] == Highlight::LNS_DESTROYED)
+      {
+        cell_rectangles[i][j].setFillColor(sf::Color::Red);
+      }
+      else if (cell_rectangles_highlights[i][j] == Highlight::SIPP_EXPANDED)
+      {
+        cell_rectangles[i][j].setFillColor(COLOR_GREY);
+      }
+      window.draw(cell_rectangles[i][j]);
     }
   }
 
@@ -576,6 +595,7 @@ void Visualizer::draw_paths(sf::RenderWindow& window)
 
 void Visualizer::update_all_paths(int time)
 {
+  std::cout << "Updating all paths." << std::endl;
   agents_paths = &lns_info[time].sol.converted_paths;
   assertm(instance.num_of_agents == (int)(*agents_paths).size(), "Number of paths should be the same as the number of agents.");
 
@@ -894,7 +914,16 @@ void Visualizer::create_right_panel()
   {
     ss << it << " ";
   }
+  float panelWidth = ImGui::GetContentRegionAvail().x;
+
+  // Enable text wrapping at the panel's width
+  ImGui::PushTextWrapPos(ImGui::GetCursorPos().x + panelWidth);
   ImGui::Text("\tDestroyed: %s", ss.str().c_str());
+  ImGui::PopTextWrapPos();
+  if (ImGui::Checkbox("Highlight destroyed:", &highlight_destroyed))
+  {
+    update_cell_rectangles_highlights();
+  }
 
 
   ImGui::End();
@@ -1073,7 +1102,7 @@ void Visualizer::solution_visualization_update(const Visualization& vis)
 
 void Visualizer::sipp_visualization_update(const Visualization& vis)
 {
-  update_cell_rectangles_active(vis.time);
+  update_cell_rectangles_highlights();
 }
 
 void Visualizer::lns_visualization_update(const Visualization& vis)
@@ -1086,6 +1115,10 @@ void Visualizer::lns_visualization_update(const Visualization& vis)
   {
     update_sipp_info();
     sipp_vis.reset();
+  }
+  else
+  {
+    update_cell_rectangles_highlights();
   }
 }
 

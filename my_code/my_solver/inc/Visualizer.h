@@ -18,6 +18,13 @@
 #include "IterInfo.h"
 #include "SharedData.h"
 
+enum class Highlight
+{
+  NONE,
+  SIPP_EXPANDED,
+  LNS_DESTROYED
+};
+
 class Visualization
 {
 public:
@@ -61,7 +68,7 @@ public:
   void update_path_vis(int agent_num, const Path& path);
   void update_all_paths(int time);
   void update_all_path_vis(int time);
-  void update_cell_rectangles_active(int time);
+  void update_cell_rectangles_highlights();
   void update_sipp_info();
   void create_cell_rectangles();
   auto get_agent_position(int agent_num, int time) const -> const Point2d;
@@ -120,11 +127,12 @@ private:
   std::vector<sf::VertexArray>                 agents_paths_vis;
   std::vector<Path> const*                     agents_paths = nullptr;
   std::vector<std::vector<sf::RectangleShape>> cell_rectangles;
-  std::vector<std::vector<bool>>               cell_rectangles_active;
+  std::vector<std::vector<Highlight>>          cell_rectangles_highlights;
   SIPPInfo const*                              sipp_info;
   std::vector<LNSIterationInfo>                lns_info;
-  int                                          selected_agent = -1;
-  bool                                         is_moving      = false;
+  int                                          selected_agent      = -1;
+  bool                                         is_moving           = false;
+  bool                                         highlight_destroyed = false;
   sf::Vector2i                                 last_click_pos;
   sf::RectangleShape                           curr_expanded_rectangle;
   std::vector<std::string>                     log;

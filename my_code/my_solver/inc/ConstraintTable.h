@@ -14,9 +14,10 @@
 #include <vector>
 
 #include "Instance.h"
+#include "magic_enum/magic_enum.hpp"
 #include "utils.h"
 
-#define NUM_DIRECTIONS 4
+constexpr int NUM_DIRECTIONS = magic_enum::enum_count<Direction>() - 1;  // dont consider NONE direction
 
 class EdgeConstraint
 {
@@ -40,8 +41,8 @@ public:
 
   [[nodiscard]] inline auto get(int loc1, int loc2, int time) const -> bool
   {
-    const int dir = find_direction(loc1, loc2) - 1;
-    assertm(dir >= 0 && dir <= NUM_DIRECTIONS, "Invalid direction.");
+    const int dir = static_cast<int>(find_direction(loc1, loc2)) - 1;  // dont consider NONE direction
+    assertm(dir >= 0 && dir < NUM_DIRECTIONS, "Invalid direction.");
 
     // return edge_constraints[dir][loc2].find(time) != edge_constraints[dir][loc2].end(); // unordered set implementation
     return std::find(edge_constraints[dir][loc2].begin(), edge_constraints[dir][loc2].end(), time) !=
