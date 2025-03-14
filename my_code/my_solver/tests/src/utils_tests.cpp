@@ -707,3 +707,52 @@ TEST(test_utils, RandomBool)
     EXPECT_TRUE(b == true || b == false) << "Invalid value.";
   }
 }
+
+// test function that retrieves the last number from string
+TEST(FindLastNumberTest, BasicCases)
+{
+  EXPECT_EQ(find_last_number("abc 123 def 456 ghi 789"), 789);
+  EXPECT_EQ(find_last_number("The number is 42"), 42);
+  EXPECT_EQ(find_last_number("123 456 789"), 789);
+}
+
+TEST(FindLastNumberTest, NoNumber)
+{
+  EXPECT_EQ(find_last_number("Hello World"), -1);
+  EXPECT_EQ(find_last_number("No digits here!"), -1);
+  EXPECT_EQ(find_last_number(""), -1);
+}
+
+TEST(FindLastNumberTest, SingleNumber)
+{
+  EXPECT_EQ(find_last_number("42"), 42);
+  EXPECT_EQ(find_last_number("Only one 99"), 99);
+  EXPECT_EQ(find_last_number("123abc"), 123);
+}
+
+TEST(FindLastNumberTest, LeadingAndTrailingSpaces)
+{
+  EXPECT_EQ(find_last_number("   100   "), 100);
+  EXPECT_EQ(find_last_number("   test 55"), 55);
+}
+
+TEST(FindLastNumberTest, SpecialCharacters)
+{
+  EXPECT_EQ(find_last_number("!@# $%^ 77 &*()"), 77);
+  EXPECT_EQ(find_last_number("**&& 9981 !!"), 9981);
+}
+
+TEST(FindLastNumberTest, NegativeNumbers)
+{
+  EXPECT_EQ(find_last_number("abc -123 def -456 ghi -789"), 789);
+  EXPECT_EQ(find_last_number("-42"), 42);
+  EXPECT_EQ(find_last_number("Some -9 and 8"), 8);
+}
+
+TEST(FindLastNumberTest, MixedContent)
+{
+  EXPECT_EQ(find_last_number("a1b2c3 88 end99"), 99);
+  EXPECT_EQ(find_last_number("Pi is around 3.14159"), 14159);
+  EXPECT_EQ(find_last_number("x y z 1 2 3 abc 987"), 987);
+}
+

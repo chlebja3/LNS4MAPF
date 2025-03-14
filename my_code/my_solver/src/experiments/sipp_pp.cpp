@@ -14,17 +14,21 @@
 #include "magic_enum/magic_enum.hpp"
 #include "utils.h"
 
-#define RUNS_PER_MAP 52
+// #define RUNS_PER_MAP 104
+#define RUNS_PER_MAP 2
 #define EXPERIMENT_NAME "sipp_pp"
 
-#define MAPS  \
-  {           \
-    "den520d" \
+#define MAPS               \
+  {                        \
+    "empty-8-8", "den520d" \
   }
 
 #define NUMS_AGENTS \
   {                 \
-    500             \
+    {10},           \
+    {               \
+      100, 500      \
+    }               \
   }
 
 #define SUBOPTIMALITIES       \
@@ -32,12 +36,11 @@
     1.0, 1.01, 1.05, 1.1, 1.5 \
   }
 
-
 auto main(int argc, char** argv) -> int
 {
-  assertm(false, "Experiments should be compiled in Release mode to have reliable results!");
-  const std::vector<std::string> maps(MAPS);
-  const std::vector<int>         agent_nums(NUMS_AGENTS);
+  // assertm(false, "Experiments should be compiled in Release mode to have reliable results!");
+  const std::vector<std::string>      maps(MAPS);
+  const std::vector<std::vector<int>> agent_nums(NUMS_AGENTS);
 
   // nondeterministic random generator for generating seeds
   std::random_device                 rd;
@@ -63,7 +66,7 @@ auto main(int argc, char** argv) -> int
 
   // Create a MultiProgress object to handle multiple progress bars
   indicators::ProgressBar                               bar1 = create_progress_bar("Maps:\t\t", static_cast<int>(maps.size()));
-  indicators::ProgressBar                               bar2 = create_progress_bar("Agent nums:\t", agent_nums.size());
+  indicators::ProgressBar                               bar2 = create_progress_bar("Agent nums:\t", agent_nums[0].size());
   indicators::ProgressBar                               bar3 = create_progress_bar("Scene:\t\t", RUNS_PER_MAP);
   indicators::ProgressBar                               bar4 = create_progress_bar("Algo:\t\t", static_cast<int>(algorithms.size()));
   indicators::MultiProgress<indicators::ProgressBar, 3> bars(bar1, bar2, bar3);
@@ -74,6 +77,7 @@ auto main(int argc, char** argv) -> int
   int               skipped_agent_nums      = 0;
   int               skipped_runs            = 0;
   int               skipped_implementations = 0;
+  int               sum_agent_nums          = 0;
 
 
   // iterate over all maps
@@ -83,17 +87,18 @@ auto main(int argc, char** argv) -> int
     bars.set_option<0>(indicators::option::PostfixText{std::to_string(i) + "/" + std::to_string(static_cast<int>(maps.size()))});
 
     // skip maps that were already solved
-    const int start_offset_map = i * static_cast<int>(agent_nums.size()) * RUNS_PER_MAP * static_cast<int>(algorithms.size());
-    const int end_offset_map   = (i + 1) * agent_nums.size() * RUNS_PER_MAP * static_cast<int>(algorithms.size());
+    const int start_offset_map = sum_agent_nums * RUNS_PER_MAP * static_cast<int>(algorithms.size());
+    sum_agent_nums += static_cast<int>(agent_nums[i].size());
+    const int end_offset_map = sum_agent_nums * RUNS_PER_MAP * static_cast<int>(algorithms.size());
     if (std::all_of(skips.begin() + start_offset_map, skips.begin() + end_offset_map, [](bool b) { return b; }))
     {
       bars.tick<0>();
-      bars.set_progress<1>(agent_nums.size());
+      bars.set_progress<1>(agent_nums[i].size());
       bars.set_progress<2>((size_t)RUNS_PER_MAP);
       skipped_maps++;
-      skipped_agent_nums += static_cast<int>(agent_nums.size());
-      skipped_runs += static_cast<int>(agent_nums.size()) * RUNS_PER_MAP;
-      skipped_implementations += static_cast<int>(agent_nums.size()) * RUNS_PER_MAP * static_cast<int>(algorithms.size());
+      skipped_agent_nums += static_cast<int>(agent_nums[i].size());
+      skipped_runs += static_cast<int>(agent_nums[i].size()) * RUNS_PER_MAP;
+      skipped_implementations += static_cast<int>(agent_nums[i].size()) * RUNS_PER_MAP * static_cast<int>(algorithms.size());
       continue;
     }
 
@@ -102,10 +107,10 @@ auto main(int argc, char** argv) -> int
     const std::vector<std::string> scenes = get_scene_names(map_name, RUNS_PER_MAP);
 
     // iterate over agent numbers
-    for (int j = 0; j < static_cast<int>(agent_nums.size()); j++)
+    for (int j = 0; j < static_cast<int>(agent_nums[i].size()); j++)
     {
       // update the progress bar iteration number display
-      bars.set_option<1>(indicators::option::PostfixText{std::to_string(j) + "/" + std::to_string(agent_nums.size())});
+      bars.set_option<1>(indicators::option::PostfixText{std::to_string(j) + "/" + std::to_string(agent_nums[i].size())});
 
       // skip agent_nums that were already solved
       const int start_offset_an = start_offset_map + j * RUNS_PER_MAP * static_cast<int>(algorithms.size());
@@ -120,7 +125,7 @@ auto main(int argc, char** argv) -> int
         continue;
       }
 
-      int agent_num = agent_nums[j];
+      int agent_num = agent_nums[i][j];
 
       // load all instances TODO load only instances that will not be skipped
       auto [instances, preprocessing_times] = load_instances(scenes, map_name, agent_num);
@@ -222,27 +227,26 @@ auto main(int argc, char** argv) -> int
                                            {"seed", seed}};
 
           // save the experiment
-          save_experiment(experiment_res, map_name, scene_name, EXPERIMENT_NAME, algorithm_name);
+          save_experiment(experiment_res, agent_num, map_name, scene_name, EXPERIMENT_NAME, algorithm_name);
         }
         bars.tick<2>();
       }
       bars.set_option<2>(indicators::option::PostfixText{std::to_string(RUNS_PER_MAP) + "/" + std::to_string(RUNS_PER_MAP)});
       bars.tick<1>();
     }
-    bars.set_option<1>(indicators::option::PostfixText{std::to_string(agent_nums.size()) + "/" + std::to_string(agent_nums.size())});
+    bars.set_option<1>(indicators::option::PostfixText{std::to_string(agent_nums[i].size()) + "/" + std::to_string(agent_nums[i].size())});
     bars.tick<0>();
   }
   bars.set_option<0>(
       indicators::option::PostfixText{std::to_string(static_cast<int>(maps.size())) + "/" + std::to_string(static_cast<int>(maps.size()))});
   // mark all progress bars as finished
   bars.set_progress<0>(maps.size());
-  bars.set_progress<1>(agent_nums.size());
+  bars.set_progress<1>(agent_nums.back().size());
   bars.set_progress<2>((size_t)RUNS_PER_MAP);
 
   std::cout << "Experiment finished. Skipped: " << skipped_maps << "/" << static_cast<int>(maps.size()) << " maps, " << skipped_agent_nums
-            << "/" << static_cast<int>(maps.size()) * agent_nums.size() << " agent_nums, " << skipped_runs << "/"
-            << static_cast<int>(maps.size()) * agent_nums.size() * RUNS_PER_MAP << " runs, " << skipped_implementations << "/"
-            << static_cast<int>(maps.size()) * static_cast<int>(agent_nums.size()) * RUNS_PER_MAP * static_cast<int>(algorithms.size())
-            << " implementations." << std::endl;
+            << "/" << sum_agent_nums << " agent_nums, " << skipped_runs << "/" << sum_agent_nums * RUNS_PER_MAP << " runs, "
+            << skipped_implementations << "/" << sum_agent_nums * RUNS_PER_MAP * static_cast<int>(algorithms.size()) << " implementations."
+            << std::endl;
 }
 

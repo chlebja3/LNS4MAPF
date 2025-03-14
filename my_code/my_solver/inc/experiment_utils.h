@@ -54,8 +54,9 @@ auto create_progress_bar(std::string name, int max_iter) -> indicators::Progress
 auto load_instances(const std::vector<std::string>& scenes, const std::string& map_name, int agent_num)
     -> std::pair<std::vector<Instance>, std::vector<std::pair<double, double>>>;
 
-void save_experiment(nlohmann::json& experiment_res, const std::string& map_name, const std::string& scene_name,
+void save_experiment(nlohmann::json& experiment_res, int agent_num, const std::string& map_name, const std::string& scene_name,
                      const std::string& experiment_name, const std::string& algorithm_name);
 
-auto what_can_be_skipped(const std::string& experiment_name, const std::vector<std::string>& maps, const std::vector<int>& agent_nums,
-                         int runs_per_map, std::vector<Algorithm>& algorithms) -> std::vector<bool>;
+auto what_can_be_skipped(const std::string& experiment_name, const std::vector<std::string>& maps,
+                         const std::vector<std::vector<int>>& agent_nums, int runs_per_map, std::vector<Algorithm>& algorithms)
+    -> std::vector<bool>;

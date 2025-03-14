@@ -444,3 +444,30 @@ auto any_to_str(const std::any& value) -> std::string
   // unknown type
   throw std::runtime_error("Unsupported parameter type: " + std::string(value.type().name()));
 }
+
+auto find_last_number(const std::string& str) -> int
+{
+  // iterate from the back
+  int i = static_cast<int>(str.size()) - 1;
+
+  while (i >= 0 && (std::isdigit(str[i]) == 0))  // skip non digits
+  {
+    i--;
+  }
+
+  if (i < 0)
+  {
+    return -1;  // No number found
+  }
+
+  int end = i;
+
+  // Find the beginning of the number
+  while (i >= 0 && (std::isdigit(str[i]) > 0))
+  {
+    i--;
+  }
+
+  return std::stoi(str.substr(i + 1, end - i));
+}
+
