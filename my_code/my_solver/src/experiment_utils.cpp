@@ -34,7 +34,7 @@ auto get_scene_names(const std::string& map_name, int runs_per_map) -> std::vect
       scen_files.push_back(filename);
     }
   }
-  const int scen_num = std::max(static_cast<int>(scen_files.size()), runs_per_map);
+  const int scen_num = std::min(static_cast<int>(scen_files.size()), runs_per_map);
 
   struct
   {
@@ -46,6 +46,7 @@ auto get_scene_names(const std::string& map_name, int runs_per_map) -> std::vect
     }
   } scene_compare;
 
+  // print
   std::sort(scen_files.begin(), scen_files.end(), scene_compare);
   std::vector<std::string> result(std::make_move_iterator(scen_files.begin()), std::make_move_iterator(scen_files.begin() + scen_num));
   return result;
@@ -122,6 +123,7 @@ auto what_can_be_skipped(const std::string& experiment_name, const std::vector<s
   {
     const std::string& map_name = maps[i];
     const std::string  map_dir  = result_dir_path + map_name;
+    std::cout << "Map dir: " << map_dir << std::endl;
     if (!std::filesystem::exists(map_dir))
     {
       std::filesystem::create_directory(map_dir);
@@ -130,22 +132,38 @@ auto what_can_be_skipped(const std::string& experiment_name, const std::vector<s
       continue;
     }
 
-    const std::vector<std::string> scenes = get_scene_names(map_name, runs_per_map);
+    skips.reserve(skips.size() + agent_nums[i].size() * runs_per_map * algorithms.size());
+
+
+    std::vector<std::string> scenes = get_scene_names(map_name, runs_per_map);
+    assertm(!scenes.empty(), "Did not find any scenes");
+
     // iterate over the agent numbers
     for (int j = 0; j < (int)agent_nums[i].size(); j++)
     {
+      assertm(i <= (int)agent_nums.size(), "Invalid map index");
+      assertm(j <= (int)agent_nums[i].size(), "Invalid map index");
       for (int k = 0; k < runs_per_map; k++)
       {
-        const int          idx                 = k % (int)scenes.size();
-        const std::string& scene_name          = scenes[idx];
-        const std::string  scene_name_stripped = scene_name.substr(map_name.size() + 1, scene_name.find('.') - map_name.size() - 1);
+        const int idx = k % (int)scenes.size();
+        std::cout << "idx " << idx << std::endl;
+        const std::string& scene_name = scenes[idx];
+        size_t             dot_pos    = scene_name.find('.');
+        if (dot_pos == std::string::npos)
+        {
+          throw std::runtime_error("Could not find dot in scene name: '" + scene_name + "'");
+        }
+        const std::string scene_name_stripped = scene_name.substr(map_name.size() + 1, dot_pos - map_name.size() - 1);
 
         for (const auto& algo : algorithms)
         {
+          continue;
           const std::string algorithm_name = algo.get_name();
           const std::string filename = map_dir + "/" + experiment_name + "_" + std::to_string(agent_nums[i][j]) + "agents_" + map_name +
                                        "_" + scene_name_stripped + "_" + algorithm_name + "_" +
                                        std::to_string((int)std::floor(k / scenes.size())) + ".json";
+
+          assertm((int)filename.size() < 260, "Filename must be shorter than 260 characters.");
           // check whether the file exists
           if (std::filesystem::exists(filename))
           {
@@ -153,7 +171,6 @@ auto what_can_be_skipped(const std::string& experiment_name, const std::vector<s
           }
           else
           {
-            // std::cout << "Not found: " << filename << std::endl;
             skips.push_back(false);
           }
         }

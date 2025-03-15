@@ -14,21 +14,22 @@
 #include "magic_enum/magic_enum.hpp"
 #include "utils.h"
 
-// #define RUNS_PER_MAP 104
-#define RUNS_PER_MAP 2
+#define RUNS_PER_MAP 104
 #define EXPERIMENT_NAME "sipp_pp"
 
-#define MAPS               \
-  {                        \
-    "empty-8-8", "den520d" \
+// #define SHOW_PROGRESS
+
+#define MAPS                                                                                      \
+  {                                                                                               \
+    "empty-8-8", "empty-32-32", "random-32-32-20", "warehouse-10-20-10-2-1", "ost003d", "den520d" \
   }
 
-#define NUMS_AGENTS \
-  {                 \
-    {10},           \
-    {               \
-      100, 500      \
-    }               \
+#define NUMS_AGENTS                                                                                                          \
+  {                                                                                                                          \
+    {16, 24, 32}, {300, 350, 400, 450, 500}, {50, 100, 150, 200, 250}, {150, 200, 250, 300, 350}, {100, 200, 300, 400, 500}, \
+    {                                                                                                                        \
+      500, 600, 700, 800, 900                                                                                                \
+    }                                                                                                                        \
   }
 
 #define SUBOPTIMALITIES        \
@@ -46,7 +47,6 @@ auto main(int argc, char** argv) -> int
   std::random_device                 rd;
   auto                               nondeterministic_rnd_generator = std::mt19937(rd());
   std::uniform_int_distribution<int> dist(0, std::numeric_limits<int>::max());
-
   // prepare the algorithms
   std::vector<Algorithm> algorithms;
   for (const auto& algo_type : magic_enum::enum_values<SIPP_implementation>())
@@ -65,6 +65,7 @@ auto main(int argc, char** argv) -> int
   }
 
   // Create a MultiProgress object to handle multiple progress bars
+#ifdef SHOW_PROGRESS
   indicators::ProgressBar                               bar1 = create_progress_bar("Maps:\t\t", static_cast<int>(maps.size()));
   indicators::ProgressBar                               bar2 = create_progress_bar("Agent nums:\t", agent_nums[0].size());
   indicators::ProgressBar                               bar3 = create_progress_bar("Scene:\t\t", RUNS_PER_MAP);
@@ -75,23 +76,27 @@ auto main(int argc, char** argv) -> int
   bars.set_progress<0>(static_cast<size_t>(0));
   bars.set_progress<1>(static_cast<size_t>(0));
   bars.set_progress<2>(static_cast<size_t>(0));
+#endif
 
 
   // precalculate what can be skipped
-  std::vector<bool> skips                   = what_can_be_skipped(EXPERIMENT_NAME, maps, agent_nums, RUNS_PER_MAP, algorithms);
-  int               skipped_maps            = 0;
-  int               skipped_agent_nums      = 0;
-  int               skipped_runs            = 0;
-  int               skipped_implementations = 0;
-  int               sum_agent_nums          = 0;
+  std::vector<bool> skips = what_can_be_skipped(EXPERIMENT_NAME, maps, agent_nums, RUNS_PER_MAP, algorithms);
+  std::cout << "What can be skipped determined." << std::endl;
+  int skipped_maps            = 0;
+  int skipped_agent_nums      = 0;
+  int skipped_runs            = 0;
+  int skipped_implementations = 0;
+  int sum_agent_nums          = 0;
 
 
   // iterate over all maps
   for (int i = 0; i < static_cast<int>(static_cast<int>(maps.size())); i++)
   {
     // update the progress bar iteration number display
+#ifdef SHOW_PROGRESS
     bars.set_progress<0>(static_cast<size_t>(i));
     bars.set_option<0>(indicators::option::PostfixText{std::to_string(i) + "/" + std::to_string(static_cast<int>(maps.size()))});
+#endif
 
     // skip maps that were already solved
     const int start_offset_map = sum_agent_nums * RUNS_PER_MAP * static_cast<int>(algorithms.size());
@@ -99,8 +104,10 @@ auto main(int argc, char** argv) -> int
     const int end_offset_map = sum_agent_nums * RUNS_PER_MAP * static_cast<int>(algorithms.size());
     if (std::all_of(skips.begin() + start_offset_map, skips.begin() + end_offset_map, [](bool b) { return b; }))
     {
+#ifdef SHOW_PROGRESS
       bars.set_progress<1>(agent_nums[i].size());
       bars.set_progress<2>((size_t)RUNS_PER_MAP);
+#endif
       skipped_maps++;
       skipped_agent_nums += static_cast<int>(agent_nums[i].size());
       skipped_runs += static_cast<int>(agent_nums[i].size()) * RUNS_PER_MAP;
@@ -112,20 +119,26 @@ auto main(int argc, char** argv) -> int
 
     const std::vector<std::string> scenes = get_scene_names(map_name, RUNS_PER_MAP);
 
+#ifdef SHOW_PROGRESS
     bars.set_option<1>(indicators::option::MaxProgress{(int)agent_nums[i].size()});
+#endif
     // iterate over agent numbers
     for (int j = 0; j < static_cast<int>(agent_nums[i].size()); j++)
     {
       // update the progress bar iteration number display
+#ifdef SHOW_PROGRESS
       bars.set_option<1>(indicators::option::PostfixText{std::to_string(j) + "/" + std::to_string(agent_nums[i].size())});
       bars.set_progress<1>(static_cast<size_t>(j));
+#endif
 
       // skip agent_nums that were already solved
       const int start_offset_an = start_offset_map + j * RUNS_PER_MAP * static_cast<int>(algorithms.size());
       const int end_offset_an   = start_offset_map + (j + 1) * RUNS_PER_MAP * static_cast<int>(algorithms.size());
       if (std::all_of(skips.begin() + start_offset_an, skips.begin() + end_offset_an, [](bool b) { return b; }))
       {
+#ifdef SHOW_PROGRESS
         bars.set_progress<2>((size_t)RUNS_PER_MAP);
+#endif
         skipped_agent_nums++;
         skipped_runs += RUNS_PER_MAP;
         skipped_implementations += RUNS_PER_MAP * static_cast<int>(algorithms.size());
@@ -141,8 +154,10 @@ auto main(int argc, char** argv) -> int
       for (int k = 0; k < RUNS_PER_MAP; k++)
       {
         // update the progress bar iteration number display
+#ifdef SHOW_PROGRESS
         bars.set_option<2>(indicators::option::PostfixText{std::to_string(k) + "/" + std::to_string(RUNS_PER_MAP)});
         bars.set_progress<2>(static_cast<size_t>(k));
+#endif
 
 
         // skip runs that were already solved
@@ -241,6 +256,7 @@ auto main(int argc, char** argv) -> int
     }
   }
   // mark all progress bars as finished
+#ifdef SHOW_PROGRESS
   bars.set_option<0>(
       indicators::option::PostfixText{std::to_string(static_cast<int>(maps.size())) + "/" + std::to_string(static_cast<int>(maps.size()))});
   bars.set_progress<0>(maps.size());
@@ -249,6 +265,7 @@ auto main(int argc, char** argv) -> int
       indicators::option::PostfixText{std::to_string(agent_nums.back().size()) + "/" + std::to_string(agent_nums.back().size())});
   bars.set_option<2>(indicators::option::PostfixText{std::to_string(RUNS_PER_MAP) + "/" + std::to_string(RUNS_PER_MAP)});
   bars.set_progress<2>((size_t)RUNS_PER_MAP);
+#endif
 
   std::cout << "Experiment finished. Skipped: " << skipped_maps << "/" << static_cast<int>(maps.size()) << " maps, " << skipped_agent_nums
             << "/" << sum_agent_nums << " agent_nums, " << skipped_runs << "/" << sum_agent_nums * RUNS_PER_MAP << " runs, "
