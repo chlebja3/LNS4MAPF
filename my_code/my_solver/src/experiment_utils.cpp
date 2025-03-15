@@ -95,8 +95,8 @@ void save_experiment(nlohmann::json& experiment_res, int agent_num, const std::s
   const std::string        scene_name_stripped = scene_name.substr(map_name.size() + 1, scene_name.find('.') - map_name.size() - 1);
   static const std::string experiment_dir_path = get_base_path() + "/experiments/" + experiment_name + "/";
   std::string              result_dir_path     = experiment_dir_path + map_name + "/";
-  std::string filename = result_dir_path + experiment_name + "_" + map_name + "_" + scene_name_stripped + "_" + algorithm_name + "_" +
-                         std::to_string(num) + ".json";
+  std::string              filename = result_dir_path + experiment_name + "_" + std::to_string(agent_num) + "agents_" + map_name + "_" +
+                         scene_name_stripped + "_" + algorithm_name + "_" + std::to_string(num) + ".json";
   while (std::filesystem::exists(filename))
   {
     num++;
