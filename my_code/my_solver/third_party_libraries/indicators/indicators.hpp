@@ -2861,6 +2861,12 @@ public:
     bars_[index].get().set_option(setting);
   }
 
+  template <size_t index>
+  typename std::enable_if<(index >= 0 && index < count), void>::type set_option(const option::MaxProgress& setting) const
+  {
+    bars_[index].get().set_option(setting);
+  }
+
 private:
   std::atomic<bool>                              started_{false};
   std::mutex                                     mutex_;

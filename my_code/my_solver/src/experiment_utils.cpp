@@ -153,7 +153,7 @@ auto what_can_be_skipped(const std::string& experiment_name, const std::vector<s
           }
           else
           {
-            std::cout << "Not found: " << filename << std::endl;
+            // std::cout << "Not found: " << filename << std::endl;
             skips.push_back(false);
           }
         }
