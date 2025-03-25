@@ -9,7 +9,7 @@ import pandas as pd
 
 def construct_experiment(solver_path, map_path, scen_path, output_file_name, agent_num, seed):
     """ Construct the input of subprocess.check_output to perform the experiment"""
-    return [solver_path, '-m', map_path, '-a', scen_path, "-o", output_file_name + ".csv", "-k", str(agent_num), "--initAlgo", "PP", "--maxIterations",  str(0), "--initLNS", "0", "--seed", str(seed)]
+    return [solver_path, '-m', map_path, '-a', scen_path, "-o", output_file_name + ".csv", "-k", str(agent_num), "--initAlgo", "PP", "--maxIterations",  str(0), "--initLNS", "0", "--seed", str(seed), "-t", 20]
 
 def find_last_number(s: str) -> int:
     """Extracts the last number from a string. Returns -1 if no number is found."""
@@ -25,8 +25,8 @@ def construct_scen_path(scen_dir, map_name, k):
     return scen_dir + map_name + "-random-" + str(k) + ".scen"
 
 # parameters
-map_names = [ "empty-32-32", "random-32-32-20", "warehouse-10-20-10-2-1", "ost003d", "den520d" ]
-agent_nums = [[300, 350, 400, 450, 500], [50, 100, 150, 200, 250], [150, 200, 250, 300, 350], [100, 200, 300, 400, 500],
+map_names = [ "empty-8-8", "empty-32-32", "random-32-32-20", "warehouse-10-20-10-2-1", "ost003d", "den520d" ]
+agent_nums = [[16, 24, 32], [300, 350, 400, 450, 500], [50, 100, 150, 200, 250], [150, 200, 250, 300, 350], [100, 200, 300, 400, 500],
     [ 100, 200, 300, 400, 500 ]]
 num_runs = 104 
 results_file = "results"
@@ -47,13 +47,13 @@ for map_name in tqdm.tqdm(map_names, desc="maps", position=0):
     map_path = mapf_benchmark_dir + "mapf-map/" + map_name + ".map"
 
     # list all scenes
-    scenes = sort_strings_by_last_number([os.path.splitext(f)[0] for f in os.listdir(scen_dir) if f.startswith(map_name)])
+    scenes = sort_strings_by_last_number([f for f in os.listdir(scen_dir) if f.startswith(map_name)])
 
     for agent_num in tqdm.tqdm(agent_nums[map_idx], desc="agent nums", position=1):
         for i in tqdm.tqdm(range(num_runs), desc="runs", position=2, leave=False):
-            scen_name = scenes[i % len(scenes)]
+            scen_name = os.path.splitext(scenes[i % len(scenes)])[0]
             scen_name_stripped = scen_name[len(map_name)+1:]
-            scen_path = scen_dir + scen_name
+            scen_path = scen_dir + scenes[i % len(scenes)]
 
             # find the seed
             experiment_name = "sipp_pp_" + str(agent_num) + "agents_" + map_name + "_" + scen_name_stripped +  "_SIPP_mapf_lns_" + str(int(i/len(scenes))) + ".json"

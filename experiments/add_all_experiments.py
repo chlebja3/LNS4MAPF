@@ -44,10 +44,10 @@ added = 0
 skipped = 0
 for map_dir in map_dirs:
     map_path = os.path.join(experiment_dir, map_dir)
-    print("Map:", map_path)
+    #print("Map:", map_path)
     files = os.listdir(map_path)
     for file in files:
-        print(file)
+        #print(file)
         if (file[0:len(experiment_name)] != experiment_name): continue # skip files that are not experiments
         with open(os.path.join(map_path, file), "r") as f:
             data = json.load(f) # loads the json as dictionary
