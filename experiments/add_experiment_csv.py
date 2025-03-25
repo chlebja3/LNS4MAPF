@@ -52,8 +52,8 @@ for experiment in file_res:
         ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
         """, (
             experiment_name, 
-            algo_name, "[]", float(experiment[20]), float(experiment[0]), int(experiment[10]), "sipp_pp", int(experiment[2]) != -1, int(experiment[11]) + int(experiment[12]), int(experiment[18]),
-            map_name, int(experiment[13]), float(experiment[19]), float(experiment[14]),
+            algo_name, "[]", float(experiment[19]), float(experiment[0]), int(experiment[10]), "sipp_pp", int(experiment[2]) != -1, int(experiment[11]) + int(experiment[12]), int(experiment[18]),
+            map_name, int(experiment[13]), float(experiment[20]), float(experiment[14]),
             instance_name_stripped, int(experiment[17]), int(experiment[2]), int(experiment[4]) 
         ))
         added += 1

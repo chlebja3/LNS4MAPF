@@ -123,7 +123,7 @@ auto what_can_be_skipped(const std::string& experiment_name, const std::vector<s
   {
     const std::string& map_name = maps[i];
     const std::string  map_dir  = result_dir_path + map_name;
-    std::cout << "Map dir: " << map_dir << std::endl;
+    // std::cout << "Map dir: " << map_dir << std::endl;
     if (!std::filesystem::exists(map_dir))
     {
       std::filesystem::create_directory(map_dir);
@@ -145,8 +145,7 @@ auto what_can_be_skipped(const std::string& experiment_name, const std::vector<s
       assertm(j <= (int)agent_nums[i].size(), "Invalid map index");
       for (int k = 0; k < runs_per_map; k++)
       {
-        const int idx = k % (int)scenes.size();
-        std::cout << "idx " << idx << std::endl;
+        const int          idx        = k % (int)scenes.size();
         const std::string& scene_name = scenes[idx];
         size_t             dot_pos    = scene_name.find('.');
         if (dot_pos == std::string::npos)
@@ -157,7 +156,6 @@ auto what_can_be_skipped(const std::string& experiment_name, const std::vector<s
 
         for (const auto& algo : algorithms)
         {
-          continue;
           const std::string algorithm_name = algo.get_name();
           const std::string filename = map_dir + "/" + experiment_name + "_" + std::to_string(agent_nums[i][j]) + "agents_" + map_name +
                                        "_" + scene_name_stripped + "_" + algorithm_name + "_" +

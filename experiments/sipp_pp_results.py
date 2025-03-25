@@ -18,7 +18,10 @@ def plot_algorithm_metrics(algo_names, avg_values, median_values, std_values, mi
 
     # Plot min/max as vertical whiskers
     for i in range(len(algo_names)):
-        plt.plot([x_positions[i], x_positions[i]], [min_values[i], max_values[i]], color='gray', linestyle='--', zorder=3)
+        if i == 0:
+            plt.plot([x_positions[i], x_positions[i]], [min_values[i], max_values[i]], color='gray', linestyle='--', label='range', zorder=3, linewidth=4)
+        else:
+            plt.plot([x_positions[i], x_positions[i]], [min_values[i], max_values[i]], color='gray', linestyle='--', zorder=3, linewidth=4)
 
     # Formatting
     plt.xticks(x_positions, algo_names, rotation=15)

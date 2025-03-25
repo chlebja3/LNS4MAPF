@@ -366,6 +366,7 @@ bool LNS::runPP()
   auto shuffled_agents = neighbor.agents;
   // std::random_shuffle(shuffled_agents.begin(), shuffled_agents.end());
   std::shuffle(shuffled_agents.begin(), shuffled_agents.end(), rnd_generator);
+
   if (screen >= 2)
   {
     for (auto id : shuffled_agents)

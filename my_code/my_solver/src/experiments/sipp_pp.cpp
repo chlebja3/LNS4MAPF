@@ -80,13 +80,12 @@ auto main(int argc, char** argv) -> int
 
 
   // precalculate what can be skipped
-  std::vector<bool> skips = what_can_be_skipped(EXPERIMENT_NAME, maps, agent_nums, RUNS_PER_MAP, algorithms);
-  std::cout << "What can be skipped determined." << std::endl;
-  int skipped_maps            = 0;
-  int skipped_agent_nums      = 0;
-  int skipped_runs            = 0;
-  int skipped_implementations = 0;
-  int sum_agent_nums          = 0;
+  std::vector<bool> skips                   = what_can_be_skipped(EXPERIMENT_NAME, maps, agent_nums, RUNS_PER_MAP, algorithms);
+  int               skipped_maps            = 0;
+  int               skipped_agent_nums      = 0;
+  int               skipped_runs            = 0;
+  int               skipped_implementations = 0;
+  int               sum_agent_nums          = 0;
 
 
   // iterate over all maps
