@@ -471,3 +471,14 @@ auto find_last_number(const std::string& str) -> int
   return std::stoi(str.substr(i + 1, end - i));
 }
 
+auto location_at_time(TimePointPath& path, int time) -> int
+{
+  for (const auto& it : path)
+  {
+    if (it.interval.t_min <= time && it.interval.t_max >= time)
+    {
+      return it.location;
+    }
+  }
+  return -1;
+}

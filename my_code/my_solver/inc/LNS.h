@@ -73,8 +73,9 @@ public:
 private:
   void destroy_random(Solution& sol) const;
   void destroy_randomwalk(Solution& sol) const;
-  void random_walk(int agent_num, int start_location, int start_time, int upperbound,
-                   std::vector<std::vector<int>>& location_time_to_agentnum);
+  auto random_walk(int agent_num, int neighborhood_size, int start_location, int start_time, int upperbound,
+                   std::vector<std::vector<int>>& location_time_to_agentnum, std::vector<std::vector<std::vector<int>>>& edge_collisions,
+                   std::vector<int>& chosen) const -> bool;
   void repair_default(Solution& sol) const;
 
   SharedData*         shared_data;

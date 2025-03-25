@@ -92,6 +92,11 @@ public:
   [[nodiscard]] auto check_timepointpath_validity(const TimePointPath& tp_path) const -> bool;
   void               reset();
 
+  [[nodiscard]] auto get_num_cells() const -> int
+  {
+    return map_data.width * map_data.height;
+  }
+
 
 private:
   /**

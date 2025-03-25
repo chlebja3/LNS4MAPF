@@ -17,7 +17,7 @@
 #define RUNS_PER_MAP 104
 #define EXPERIMENT_NAME "sipp_pp"
 
-// #define SHOW_PROGRESS
+#define SHOW_PROGRESS
 
 #define MAPS                                                                                      \
   {                                                                                               \
@@ -28,7 +28,7 @@
   {                                                                                                                          \
     {16, 24, 32}, {300, 350, 400, 450, 500}, {50, 100, 150, 200, 250}, {150, 200, 250, 300, 350}, {100, 200, 300, 400, 500}, \
     {                                                                                                                        \
-      500, 600, 700, 800, 900                                                                                                \
+      100, 200, 300, 400, 500                                                                                                \
     }                                                                                                                        \
   }
 

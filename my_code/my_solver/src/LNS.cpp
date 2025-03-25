@@ -182,7 +182,7 @@ auto LNS::PrioritizedPlanning(SIPP_implementation sipp_implementation) -> Soluti
     // check validity
     if (tp_path.empty())
     {
-      std::cout << "Unable to find initial solution by prioritized planning. " << std::endl;
+      // std::cout << "Unable to find initial solution by prioritized planning. " << std::endl;
       sol.feasible = false;
       return sol;
     }
@@ -253,7 +253,7 @@ void LNS::destroy_randomwalk(Solution& sol) const
   // check, whether to reset tabu list
   if (max_delay == 0)
   {
-    assertm(!tabu_list.empty(), "Tabu list is empty and theres no delayed agent.");
+    assertm(!tabu_list.empty(), "Tabu list is empty and there is no delayed agent.");
     // reset the tabu list and try again
     tabu_list.clear();
     destroy_randomwalk(sol);
@@ -268,37 +268,38 @@ void LNS::destroy_randomwalk(Solution& sol) const
   int              upperbound = sol.paths[most_delayed].back().interval.t_min - 1;
 
   // build the list of agents for each location and time which will be used in the random walk
-  std::vector<std::vector<int>> location_time_to_agentnum;  // [location][time]
-  location_time_to_agentnum.resize(instance.get_map_data().width * instance.get_map_data().height, std::vector<int>(upperbound, -1));
-  std::vector<std::vector<std::vector<int>>> edge_collisions;  // [dir][to][time]
-  edge_collisions.resize(magic_enum::enum_count<Direction>() - 1);
-  for (auto it : edge_collisions)
-  {
-    it.resize(instance.get_map_data().width * instance.get_map_data().height, std::vector<int>(upperbound, -1));
-  }
+  auto [location_time_to_agentnum, edge_collisions] = create_collision_vectors(sol, upperbound);
 
-  // TODO parallelize and move into a separate function
-  for (int agent_num = 0; agent_num < static_cast<int>(sol.paths.size()); agent_num++)
+  // perform the random walk, maximum 10 iterations
+  for (int i = 0; i < 10; i++)
   {
-    const TimePointPath path = sol.paths[agent_num];
-    for (auto tp = path.cbegin(); tp != path.cend(); tp++)
+    // choose a random agent
+    std::uniform_int_distribution<int> dist(0, chosen.size() - 1);
+    int                                idx = dist(rnd_generator);
+    assertm(idx >= 0 && idx < static_cast<int>(chosen.size()), "Index out of bounds.");
+    int chosen_agent = chosen[idx];
+
+    // choose a random time from its path
+    int                                tmax = sol.paths[chosen_agent].back().interval.t_min - 1;
+    std::uniform_int_distribution<int> dist_time(0, tmax);
+    int                                chosen_t = dist_time(rnd_generator);
+
+    // choose location
+    int rw_start_location = location_at_time(sol.paths[chosen_agent], chosen_t);
+
+    // perform randomwalk
+    if (random_walk(chosen_agent, neighborhood_size, rw_start_location, chosen_t, upperbound, location_time_to_agentnum, edge_collisions,
+                    chosen))
     {
-      // add edge collision
-      if (tp != path.cbegin())
-      {
-        const int dir = static_cast<int>(find_direction(std::prev(tp)->location, tp->location)) - 1;  // dont consider NONE direction
-        edge_collisions[dir][tp->location][tp->interval.t_min] = agent_num;
-      }
-
-      for (int t = tp->interval.t_min; t <= tp->interval.t_max; t++)
-      {
-        location_time_to_agentnum[tp->location][t] = agent_num;
-      }
+      break;
     }
   }
-  // remember, to handle edge conflicts, as here only cell conflicts are handled
 
-  // TODO perform the random walk
+  // TODO if not enough agents selected, fill with random agents
+  assertm(static_cast<int>(chosen.size()) == neighborhood_size, "Neighborhood is not full.");
+  sol.destroyed_paths = std::vector(std::make_move_iterator(chosen.begin()), std::make_move_iterator(chosen.end()));
+  assertm(sol.destroyed_paths.size() > 0, "No paths were destroyed.");
+  sol.feasible = false;
 }
 
 auto LNS::create_collision_vectors(const Solution& sol, int upperbound) const
@@ -306,24 +307,31 @@ auto LNS::create_collision_vectors(const Solution& sol, int upperbound) const
 {
   assertm(sol.feasible, "Infeasible solution");
   assertm(static_cast<int>(sol.paths.size()) == instance.num_of_agents, "Not enough paths");
+
   // build the list of agents for each location and time which will be used in the random walk
   std::vector<std::vector<int>> location_time_to_agentnum;  // [location][time]
-  location_time_to_agentnum.resize(instance.get_map_data().width * instance.get_map_data().height, std::vector<int>(upperbound, -1));
+  location_time_to_agentnum.resize(instance.get_num_cells(), std::vector<int>(upperbound, -1));
+
   std::vector<std::vector<std::vector<int>>> edge_collisions;  // [dir][to][time]
   edge_collisions.resize(magic_enum::enum_count<Direction>() - 1);
+
+  // resize to store all possivle edge collisions
   for (auto& edge_collision : edge_collisions)
   {
-    edge_collision.resize(instance.get_map_data().width * instance.get_map_data().height, std::vector<int>(upperbound, -1));
+    edge_collision.resize(instance.get_num_cells(), std::vector<int>(upperbound, -1));
   }
 
-  // TODO parallelize and move into a separate function
+  // TODO parallelize?
+  // fill the collisions
   for (int agent_num = 0; agent_num < static_cast<int>(sol.paths.size()); agent_num++)
   {
     const TimePointPath path = sol.paths[agent_num];
+    // get the collisions from the agents path
     for (auto tp = path.cbegin(); tp != path.cend(); tp++)
     {
       assertm(tp->location >= 0 && tp->location < static_cast<int>(location_time_to_agentnum.size()), "Invalid location");
       assertm(tp->location < static_cast<int>(edge_collisions[0].size()), "Invalid location");
+
       // add edge collision
       if (tp != path.cbegin())
       {
@@ -334,6 +342,7 @@ auto LNS::create_collision_vectors(const Solution& sol, int upperbound) const
         edge_collisions[dir][tp->location][tp->interval.t_min] = agent_num;
       }
 
+      // add location collisions
       for (int t = tp->interval.t_min; t <= std::min(tp->interval.t_max, upperbound - 1); t++)
       {
         assertm(t >= 0 && t < static_cast<int>(location_time_to_agentnum[tp->location].size()), "Invalid time");
@@ -344,8 +353,9 @@ auto LNS::create_collision_vectors(const Solution& sol, int upperbound) const
   return {location_time_to_agentnum, edge_collisions};
 }
 
-void LNS::random_walk(int agent_num, int start_location, int start_time, int upperbound,
-                      std::vector<std::vector<int>>& location_time_to_agentnum)
+auto LNS::random_walk(int agent_num, int neighborhood_size, int start_location, int start_time, int upperbound,
+                      std::vector<std::vector<int>>& location_time_to_agentnum, std::vector<std::vector<std::vector<int>>>& edge_collisions,
+                      std::vector<int>& chosen) const -> bool
 {
   int curr = start_location;
   for (int t = start_time; t < upperbound; t++)
@@ -353,26 +363,45 @@ void LNS::random_walk(int agent_num, int start_location, int start_time, int upp
     std::vector<int> next_locations = instance.get_neighbor_locations(curr);
     next_locations.push_back(curr);  // agent can also stay
     std::shuffle(next_locations.begin(), next_locations.end(), rnd_generator);
+    // try all possible neighbors in random order
     for (auto loc : next_locations)
     {
       int next_h_val = instance.get_heuristic_distance(agent_num, loc);
       // if lowerbound on the time to reach goal smaller than limit, accept the move
       if (t + 1 + next_h_val < upperbound)
       {
-        // TODO get agent that is in conflict and add it to the neighborhood
+        // get the agent that is in conflict and add it to the neighborhood
         int agent = location_time_to_agentnum[loc][t + 1];
 
         // if no conflict, check for edge conflicts
         if (agent == -1)
         {
+          // there can be an edge conflict only when the agent is not staying in the same cell
+          if (curr != loc)
+          {
+            const int dir = static_cast<int>(find_direction(curr, loc)) - 1;
+            agent         = edge_collisions[dir][loc][t + 1];
+          }
+        }
+
+        // if there is an agent in collision, add it to the neighborhood
+        if (agent != -1)
+        {
+          chosen.push_back(agent);
         }
 
         curr = loc;
         break;
       }
     }
-    // TODO test whether enough agents selected
+    // test whether enough agents selected
+    if (static_cast<int>(chosen.size()) == neighborhood_size)
+    {
+      return true;
+    }
   }
+  assertm(static_cast<int>(chosen.size()) <= neighborhood_size, "Enough agents selected, but false returned.");
+  return false;
 }
 
 void LNS::repair_default(Solution& sol) const
