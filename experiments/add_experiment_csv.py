@@ -23,13 +23,13 @@ added = 0
 skipped = 0
 
 for experiment in file_res:
-    print(experiment)
 # check whether the experiment is already in the database
-    instance_name = experiment[-1]
+    instance_name = experiment[17]
+    agent_num = int(experiment[22])
     idx1 = len("../MAPF-benchmark/mapf-scen-random/scen-random/")
     idx2 = instance_name.find(".scen")
     instance_name_stripped = instance_name[idx1:idx2]
-    experiment_name = "sipp_pp_" + instance_name_stripped + algo_name
+    experiment_name = "sipp_pp_" + str(agent_num) + "agents_"+ instance_name_stripped + algo_name
     num = counts[experiment_name]
     counts[experiment_name] += 1
     experiment_name += "_" + str(num)
@@ -52,9 +52,9 @@ for experiment in file_res:
         ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
         """, (
             experiment_name, 
-            algo_name, "[]", float(experiment[19]), float(experiment[0]), int(experiment[10]), "sipp_pp", int(experiment[2]) != -1, int(experiment[11]) + int(experiment[12]), int(experiment[18]),
-            map_name, int(experiment[13]), float(experiment[20]), float(experiment[14]),
-            instance_name_stripped, int(experiment[17]), int(experiment[2]), int(experiment[4]) 
+            algo_name, "[]", float(experiment[20]), float(experiment[0]), int(experiment[10]), "sipp_pp", int(experiment[2]) != -1, int(experiment[11]) + int(experiment[12]), int(experiment[19]),
+            map_name, agent_num, float(experiment[21]), float(experiment[14]),
+            instance_name_stripped, int(experiment[18]), int(experiment[2]), int(experiment[4]) 
         ))
         added += 1
     else:

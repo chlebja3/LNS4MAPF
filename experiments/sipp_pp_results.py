@@ -58,7 +58,7 @@ stats = df_grouped.agg({
 }).reset_index()
 
 # Define the metrics to plot
-metric_names = ["computation_time_cpu", "computation_time_wall"]
+metric_names = ["feasible", "computation_time_cpu", "computation_time_wall", "expanded", "sum_of_cost"]
 
 # Get unique maps
 unique_maps = stats["map_name"].unique()
@@ -66,7 +66,7 @@ num_maps = len(unique_maps)
 
 # Iterate over each metric
 for metric in metric_names:
-    fig, axes = plt.subplots(nrows=1, ncols=num_maps, figsize=(5 * num_maps, 5), sharey=True)
+    fig, axes = plt.subplots(nrows=1, ncols=num_maps, figsize=(5 * num_maps, 5), sharey=False)
 
     if num_maps == 1:  # If only one map, axes is not an array
         axes = [axes]
