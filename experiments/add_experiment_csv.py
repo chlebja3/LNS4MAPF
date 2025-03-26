@@ -36,6 +36,8 @@ for experiment in file_res:
     idx3 = instance_name_stripped.find("-random")
     map_name = instance_name_stripped[:idx3]
 
+    feasible = (int(experiment[2]) != -1 and int(experiment[8]) == 0) # feasible when solution cost is not -1 and number of restarts is 0
+
     cursor.execute("""
     SELECT 1 FROM experiments WHERE 
         file_name = ?
@@ -52,7 +54,7 @@ for experiment in file_res:
         ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
         """, (
             experiment_name, 
-            algo_name, "[]", float(experiment[20]), float(experiment[0]), int(experiment[10]), "sipp_pp", int(experiment[2]) != -1, int(experiment[11]) + int(experiment[12]), int(experiment[19]),
+            algo_name, "[]", float(experiment[20]), float(experiment[0]), int(experiment[10]), "sipp_pp", feasible, int(experiment[11]) + int(experiment[12]), int(experiment[19]),
             map_name, agent_num, float(experiment[21]), float(experiment[14]),
             instance_name_stripped, int(experiment[18]), int(experiment[2]), int(experiment[4]) 
         ))

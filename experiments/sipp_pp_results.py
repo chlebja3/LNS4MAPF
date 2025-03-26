@@ -43,9 +43,22 @@ df["delay"] = df["sum_of_cost"] - df["sum_of_dist"]
 # close the database
 conn.close()
 
+df_feasible = df[df["feasible"] == 1]
 df_grouped = df.groupby(["map_name", "num_agents", "algo_name"])
-
+df_feasible_grouped = df_feasible.groupby(["map_name", "num_agents", "algo_name"])
 stats = df_grouped.agg({
+    "computation_time_cpu": ["mean", "std", "median", "min", "max"],
+    "computation_time_wall": ["mean", "std", "median", "min", "max"],
+    "expanded": ["mean", "std", "median", "min", "max"],
+    "generated": ["mean", "std", "median", "min", "max"],
+    "makespan": ["mean", "std", "median", "min", "max"],
+    "sum_of_cost": ["mean", "std", "median", "min", "max"],
+    "sum_of_dist": ["mean", "std", "median", "min", "max"],
+    "delay": ["mean", "std", "median", "min", "max"],
+    "feasible" : ["mean"] 
+}).reset_index()
+
+stats_feasible = df_feasible_grouped.agg({
     "computation_time_cpu": ["mean", "std", "median", "min", "max"],
     "computation_time_wall": ["mean", "std", "median", "min", "max"],
     "expanded": ["mean", "std", "median", "min", "max"],
@@ -72,20 +85,39 @@ for metric in metric_names:
         axes = [axes]
 
     # Iterate over each map
-    for i, (map_name, map_group) in enumerate(stats.groupby('map_name')):
-        ax = axes[i]
+    if metric == "feasible":
+        for i, (map_name, map_group) in enumerate(stats.groupby('map_name')):
+            ax = axes[i]
 
-        # Plot each algorithm
-        for algo_name, algo_group in map_group.groupby('algo_name'):
-            ax.plot(algo_group["num_agents"], algo_group[(metric, "mean")], marker='o', label=f"{algo_name}")
+            # Plot each algorithm
+            for algo_name, algo_group in map_group.groupby('algo_name'):
+                ax.plot(algo_group["num_agents"], algo_group[(metric, "mean")], marker='o', label=f"{algo_name}")
 
-        ax.set_title(map_name)
-        ax.set_xlabel("Number of Agents")
-        if i == 0:
-            ax.set_ylabel(metric)  # Only label Y-axis on first subplot
+            ax.set_title(map_name)
+            ax.set_xlabel("Number of Agents")
+            if i == 0:
+                ax.set_ylabel(metric)  # Only label Y-axis on first subplot
 
-        ax.legend()
-        ax.grid(True)
+            ax.legend()
+            ax.grid(True)
+    else:
+        for i, (map_name, map_group) in enumerate(stats_feasible.groupby('map_name')):
+            print("map_name:", map_name)
+            ax = axes[i]
+
+            # Plot each algorithm
+            for algo_name, algo_group in map_group.groupby('algo_name'):
+                ax.plot(algo_group["num_agents"], algo_group[(metric, "mean")], marker='o', label=f"{algo_name}")
+                print("Algo name:", algo_name)
+                print(algo_group[(metric, "mean")])
+
+            ax.set_title(map_name)
+            ax.set_xlabel("Number of Agents")
+            if i == 0:
+                ax.set_ylabel(metric)  # Only label Y-axis on first subplot
+
+            ax.legend()
+            ax.grid(True)
 
     fig.suptitle(f"{metric} Across Maps", fontsize=16)
     plt.tight_layout()
