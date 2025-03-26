@@ -97,6 +97,12 @@ public:
     return map_data.width * map_data.height;
   }
 
+  [[nodiscard]] auto is_goal_location(int loc) const -> bool
+  {
+    assertm(map_data.is_in(loc), "Invalid location.");
+    return is_goal_location_array[loc];
+  }
+
 
 private:
   /**
@@ -120,6 +126,7 @@ private:
   std::vector<int>              start_locations;
   std::vector<Point2d>          goal_positions;
   std::vector<int>              goal_locations;
+  std::vector<bool>             is_goal_location_array;
   std::vector<Path>             optimal_paths;
   std::vector<std::vector<int>> neighbors;
 

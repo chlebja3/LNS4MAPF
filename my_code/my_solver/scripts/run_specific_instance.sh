@@ -11,6 +11,12 @@ then
 elif [ $1 == "empty" ]
 then
 ./scripts/run.sh -m ../../MAPF-benchmark/mapf-map/empty-16-16.map -a ../../MAPF-benchmark/mapf-scen-random/scen-random/empty-16-16-random-1.scen -k 20 $@
+elif [ $1 == "empty-8-8" ]
+then
+./scripts/run.sh -m ../../MAPF-benchmark/mapf-map/empty-8-8.map -a ../../MAPF-benchmark/mapf-scen-random/scen-random/empty-8-8-random-1.scen -k 32 -s 2119874029 -i 1 $@
+elif [ $1 == "not_optimal" ]
+then
+./scripts/run.sh -m ../../MAPF-benchmark/mapf-map/den520d.map -a ../../MAPF-benchmark/mapf-scen-random/scen-random/den520d-random-0.scen -k 100 -s 1046160888 -i 1 $@
 else 
   echo "Unknown instance"
 fi

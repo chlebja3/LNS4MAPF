@@ -222,13 +222,17 @@ auto SIPP::plan(const int agent_num) -> TimePointPath
       // calculate the heuristic
       // const double h = instance.get_heuristic_euclidean(agent_num, neighbor);
       // const double h = instance.get_heuristic_manhattan(agent_num, neighbor);
-      const double h2 = instance.get_heuristic_distance(agent_num, neighbor);
+      double h2 = instance.get_heuristic_distance(agent_num, neighbor);
+      // TODO add small number for goals of other agents to not block them, which introduces delay
+      if (neighbor != goal && instance.is_goal_location(neighbor))
+      {
+        h2 += 0.1;
+      }
       // std::cout << "Neighbor: " << instance.location_to_position(neighbor) << ", h2: " << h2 << std::endl;
 
       // retrieve the safe intervals for the neighbor
 
-      std::list<TimeInterval>::const_iterator sf_start, sf_end;
-      std::tie(sf_start, sf_end) = constraint_table.get_safe_intervals(neighbor, neighbor_entry_time_interval);
+      auto [sf_start, sf_end] = constraint_table.get_safe_intervals(neighbor, neighbor_entry_time_interval);
 
       for (auto it = sf_start; it != sf_end; it++)
       {

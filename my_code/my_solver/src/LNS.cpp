@@ -32,6 +32,10 @@ void LNS::solve()
 
   // calculate initial solution
   bool found = find_initial_solution();
+  if (!found)
+  {
+    return;
+  }
   assertm(found, "Could not find the initial solution");
   assertm(solution.is_valid(instance), "Found invalid solution");
 
@@ -102,7 +106,7 @@ void LNS::solve()
 auto LNS::find_initial_solution() -> bool
 {
   // create initial solution
-  solution = PrioritizedPlanning(SIPP_implementation::SIPP_mine);
+  solution = PrioritizedPlanning(settings.sipp_settings.implementation);
   if (solution.feasible)
   {
     solution.calculate_cost(instance);

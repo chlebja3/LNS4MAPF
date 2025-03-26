@@ -87,8 +87,9 @@ auto main(int argc, char** argv) -> int
     info_type = INFO_type::visualisation;
   }
 
-  SIPP_implementation sipp_implementation     = SIPP_implementation::SIPP_mine;
-  auto                sipp_implementation_opt = magic_enum::enum_cast<SIPP_implementation>(sipp_algo, magic_enum::case_insensitive);
+  SIPP_implementation sipp_implementation = SIPP_implementation::SIPP_mine;
+  std::cout << (int)sipp_implementation << std::endl;
+  auto sipp_implementation_opt = magic_enum::enum_cast<SIPP_implementation>(sipp_algo, magic_enum::case_insensitive);
   if (sipp_implementation_opt.has_value())
   {
     sipp_implementation = sipp_implementation_opt.value();

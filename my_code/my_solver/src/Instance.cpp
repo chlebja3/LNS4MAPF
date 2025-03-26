@@ -43,6 +43,14 @@ void Instance::initialize(bool calculate_manhattan, bool calculate_euclidean)
   {
     sum_of_distances += get_heuristic_distance(i, start_locations[i]);
   }
+
+  // prepare goal indicators
+  is_goal_location_array.resize(get_num_cells(), false);
+  for (auto& it : goal_locations)
+  {
+    is_goal_location_array[it] = true;
+  }
+
   initialized = true;
 }
 

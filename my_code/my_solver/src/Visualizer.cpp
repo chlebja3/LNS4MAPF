@@ -576,8 +576,11 @@ void Visualizer::update_all_path_vis(int time)
   for (int i = 0; i < (int)(*agents_paths).size(); i++)
   {
     // calculate the start index of the path according to the visualization time
-    int idx = std::min((int)(*agents_paths)[i].size() - 1, time);
-    update_path_vis(i, Path((*agents_paths)[i].begin() + idx, (*agents_paths)[i].end()));
+    if (!(*agents_paths)[i].empty())
+    {
+      int idx = std::min((int)(*agents_paths)[i].size() - 1, time);
+      update_path_vis(i, Path((*agents_paths)[i].begin() + idx, (*agents_paths)[i].end()));
+    }
   }
 }
 
@@ -603,8 +606,12 @@ void Visualizer::update_all_paths(int time)
   // construct the path visualizations and find the new length of the visualization
   for (int i = 0; i < instance.num_of_agents; i++)
   {
-    update_path_vis(i, (*agents_paths)[i]);
-    max_path_len = std::max(max_path_len, (int)(*agents_paths)[i].size() - 1);
+    int len = (int)(*agents_paths)[i].size() - 1;
+    if (len > 0)
+    {
+      update_path_vis(i, (*agents_paths)[i]);
+      max_path_len = std::max(max_path_len, len);
+    }
   }
 
   // update the visualization
@@ -1109,7 +1116,9 @@ void Visualizer::lns_visualization_update(const Visualization& vis)
 {
   // reset other visualizations
   update_all_paths(vis.time);
+  std::cout << "Paths updated" << std::endl;
   solution_vis.reset();
+  std::cout << "Sol vis reset." << std::endl;
   // update sipp info
   if (selected_agent != -1)
   {
