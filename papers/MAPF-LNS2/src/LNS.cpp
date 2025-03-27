@@ -849,8 +849,8 @@ void LNS::writeResultToFile(const string& file_name) const
              << "group size,"
              << "runtime of initial solution,restart times,area under curve,"
              << "LL expanded nodes,LL generated,LL reopened,LL runs,"
-             << "preprocessing runtime,solver name,instance name, ,"
-             << "seed, makespan, computation_time_cpu, preprocessing_time_cpu" << endl;
+             << "preprocessing runtime,solver name,instance name, scen_name,"
+             << "seed, makespan, computation_time_cpu, preprocessing_time_cpu, num_agents" << endl;
     addHeads.close();
   }
   uint64_t num_LL_expanded = 0, num_LL_generated = 0, num_LL_reopened = 0, num_LL_runs = 0;
@@ -881,7 +881,7 @@ void LNS::writeResultToFile(const string& file_name) const
         << sum_of_distances << "," << iteration_stats.size() << "," << average_group_size << "," << initial_solution_runtime << ","
         << restart_times << "," << auc << "," << num_LL_expanded << "," << num_LL_generated << "," << num_LL_reopened << "," << num_LL_runs
         << "," << preprocessing_time << "," << getSolverName() << "," << instance.getInstanceName() << "," << seed << "," << makespan << ","
-        << runtime_cpu << ", " << preprocessing_time_cpu << endl;
+        << runtime_cpu << ", " << preprocessing_time_cpu << ", " << agents.size() << endl;
   stats.close();
 }
 

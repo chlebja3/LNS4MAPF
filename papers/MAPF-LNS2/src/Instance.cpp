@@ -32,9 +32,11 @@ Instance::Instance(const string& map_fname, const string& agent_fname, int num_o
   {
     if (num_of_agents > 0)
     {
-      generateRandomAgents(warehouse_width);
+      cerr << "Could not generate all agents. Generated: " << num_of_agents << std::endl;
+      exit(-1);
+      // generateRandomAgents(warehouse_width);
       // saveAgents();
-      saveNathan();
+      // saveNathan();
     }
     else
     {
