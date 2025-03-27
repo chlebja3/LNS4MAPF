@@ -42,16 +42,17 @@ public:
   TimePoint       time_point;
   SIPPNode const* parent;
   double          h2;
+  double          h3;
 
 
   // constructors
-  SIPPNode(int location, const TimeInterval& interval, double g_, double h_, double h2_, SIPPNode const* parent_)
-      : Node(g_, h_), time_point(location, interval), parent(parent_), h2(h2_)
+  SIPPNode(int location, const TimeInterval& interval, double g_, double h_, double h2_, double h3_, SIPPNode const* parent_)
+      : Node(g_, h_), time_point(location, interval), parent(parent_), h2(h2_), h3(h3_)
   {
   }
 
-  SIPPNode(const TimePoint& time_point_, double g_, double h_, double h2_, SIPPNode const* parent_)
-      : Node(g_, h_), time_point(time_point_), parent(parent_), h2(h2_)
+  SIPPNode(const TimePoint& time_point_, double g_, double h_, double h2_, double h3_, SIPPNode const* parent_)
+      : Node(g_, h_), time_point(time_point_), parent(parent_), h2(h2_), h3(h3_)
   {
   }
 

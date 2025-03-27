@@ -74,6 +74,10 @@ public:
   [[nodiscard]] auto get_max_path_len_estimate() const -> int;
   void               update_latest_constraint_end_estimate();
   [[nodiscard]] auto get_min_reach_time(int goal) const -> int;
+  [[nodiscard]] auto get_last_safe_interval(int location) const -> const TimeInterval&
+  {
+    return safe_intervals[location].back();
+  }
 
 private:
   std::vector<std::list<TimeInterval>> safe_intervals;  // safe intervals for each position

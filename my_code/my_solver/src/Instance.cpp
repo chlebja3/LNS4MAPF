@@ -44,11 +44,12 @@ void Instance::initialize(bool calculate_manhattan, bool calculate_euclidean)
     sum_of_distances += get_heuristic_distance(i, start_locations[i]);
   }
 
-  // prepare goal indicators
-  is_goal_location_array.resize(get_num_cells(), false);
-  for (auto& it : goal_locations)
+  // prepare location to goal conversion
+  location_to_goal_array.resize(get_num_cells(), -1);  // initialize to -1 which means not a goal location
+  for (int i = 0; i < static_cast<int>(goal_locations.size()); i++)
   {
-    is_goal_location_array[it] = true;
+    // for each location remember the number of agent whose goal it is
+    location_to_goal_array[goal_locations[i]] = i;
   }
 
   initialized = true;
