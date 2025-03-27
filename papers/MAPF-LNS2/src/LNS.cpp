@@ -92,12 +92,14 @@ bool LNS::run()
     }
     else  // use random restart
     {
-      while (!succ && initial_solution_runtime < time_limit)
-      {
-        succ                     = getInitialSolution();
-        initial_solution_runtime = ((fsec)(Time::now() - start_time)).count();
-        restart_times++;
-      }
+      std::cout << "WARNING: Restarts were turned off." << std::endl;
+      // TODO this was commented out for the experiments
+      // while (!succ && initial_solution_runtime < time_limit)
+      // {
+      //   succ                     = getInitialSolution();
+      //   initial_solution_runtime = ((fsec)(Time::now() - start_time)).count();
+      //   restart_times++;
+      // }
     }
   }
 
