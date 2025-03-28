@@ -426,13 +426,14 @@ auto SIPP::plan_suboptimal(const int agent_num, double w) -> TimePointPath
       // calculate the heuristic
       // const double h = instance.get_heuristic_euclidean(agent_num, neighbor);
       // const double h = instance.get_heuristic_manhattan(agent_num, neighbor);
-      const double h2 = instance.get_heuristic_distance(agent_num, neighbor);
+      double h2 = instance.get_heuristic_distance(agent_num, neighbor);
       // std::cout << "Neighbor: " << instance.location_to_position(neighbor) << ", h2: " << h2 << std::endl;
 
       double h3 = 0;
       if (neighbor != goal && instance.is_goal_location(neighbor))
       {
-        h3 = 1.0;
+        // h3 = 1.0;
+        h2 += w;
       }
       // retrieve the safe intervals for the neighbor
 
