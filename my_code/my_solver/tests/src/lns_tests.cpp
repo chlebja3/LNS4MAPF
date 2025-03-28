@@ -24,7 +24,7 @@ TEST(LNSCollisionVectors, SinglePath)
 
   // find initial solution
   auto         rnd_generator = std::mt19937(0);
-  LNS_settings lns_settings(0, 5, {SIPP_implementation::SIPP_mine, INFO_type::no_info, 1.0});
+  LNS_settings lns_settings(0, 5, {DESTROY_TYPE::RANDOM, 10}, {SIPP_implementation::SIPP_mine, INFO_type::no_info, 1.0});
   LNS          lns(*instance, rnd_generator, nullptr, lns_settings);
   Solution     sol;
   sol.paths = {TimePointPath({{0, {0, 0}}, {1, {1, 1}}, {2, {2, 5}}, {3, {6, 7}}, {2, {8, 8}}, {1, {9, 10}}})};
@@ -113,7 +113,7 @@ TEST(LNSCollisionVectors, TwoPaths)
       std::make_unique<Instance>(base_path + "/tests/test_maps/dummy_3_3.map", base_path + "/tests/test_scen/dummy_3_3_scen_1.scen", 2);
   // find initial solution
   auto         rnd_generator = std::mt19937(0);
-  LNS_settings lns_settings(0, 5, {SIPP_implementation::SIPP_mine, INFO_type::no_info, 1.0});
+  LNS_settings lns_settings(0, 5, {DESTROY_TYPE::RANDOM, 10}, {SIPP_implementation::SIPP_mine, INFO_type::no_info, 1.0});
   LNS          lns(*instance, rnd_generator, nullptr, lns_settings);
   lns.find_initial_solution();
   ASSERT_TRUE(lns.solution.feasible) << "Initial solution is not feasible";
@@ -177,7 +177,7 @@ TEST(LNSCollisionVectors, ConsistencyWithConstraintTable)
 
   // find initial solution
   auto         rnd_generator = std::mt19937(0);
-  LNS_settings lns_settings(0, 5, {SIPP_implementation::SIPP_mine, INFO_type::no_info, 1.0});
+  LNS_settings lns_settings(0, 5, {DESTROY_TYPE::RANDOM, 10}, {SIPP_implementation::SIPP_mine, INFO_type::no_info, 1.0});
   LNS          lns(*instance, rnd_generator, nullptr, lns_settings);
   lns.find_initial_solution();
   ASSERT_TRUE(lns.solution.feasible) << "Initial solution is not feasible";
@@ -204,5 +204,35 @@ TEST(LNSCollisionVectors, ConsistencyWithConstraintTable)
         EXPECT_TRUE(beggining == end) << "Location-time pair (" << i << ", " << j << ") should not be safe";
       }
     }
+  }
+}
+
+// test destroy operators
+TEST(LNSDestroyRandomWalk, RightNumber)
+{
+  // load instance
+  int                       agent_num = 50;
+  std::string               base_path = get_base_path_tests();  // path to my_solver
+  std::unique_ptr<Instance> instance  = std::make_unique<Instance>(base_path + "/tests/test_maps/den520d.map",
+                                                                  base_path + "/tests/test_scen/den520d-random-0.scen", agent_num);
+
+  std::array<int, 5> neighborhood_sizes = {1, 4, 8, 16, 32};
+
+  // find initial solution
+  for (auto neighborhood_size : neighborhood_sizes)
+  {
+    auto         rnd_generator = std::mt19937(0);
+    LNS_settings lns_settings(0, 5, {DESTROY_TYPE::RANDOMWALK, neighborhood_size},
+                              {SIPP_implementation::SIPP_mine, INFO_type::no_info, 1.0});
+    LNS          lns(*instance, rnd_generator, nullptr, lns_settings);
+    lns.find_initial_solution();
+    ASSERT_TRUE(lns.solution.feasible) << "Initial solution is not feasible";
+    ASSERT_TRUE(lns.solution.is_valid(*instance)) << "Initial solution is not valid";
+
+    // destroy agents
+    lns.destroy_operator.apply(lns.solution);
+
+    // check if the right number of agents were destroyed
+    EXPECT_EQ(lns.solution.destroyed_paths.size(), neighborhood_size);
   }
 }

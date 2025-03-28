@@ -12,16 +12,33 @@
 #include "SharedData.h"
 #include "Solver.h"
 
+enum class DESTROY_TYPE
+{
+  RANDOM,
+  RANDOMWALK
+};
+
+class Destroy_settings
+{
+public:
+  Destroy_settings(DESTROY_TYPE type_, int size_) : type(type_), size(size_)
+  {
+  }
+  DESTROY_TYPE type;
+  int          size;
+};
+
 class LNS_settings
 {
 public:
-  LNS_settings(int max_iter_, double time_limit_, SIPP_settings sipp_settings_)
-      : max_iter(max_iter_), time_limit(time_limit_), sipp_settings(sipp_settings_)
+  LNS_settings(int max_iter_, double time_limit_, Destroy_settings destroy_settings_, SIPP_settings sipp_settings_)
+      : max_iter(max_iter_), time_limit(time_limit_), destroy_settings(destroy_settings_), sipp_settings(sipp_settings_)
   {
   }
-  int           max_iter;
-  double        time_limit;
-  SIPP_settings sipp_settings;
+  int              max_iter;
+  double           time_limit;
+  Destroy_settings destroy_settings;
+  SIPP_settings    sipp_settings;
 };
 
 class Operator
@@ -70,12 +87,15 @@ public:
   auto create_collision_vectors(const Solution& sol, int upperbound) const
       -> std::pair<std::vector<std::vector<int>>, std::vector<std::vector<std::vector<int>>>>;
 
+
+  Operator destroy_operator;
+
 private:
   void destroy_random(Solution& sol) const;
   void destroy_randomwalk(Solution& sol) const;
   auto random_walk(int agent_num, int neighborhood_size, int start_location, int start_time, int upperbound,
                    std::vector<std::vector<int>>& location_time_to_agentnum, std::vector<std::vector<std::vector<int>>>& edge_collisions,
-                   std::vector<int>& chosen) const -> bool;
+                   std::unordered_set<int>& chosen) const -> bool;
   void repair_default(Solution& sol) const;
 
   SharedData*         shared_data;
@@ -83,6 +103,5 @@ private:
   int                 iteration_num = 0;
   double              initial_solution_time;
   double              curr_time;
-  Operator            destroy_operator;
   Operator            repair_operator;
 };

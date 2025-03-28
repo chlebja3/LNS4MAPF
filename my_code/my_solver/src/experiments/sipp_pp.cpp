@@ -212,7 +212,7 @@ auto main(int argc, char** argv) -> int
           }
 
           // create solver
-          LNS_settings lns_settings(1, 1, {sipp_implementation, INFO_type::experiment, w});
+          LNS_settings lns_settings(1, 1, {DESTROY_TYPE::RANDOM, 10}, {sipp_implementation, INFO_type::experiment, w});
           LNS          solver(instance, rnd_generator, nullptr, lns_settings);
 
           // find the solution

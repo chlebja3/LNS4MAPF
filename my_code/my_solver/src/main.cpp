@@ -103,8 +103,11 @@ auto main(int argc, char** argv) -> int
   // create SIPP settings
   SIPP_settings sipp_settings = SIPP_settings(sipp_implementation, info_type, w);
 
+  // create destroy settings
+  Destroy_settings destroy_settings = Destroy_settings(DESTROY_TYPE::RANDOM, 10);
+
   // create LNS settings
-  LNS_settings lns_settings = LNS_settings(max_iter, time_limit, sipp_settings);
+  LNS_settings lns_settings = LNS_settings(max_iter, time_limit, destroy_settings, sipp_settings);
 
 
   // create the computation object

@@ -344,7 +344,7 @@ TEST(SIPPTest, PrioritizedPlanning1agent)
   for (auto algo : magic_enum::enum_values<SIPP_implementation>())
   {
     auto         rnd_generator = std::mt19937(0);
-    LNS_settings lns_settings(0, 5, {algo, INFO_type::no_info, 1.0});
+    LNS_settings lns_settings(0, 5, {DESTROY_TYPE::RANDOM, 10}, {algo, INFO_type::no_info, 1.0});
     LNS          lns(*instance, rnd_generator, nullptr, lns_settings);
     Solution     sol = lns.PrioritizedPlanning(algo);
     // check solution validity
@@ -366,7 +366,7 @@ TEST(SIPPTest, PrioritizedPlanningEmpty2agents)
   {
     // create LNS
     auto         rnd_generator = std::mt19937(0);
-    LNS_settings lns_settings(0, 5, {algo, INFO_type::no_info, 1.0});
+    LNS_settings lns_settings(0, 5, {DESTROY_TYPE::RANDOM, 10}, {algo, INFO_type::no_info, 1.0});
     LNS          lns(*instance, rnd_generator, nullptr, lns_settings);
     Solution     sol = lns.PrioritizedPlanning(algo);
 
@@ -389,7 +389,7 @@ TEST(SIPPTest, PrioritizedPlanning)
   {
     // create LNS
     auto         rnd_generator = std::mt19937(0);
-    LNS_settings lns_settings(0, 5, {algo, INFO_type::no_info, 1.0});
+    LNS_settings lns_settings(0, 5, {DESTROY_TYPE::RANDOM, 10}, {algo, INFO_type::no_info, 1.0});
     LNS          lns(*instance, rnd_generator, nullptr, lns_settings);
     Solution     sol = lns.PrioritizedPlanning(algo);
     // check solution validity
@@ -410,7 +410,7 @@ TEST(SIPPTest, SameAfterDestroy)
   {
     // create LNS
     auto         rnd_generator = std::mt19937(0);
-    LNS_settings lns_settings(0, 5, {algo, INFO_type::no_info, 1.0});
+    LNS_settings lns_settings(0, 5, {DESTROY_TYPE::RANDOM, 10}, {algo, INFO_type::no_info, 1.0});
     LNS          lns(*instance, rnd_generator, nullptr, lns_settings);
     Solution     sol = lns.PrioritizedPlanning(algo);
     // check solution validity

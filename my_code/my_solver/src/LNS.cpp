@@ -18,7 +18,16 @@ LNS::LNS(const Instance& instance_, std::mt19937& rnd_generator_, SharedData* sh
     : Solver("LNS", instance_, rnd_generator_),
       shared_data(shared_data_),
       settings(settings_),
-      destroy_operator(Operator([this](Solution& sol) { destroy_random(sol); })),
+      destroy_operator(Operator([this](Solution& sol) {
+        if (settings.destroy_settings.type == DESTROY_TYPE::RANDOMWALK)
+        {
+          destroy_randomwalk(sol);
+        }
+        else
+        {
+          destroy_random(sol);
+        }
+      })),
       repair_operator(Operator([this](Solution& sol) { repair_default(sol); }))
 {
   // SIPP's lifetime can not be longer than LNS's lifetime, because then map_data might be deleted before SIPP
@@ -206,12 +215,12 @@ auto LNS::PrioritizedPlanning(SIPP_implementation sipp_implementation) -> Soluti
 void LNS::destroy_random(Solution& sol) const
 {
   // TODO optimize
-  assertm(settings.destroy_size >= 0 && settings.destroy_size <= instance.num_of_agents, "Invalid neighborhood size.");
+  assertm(settings.destroy_settings.size >= 0 && settings.destroy_settings.size <= instance.num_of_agents, "Invalid neighborhood size.");
   std::vector<int> path_idcs(sol.paths.size());
   std::iota(path_idcs.begin(), path_idcs.end(), 0);
   std::shuffle(path_idcs.begin(), path_idcs.end(), rnd_generator);
-  assertm((int)path_idcs.size() > neighborhood_size, "Not enough paths for the destroy operator.");
-  int num_to_destroy = std::min(settings.destroy_size, instance.num_of_agents);
+  assertm((int)path_idcs.size() > settings.destroy_settings.size, "Not enough paths for the destroy operator.");
+  int num_to_destroy = std::min(settings.destroy_settings.size, instance.num_of_agents);
   sol.destroyed_paths =
       std::vector(std::make_move_iterator(path_idcs.begin()), std::make_move_iterator(path_idcs.begin() + num_to_destroy));
   assertm(sol.destroyed_paths.size() > 0, "No paths were destroyed.");
@@ -220,9 +229,9 @@ void LNS::destroy_random(Solution& sol) const
 
 void LNS::destroy_randomwalk(Solution& sol) const
 {
-  assertm(settings.destroy_size >= 0 && settings.destroy_size <= instance.num_of_agents, "Invalid neighborhood size.");
+  assertm(settings.destroy_settings.size >= 0 && settings.destroy_settings.size <= instance.num_of_agents, "Invalid neighborhood size.");
   // if neighborhood size the same as number of agents or more, return all agents
-  if (settings.destroy_size >= instance.num_of_agents)
+  if (settings.destroy_settings.size >= instance.num_of_agents)
   {
     destroy_random(sol);
     return;
@@ -237,8 +246,14 @@ void LNS::destroy_randomwalk(Solution& sol) const
 
   int max_delay    = 0;
   int most_delayed = -1;
+  int latest_time  = 0;
   for (int i = 0; i < instance.num_of_agents; i++)
   {
+    if (sol.paths[i].back().interval.t_min > latest_time)
+    {
+      latest_time = sol.paths[i].back().interval.t_min;
+    }
+
     // skip agents in tabu list
     if (tabu_list.find(i) != tabu_list.end())
     {
@@ -268,9 +283,10 @@ void LNS::destroy_randomwalk(Solution& sol) const
 
   std::unordered_set<int> chosen     = {most_delayed};
   int                     upperbound = sol.paths[most_delayed].back().interval.t_min - 1;
+  assertm(upperbound > 0, "Upperbound is too small.");
 
   // build the list of agents for each location and time which will be used in the random walk
-  auto [location_time_to_agentnum, edge_collisions] = create_collision_vectors(sol, upperbound);
+  auto [location_time_to_agentnum, edge_collisions] = create_collision_vectors(sol, latest_time + 1);
 
   // perform the random walk, maximum 10 iterations
   for (int i = 0; i < 10; i++)
@@ -293,7 +309,7 @@ void LNS::destroy_randomwalk(Solution& sol) const
     int rw_start_location = location_at_time(sol.paths[chosen_agent], chosen_t);
 
     // perform randomwalk
-    if (random_walk(chosen_agent, settings.destroy_size, rw_start_location, chosen_t, upperbound, location_time_to_agentnum,
+    if (random_walk(chosen_agent, settings.destroy_settings.size, rw_start_location, chosen_t, upperbound, location_time_to_agentnum,
                     edge_collisions, chosen))
     {
       break;
@@ -310,17 +326,18 @@ void LNS::destroy_randomwalk(Solution& sol) const
       not_chosen.push_back(i);
     }
   }
-  for (int i = 0; i < settings.destroy_size - static_cast<int>(chosen.size()); i++)
+  int iterations = settings.destroy_settings.size - static_cast<int>(chosen.size());
+  for (int i = 0; i < iterations; i++)
   {
     // choose a random element that was not yet chosen
-    std::uniform_int_distribution<int> dist(0, not_chosen.size());
+    std::uniform_int_distribution<int> dist(0, not_chosen.size() - 1);
     int                                idx = dist(rnd_generator);
     auto                               it  = not_chosen.begin();
     std::advance(it, idx);
     chosen.insert(*it);    // add to the neighborhood
     not_chosen.erase(it);  // remove from the not yet chosen elements
   }
-  assertm(static_cast<int>(chosen.size()) == neighborhood_size, "Neighborhood is not full.");
+  assertm(static_cast<int>(chosen.size()) == settings.destroy_settings.size, "Neighborhood is not full.");
   sol.destroyed_paths = std::vector(std::make_move_iterator(chosen.begin()), std::make_move_iterator(chosen.end()));
   assertm(sol.destroyed_paths.size() > 0, "No paths were destroyed.");
   sol.feasible = false;
@@ -344,7 +361,6 @@ auto LNS::create_collision_vectors(const Solution& sol, int upperbound) const
   {
     edge_collision.resize(instance.get_num_cells(), std::vector<int>(upperbound, -1));
   }
-
   // TODO parallelize?
   // fill the collisions
   for (int agent_num = 0; agent_num < static_cast<int>(sol.paths.size()); agent_num++)
@@ -411,7 +427,7 @@ auto LNS::random_walk(int agent_num, int neighborhood_size, int start_location, 
         // if there is an agent in collision, add it to the neighborhood
         if (agent != -1)
         {
-          chosen.push_back(agent);
+          chosen.insert(agent);
         }
 
         curr = loc;
