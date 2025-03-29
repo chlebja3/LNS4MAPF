@@ -123,6 +123,13 @@ void ConstraintTable::remove_constraint(const TimePoint& timepoint)
 
   std::list<TimeInterval>& cur_TI_list = safe_intervals[timepoint.location];
 
+  // check whether there are any safe intervals
+  if (cur_TI_list.empty())
+  {
+    cur_TI_list.push_back(timepoint.interval);
+    return;
+  }
+
   // firstly handle constraints after the last safe interval (there is no safe interval after the constraint)
   assertm(timepoint.interval.t_min != cur_TI_list.back().t_max, "Constraint start overlaps with last safe interval end.");
 
