@@ -181,7 +181,7 @@ void Visualizer::run()
       assertm(!new_lns_info.empty(), "Received empty LNS info");
       lns_info.insert(lns_info.end(), std::make_move_iterator(new_lns_info.begin()), std::make_move_iterator(new_lns_info.end()));
       lns_vis.max_time = static_cast<int>(lns_info.size()) - 1;
-      std::cout << "New max time: " << lns_vis.max_time << std::endl;
+      // std::cout << "New max time: " << lns_vis.max_time << std::endl;
       lns_vis.update();
     }
 
@@ -598,7 +598,7 @@ void Visualizer::draw_paths(sf::RenderWindow& window)
 
 void Visualizer::update_all_paths(int time)
 {
-  std::cout << "Updating all paths." << std::endl;
+  // std::cout << "Updating all paths." << std::endl;
   agents_paths = &lns_info[time].sol.converted_paths;
   assertm(instance.num_of_agents == (int)(*agents_paths).size(), "Number of paths should be the same as the number of agents.");
 
@@ -1116,9 +1116,7 @@ void Visualizer::lns_visualization_update(const Visualization& vis)
 {
   // reset other visualizations
   update_all_paths(vis.time);
-  std::cout << "Paths updated" << std::endl;
   solution_vis.reset();
-  std::cout << "Sol vis reset." << std::endl;
   // update sipp info
   if (selected_agent != -1)
   {

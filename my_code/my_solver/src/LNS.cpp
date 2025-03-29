@@ -277,12 +277,10 @@ void LNS::destroy_randomwalk(Solution& sol) const
       destroy_randomwalk(sol);
       return;
     }
-    else
-    {
-      // select random agents
-      destroy_random(sol);
-      return;
-    }
+
+    // select random agents
+    destroy_random(sol);
+    return;
   }
 
   assertm(max_delay > 0, "Max delay is invalid.");
