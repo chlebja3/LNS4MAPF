@@ -270,11 +270,19 @@ void LNS::destroy_randomwalk(Solution& sol) const
   // check, whether to reset tabu list
   if (max_delay == 0)
   {
-    assertm(!tabu_list.empty(), "Tabu list is empty and there is no delayed agent.");
     // reset the tabu list and try again
-    tabu_list.clear();
-    destroy_randomwalk(sol);
-    return;
+    if (!tabu_list.empty())
+    {
+      tabu_list.clear();
+      destroy_randomwalk(sol);
+      return;
+    }
+    else
+    {
+      // select random agents
+      destroy_random(sol);
+      return;
+    }
   }
 
   assertm(max_delay > 0, "Max delay is invalid.");
