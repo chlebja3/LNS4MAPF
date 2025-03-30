@@ -530,9 +530,29 @@ void LNS::destroy_intersection(Solution& sol) const
     }
   }
 
+  // if not enough agents selected, fill with random agents
+  // find all agents that were not selected yet
+  std::vector<int> not_chosen;
+  for (int i = 0; i < instance.num_of_agents; i++)
+  {
+    if (neighborhood.find(i) == neighborhood.end())
+    {
+      not_chosen.push_back(i);
+    }
+  }
+  int iterations = settings.destroy_settings.size - static_cast<int>(neighborhood.size());
+  for (int i = 0; i < iterations; i++)
+  {
+    // choose a random element that was not yet chosen
+    std::uniform_int_distribution<int> dist(0, not_chosen.size() - 1);
+    int                                idx = dist(rnd_generator);
+    auto                               it  = not_chosen.begin();
+    std::advance(it, idx);
+    neighborhood.insert(*it);  // add to the neighborhood
+    not_chosen.erase(it);      // remove from the not yet chosen elements
+  }
+
   assertm(settings.destroy_settings.size == static_cast<int>(neighborhood.size()), "Wrong neighborhood size.");
-  // TODO
-  // if not enough agents in the neighborhood, fill with random agents?
   // convert to vector and shuffle
   sol.destroyed_paths = std::vector(std::make_move_iterator(neighborhood.begin()), std::make_move_iterator(neighborhood.end()));
   // shuffle the paths

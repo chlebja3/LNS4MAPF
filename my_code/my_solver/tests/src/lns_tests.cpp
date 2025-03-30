@@ -208,7 +208,7 @@ TEST(LNSCollisionVectors, ConsistencyWithConstraintTable)
 }
 
 // test destroy operators
-TEST(LNSDestroyRandomWalk, RightNumberOfDestroyed)
+TEST(LNSDestroyOperators, RightNumberOfDestroyed)
 {
   // load instance
   int                       agent_num = 50;
@@ -219,21 +219,23 @@ TEST(LNSDestroyRandomWalk, RightNumberOfDestroyed)
   std::array<int, 5> neighborhood_sizes = {1, 4, 8, 16, 32};
 
   // find initial solution
-  for (auto neighborhood_size : neighborhood_sizes)
+  for (auto destroy_type : magic_enum::enum_values<DESTROY_TYPE>())
   {
-    auto         rnd_generator = std::mt19937(0);
-    LNS_settings lns_settings(0, 5, {DESTROY_TYPE::RANDOMWALK, neighborhood_size},
-                              {SIPP_implementation::SIPP_mine, INFO_type::no_info, 1.0});
-    LNS          lns(*instance, rnd_generator, nullptr, lns_settings);
-    lns.find_initial_solution();
-    ASSERT_TRUE(lns.solution.feasible) << "Initial solution is not feasible";
-    ASSERT_TRUE(lns.solution.is_valid(*instance)) << "Initial solution is not valid";
+    for (auto neighborhood_size : neighborhood_sizes)
+    {
+      auto         rnd_generator = std::mt19937(0);
+      LNS_settings lns_settings(0, 5, {destroy_type, neighborhood_size}, {SIPP_implementation::SIPP_mine, INFO_type::no_info, 1.0});
+      LNS          lns(*instance, rnd_generator, nullptr, lns_settings);
+      lns.find_initial_solution();
+      ASSERT_TRUE(lns.solution.feasible) << "Initial solution is not feasible";
+      ASSERT_TRUE(lns.solution.is_valid(*instance)) << "Initial solution is not valid";
 
-    // destroy agents
-    lns.destroy_operator.apply(lns.solution);
+      // destroy agents
+      lns.destroy_operator.apply(lns.solution);
 
-    // check if the right number of agents were destroyed
-    EXPECT_EQ(lns.solution.destroyed_paths.size(), neighborhood_size);
+      // check if the right number of agents were destroyed
+      EXPECT_EQ(lns.solution.destroyed_paths.size(), neighborhood_size);
+    }
   }
 }
 
