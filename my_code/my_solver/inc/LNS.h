@@ -15,7 +15,8 @@
 enum class DESTROY_TYPE
 {
   RANDOM,
-  RANDOMWALK
+  RANDOMWALK,
+  INTERSECTION
 };
 
 class Destroy_settings
@@ -96,6 +97,9 @@ private:
   auto random_walk(int agent_num, int neighborhood_size, int start_location, int start_time, int upperbound,
                    std::vector<std::vector<int>>& location_time_to_agentnum, std::vector<std::vector<std::vector<int>>>& edge_collisions,
                    std::unordered_set<int>& chosen) const -> bool;
+  void destroy_intersection(Solution& sol) const;
+  void get_intersection_agents(std::unordered_set<int>& neighborhood, std::unordered_set<int>& intersecting, Solution& sol,
+                               int current) const;
   void repair_default(Solution& sol) const;
 
   SharedData*         shared_data;

@@ -8,6 +8,7 @@
 #include "LNS.h"
 
 #include <numeric>
+#include <queue>
 #include <random>
 
 #include "SIPP.h"
@@ -22,6 +23,10 @@ LNS::LNS(const Instance& instance_, std::mt19937& rnd_generator_, SharedData* sh
         if (settings.destroy_settings.type == DESTROY_TYPE::RANDOMWALK)
         {
           destroy_randomwalk(sol);
+        }
+        else if (settings.destroy_settings.type == DESTROY_TYPE::INTERSECTION)
+        {
+          destroy_intersection(sol);
         }
         else
         {
@@ -345,6 +350,8 @@ void LNS::destroy_randomwalk(Solution& sol) const
   }
   assertm(static_cast<int>(chosen.size()) == settings.destroy_settings.size, "Neighborhood is not full.");
   sol.destroyed_paths = std::vector(std::make_move_iterator(chosen.begin()), std::make_move_iterator(chosen.end()));
+  // shuffle the paths
+  std::shuffle(sol.destroyed_paths.begin(), sol.destroyed_paths.end(), rnd_generator);
   assertm(sol.destroyed_paths.size() > 0, "No paths were destroyed.");
   sol.feasible = false;
 }
@@ -448,6 +455,134 @@ auto LNS::random_walk(int agent_num, int neighborhood_size, int start_location, 
   }
   assertm(static_cast<int>(chosen.size()) <= neighborhood_size, "Enough agents selected, but false returned.");
   return false;
+}
+
+void LNS::destroy_intersection(Solution& sol) const
+{
+  // first collect all intersection vertices
+  // prealocate
+  std::vector<std::unordered_set<int>> locations_visited;
+  locations_visited.resize(instance.get_num_cells(), {});
+
+  // for each location find all agents that visit it
+  for (int i = 0; i < instance.num_of_agents; i++)
+  {
+    for (int j = 0; j < static_cast<int>(sol.paths[i].size()); j++)
+    {
+      int loc = sol.paths[i][j].location;
+      locations_visited[loc].insert(i);
+    }
+  }
+
+  // find all intersection vertices
+  std::vector<int> intersection_vertices;
+  for (int i = 0; i < instance.get_num_cells(); i++)
+  {
+    if (static_cast<int>(locations_visited[i].size()) >= 3)
+    {
+      intersection_vertices.push_back(i);
+    }
+  }
+
+  // pick a random intersection vertex
+  std::uniform_int_distribution<int> dist(0, intersection_vertices.size() - 1);
+  int                                idx    = dist(rnd_generator);
+  int                                chosen = intersection_vertices[idx];
+
+  // create queue
+  std::queue<int> openlist;
+  openlist.push(chosen);
+
+  std::unordered_set<int> neighborhood;  // TODO try set
+  std::unordered_set<int> known;
+
+  while (!openlist.empty())
+  {
+    // retrieve current node
+    int current = openlist.front();
+    openlist.pop();
+    // std::cout << "Current: " << current << std::endl;
+    if (known.find(current) != known.end())
+    {
+      continue;
+    }
+    known.insert(current);
+
+    // check whether intersection vertex
+    if (static_cast<int>(locations_visited[current].size()) >= 3)
+    {
+      // add agents that visit this vertex to the neighborhood
+      get_intersection_agents(neighborhood, locations_visited[current], sol, current);
+    }
+
+    // check whether enough agents selected
+    // std::cout << "Selected: " << static_cast<int>(neighborhood.size()) << std::endl;
+    if (settings.destroy_settings.size == static_cast<int>(neighborhood.size()))
+    {
+      break;
+    }
+
+    // add neighbors to the queue
+    auto neighbors = instance.get_neighbor_locations(current);
+    for (auto it : neighbors)
+    {
+      openlist.push(it);
+    }
+  }
+
+  assertm(settings.destroy_settings.size == static_cast<int>(neighborhood.size()), "Wrong neighborhood size.");
+  // TODO
+  // if not enough agents in the neighborhood, fill with random agents?
+  // convert to vector and shuffle
+  sol.destroyed_paths = std::vector(std::make_move_iterator(neighborhood.begin()), std::make_move_iterator(neighborhood.end()));
+  // shuffle the paths
+  std::shuffle(sol.destroyed_paths.begin(), sol.destroyed_paths.end(), rnd_generator);
+  assertm(sol.destroyed_paths.size() > 0, "No paths were destroyed.");
+  sol.feasible = false;
+}
+
+void LNS::get_intersection_agents(std::unordered_set<int>& neighborhood, std::unordered_set<int>& intersecting, Solution& sol,
+                                  int current) const
+{
+  // find maximal T
+  int t_max = 0;
+  for (auto it : neighborhood)
+  {
+    for (auto it2 : sol.paths[it])
+    {
+      if (it2.location == current)
+      {
+        t_max = std::max(t_max, it2.interval.t_min);
+      }
+    }
+  }
+
+  // choose random time
+  std::uniform_int_distribution<int> dist(0, t_max);
+  int                                t     = dist(rnd_generator);
+  int                                delta = 0;
+  while (static_cast<int>(neighborhood.size()) < settings.destroy_settings.size && t + delta <= t_max)
+  {
+    bool inserted = false;
+    for (auto it : intersecting)
+    {
+      for (auto it2 : sol.paths[it])
+      {
+        if (it2.location == current && it2.interval.t_min <= t + delta && it2.interval.t_max >= t + delta)
+        {
+          // std::cout << "Inserting: " << it << std::endl;
+          neighborhood.insert(it);
+          inserted = true;
+          break;
+        }
+      }
+      if (inserted)  // the same location can be visited only by one agent at the same time
+      {
+        break;
+      }
+    }
+    delta++;
+  }
 }
 
 void LNS::repair_default(Solution& sol) const
