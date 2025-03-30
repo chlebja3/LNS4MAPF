@@ -84,10 +84,13 @@ add_library(MAPF_lib ${SOURCES} ${IMGUI_SOURCES} )
 # Add the executable
 add_executable(simple_MAPF_solver src/main.cpp)
 
-target_include_directories(MAPF_lib PRIVATE "third_party_libraries/imgui" "third_party_libraries/imgui-sfml")
+# add native filedialog extended
+add_subdirectory("third_party_libraries/nativefiledialog-extended")
+
+target_include_directories(MAPF_lib PRIVATE "third_party_libraries/imgui" "third_party_libraries/imgui-sfml" "third_party_libraries/nativefiledialog-extended/src/include")
 
 # link the libraries
-target_link_libraries(MAPF_lib ${Boost_LIBRARIES} Eigen3::Eigen sfml-graphics sfml-window sfml-system OpenGL::GL nlohmann_json::nlohmann_json)
+target_link_libraries(MAPF_lib ${Boost_LIBRARIES} Eigen3::Eigen sfml-graphics sfml-window sfml-system OpenGL::GL nlohmann_json::nlohmann_json nfd)
 target_link_libraries(simple_MAPF_solver MAPF_lib)
 
 # experiments

@@ -12,6 +12,7 @@
 #include <cmath>
 #include <filesystem>
 #include <iostream>
+#include <nfd.hpp>
 
 void Clock::start()
 {
@@ -492,4 +493,25 @@ auto location_at_time(TimePointPath& path, int time) -> int
     }
   }
   return -1;
+}
+
+auto open_file_dialog(const std::string& type, const std::string& file_extensions) -> std::string
+{
+  // initialize nfd to ensure proper cleanup
+  NFD::Guard      nfdGuard;
+  NFD::UniquePath outPath;
+
+  // prepare the filter
+  nfdfilteritem_t filter[1] = {{type.c_str(), file_extensions.c_str()}};
+  // show the dialog
+  nfdresult_t result = NFD::OpenDialog(outPath, filter, 1);
+  if (result == NFD_OKAY)
+  {
+    return outPath.get();
+  }
+  if (result != NFD_CANCEL)  // user pressed cancel
+  {
+    std::cout << "Error: " << NFD::GetError() << std::endl;
+  }
+  return "";
 }

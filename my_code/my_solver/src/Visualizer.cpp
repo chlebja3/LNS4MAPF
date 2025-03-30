@@ -22,6 +22,7 @@
 #include "imgui-SFML.h"
 #include "imgui.h"
 #include "imgui_internal.h"
+#include "nfd.hpp"
 #include "utils.h"
 
 // default size of the panels (0 - 1)
@@ -1049,11 +1050,19 @@ void Visualizer::create_menu_bar()
     {
       if (ImGui::MenuItem("Load map"))
       {
-        std::cout << "Loading a map." << std::endl;
+        std::string map_path = open_file_dialog("Map file", "map");
+        if (!map_path.empty())
+        {
+          std::cout << "Loaded map: " << map_path << std::endl;
+        }
       }
       if (ImGui::MenuItem("Load scene"))
       {
-        std::cout << "Loading a scene." << std::endl;
+        std::string scene_path = open_file_dialog("Scene file", "scen");
+        if (!scene_path.empty())
+        {
+          std::cout << "Loaded scene: " << scene_path << std::endl;
+        }
       }
       ImGui::EndMenu();
     }

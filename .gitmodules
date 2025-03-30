@@ -1,0 +1,6 @@
+[submodule "my_code/my_solver/third_party_libraries/my_code/my_solver/third_party_libraries/nativefiledialog-extended"]
+	path = my_code/my_solver/third_party_libraries/my_code/my_solver/third_party_libraries/nativefiledialog-extended
+	url = https://github.com/btzy/nativefiledialog-extended.git
+[submodule "my_code/my_solver/third_party_libraries/nativefiledialog-extended"]
+	path = my_code/my_solver/third_party_libraries/nativefiledialog-extended
+	url = https://github.com/btzy/nativefiledialog-extended.git
