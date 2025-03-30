@@ -50,6 +50,7 @@ Visualizer::Visualizer(const Instance& instance_, SharedData& shared_data_, int 
       lns_vis([this](Visualization& vis) { this->lns_visualization_update(vis); }),
       seed(seed_)
 {
+  clock.start();
   // initialized the random generator
   if (seed - 1 < 0)  // visualizer gets a seed with +1
   {
@@ -179,6 +180,19 @@ void Visualizer::run()
     {
       std::vector<LNSIterationInfo> new_lns_info = shared_data.consume_lns_info();
       assertm(!new_lns_info.empty(), "Received empty LNS info");
+      auto [timestamp_wall, timestamp_cpu] = clock.get_current_time();
+      // write to the console
+      if (static_cast<int>(lns_info.size()) == 0)
+      {
+        // initial solution
+        log.push_back(std::to_string(timestamp_wall) + ":\t" +
+                      "Found initial solution with cost: " + std::to_string(new_lns_info[0].sol.sum_of_costs));
+      }
+      else if (new_lns_info.back().improvement > 0)
+      {
+        log.push_back(std::to_string(timestamp_wall) + ":\t" +
+                      "Found better solution with cost: " + std::to_string(new_lns_info.back().sol.sum_of_costs));
+      }
       lns_info.insert(lns_info.end(), std::make_move_iterator(new_lns_info.begin()), std::make_move_iterator(new_lns_info.end()));
       lns_vis.max_time = static_cast<int>(lns_info.size()) - 1;
       // std::cout << "New max time: " << lns_vis.max_time << std::endl;
@@ -240,6 +254,9 @@ void Visualizer::run()
   }
   ImGui::SFML::Shutdown();
   std::cout << "Visualizer thread ended" << std::endl;
+
+  // signal to the other thread to end
+  shared_data.is_end.store(true, std::memory_order_release);
 }
 
 // Render the map onto a texture

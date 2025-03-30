@@ -147,4 +147,5 @@ private:
   Visualization lns_vis;
   int           seed;
   std::mt19937  rnd_generator;
+  Clock         clock;
 };

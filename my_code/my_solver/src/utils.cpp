@@ -22,8 +22,19 @@ void Clock::start()
   initialized = true;
 }
 
+[[nodiscard]] auto Clock::get_current_time() const -> std::pair<double, double>
+{
+  assertm(initialized, "Can not retrieve time of uninitialized clock.");
+  double   wall_time = ((dsec)(Time::now() - wall_time_start)).count();
+  timespec ts{};
+  clock_gettime(CLOCK_PROCESS_CPUTIME_ID, &ts);
+  auto cpu_time = (double)(ts.tv_sec - cpu_time_start.tv_sec + (ts.tv_nsec - cpu_time_start.tv_nsec) / 1e9);
+  return {wall_time, cpu_time};
+}
+
 auto Clock::end() -> std::pair<double, double>
 {
+  assertm(initialized, "Can not end uninitialized clock.");
   initialized        = false;
   double   wall_time = ((dsec)(Time::now() - wall_time_start)).count();
   timespec ts{};

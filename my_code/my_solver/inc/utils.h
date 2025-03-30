@@ -47,8 +47,9 @@ enum class INFO_type
 class Clock
 {
 public:
-  void start();
-  auto end() -> std::pair<double, double>;
+  void               start();
+  [[nodiscard]] auto get_current_time() const -> std::pair<double, double>;
+  auto               end() -> std::pair<double, double>;
 
 private:
   bool             initialized = false;

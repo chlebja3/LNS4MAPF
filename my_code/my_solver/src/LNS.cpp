@@ -17,8 +17,6 @@
 
 LNS::LNS(const Instance& instance_, std::mt19937& rnd_generator_, SharedData* shared_data_, const LNS_settings& settings_)
     : Solver("LNS", instance_, rnd_generator_),
-      shared_data(shared_data_),
-      settings(settings_),
       destroy_operator(Operator([this](Solution& sol) {
         if (settings.destroy_settings.type == DESTROY_TYPE::RANDOMWALK)
         {
@@ -33,6 +31,8 @@ LNS::LNS(const Instance& instance_, std::mt19937& rnd_generator_, SharedData* sh
           destroy_random(sol);
         }
       })),
+      shared_data(shared_data_),
+      settings(settings_),
       repair_operator(Operator([this](Solution& sol) { repair_default(sol); }))
 {
   // SIPP's lifetime can not be longer than LNS's lifetime, because then map_data might be deleted before SIPP
@@ -61,6 +61,14 @@ void LNS::solve()
   // improve the solution
   while (iteration_num < settings.max_iter && curr_time < settings.time_limit)
   {
+    // check for visualization thread end
+    if (settings.sipp_settings.info_type == INFO_type::visualisation)
+    {
+      if (shared_data->is_end.load(std::memory_order_acquire))
+      {
+        break;
+      }
+    }
     iteration_num++;
 
     // copy solution
@@ -484,14 +492,17 @@ void LNS::destroy_intersection(Solution& sol) const
     }
   }
 
-  // pick a random intersection vertex
-  std::uniform_int_distribution<int> dist(0, intersection_vertices.size() - 1);
-  int                                idx    = dist(rnd_generator);
-  int                                chosen = intersection_vertices[idx];
-
   // create queue
   std::queue<int> openlist;
-  openlist.push(chosen);
+
+  // pick a random intersection vertex
+  {
+    std::uniform_int_distribution<int> dist(0, intersection_vertices.size() - 1);
+    int                                idx    = dist(rnd_generator);
+    int                                chosen = intersection_vertices[idx];
+    openlist.push(chosen);
+  }
+
 
   std::unordered_set<int> neighborhood;  // TODO try set
   std::unordered_set<int> known;
