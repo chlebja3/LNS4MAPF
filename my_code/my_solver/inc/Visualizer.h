@@ -14,6 +14,7 @@
 #include <memory>
 #include <thread>
 
+#include "Computation.h"
 #include "Instance.h"
 #include "IterInfo.h"
 #include "SharedData.h"
@@ -45,11 +46,18 @@ public:
   void next_iteration();
 };
 
+struct Settings
+{
+  std::string map_fname;
+  std::string scene_fname;
+  int         num_of_agents;
+};
+
 class Visualizer
 {
 public:
   // constructor and destructor
-  Visualizer(const Instance& instance_, SharedData& shared_data_, int seed);
+  Visualizer(Instance& instance_, Computation& computation_thread_, SharedData& shared_data_, int seed);
   ~Visualizer();
 
   // manage the underlying thread
@@ -78,6 +86,7 @@ public:
   void solution_visualization_update(const Visualization& vis);
   void sipp_visualization_update(const Visualization& vis);
   void lns_visualization_update(const Visualization& vis);
+  void number_of_agents_dialog();
 
 
 private:
@@ -106,14 +115,17 @@ private:
   void        create_bottom_panel();
   static void create_visualization_playback_bar(std::string vis_name, Visualization& vis, int id);
   // draw the agents
-  void            draw_agents(sf::RenderWindow& window);
-  void            draw_goals(sf::RenderWindow& window);
-  void            draw_paths(sf::RenderWindow& window);
-  void            draw_cell_rectangles(sf::RenderWindow& window);
-  std::thread     vis_thread;  // the underlying thread
-  bool            running;     // indicator whether the thread should be running
-  const Instance& instance;
-  SharedData&     shared_data;
+  void draw_agents(sf::RenderWindow& window);
+  void draw_goals(sf::RenderWindow& window);
+  void draw_paths(sf::RenderWindow& window);
+  void draw_cell_rectangles(sf::RenderWindow& window);
+  void add_to_log(std::string message);
+
+  std::thread  vis_thread;  // the underlying thread
+  bool         running;     // indicator whether the thread should be running
+  Instance&    instance;
+  Computation& computation_thread;
+  SharedData&  shared_data;
 
   void create_docking_space();
   void create_menu_bar();
@@ -148,4 +160,7 @@ private:
   int           seed;
   std::mt19937  rnd_generator;
   Clock         clock;
+
+  Settings settings;
+  bool     show_agent_num_dialog = false;
 };

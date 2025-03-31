@@ -421,10 +421,10 @@ auto fast_random_bool() -> bool
   return ret;
 }
 
-auto double_to_str(double num, char separating_char) -> std::string
+auto double_to_str(double num, char separating_char, int precision) -> std::string
 {
   std::stringstream stream;
-  stream << std::fixed << std::setprecision(2) << num;
+  stream << std::fixed << std::setprecision(precision) << num;
   std::string ret = stream.str();
   // replace . with -
   std::replace(ret.begin(), ret.end(), '.', separating_char);

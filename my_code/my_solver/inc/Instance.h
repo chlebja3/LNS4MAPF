@@ -14,8 +14,6 @@
 class Instance
 {
 public:
-  int num_of_agents;
-
   // constructor
   Instance() = default;
   Instance(std::string map_fname_, std::string scene_fname_, int num_of_agents_ = 0, bool calculate_manhattan = false,
@@ -51,7 +49,7 @@ public:
     return goal_locations;
   }
 
-  [[nodiscard]] auto get_optimal_paths() const -> const std::vector<Path>&;
+  // [[nodiscard]] auto get_optimal_paths() const -> const std::vector<Path>&;
 
   void calculate_heuristics(bool calculate_manhattan, bool calculate_euclidean);
   void precompute_neighbors();
@@ -110,6 +108,8 @@ public:
   }
 
 
+  int num_of_agents;
+
 private:
   /**
    * @brief Load the map from a file specified during Instance initialization.
@@ -123,17 +123,17 @@ private:
 
   void calculate_distance_heuristic();
 
-  bool                          initialized = false;
-  std::string                   map_fname;
-  std::string                   scene_fname;
-  std::string                   type;
-  Map                           map_data;
-  std::vector<Point2d>          start_positions;
-  std::vector<int>              start_locations;
-  std::vector<Point2d>          goal_positions;
-  std::vector<int>              goal_locations;          // goal location for each agent
-  std::vector<int>              location_to_goal_array;  // goal location for each location
-  std::vector<Path>             optimal_paths;
+  bool                 initialized = false;
+  std::string          map_fname;
+  std::string          scene_fname;
+  std::string          type;
+  Map                  map_data;
+  std::vector<Point2d> start_positions;
+  std::vector<int>     start_locations;
+  std::vector<Point2d> goal_positions;
+  std::vector<int>     goal_locations;          // goal location for each agent
+  std::vector<int>     location_to_goal_array;  // goal location for each location
+  // std::vector<Path>             optimal_paths;
   std::vector<std::vector<int>> neighbors;
 
   // heuristics

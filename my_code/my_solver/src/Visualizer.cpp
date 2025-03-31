@@ -12,6 +12,7 @@
 #include <SFML/Graphics/RectangleShape.hpp>
 #include <SFML/System/Vector2.hpp>
 #include <SFML/Window/WindowStyle.hpp>
+#include <chrono>
 #include <cmath>
 #include <iostream>
 #include <memory>
@@ -43,8 +44,9 @@
 #define MAX_BRIGHTNESS 230
 #define COLOR_GREY sf::Color(150, 150, 150, 255)
 
-Visualizer::Visualizer(const Instance& instance_, SharedData& shared_data_, int seed_)
+Visualizer::Visualizer(Instance& instance_, Computation& computation_thread_, SharedData& shared_data_, int seed_)
     : instance(instance_),
+      computation_thread(computation_thread_),
       shared_data(shared_data_),
       solution_vis([this](Visualization& vis) { this->solution_visualization_update(vis); }),
       sipp_vis([this](Visualization& vis) { this->sipp_visualization_update(vis); }),
@@ -127,11 +129,11 @@ void Visualizer::run()
   const int map_height = instance.get_map_data().height;
 
   // turn on antialiasing
-  sf::ContextSettings settings;
-  settings.antialiasingLevel = DEFAULT_ANTIALIASING_LEVEL;
+  sf::ContextSettings c_settings;
+  c_settings.antialiasingLevel = DEFAULT_ANTIALIASING_LEVEL;
 
   // create the sfml window
-  sf::RenderWindow window(sf::VideoMode(screen_width, screen_height), "MAPF solver", sf::Style::Default, settings);
+  sf::RenderWindow window(sf::VideoMode(screen_width, screen_height), "MAPF solver", sf::Style::Default, c_settings);
 
   // set framerate
   window.setFramerateLimit(FRAME_RATE);
@@ -181,18 +183,15 @@ void Visualizer::run()
     {
       std::vector<LNSIterationInfo> new_lns_info = shared_data.consume_lns_info();
       assertm(!new_lns_info.empty(), "Received empty LNS info");
-      auto [timestamp_wall, timestamp_cpu] = clock.get_current_time();
       // write to the console
       if (static_cast<int>(lns_info.size()) == 0)
       {
         // initial solution
-        log.push_back(std::to_string(timestamp_wall) + ":\t" +
-                      "Found initial solution with cost: " + std::to_string(new_lns_info[0].sol.sum_of_costs));
+        add_to_log("Found initial solution with cost: " + std::to_string(new_lns_info[0].sol.sum_of_costs));
       }
       else if (new_lns_info.back().improvement > 0)
       {
-        log.push_back(std::to_string(timestamp_wall) + ":\t" +
-                      "Found better solution with cost: " + std::to_string(new_lns_info.back().sol.sum_of_costs));
+        add_to_log("Found better solution with cost: " + std::to_string(new_lns_info.back().sol.sum_of_costs));
       }
       lns_info.insert(lns_info.end(), std::make_move_iterator(new_lns_info.begin()), std::make_move_iterator(new_lns_info.end()));
       lns_vis.max_time = static_cast<int>(lns_info.size()) - 1;
@@ -224,6 +223,9 @@ void Visualizer::run()
 
     // create the menu bar
     create_menu_bar();
+
+    // show dialog if applicable
+    number_of_agents_dialog();
 
     // draw the map
     window.draw(map_sprite);
@@ -1050,19 +1052,64 @@ void Visualizer::create_menu_bar()
     {
       if (ImGui::MenuItem("Load map"))
       {
-        std::string map_path = open_file_dialog("Map file", "map");
-        if (!map_path.empty())
+        std::string map_fname = open_file_dialog("Map file", "map");
+        if (!map_fname.empty())
+        {
+          settings.map_fname = map_fname;
+          add_to_log("Loaded map: " + map_fname);
+          std::string scene_fname = open_file_dialog("Scene file", "scen");
+          if (!scene_fname.empty())
+          {
+            add_to_log("Loaded scene: " + scene_fname);
+            settings.scene_fname  = scene_fname;
+            show_agent_num_dialog = true;
+          }
+          else
+          {
+            add_to_log("Failed to load a scene file.");
+          }
+        }
+        else
+        {
+          add_to_log("Failed to load a map file.");
+        }
+        /*
+        if (!map_path.empty() && !scene_path.empty())
         {
           std::cout << "Loaded map: " << map_path << std::endl;
-        }
+          // stop computation
+          shared_data.is_end.store(true, std::memory_order_release);
+
+          // wait until computation ended
+          while (!computation_thread.running.load(std::memory_order_acquire))
+          {
+            // sleep a bit
+            std::this_thread::sleep_for(std::chrono::milliseconds(100));
+          }
+
+          // load new instance
+          instance.reset();
+
+          // reset visualization
+        }*/
       }
       if (ImGui::MenuItem("Load scene"))
       {
-        std::string scene_path = open_file_dialog("Scene file", "scen");
-        if (!scene_path.empty())
+        std::string scene_fname = open_file_dialog("Scene file", "scen");
+        if (!scene_fname.empty())
         {
-          std::cout << "Loaded scene: " << scene_path << std::endl;
+          add_to_log("Loaded scene: " + scene_fname);
+          settings.scene_fname  = scene_fname;
+          show_agent_num_dialog = true;
         }
+        else
+        {
+          add_to_log("Failed to load a scene file.");
+        }
+      }
+      if (ImGui::MenuItem("Change number of agents"))
+      {
+        show_agent_num_dialog = true;
       }
       ImGui::EndMenu();
     }
@@ -1199,6 +1246,46 @@ void Visualizer::update_sipp_info()
     sipp_info = &(lns_info[0].sipp_info[selected_agent]);
     sipp_vis.new_data((*sipp_info).size());
   }
+}
+
+void Visualizer::number_of_agents_dialog()
+{
+  static int user_input = 0;
+  if (show_agent_num_dialog)
+  {
+    ImGui::OpenPopup("Number of agents");
+    show_agent_num_dialog = false;  // Reset the flag after opening
+  }
+
+  if (ImGui::BeginPopupModal("Number of agents", NULL, ImGuiWindowFlags_AlwaysAutoResize))
+  {
+    ImGui::Text("Please enter the number of agents:");
+    ImGui::InputInt("##number", &user_input);
+
+    if (ImGui::Button("OK"))
+    {
+      settings.num_of_agents = user_input;
+      show_agent_num_dialog  = false;
+      add_to_log("Number of agents changed to: " + std::to_string(settings.num_of_agents));
+      ImGui::CloseCurrentPopup();
+    }
+
+    ImGui::SameLine();
+
+    if (ImGui::Button("Cancel"))
+    {
+      show_agent_num_dialog = false;
+      ImGui::CloseCurrentPopup();
+    }
+
+    ImGui::EndPopup();
+  }
+}
+
+void Visualizer::add_to_log(std::string message)
+{
+  auto [timestamp_wall, timestamp_cpu] = clock.get_current_time();
+  log.push_back(double_to_str(timestamp_wall, '.', 3) + ":\t" + message);
 }
 
 Visualization::Visualization(std::function<void(Visualization& vis)> update_func_) : update_func(std::move(update_func_))

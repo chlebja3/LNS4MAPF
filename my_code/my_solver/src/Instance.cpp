@@ -58,7 +58,23 @@ void Instance::initialize(bool calculate_manhattan, bool calculate_euclidean)
 void Instance::reset()
 {
   assertm(initialized, "Instance already reset.");
-  initialized = false;
+  num_of_agents = 0;
+  initialized   = false;
+  map_fname     = "";
+  scene_fname   = "";
+  type          = "";
+  map_data      = Map();
+  start_positions.clear();
+  start_locations.clear();
+  goal_positions.clear();
+  goal_locations.clear();
+  location_to_goal_array.clear();
+  // optimal_paths.clear();
+  neighbors.clear();
+  heuristic_manhattan.clear();
+  heuristic_euclidean.clear();
+  heuristic_distance.clear();
+  sum_of_distances = 0;
 }
 
 auto Instance::is_initialized() const -> bool
@@ -271,10 +287,10 @@ auto Instance::get_goal_positions() const -> const std::vector<Point2d>&
   return goal_positions;
 }
 
-auto Instance::get_optimal_paths() const -> const std::vector<Path>&
-{
-  return optimal_paths;
-}
+// auto Instance::get_optimal_paths() const -> const std::vector<Path>&
+// {
+//   return optimal_paths;
+// }
 
 
 void Instance::calculate_heuristics(bool calculate_manhattan, bool calculate_euclidean)

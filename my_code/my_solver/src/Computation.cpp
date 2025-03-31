@@ -41,13 +41,13 @@ void Computation::start()
 {
   // start the underlying thread
   comp_thread = std::thread(&Computation::run, this);
-  running     = true;
+  running.store(true, std::memory_order_release);
 }
 
 void Computation::stop()
 {
   // set the stop signal
-  running = false;
+  running.store(false, std::memory_order_release);
 }
 
 void Computation::join_thread()
@@ -62,5 +62,5 @@ void Computation::run()
 {
   solver->solve();
   std::cout << "Final solution has sum of costs: " << solver->solution.sum_of_costs << std::endl;
-  std::cout << "Computation thread ended" << std::endl;
+  running.store(false, std::memory_order_release);
 }

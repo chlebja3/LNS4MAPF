@@ -14,6 +14,8 @@ google-test 1.10.0
 
 google benchmark 1.5.0-4build1
 
+nativefiledialog-extended (added as submodule, might be needed to run `git submodule update --init --recursive`)
+
 # Build
 ```
 ./scripts/compile.sh "build type" "tests"

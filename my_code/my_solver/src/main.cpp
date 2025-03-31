@@ -144,7 +144,7 @@ auto main(int argc, char** argv) -> int
   // create the visualization object
   if (GUI)
   {
-    Visualizer visualizer(*instance, *shared_data, seed + 1);  // use different seed for visualizer than for computation
+    Visualizer visualizer(*instance, computation, *shared_data, seed + 1);  // use different seed for visualizer than for computation
     visualizer.start();
     // wait for the visualization thread to finish
     visualizer.join_thread();

@@ -229,7 +229,7 @@ inline auto safe_increase(int num) -> int
 auto fast_random_bool() -> bool;
 
 auto any_to_str(const std::any& value) -> std::string;
-auto double_to_str(double num, char separating_char = ',') -> std::string;
+auto double_to_str(double num, char separating_char = ',', int precision = 2) -> std::string;
 auto find_last_number(const std::string& str) -> int;
 auto location_at_time(TimePointPath& path, int time) -> int;
 auto open_file_dialog(const std::string& type, const std::string& file_extensions) -> std::string;

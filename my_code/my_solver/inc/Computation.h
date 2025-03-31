@@ -28,14 +28,14 @@ public:
   void join_thread();
 
   // the function called in the thread
-  void run();
+  void              run();
+  std::atomic<bool> running;
 
 private:
   std::unique_ptr<LNS> solver;
   std::thread          comp_thread;
   const Instance&      instance;
   SharedData*          shared_data;
-  std::atomic<bool>    running;
   int                  seed;
   std::mt19937         rnd_generator;
   LNS_settings         lns_settings;
