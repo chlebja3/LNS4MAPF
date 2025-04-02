@@ -10,9 +10,9 @@
 
 #include <climits>
 
-#include "ConstraintTable.h"
 #include "Instance.h"
 #include "LNS.h"
+#include "SafeIntervalTable.h"
 #include "test_utils.h"
 
 TEST(LNSCollisionVectors, SinglePath)
@@ -193,14 +193,14 @@ TEST(LNSCollisionVectors, ConsistencyWithConstraintTable)
   // create collision vectors
   auto [location_time_to_agentnum, edge_collisions] = lns.create_collision_vectors(lns.solution, max_path_len);
 
-  // check consistency with constraint table
+  // check consistency with safe interval table
   for (int i = 0; i < instance->get_map_data().width * instance->get_map_data().height; i++)  // locations
   {
     for (int j = 0; j < max_path_len; j++)  // times
     {
       if (location_time_to_agentnum[i][j] != -1)
       {
-        auto [beggining, end] = lns.planner->constraint_table.get_safe_intervals(i, TimeInterval(j, j));
+        auto [beggining, end] = lns.planner->safe_interval_table.get_safe_intervals(i, TimeInterval(j, j));
         EXPECT_TRUE(beggining == end) << "Location-time pair (" << i << ", " << j << ") should not be safe";
       }
     }

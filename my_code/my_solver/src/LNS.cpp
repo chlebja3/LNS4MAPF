@@ -217,7 +217,7 @@ auto LNS::PrioritizedPlanning(SIPP_implementation sipp_implementation) -> Soluti
     assertm(instance.check_timepointpath_validity(tp_path), "SIPP planned an invalid timepointpath.");
 
     // update the constraint table
-    planner->constraint_table.add_constraints(tp_path);
+    planner->safe_interval_table.add_constraints(tp_path);
 
     // add to the solution
     sol.paths[agent_id] = tp_path;
@@ -631,7 +631,7 @@ void LNS::repair_default(Solution& sol) const
   for (auto& it : sol.destroyed_paths)
   {
     // std::cout << "Removing path: " << it << std::endl;
-    planner->constraint_table.remove_constraints(sol.paths[it]);
+    planner->safe_interval_table.remove_constraints(sol.paths[it]);
     sol.paths[it].clear();
   }
   sol.feasible = true;
@@ -654,7 +654,7 @@ void LNS::repair_default(Solution& sol) const
       planner->iter_info.clear();
     }
 
-    planner->constraint_table.add_constraints(tp_path);
+    planner->safe_interval_table.add_constraints(tp_path);
     sol.paths[path_idx] = tp_path;
   }
 }
@@ -666,13 +666,13 @@ void LNS::discard_solution(const Solution& sol, const Solution& prev_sol) const
     // remove the destroyed paths
     if (!sol.paths[it].empty())
     {
-      planner->constraint_table.remove_constraints(sol.paths[it]);
+      planner->safe_interval_table.remove_constraints(sol.paths[it]);
     }
   }
 
   // restore the old paths
   for (const auto& it : sol.destroyed_paths)
   {
-    planner->constraint_table.add_constraints(prev_sol.paths[it]);
+    planner->safe_interval_table.add_constraints(prev_sol.paths[it]);
   }
 }

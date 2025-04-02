@@ -5,18 +5,18 @@
  * Description:
  */
 
-#include "ConstraintTable.h"
-
 #include <boost/functional/hash.hpp>
 #include <climits>
 #include <iostream>
+
+#include "SafeIntervalTable.h"
 
 auto EdgeConstraint::operator==(const EdgeConstraint& other) const -> bool
 {
   return from == other.from && to == other.to && t == other.t;
 }
 
-ConstraintTable::ConstraintTable(const Instance& instance_)
+SafeIntervalTable::SafeIntervalTable(const Instance& instance_)
     : edge_constraint_table(instance_.get_map_data().width * instance_.get_map_data().height),
       instance(instance_),
       unlimited_safe_intervals(instance_.get_map_data().free_cells)
@@ -27,7 +27,7 @@ ConstraintTable::ConstraintTable(const Instance& instance_)
   safe_intervals = std::vector<std::list<TimeInterval>>(num_cells, std::list<TimeInterval>(1, TimeInterval(0, INT_MAX)));
 }
 
-void ConstraintTable::add_constraint(const TimePoint& timepoint)
+void SafeIntervalTable::add_constraint(const TimePoint& timepoint)
 {
   // check the location is valid
   assertm(instance.get_map_data().is_in(timepoint.location), "Invalid location.");
@@ -107,7 +107,7 @@ void ConstraintTable::add_constraint(const TimePoint& timepoint)
 }
 
 
-void ConstraintTable::remove_constraint(const TimePoint& timepoint)
+void SafeIntervalTable::remove_constraint(const TimePoint& timepoint)
 {
   // check the location is valid
   assertm(instance.get_map_data().is_in(timepoint.location), "Invalid location.");
@@ -192,7 +192,7 @@ void ConstraintTable::remove_constraint(const TimePoint& timepoint)
   throw std::runtime_error("Did not remove any constraint.");
 }
 
-void ConstraintTable::add_constraints(const TimePointPath& path)
+void SafeIntervalTable::add_constraints(const TimePointPath& path)
 {
   for (int i = 0; i < (int)path.size(); i++)
   {
@@ -208,7 +208,7 @@ void ConstraintTable::add_constraints(const TimePointPath& path)
   }
 }
 
-void ConstraintTable::remove_constraints(const TimePointPath& path)
+void SafeIntervalTable::remove_constraints(const TimePointPath& path)
 {
   for (int i = 0; i < (int)path.size(); i++)
   {
@@ -226,7 +226,7 @@ void ConstraintTable::remove_constraints(const TimePointPath& path)
   update_latest_constraint_end_estimate();
 }
 
-auto ConstraintTable::get_first_safe_interval(int location) const -> const std::list<TimeInterval>::const_iterator
+auto SafeIntervalTable::get_first_safe_interval(int location) const -> std::list<TimeInterval>::const_iterator
 {
   // check the location is valid
   assertm(instance.get_map_data().is_in(location), "Invalid location.");
@@ -242,7 +242,7 @@ auto ConstraintTable::get_first_safe_interval(int location) const -> const std::
   return cur_TI_list.cbegin();
 }
 
-auto ConstraintTable::get_safe_intervals(int location, const TimeInterval& time_interval) const
+auto SafeIntervalTable::get_safe_intervals(int location, const TimeInterval& time_interval) const
     -> std::pair<std::list<TimeInterval>::const_iterator, std::list<TimeInterval>::const_iterator>
 {
   // this implementation does not check edge collisions, so they must be handled elsewhere.
@@ -275,7 +275,7 @@ auto ConstraintTable::get_safe_intervals(int location, const TimeInterval& time_
   return std::make_pair(start, end);
 }
 
-void ConstraintTable::update_latest_constraint_end_estimate()
+void SafeIntervalTable::update_latest_constraint_end_estimate()
 {
   latest_constraint_end = 0;
   for (const auto& safe_interval_list : safe_intervals)
@@ -290,7 +290,7 @@ void ConstraintTable::update_latest_constraint_end_estimate()
   }
 }
 
-[[nodiscard]] auto ConstraintTable::get_max_path_len_estimate() const -> int
+[[nodiscard]] auto SafeIntervalTable::get_max_path_len_estimate() const -> int
 {
   if (unlimited_safe_intervals == 0)
   {
@@ -305,7 +305,7 @@ void ConstraintTable::update_latest_constraint_end_estimate()
 }
 
 
-auto ConstraintTable::get_min_reach_time(int goal) const -> int
+auto SafeIntervalTable::get_min_reach_time(int goal) const -> int
 {
   return safe_intervals[goal].back().t_min;
 }

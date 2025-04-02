@@ -8,20 +8,20 @@
 
 #include <climits>
 
-#include "ConstraintTable.h"
 #include "Instance.h"
 #include "LNS.h"
 #include "SIPP.h"
+#include "SafeIntervalTable.h"
 #include "test_utils.h"
 
 /**
- * @brief Class for testing the ConstraintTable class
+ * @brief Class for testing the SafeIntervalTable class
  */
-class ConstraintTableTest : public ::testing::Test
+class SafeIntervalTableTest : public ::testing::Test
 {
 protected:
-  std::unique_ptr<Instance>        instance;
-  std::unique_ptr<ConstraintTable> table;
+  std::unique_ptr<Instance>          instance;
+  std::unique_ptr<SafeIntervalTable> table;
 
   void SetUp() override
   {
@@ -30,7 +30,7 @@ protected:
 
     instance =
         std::make_unique<Instance>(base_path + "/tests/test_maps/dummy_3_3.map", base_path + "/tests/test_scen/dummy_3_3_scen_1.scen", 1);
-    table = std::make_unique<ConstraintTable>(*instance);
+    table = std::make_unique<SafeIntervalTable>(*instance);
   }
 
   void TearDown() override
@@ -40,7 +40,7 @@ protected:
 
 // Constraint Table tests
 // Adding a single constraint and checking if it is stored correctly
-TEST_F(ConstraintTableTest, SingleConstraint)
+TEST_F(SafeIntervalTableTest, SingleConstraint)
 {
   TimePoint tp(7, {3, 5});  // location (1,2) with time interval [3,5]
                             //
@@ -68,7 +68,7 @@ TEST_F(ConstraintTableTest, SingleConstraint)
 }
 
 // Adding multiple constraints and ensuring safe intervals are computed correctly
-TEST_F(ConstraintTableTest, MultipleSingleConstraints)
+TEST_F(SafeIntervalTableTest, MultipleSingleConstraints)
 {
   table->add_constraint(TimePoint(7, {2, 4}));
   table->add_constraint(TimePoint(7, {5, 5}));
@@ -87,7 +87,7 @@ TEST_F(ConstraintTableTest, MultipleSingleConstraints)
 }
 
 // Removing a constraint and ensuring safe intervals update
-TEST_F(ConstraintTableTest, RemoveConstraint)
+TEST_F(SafeIntervalTableTest, RemoveConstraint)
 {
   TimePoint tp(7, {3, 5});
   table->add_constraint(tp);
@@ -107,7 +107,7 @@ TEST_F(ConstraintTableTest, RemoveConstraint)
 }
 
 // the other method
-TEST_F(ConstraintTableTest, GetSafeIntervalEmpty)
+TEST_F(SafeIntervalTableTest, GetSafeIntervalEmpty)
 {
   auto first_si = table->get_first_safe_interval(4);
   EXPECT_TRUE(first_si->t_min == 0 && first_si->t_max == INT_MAX) << "No constraints should mean an unlimited safe interval.";
@@ -123,7 +123,7 @@ TEST_F(ConstraintTableTest, GetSafeIntervalEmpty)
 
 
 // Handling constraints dynamically (adding and removing in sequence)
-TEST_F(ConstraintTableTest, DynamicAddRemove)
+TEST_F(SafeIntervalTableTest, DynamicAddRemove)
 {
   table->add_constraint(TimePoint(4, {2, 4}));
   table->add_constraint(TimePoint(4, {6, 8}));
@@ -141,9 +141,9 @@ TEST_F(ConstraintTableTest, DynamicAddRemove)
 
 // Constraint removal from empty table if in debug mode
 #ifdef NDEBUG
-TEST_F(ConstraintTableTest, DISABLED_RemoveFromEmptyTable)
+TEST_F(SafeIntervalTableTest, DISABLED_RemoveFromEmptyTable)
 #else
-TEST_F(ConstraintTableTest, RemoveFromEmptyTable)
+TEST_F(SafeIntervalTableTest, RemoveFromEmptyTable)
 #endif
 {
   TimePoint tp(4, {3, 6});
@@ -152,7 +152,7 @@ TEST_F(ConstraintTableTest, RemoveFromEmptyTable)
 }
 
 // Constraint removal when no constraint exists
-TEST_F(ConstraintTableTest, RemoveNonExistentConstraint)
+TEST_F(SafeIntervalTableTest, RemoveNonExistentConstraint)
 {
   TimePoint tp(4, {3, 6});
   // test the second method
@@ -161,9 +161,9 @@ TEST_F(ConstraintTableTest, RemoveNonExistentConstraint)
 
 // Test 8: Adding a constraint that is already present (should cause assert death)
 #ifdef NDEBUG
-TEST_F(ConstraintTableTest, DISABLED_AddExistingConstraint)
+TEST_F(SafeIntervalTableTest, DISABLED_AddExistingConstraint)
 #else
-TEST_F(ConstraintTableTest, AddExistingConstraint)
+TEST_F(SafeIntervalTableTest, AddExistingConstraint)
 #endif
 {
   TimePoint tp(4, {3, 6});
@@ -173,7 +173,7 @@ TEST_F(ConstraintTableTest, AddExistingConstraint)
 
 // Adding a path that forms constraints, test whether edge constraints are added
 // Adding a path that forms constraints, test whether edge constraints are added
-TEST_F(ConstraintTableTest, AddPathConstraints)
+TEST_F(SafeIntervalTableTest, AddPathConstraints)
 {
   std::vector<TimePoint> path1 = {TimePoint(4, {0, 2}), TimePoint(7, {3, 4}), TimePoint(8, {5, 6})};
   table->add_constraints(path1);
@@ -202,7 +202,7 @@ TEST_F(ConstraintTableTest, AddPathConstraints)
 }
 
 // check that the edge conflict is resolved correctly when there are more constraints in the list
-TEST_F(ConstraintTableTest, EdgeConflictMoreConstraints)
+TEST_F(SafeIntervalTableTest, EdgeConflictMoreConstraints)
 {
   std::vector<TimePoint> path1 = {TimePoint(4, {0, 1}), TimePoint(7, {2, 4}), TimePoint(4, {5, 6}), TimePoint(7, {7, 8}),
                                   TimePoint(4, {9, 10})};
@@ -214,7 +214,7 @@ TEST_F(ConstraintTableTest, EdgeConflictMoreConstraints)
 
 // test edge constraint table
 // add to edge constraint table
-TEST_F(ConstraintTableTest, EdgeConstraintTableAdd)
+TEST_F(SafeIntervalTableTest, EdgeConstraintTableAdd)
 {
   // add a constraint to the table
   table->edge_constraint_table.add(4, 7, 3);
@@ -228,7 +228,7 @@ TEST_F(ConstraintTableTest, EdgeConstraintTableAdd)
 }
 
 // remove from edge constraint table
-TEST_F(ConstraintTableTest, EdgeConstraintTableRemove)
+TEST_F(SafeIntervalTableTest, EdgeConstraintTableRemove)
 {
   // add a constraint to the table
   table->edge_constraint_table.add(1, 2, 3);
@@ -243,7 +243,7 @@ TEST_F(ConstraintTableTest, EdgeConstraintTableRemove)
 }
 
 // add an existing edge constraint
-TEST_F(ConstraintTableTest, EdgeConstraintTableAddExisting)
+TEST_F(SafeIntervalTableTest, EdgeConstraintTableAddExisting)
 {
   // add a constraint to the table
   table->edge_constraint_table.add(1, 2, 3);
@@ -253,7 +253,7 @@ TEST_F(ConstraintTableTest, EdgeConstraintTableAddExisting)
 }
 
 // add an invalid edge constraint
-TEST_F(ConstraintTableTest, EdgeConstraintTableAddInvalid)
+TEST_F(SafeIntervalTableTest, EdgeConstraintTableAddInvalid)
 {
   // expect assert death
   EXPECT_DEATH(table->edge_constraint_table.add(1, 1, 2), "Invalid edge constraint.");

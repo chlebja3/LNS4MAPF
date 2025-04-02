@@ -9,10 +9,10 @@
 
 #include <climits>
 
-#include "ConstraintTable.h"
 #include "Instance.h"
 #include "LNS.h"
 #include "SIPP.h"
+#include "SafeIntervalTable.h"
 #include "magic_enum/magic_enum.hpp"
 #include "test_utils.h"
 
@@ -97,7 +97,7 @@ TEST(SIPPTest, TimeConstraintHandling)
       {
         continue;  // passage through (2,2)
       }
-      sipp.constraint_table.add_constraint(TimePoint(instance->position_to_location({i, 2}), {0, 20}));
+      sipp.safe_interval_table.add_constraint(TimePoint(instance->position_to_location({i, 2}), {0, 20}));
     }
 
     TimePointPath path = sipp.plan(0);
@@ -155,15 +155,15 @@ TEST(SIPPTest, NoPathDueToTimeConstraints)
     SIPP          sipp(*instance, rnd_generator, sipp_settings);
 
     // Add constraints that make it impossible to leave start until time 10
-    sipp.constraint_table.add_constraint(TimePoint(1, {0, 10}));  // {1, 0}
-    sipp.constraint_table.add_constraint(TimePoint(5, {0, 10}));  // {0, 1}
+    sipp.safe_interval_table.add_constraint(TimePoint(1, {0, 10}));  // {1, 0}
+    sipp.safe_interval_table.add_constraint(TimePoint(5, {0, 10}));  // {0, 1}
 
     // add constraints that make it impossible to reach the goal from time 10 to 20
-    sipp.constraint_table.add_constraint(TimePoint(instance->position_to_location({3, 4}), {10, 20}));  // {3, 4}
-    sipp.constraint_table.add_constraint(TimePoint(instance->position_to_location({4, 3}), {10, 20}));  // {4, 3}
+    sipp.safe_interval_table.add_constraint(TimePoint(instance->position_to_location({3, 4}), {10, 20}));  // {3, 4}
+    sipp.safe_interval_table.add_constraint(TimePoint(instance->position_to_location({4, 3}), {10, 20}));  // {4, 3}
 
     // test path len estimate
-    EXPECT_EQ(sipp.constraint_table.get_max_path_len_estimate(), 20 + 5 * 5) << "Invalid path length estimate.";
+    EXPECT_EQ(sipp.safe_interval_table.get_max_path_len_estimate(), 20 + 5 * 5) << "Invalid path length estimate.";
 
     // plan path
     TimePointPath path = sipp.plan(0);
@@ -207,7 +207,7 @@ TEST(SIPPTest, DynamicObstacleAtGoal)
     SIPP          sipp(*instance, rnd_generator, sipp_settings);
 
     // add a constraint that blocks the goal after time 20
-    sipp.constraint_table.add_constraint(TimePoint(instance->get_goal_locations()[0], {20, 30}));
+    sipp.safe_interval_table.add_constraint(TimePoint(instance->get_goal_locations()[0], {20, 30}));
 
     TimePointPath path = sipp.plan(0);
 
@@ -238,8 +238,8 @@ TEST(SIPPTest, EdgeConstraintsAtGoal)
     // from (2, 0) to (2, 1)
 
     // add edge constraints at the goal so that the agent has to go around
-    sipp.constraint_table.add_constraints({TimePoint(5, {0, 0}), TimePoint(2, {1, 1}), TimePoint(1, {2, 2}), TimePoint(0, {3, 3}),
-                                           TimePoint(3, {4, 4}), TimePoint(6, {5, 5}), TimePoint(7, {6, 6}), TimePoint(8, {7, 7})});
+    sipp.safe_interval_table.add_constraints({TimePoint(5, {0, 0}), TimePoint(2, {1, 1}), TimePoint(1, {2, 2}), TimePoint(0, {3, 3}),
+                                              TimePoint(3, {4, 4}), TimePoint(6, {5, 5}), TimePoint(7, {6, 6}), TimePoint(8, {7, 7})});
 
 
     TimePointPath path = sipp.plan(0);
@@ -418,7 +418,7 @@ TEST(SIPPTest, SameAfterDestroy)
     int           agent_num = 100;
     TimePointPath path0     = sol.paths[agent_num];
     // remove the path
-    lns.planner->constraint_table.remove_constraints(path0);
+    lns.planner->safe_interval_table.remove_constraints(path0);
 
     // replan
     TimePointPath path1 = lns.planner->plan(agent_num);

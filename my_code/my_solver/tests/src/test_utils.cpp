@@ -12,7 +12,7 @@
 #include <climits>
 #include <filesystem>
 
-#include "ConstraintTable.h"
+#include "SafeIntervalTable.h"
 
 
 std::string get_base_path_tests()
@@ -55,7 +55,7 @@ TimePointPath generate_random_timepointpath(int len_wanted)
 }
 
 auto filter_time_intervals(std::pair<std::list<TimeInterval>::const_iterator, std::list<TimeInterval>::const_iterator> start_goal,
-                           TimeInterval interval, int from, int to, ConstraintTable& table) -> std::vector<TimeInterval>
+                           TimeInterval interval, int from, int to, SafeIntervalTable& table) -> std::vector<TimeInterval>
 {
   std::list<TimeInterval>::const_iterator start;
   std::list<TimeInterval>::const_iterator end;

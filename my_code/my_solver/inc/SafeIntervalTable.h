@@ -57,10 +57,10 @@ private:
   std::vector<std::vector<std::vector<int>>> edge_constraints;  // vector implementation
 };
 
-class ConstraintTable
+class SafeIntervalTable
 {
 public:
-  explicit ConstraintTable(const Instance& instance_);
+  explicit SafeIntervalTable(const Instance& instance_);
   EdgeConstraintTable edge_constraint_table;
 
   // new implementation
@@ -70,7 +70,7 @@ public:
   void               remove_constraints(const TimePointPath& path);
   [[nodiscard]] auto get_safe_intervals(int location, const TimeInterval& time_interval) const
       -> std::pair<std::list<TimeInterval>::const_iterator, std::list<TimeInterval>::const_iterator>;
-  [[nodiscard]] auto get_first_safe_interval(int location) const -> const std::list<TimeInterval>::const_iterator;
+  [[nodiscard]] auto get_first_safe_interval(int location) const -> std::list<TimeInterval>::const_iterator;
   [[nodiscard]] auto get_max_path_len_estimate() const -> int;
   void               update_latest_constraint_end_estimate();
   [[nodiscard]] auto get_min_reach_time(int goal) const -> int;

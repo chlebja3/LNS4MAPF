@@ -17,8 +17,8 @@
 // #include <unordered_set>
 // #include <boost/heap/fibonacci_heap.hpp>
 
-#include "ConstraintTable.h"
 #include "IterInfo.h"
+#include "SafeIntervalTable.h"
 
 class SIPP_settings
 {
@@ -118,13 +118,13 @@ auto extract_path(SIPPNode const* final_node) -> TimePointPath;
 class SIPP
 {
 public:
-  ConstraintTable constraint_table;
-  int             generated_all_iter  = 0;
-  int             generated_this_iter = 0;
-  int             expanded_all_iter   = 0;
-  int             expanded_this_iter  = 0;
-  int             iteration_num       = 0;
-  SIPPInfo        iter_info;
+  SafeIntervalTable safe_interval_table;
+  int               generated_all_iter  = 0;
+  int               generated_this_iter = 0;
+  int               expanded_all_iter   = 0;
+  int               expanded_this_iter  = 0;
+  int               iteration_num       = 0;
+  SIPPInfo          iter_info;
 
   // constructor
   SIPP(const Instance& instance_, std::mt19937& rnd_generator_, const SIPP_settings& settings_);
