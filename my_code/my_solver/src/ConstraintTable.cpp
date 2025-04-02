@@ -138,7 +138,8 @@ auto ConstraintTable::get_blocking_agent(int from, int to, int time) const -> in
   // find edge constraint
   if (from != to)
   {
-    return edge_constraint_table.get(from, to, time);
+    // we want to look for opposite edge, because there can not be any edge ending in to location without location constraint
+    return edge_constraint_table.get(to, from, time);
   }
   return -1;
 }
