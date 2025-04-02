@@ -307,9 +307,9 @@ void LNS::destroy_randomwalk(Solution& sol) const
 
   // build the list of agents for each location and time which will be used in the random walk
   // auto [location_time_to_agentnum, edge_collisions] = create_collision_vectors(sol, latest_time + 1);
-  static bool constraint_table_initialized = false;
   if (!constraint_table_initialized)
   {
+    constraint_table_initialized = true;
     // add all paths to the constraint table
     for (int i = 0; i < instance.num_of_agents; i++)
     {
@@ -630,7 +630,10 @@ void LNS::repair_default(Solution& sol) const
   {
     // std::cout << "Removing path: " << it << std::endl;
     planner->safe_interval_table.remove_constraints(sol.paths[it]);
-    constraint_table.remove_constraints(sol.paths[it]);
+    if (constraint_table_initialized)
+    {
+      constraint_table.remove_constraints(sol.paths[it]);
+    }
     sol.paths[it].clear();
   }
   sol.feasible = true;
@@ -642,6 +645,7 @@ void LNS::repair_default(Solution& sol) const
     TimePointPath tp_path  = planner->plan(path_idx);
     if (tp_path.empty())
     {
+      // TODO reset the safe interval table and constrant table
       sol.feasible = false;
       return;
     }
@@ -654,25 +658,36 @@ void LNS::repair_default(Solution& sol) const
     }
 
     planner->safe_interval_table.add_constraints(tp_path);
-    constraint_table.add_constraints(tp_path, path_idx);
+    if (constraint_table_initialized)
+    {
+      constraint_table.add_constraints(tp_path, path_idx);
+    }
     sol.paths[path_idx] = tp_path;
   }
 }
 
 void LNS::discard_solution(const Solution& sol, const Solution& prev_sol) const
 {
-  for (const auto& it : sol.destroyed_paths)
+  for (int it : sol.destroyed_paths)
   {
     // remove the destroyed paths
     if (!sol.paths[it].empty())
     {
       planner->safe_interval_table.remove_constraints(sol.paths[it]);
+      if (constraint_table_initialized)
+      {
+        constraint_table.remove_constraints(sol.paths[it]);
+      }
     }
   }
 
   // restore the old paths
-  for (const auto& it : sol.destroyed_paths)
+  for (int it : sol.destroyed_paths)
   {
     planner->safe_interval_table.add_constraints(prev_sol.paths[it]);
+    if (constraint_table_initialized)
+    {
+      constraint_table.add_constraints(prev_sol.paths[it], it);
+    }
   }
 }

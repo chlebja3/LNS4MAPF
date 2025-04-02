@@ -109,4 +109,5 @@ private:
   double                  curr_time;
   Operator                repair_operator;
   mutable ConstraintTable constraint_table;
+  mutable bool            constraint_table_initialized = false;
 };

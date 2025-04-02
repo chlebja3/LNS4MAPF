@@ -82,6 +82,7 @@ void ConstraintTable::add_constraints(const TimePointPath& path, int agent_num)
   for (int i = 0; i < (int)path.size(); i++)
   {
     // add the point constraint
+    // std::cout << "Adding: " << path[i].location << ", " << path[i].interval << std::endl;
     add_constraint(path[i], agent_num);
 
     // add the edge constraint
@@ -98,6 +99,7 @@ void ConstraintTable::remove_constraints(const TimePointPath& path)
   for (int i = 0; i < (int)path.size(); i++)
   {
     // remove the point constraint
+    // std::cout << "Removing: " << path[i].location << ", " << path[i].interval << std::endl;
     remove_constraint(path[i]);
 
     // remove the edge constraint
