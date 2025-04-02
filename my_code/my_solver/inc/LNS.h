@@ -8,6 +8,7 @@
 #pragma once
 #include <random>
 
+#include "ConstraintTable.h"
 #include "SIPP.h"
 #include "SharedData.h"
 #include "Solver.h"
@@ -95,17 +96,17 @@ private:
   void destroy_random(Solution& sol) const;
   void destroy_randomwalk(Solution& sol) const;
   auto random_walk(int agent_num, int neighborhood_size, int start_location, int start_time, int upperbound,
-                   std::vector<std::vector<int>>& location_time_to_agentnum, std::vector<std::vector<std::vector<int>>>& edge_collisions,
                    std::unordered_set<int>& chosen) const -> bool;
   void destroy_intersection(Solution& sol) const;
   void get_intersection_agents(std::unordered_set<int>& neighborhood, std::unordered_set<int>& intersecting, Solution& sol,
                                int current) const;
   void repair_default(Solution& sol) const;
 
-  SharedData*         shared_data;
-  const LNS_settings& settings;
-  int                 iteration_num = 0;
-  double              initial_solution_time;
-  double              curr_time;
-  Operator            repair_operator;
+  SharedData*             shared_data;
+  const LNS_settings&     settings;
+  int                     iteration_num = 0;
+  double                  initial_solution_time;
+  double                  curr_time;
+  Operator                repair_operator;
+  mutable ConstraintTable constraint_table;
 };

@@ -33,7 +33,8 @@ LNS::LNS(const Instance& instance_, std::mt19937& rnd_generator_, SharedData* sh
       })),
       shared_data(shared_data_),
       settings(settings_),
-      repair_operator(Operator([this](Solution& sol) { repair_default(sol); }))
+      repair_operator(Operator([this](Solution& sol) { repair_default(sol); })),
+      constraint_table(instance)
 {
   // SIPP's lifetime can not be longer than LNS's lifetime, because then map_data might be deleted before SIPP
   planner = std::make_unique<SIPP>(instance, rnd_generator, settings.sipp_settings);
@@ -216,7 +217,7 @@ auto LNS::PrioritizedPlanning(SIPP_implementation sipp_implementation) -> Soluti
     // check validity
     assertm(instance.check_timepointpath_validity(tp_path), "SIPP planned an invalid timepointpath.");
 
-    // update the constraint table
+    // update the safe interval table
     planner->safe_interval_table.add_constraints(tp_path);
 
     // add to the solution
@@ -305,7 +306,16 @@ void LNS::destroy_randomwalk(Solution& sol) const
   assertm(upperbound > 0, "Upperbound is too small.");
 
   // build the list of agents for each location and time which will be used in the random walk
-  auto [location_time_to_agentnum, edge_collisions] = create_collision_vectors(sol, latest_time + 1);
+  // auto [location_time_to_agentnum, edge_collisions] = create_collision_vectors(sol, latest_time + 1);
+  static bool constraint_table_initialized = false;
+  if (!constraint_table_initialized)
+  {
+    // add all paths to the constraint table
+    for (int i = 0; i < instance.num_of_agents; i++)
+    {
+      constraint_table.add_constraints(sol.paths[i], i);
+    }
+  }
 
   // perform the random walk, maximum 10 iterations
   for (int i = 0; i < 10; i++)
@@ -328,8 +338,7 @@ void LNS::destroy_randomwalk(Solution& sol) const
     int rw_start_location = location_at_time(sol.paths[chosen_agent], chosen_t);
 
     // perform randomwalk
-    if (random_walk(chosen_agent, settings.destroy_settings.size, rw_start_location, chosen_t, upperbound, location_time_to_agentnum,
-                    edge_collisions, chosen))
+    if (random_walk(chosen_agent, settings.destroy_settings.size, rw_start_location, chosen_t, upperbound, chosen))
     {
       break;
     }
@@ -364,6 +373,7 @@ void LNS::destroy_randomwalk(Solution& sol) const
   sol.feasible = false;
 }
 
+// unused, too slow
 auto LNS::create_collision_vectors(const Solution& sol, int upperbound) const
     -> std::pair<std::vector<std::vector<int>>, std::vector<std::vector<std::vector<int>>>>
 {
@@ -415,7 +425,6 @@ auto LNS::create_collision_vectors(const Solution& sol, int upperbound) const
 }
 
 auto LNS::random_walk(int agent_num, int neighborhood_size, int start_location, int start_time, int upperbound,
-                      std::vector<std::vector<int>>& location_time_to_agentnum, std::vector<std::vector<std::vector<int>>>& edge_collisions,
                       std::unordered_set<int>& chosen) const -> bool
 {
   int curr = start_location;
@@ -432,23 +441,12 @@ auto LNS::random_walk(int agent_num, int neighborhood_size, int start_location, 
       if (t + 1 + next_h_val < upperbound)
       {
         // get the agent that is in conflict and add it to the neighborhood
-        int agent = location_time_to_agentnum[loc][t + 1];
-
-        // if no conflict, check for edge conflicts
-        if (agent == -1)
-        {
-          // there can be an edge conflict only when the agent is not staying in the same cell
-          if (curr != loc)
-          {
-            const int dir = static_cast<int>(find_direction(curr, loc)) - 1;
-            agent         = edge_collisions[dir][loc][t + 1];
-          }
-        }
+        int conflicting_agent = constraint_table.get_blocking_agent(curr, loc, t + 1);
 
         // if there is an agent in collision, add it to the neighborhood
-        if (agent != -1)
+        if (conflicting_agent != -1)
         {
-          chosen.insert(agent);
+          chosen.insert(conflicting_agent);
         }
 
         curr = loc;
@@ -632,6 +630,7 @@ void LNS::repair_default(Solution& sol) const
   {
     // std::cout << "Removing path: " << it << std::endl;
     planner->safe_interval_table.remove_constraints(sol.paths[it]);
+    constraint_table.remove_constraints(sol.paths[it]);
     sol.paths[it].clear();
   }
   sol.feasible = true;
@@ -655,6 +654,7 @@ void LNS::repair_default(Solution& sol) const
     }
 
     planner->safe_interval_table.add_constraints(tp_path);
+    constraint_table.add_constraints(tp_path, path_idx);
     sol.paths[path_idx] = tp_path;
   }
 }

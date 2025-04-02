@@ -5,11 +5,11 @@
  * Description:
  */
 
+#include "SafeIntervalTable.h"
+
 #include <boost/functional/hash.hpp>
 #include <climits>
 #include <iostream>
-
-#include "SafeIntervalTable.h"
 
 auto EdgeConstraint::operator==(const EdgeConstraint& other) const -> bool
 {
@@ -17,9 +17,7 @@ auto EdgeConstraint::operator==(const EdgeConstraint& other) const -> bool
 }
 
 SafeIntervalTable::SafeIntervalTable(const Instance& instance_)
-    : edge_constraint_table(instance_.get_map_data().width * instance_.get_map_data().height),
-      instance(instance_),
-      unlimited_safe_intervals(instance_.get_map_data().free_cells)
+    : edge_constraint_table(instance_.get_num_cells()), instance(instance_), unlimited_safe_intervals(instance_.get_map_data().free_cells)
 {
   const int num_cells = instance.get_map_data().width * instance.get_map_data().height;
 
