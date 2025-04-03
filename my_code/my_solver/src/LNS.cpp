@@ -408,56 +408,6 @@ void LNS::destroy_randomwalk(Solution& sol) const
   sol.feasible = false;
 }
 
-// unused, too slow
-auto LNS::create_collision_vectors(const Solution& sol, int upperbound) const
-    -> std::pair<std::vector<std::vector<int>>, std::vector<std::vector<std::vector<int>>>>
-{
-  assertm(sol.feasible, "Infeasible solution");
-  assertm(static_cast<int>(sol.paths.size()) == instance.num_of_agents, "Not enough paths");
-
-  // build the list of agents for each location and time which will be used in the random walk
-  std::vector<std::vector<int>> location_time_to_agentnum;  // [location][time]
-  location_time_to_agentnum.resize(instance.get_num_cells(), std::vector<int>(upperbound, -1));
-
-  std::vector<std::vector<std::vector<int>>> edge_collisions;  // [dir][to][time]
-  edge_collisions.resize(magic_enum::enum_count<Direction>() - 1);
-
-  // resize to store all possivle edge collisions
-  for (auto& edge_collision : edge_collisions)
-  {
-    edge_collision.resize(instance.get_num_cells(), std::vector<int>(upperbound, -1));
-  }
-  // TODO parallelize?
-  // fill the collisions
-  for (int agent_num = 0; agent_num < static_cast<int>(sol.paths.size()); agent_num++)
-  {
-    const TimePointPath path = sol.paths[agent_num];
-    // get the collisions from the agents path
-    for (auto tp = path.cbegin(); tp != path.cend(); tp++)
-    {
-      assertm(tp->location >= 0 && tp->location < static_cast<int>(location_time_to_agentnum.size()), "Invalid location");
-      assertm(tp->location < static_cast<int>(edge_collisions[0].size()), "Invalid location");
-
-      // add edge collision
-      if (tp != path.cbegin())
-      {
-        const int dir = static_cast<int>(find_direction(std::prev(tp)->location, tp->location)) - 1;  // dont consider NONE direction
-        assertm(dir >= 0 && dir < static_cast<int>(edge_collisions.size()), "Invalid direction");
-        assertm(tp->interval.t_min >= 0 && tp->interval.t_min < static_cast<int>(edge_collisions[dir][tp->location].size()),
-                "Invalid time");
-        edge_collisions[dir][tp->location][tp->interval.t_min] = agent_num;
-      }
-
-      // add location collisions
-      for (int t = tp->interval.t_min; t <= std::min(tp->interval.t_max, upperbound - 1); t++)
-      {
-        assertm(t >= 0 && t < static_cast<int>(location_time_to_agentnum[tp->location].size()), "Invalid time");
-        location_time_to_agentnum[tp->location][t] = agent_num;
-      }
-    }
-  }
-  return {location_time_to_agentnum, edge_collisions};
-}
 
 auto LNS::random_walk(int agent_num, int neighborhood_size, int start_location, int start_time, int upperbound,
                       std::unordered_set<int>& chosen) const -> bool
@@ -501,26 +451,26 @@ auto LNS::random_walk(int agent_num, int neighborhood_size, int start_location, 
 void LNS::destroy_intersection(Solution& sol) const
 {
   last_destroy_strategy = DESTROY_TYPE::INTERSECTION;
-  // first collect all intersection vertices
-  // prealocate
-  std::vector<std::unordered_set<int>> locations_visited;
-  locations_visited.resize(instance.get_num_cells(), {});
 
-  // for each location find all agents that visit it
-  for (int i = 0; i < instance.num_of_agents; i++)
+  // initialize the constraint table if it isnt initialized yet
+  if (!constraint_table_initialized)
   {
-    for (int j = 0; j < static_cast<int>(sol.paths[i].size()); j++)
+    constraint_table_initialized = true;
+    // add all paths to the constraint table
+    for (int i = 0; i < instance.num_of_agents; i++)
     {
-      int loc = sol.paths[i][j].location;
-      locations_visited[loc].insert(i);
+      constraint_table.add_constraints(sol.paths[i], i);
     }
   }
 
   // find all intersection vertices
   std::vector<int> intersection_vertices;
+  intersection_vertices.reserve(instance.get_num_cells());  // upperbound on number of intersection vertices
+
   for (int i = 0; i < instance.get_num_cells(); i++)
   {
-    if (static_cast<int>(locations_visited[i].size()) >= 3)
+    const auto& agents_counts = constraint_table.get_agents_counts(i);
+    if (static_cast<int>(agents_counts.size()) >= 3)
     {
       intersection_vertices.push_back(i);
     }
@@ -539,7 +489,7 @@ void LNS::destroy_intersection(Solution& sol) const
 
 
   std::unordered_set<int> neighborhood;  // TODO try set
-  std::unordered_set<int> known;
+  std::vector<bool>       known(instance.get_num_cells(), false);
 
   while (!openlist.empty())
   {
@@ -547,17 +497,18 @@ void LNS::destroy_intersection(Solution& sol) const
     int current = openlist.front();
     openlist.pop();
     // std::cout << "Current: " << current << std::endl;
-    if (known.find(current) != known.end())
+    if (known[current])
     {
       continue;
     }
-    known.insert(current);
+    known[current] = true;
 
     // check whether intersection vertex
-    if (static_cast<int>(locations_visited[current].size()) >= 3)
+    auto agents_counts = constraint_table.get_agents_counts(current);
+    if (static_cast<int>(agents_counts.size()) >= 3)
     {
       // add agents that visit this vertex to the neighborhood
-      get_intersection_agents(neighborhood, locations_visited[current], sol, current);
+      get_intersection_agents(neighborhood, current);
     }
 
     // check whether enough agents selected
@@ -606,45 +557,28 @@ void LNS::destroy_intersection(Solution& sol) const
   sol.feasible = false;
 }
 
-void LNS::get_intersection_agents(std::unordered_set<int>& neighborhood, std::unordered_set<int>& intersecting, Solution& sol,
-                                  int current) const
+void LNS::get_intersection_agents(std::unordered_set<int>& neighborhood, int current) const
 {
   // find maximal T
-  int t_max = 0;
-  for (auto it : neighborhood)
-  {
-    for (auto it2 : sol.paths[it])
-    {
-      if (it2.location == current)
-      {
-        t_max = std::max(t_max, it2.interval.t_min);
-      }
-    }
-  }
+  int t_max = constraint_table.get_last_constraint_start(current);
 
   // choose random time
   std::uniform_int_distribution<int> dist(0, t_max);
   int                                t     = dist(rnd_generator);
   int                                delta = 0;
-  while (static_cast<int>(neighborhood.size()) < settings.destroy_settings.size && t + delta <= t_max)
+  while (static_cast<int>(neighborhood.size()) < settings.destroy_settings.size && t + delta <= t_max && t - delta >= 0)
   {
-    bool inserted = false;
-    for (auto it : intersecting)
+    // find the agent, that blocks the cell at time t + delta
+    int blocking_agent_1 = constraint_table.get_blocking_agent(current, current, t + delta);
+    if (blocking_agent_1 >= 0)
     {
-      for (auto it2 : sol.paths[it])
-      {
-        if (it2.location == current && it2.interval.t_min <= t + delta && it2.interval.t_max >= t + delta)
-        {
-          // std::cout << "Inserting: " << it << std::endl;
-          neighborhood.insert(it);
-          inserted = true;
-          break;
-        }
-      }
-      if (inserted)  // the same location can be visited only by one agent at the same time
-      {
-        break;
-      }
+      neighborhood.insert(blocking_agent_1);
+    }
+    // find the agent, that blocks the cell at time t - delta
+    int blocking_agent_2 = constraint_table.get_blocking_agent(current, current, t - delta);
+    if (static_cast<int>(neighborhood.size()) < settings.destroy_settings.size && blocking_agent_2 >= 0)
+    {
+      neighborhood.insert(blocking_agent_2);
     }
     delta++;
   }

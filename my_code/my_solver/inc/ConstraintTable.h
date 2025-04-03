@@ -65,6 +65,11 @@ public:
     return agents_counts[location];
   }
 
+  [[nodiscard]] auto get_last_constraint_start(int location) const -> int
+  {
+    return constraints[location].back().first.t_min;
+  }
+
 private:
   std::vector<std::list<std::pair<TimeInterval, int>>> constraints;  // constraints for each location
   const Instance&                                      instance;

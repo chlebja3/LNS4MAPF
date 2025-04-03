@@ -87,9 +87,6 @@ public:
     return planner->expanded_all_iter;
   }
   void discard_solution(const Solution& sol, const Solution& prev_sol) const;
-  auto create_collision_vectors(const Solution& sol, int upperbound) const
-      -> std::pair<std::vector<std::vector<int>>, std::vector<std::vector<std::vector<int>>>>;
-
 
   Operator destroy_operator;
 
@@ -100,8 +97,7 @@ private:
                    std::unordered_set<int>& chosen) const -> bool;
   void destroy_intersection(Solution& sol) const;
   void destroy_adaptive(Solution& sol) const;
-  void get_intersection_agents(std::unordered_set<int>& neighborhood, std::unordered_set<int>& intersecting, Solution& sol,
-                               int current) const;
+  void get_intersection_agents(std::unordered_set<int>& neighborhood, int current) const;
   void repair_default(Solution& sol) const;
 
   SharedData*             shared_data;
