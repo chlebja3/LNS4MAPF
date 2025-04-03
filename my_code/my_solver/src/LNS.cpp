@@ -26,6 +26,10 @@ LNS::LNS(const Instance& instance_, std::mt19937& rnd_generator_, SharedData* sh
         {
           destroy_intersection(sol);
         }
+        else if (settings.destroy_settings.type == DESTROY_TYPE::ADAPTIVE)
+        {
+          destroy_adaptive(sol);
+        }
         else
         {
           destroy_random(sol);
@@ -38,6 +42,13 @@ LNS::LNS(const Instance& instance_, std::mt19937& rnd_generator_, SharedData* sh
 {
   // SIPP's lifetime can not be longer than LNS's lifetime, because then map_data might be deleted before SIPP
   planner = std::make_unique<SIPP>(instance, rnd_generator, settings.sipp_settings);
+
+  // initialize destroy weights for adaptive LNS to 1
+  if (settings.destroy_settings.type == DESTROY_TYPE::ADAPTIVE)
+  {
+    // the number of destroy operator is 1 less than destoroy types, because ADAPTIVE is not an operator
+    destroy_weights.assign(magic_enum::enum_count<DESTROY_TYPE>() - 1, 1);
+  }
 }
 
 void LNS::solve()
@@ -96,13 +107,35 @@ void LNS::solve()
       perturbed_sol.calculate_cost(instance);
       improvement = solution.sum_of_delays - perturbed_sol.sum_of_delays;
 
+      // find out which destroy strategy was used
+      auto destroy_strategy_index_help = magic_enum::enum_index<DESTROY_TYPE>(last_destroy_strategy);
+      int  destroy_strategy_index      = -1;
+      if (destroy_strategy_index_help.has_value())
+      {
+        destroy_strategy_index = destroy_strategy_index_help.value();
+      }
+      assertm(destroy_strategy_index >= 0 && destroy_strategy_index < static_cast<int>(magic_enum::enum_count<DESTROY_TYPE>()),
+              "Wrong destroy strategy index.");
+
       if (improvement <= 0)
       {
+        // TODO update the weights
+        if (settings.destroy_settings.type == DESTROY_TYPE::ADAPTIVE)
+        {
+          destroy_weights[destroy_strategy_index] = (1 - decay_factor) * destroy_weights[destroy_strategy_index];
+        }
         discard_solution(perturbed_sol, solution);
         // std::cout << "Discarded worse solution, difference: " << perturbed_sol.sum_of_costs - solution.sum_of_costs << std::endl;
       }
       else
       {
+        // update the weights
+        if (settings.destroy_settings.type == DESTROY_TYPE::ADAPTIVE)
+        {
+          destroy_weights[destroy_strategy_index] =
+              reaction_factor * static_cast<double>(improvement) / static_cast<double>(settings.destroy_settings.size) +
+              (1 - reaction_factor) * destroy_weights[destroy_strategy_index];
+        }
         accepted = true;
         // remember the perturbed solution
         std::cout << "Solution improved by: " << solution.sum_of_delays - perturbed_sol.sum_of_delays << std::endl;
@@ -229,6 +262,7 @@ auto LNS::PrioritizedPlanning(SIPP_implementation sipp_implementation) -> Soluti
 void LNS::destroy_random(Solution& sol) const
 {
   // TODO optimize
+  last_destroy_strategy = DESTROY_TYPE::RANDOM;
   assertm(settings.destroy_settings.size >= 0 && settings.destroy_settings.size <= instance.num_of_agents, "Invalid neighborhood size.");
   std::vector<int> path_idcs(sol.paths.size());
   std::iota(path_idcs.begin(), path_idcs.end(), 0);
@@ -243,6 +277,7 @@ void LNS::destroy_random(Solution& sol) const
 
 void LNS::destroy_randomwalk(Solution& sol) const
 {
+  last_destroy_strategy = DESTROY_TYPE::RANDOMWALK;
   assertm(settings.destroy_settings.size >= 0 && settings.destroy_settings.size <= instance.num_of_agents, "Invalid neighborhood size.");
   // if neighborhood size the same as number of agents or more, return all agents
   if (settings.destroy_settings.size >= instance.num_of_agents)
@@ -465,6 +500,7 @@ auto LNS::random_walk(int agent_num, int neighborhood_size, int start_location, 
 
 void LNS::destroy_intersection(Solution& sol) const
 {
+  last_destroy_strategy = DESTROY_TYPE::INTERSECTION;
   // first collect all intersection vertices
   // prealocate
   std::vector<std::unordered_set<int>> locations_visited;
@@ -611,6 +647,61 @@ void LNS::get_intersection_agents(std::unordered_set<int>& neighborhood, std::un
       }
     }
     delta++;
+  }
+}
+
+void LNS::destroy_adaptive(Solution& sol) const
+{
+  // choose strategy by roulette wheel selection
+  // calculate the sum of weights
+  auto sum_of_weights = std::reduce(destroy_weights.begin(), destroy_weights.end());
+  assertm(sum_of_weights > 0, "Invalid weights.");
+
+  // choose a random number in the range [0, sum_of_weights]
+  std::uniform_real_distribution<double> dist(0.0, sum_of_weights);
+  double                                 rand_value = dist(rnd_generator);
+
+  // spin the roulette
+  double       cummulative_sum = 0.0;
+  DESTROY_TYPE chosen_type     = DESTROY_TYPE::ADAPTIVE;
+  for (int i = 0; i < static_cast<int>(destroy_weights.size()); i++)
+  {
+    cummulative_sum += destroy_weights[i];
+    if (rand_value <= cummulative_sum)
+    {
+      auto chosen = magic_enum::enum_cast<DESTROY_TYPE>(i);
+      if (chosen.has_value())
+      {
+        chosen_type = chosen.value();
+        break;
+      }
+      throw std::runtime_error("Unknown DESTROY_TYPE encountered in adaptive destroy.");
+    }
+  }
+  assertm(chosen_type != DESTROY_TYPE::ADAPTIVE, "Did not select any destroy strategy.");
+
+  // std::cout << "Weights are: " << std::endl;
+  // for (auto it : destroy_weights)
+  // {
+  //   std::cout << it << ", ";
+  // }
+  // std::cout << std::endl;
+  // std::cout << "Chosen destroy: " << magic_enum::enum_name<DESTROY_TYPE>(chosen_type) << std::endl;
+
+  // apply the destroy operator
+  switch (chosen_type)
+  {
+    case DESTROY_TYPE::RANDOM:
+      destroy_random(sol);
+      break;
+    case DESTROY_TYPE::RANDOMWALK:
+      destroy_randomwalk(sol);
+      break;
+    case DESTROY_TYPE::INTERSECTION:
+      destroy_intersection(sol);
+      break;
+    default:
+      throw std::runtime_error("Unknown DESTROY_TYPE encountered in adaptive destroy.");
   }
 }
 

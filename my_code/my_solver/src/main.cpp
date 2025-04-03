@@ -38,7 +38,8 @@ auto main(int argc, char** argv) -> int
       "timeLimit,t", po::value<double>()->default_value(DEFAULT_TIME_LIMIT), "time limit to find the solution, in seconds")(
       "sipp_implementation,si", po::value<std::string>()->default_value("SIPP_mine"),
       "implementation of SIPP (SIPP_mine, SIPP_mapf_lns, SIPP_suboptimal)")(
-      "destroy_operator,do", po::value<std::string>()->default_value("RANDOM"), "Destroy operator to be used in LNS (RANDOM, RANDOMWALK)")(
+      "destroy_operator,do", po::value<std::string>()->default_value("RANDOM"),
+      "Destroy operator to be used in LNS (RANDOM, RANDOMWALK, INTERSECTION, ADAPTIVE)")(
       "neighborhood_size,n", po::value<int>()->default_value(DEFAULT_NEIGHBORHOOD_SIZE),
       "Size of the neighborhood used by the destroy operator (number of paths to be destroyed)")(
       "seed,s", po::value<int>()->default_value(-1),

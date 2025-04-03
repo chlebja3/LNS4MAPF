@@ -17,7 +17,8 @@ enum class DESTROY_TYPE
 {
   RANDOM,
   RANDOMWALK,
-  INTERSECTION
+  INTERSECTION,
+  ADAPTIVE
 };
 
 class Destroy_settings
@@ -98,6 +99,7 @@ private:
   auto random_walk(int agent_num, int neighborhood_size, int start_location, int start_time, int upperbound,
                    std::unordered_set<int>& chosen) const -> bool;
   void destroy_intersection(Solution& sol) const;
+  void destroy_adaptive(Solution& sol) const;
   void get_intersection_agents(std::unordered_set<int>& neighborhood, std::unordered_set<int>& intersecting, Solution& sol,
                                int current) const;
   void repair_default(Solution& sol) const;
@@ -110,4 +112,8 @@ private:
   Operator                repair_operator;
   mutable ConstraintTable constraint_table;
   mutable bool            constraint_table_initialized = false;
+  std::vector<double>     destroy_weights;
+  double                  reaction_factor = 0.01;  // TODO this are hardocded from the MAPF-LNS2 code for now
+  double                  decay_factor    = 0.01;
+  mutable DESTROY_TYPE    last_destroy_strategy;
 };
