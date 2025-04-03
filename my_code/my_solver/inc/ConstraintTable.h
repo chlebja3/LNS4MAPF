@@ -10,6 +10,7 @@
 #include <iostream>
 #include <list>
 #include <memory>
+#include <unordered_map>
 #include <unordered_set>
 #include <vector>
 
@@ -55,11 +56,17 @@ public:
 
   void               add_constraint(const TimePoint& timepoint, int agent_num);
   void               add_constraints(const TimePointPath& path, int agent_num);
-  void               remove_constraint(const TimePoint& timepoint);
-  void               remove_constraints(const TimePointPath& path);
+  void               remove_constraint(const TimePoint& timepoint, int agent_num);
+  void               remove_constraints(const TimePointPath& path, int agent_num);
   [[nodiscard]] auto get_blocking_agent(int from, int to, int time) const -> int;
+  [[nodiscard]] auto get_agents_counts(int location) const -> const std::unordered_map<int, int>&
+  {
+    assertm(instance.get_map_data().is_in(location), "Invalid location.");
+    return agents_counts[location];
+  }
 
 private:
   std::vector<std::list<std::pair<TimeInterval, int>>> constraints;  // constraints for each location
   const Instance&                                      instance;
+  std::vector<std::unordered_map<int, int>>            agents_counts;  // unordered map of times the agents visit each location
 };

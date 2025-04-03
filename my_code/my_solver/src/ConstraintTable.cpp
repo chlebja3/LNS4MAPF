@@ -18,6 +18,7 @@ ConstraintTable::ConstraintTable(const Instance& instance_) : edge_constraint_ta
   // initialize the constraint vectors TODO static obstacles dont need constraint vectors
   const int num_cells = instance.get_num_cells();
   constraints         = std::vector<std::list<std::pair<TimeInterval, int>>>(num_cells, std::list<std::pair<TimeInterval, int>>());
+  agents_counts       = std::vector<std::unordered_map<int, int>>(num_cells, std::unordered_map<int, int>());
 }
 
 void ConstraintTable::add_constraint(const TimePoint& timepoint, int agent_num)
@@ -51,17 +52,39 @@ void ConstraintTable::add_constraint(const TimePoint& timepoint, int agent_num)
   {
     cur_TI_list.emplace_back(timepoint.interval, agent_num);
   }
+
+  // add to the set of visiting agents
+  // if the agent is not yet in the set, add it with count 1
+  if (agents_counts[timepoint.location].find(agent_num) == agents_counts[timepoint.location].end())
+  {
+    agents_counts[timepoint.location][agent_num] = 1;
+  }
+  else
+  {
+    // else increase the count
+    agents_counts[timepoint.location][agent_num] += 1;
+  }
 }
 
-void ConstraintTable::remove_constraint(const TimePoint& timepoint)
+void ConstraintTable::remove_constraint(const TimePoint& timepoint, int agent_num)
 {
   // check the location is valid
   assertm(instance.get_map_data().is_in(timepoint.location), "Invalid location.");
+
 
   std::list<std::pair<TimeInterval, int>>& cur_TI_list = constraints[timepoint.location];
 
   // check that the list is not empty
   assertm(!cur_TI_list.empty(), "Trying to remove interval from an empty list.");
+
+  assertm(agents_counts[timepoint.location].find(agent_num) != agents_counts[timepoint.location].end(),
+          "Removing agent that is not in the agents counts");
+  agents_counts[timepoint.location][agent_num] -= 1;
+  // if the count drops to 0, erase the agent number from keys
+  if (agents_counts[timepoint.location][agent_num] == 0)
+  {
+    agents_counts[timepoint.location].erase(agent_num);
+  }
 
   // remove the interval from the list
   for (auto it = cur_TI_list.cbegin(); it != cur_TI_list.cend(); it++)
@@ -94,13 +117,13 @@ void ConstraintTable::add_constraints(const TimePointPath& path, int agent_num)
   }
 }
 
-void ConstraintTable::remove_constraints(const TimePointPath& path)
+void ConstraintTable::remove_constraints(const TimePointPath& path, int agent_num)
 {
   for (int i = 0; i < (int)path.size(); i++)
   {
     // remove the point constraint
     // std::cout << "Removing: " << path[i].location << ", " << path[i].interval << std::endl;
-    remove_constraint(path[i]);
+    remove_constraint(path[i], agent_num);
 
     // remove the edge constraint
     if (i > 0)  // skip the first point as there is no edge

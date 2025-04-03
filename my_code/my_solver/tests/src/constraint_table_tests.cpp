@@ -48,6 +48,11 @@ TEST_F(ConstraintTableTest, SingleConstraint)
 
   table->add_constraint(tp, 0);
 
+  // test that the visiting agents counts are right
+  ASSERT_EQ(table->get_agents_counts(7).size(), 1) << "There should be one agent.";
+  EXPECT_EQ(table->get_agents_counts(7).begin()->first, 0);
+  EXPECT_EQ(table->get_agents_counts(7).begin()->second, 1);
+
   // test that there is no constraint before
   EXPECT_EQ(table->get_blocking_agent(6, 7, 2), -1);
 
@@ -67,6 +72,15 @@ TEST_F(ConstraintTableTest, MultipleSingleConstraints)
   table->add_constraint(TimePoint(7, {5, 5}), 1);
   table->add_constraint(TimePoint(7, {6, 7}), 2);
   table->add_constraint(TimePoint(7, {10, 15}), 3);
+
+  // test that the visiting agents counts are right
+  ASSERT_EQ(table->get_agents_counts(7).size(), 4) << "There should be four agents.";
+  for (const auto& it : table->get_agents_counts(7))
+  {
+    // expect that the agent is 0, 1, 2 or 3 and that the count is 1
+    EXPECT_TRUE(it.first >= 0 && it.first <= 3) << "Agent should be 0, 1, 2 or 3.";
+    EXPECT_EQ(it.second, 1) << "Count should be 1.";
+  }
 
   // test that there is no constraint before
   EXPECT_EQ(table->get_blocking_agent(6, 7, 1), -1);
@@ -89,11 +103,13 @@ TEST_F(ConstraintTableTest, RemoveConstraint)
   table->add_constraint(tp, 0);
   EXPECT_EQ(table->get_blocking_agent(1, 0, 1), 0);
   EXPECT_EQ(table->get_blocking_agent(3, 0, 2), 0);
-  table->remove_constraint(tp);
+  EXPECT_EQ(table->get_agents_counts(0).size(), 1);
+  table->remove_constraint(tp, 0);
 
   // test that the constrained is removed
   EXPECT_EQ(table->get_blocking_agent(1, 0, 1), -1);
   EXPECT_EQ(table->get_blocking_agent(3, 0, 2), -1);
+  EXPECT_EQ(table->get_agents_counts(0).size(), 0);
 }
 
 // Handling constraints dynamically (adding and removing in sequence)
@@ -101,7 +117,15 @@ TEST_F(ConstraintTableTest, DynamicAddRemove)
 {
   table->add_constraint(TimePoint(4, {2, 4}), 0);
   table->add_constraint(TimePoint(4, {6, 8}), 1);
-  table->remove_constraint(TimePoint(4, {2, 4}));
+  // test agent counts before remove
+  EXPECT_EQ(table->get_agents_counts(4).size(), 2);
+
+  table->remove_constraint(TimePoint(4, {2, 4}), 0);
+
+  // test agent counts after remove
+  ASSERT_EQ(table->get_agents_counts(4).size(), 1);
+  EXPECT_EQ(table->get_agents_counts(4).begin()->first, 1);
+  EXPECT_EQ(table->get_agents_counts(4).begin()->second, 1);
 
   // test that the first constraint is removed
   EXPECT_EQ(table->get_blocking_agent(3, 4, 3), -1);
@@ -119,7 +143,7 @@ TEST_F(ConstraintTableTest, RemoveFromEmptyTable)
 {
   TimePoint tp(4, {3, 6});
   // expect assert death
-  EXPECT_DEATH(table->remove_constraint(tp), "Trying to remove interval from an empty list.");
+  EXPECT_DEATH(table->remove_constraint(tp, 0), "Trying to remove interval from an empty list.");
 }
 
 // Adding a constraint that is already present (should cause assert death)
@@ -165,6 +189,11 @@ TEST_F(ConstraintTableTest, EdgeConflictMoreConstraints)
 
   EXPECT_EQ(table->get_blocking_agent(7, 4, 2), 1) << "There should be edge conflict.";
   EXPECT_EQ(table->get_blocking_agent(7, 4, 7), 1) << "There should be edge conflict.";
+
+  // test agent counts
+  ASSERT_EQ(table->get_agents_counts(4).size(), 1) << "There should be one agent.";
+  EXPECT_EQ(table->get_agents_counts(4).begin()->first, 1) << "There should be 3 counts for agent 1.";
+  EXPECT_EQ(table->get_agents_counts(4).begin()->second, 3) << "There should be 3 counts for agent 1.";
 }
 
 // test edge constraint table

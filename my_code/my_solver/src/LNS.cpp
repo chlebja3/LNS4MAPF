@@ -723,7 +723,7 @@ void LNS::repair_default(Solution& sol) const
     planner->safe_interval_table.remove_constraints(sol.paths[it]);
     if (constraint_table_initialized)
     {
-      constraint_table.remove_constraints(sol.paths[it]);
+      constraint_table.remove_constraints(sol.paths[it], it);
     }
     sol.paths[it].clear();
   }
@@ -767,7 +767,7 @@ void LNS::discard_solution(const Solution& sol, const Solution& prev_sol) const
       planner->safe_interval_table.remove_constraints(sol.paths[it]);
       if (constraint_table_initialized)
       {
-        constraint_table.remove_constraints(sol.paths[it]);
+        constraint_table.remove_constraints(sol.paths[it], it);
       }
     }
   }
