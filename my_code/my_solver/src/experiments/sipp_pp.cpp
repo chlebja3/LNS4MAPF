@@ -175,9 +175,10 @@ auto main(int argc, char** argv) -> int
         const std::string& scene_name = scenes[idx];
         const Instance&    instance   = instances[idx];
         // check whether enough agents loaded
-        if (instance.num_of_agents != agent_num)
+        if (instance.get_num_of_agents() != agent_num)
         {
-          throw std::runtime_error("Loaded " + std::to_string(instance.num_of_agents) + " agents instead of " + std::to_string(agent_num));
+          throw std::runtime_error("Loaded " + std::to_string(instance.get_num_of_agents()) + " agents instead of " +
+                                   std::to_string(agent_num));
         }
 
         // generate a random seed (same for all implementations)

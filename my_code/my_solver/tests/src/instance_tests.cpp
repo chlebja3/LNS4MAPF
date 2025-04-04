@@ -79,7 +79,7 @@ TEST(InstanceTest, LoadScene)
       std::make_unique<Instance>(base_path + "/tests/test_maps/dummy_3_3.map", base_path + "/tests/test_scen/dummy_3_3_scen_1.scen", 3);
 
   // check that the number of agents is right
-  EXPECT_EQ(instance->num_of_agents, 3);
+  EXPECT_EQ(instance->get_num_of_agents(), 3);
 
   // check that the start positions are right
   const std::vector<Point2d> expected_starts = {{0, 0}, {2, 2}, {1, 2}};
@@ -102,7 +102,7 @@ TEST(InstanceTest, ManhattanDistance)
   std::vector<std::vector<int>> expected_heuristics = {
       {4, 3, 2, 3, 2, 1, 2, 1, 0}, {0, 1, 2, 1, 2, 3, 2, 3, 4}, {3, 2, 1, 2, 1, 0, 3, 2, 1}};
   // check with the calculated
-  for (int i = 0; i < instance->num_of_agents; i++)
+  for (int i = 0; i < instance->get_num_of_agents(); i++)
   {
     for (int loc = 0; loc < instance->get_map_data().height * instance->get_map_data().width; loc++)
     {
@@ -125,7 +125,7 @@ TEST(InstanceTest, EuclideanDistance)
       {0, 1, 2, 1, std::sqrt(2.0), std::sqrt(5.0), 2.0, std::sqrt(5.0), std::sqrt(8.0)},
       {std::sqrt(5.0), std::sqrt(2.0), 1.0, 2.0, 1.0, 0.0, std::sqrt(5.0), std::sqrt(2.0), 1.0}};
   // check with the calculated
-  for (int i = 0; i < instance->num_of_agents; i++)
+  for (int i = 0; i < instance->get_num_of_agents(); i++)
   {
     for (int loc = 0; loc < instance->get_map_data().height * instance->get_map_data().width; loc++)
     {
@@ -258,7 +258,7 @@ TEST(InstanceTest, DistanceHeuristic)
       {4, 3, 2, 3, -1, 1, 2, 1, 0}, {0, 1, 2, 1, -1, 3, 2, 3, 4}, {3, 2, 1, 4, -1, 0, 3, 2, 1}};
 
   // check with the calculated
-  for (int i = 0; i < instance->num_of_agents; i++)
+  for (int i = 0; i < instance->get_num_of_agents(); i++)
   {
     for (int loc = 0; loc < instance->get_map_data().height * instance->get_map_data().width; loc++)
     {

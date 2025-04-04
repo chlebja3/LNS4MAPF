@@ -147,12 +147,17 @@ void Map::load(const std::string& map_fname)
           // treat . as free cell
           if (i == '.')
           {
-            free_cells.push_back(static_cast<int>(data.size()));
+            // remember index to the free location vector
+            location_to_free_location_vec.push_back(static_cast<int>(free_location_to_location_vec.size()));
+            // remember index to the location
+            free_location_to_location_vec.push_back(static_cast<int>(data.size()));
             data.push_back(0);
           }
           // treat @, T as obstacle
           else if (i == '@' || i == 'T')
           {
+            // there is no index to the free location index
+            location_to_free_location_vec.push_back(-1);
             data.push_back(1);
           }
           // report all other symbols as unknown
@@ -183,6 +188,8 @@ void Map::load(const std::string& map_fname)
   {
     throw std::runtime_error("Invalid number of rows.");
   }
+
+  assertm(location_to_free_location_vec.size() == data.size(), "Each location must have an index to the free location vector.");
 
   // close the map file
   map_file.close();

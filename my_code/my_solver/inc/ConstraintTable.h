@@ -49,7 +49,7 @@ public:
 class EdgeConstraintTableWithAgentNums
 {
 public:
-  explicit EdgeConstraintTableWithAgentNums(int num_locations);
+  explicit EdgeConstraintTableWithAgentNums(const Instance& instance);
   void add(int loc1, int loc2, int time, int agent_num);
   void remove(int loc1, int loc2, int time);
   // auto get(int loc1, int loc2, int time) const -> bool;
@@ -59,7 +59,8 @@ public:
 private:
   // std::unordered_set<EdgeConstraint, EdgeConstraint::hash_edge_collision> edge_constraints;  // constraints for edges
   // std::vector<std::vector<std::unordered_set<int>>> edge_constraints; // unordered set implementation
-  std::vector<std::vector<std::vector<std::pair<int, int>>>> edge_constraints;  // vector implementation
+  std::vector<std::vector<std::vector<std::pair<int, int>>>> edge_constraints;  // vector implementation TODO try set or something log
+  const Instance&                                            instance;
 };
 class ConstraintTable
 {
@@ -80,12 +81,18 @@ public:
   [[nodiscard]] auto get_agents_counts(int location) const -> const std::unordered_map<int, int>&
   {
     assertm(instance.get_map_data().is_in(location), "Invalid location.");
-    return agents_counts[location];
+    return agents_counts[instance.location_to_free_location(location)];
+  }
+
+  [[nodiscard]] auto get_agents_counts_free(int free_location) const -> const std::unordered_map<int, int>&
+  {
+    assertm(instance.get_map_data().is_in(instance.free_location_to_location(free_location)), "Invalid location.");
+    return agents_counts[free_location];
   }
 
   [[nodiscard]] auto get_last_constraint_start(int location) const -> int
   {
-    return constraints[location].back().first.t_min;
+    return constraints[instance.location_to_free_location(location)].back().first.t_min;
   }
 
 private:

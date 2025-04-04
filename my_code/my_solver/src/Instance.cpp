@@ -76,11 +76,6 @@ void Instance::reset()
   sum_of_distances = 0;
 }
 
-auto Instance::is_initialized() const -> bool
-{
-  return initialized;
-}
-
 void Instance::load_map()
 {
   // reset the map data
@@ -174,27 +169,6 @@ void Instance::print_agents() const
   }
 }
 
-void Instance::print_map() const
-{
-  map_data.print();
-}
-
-auto Instance::get_start_positions() const -> const std::vector<Point2d>&
-{
-  return start_positions;
-}
-
-auto Instance::get_goal_positions() const -> const std::vector<Point2d>&
-{
-  return goal_positions;
-}
-
-// auto Instance::get_optimal_paths() const -> const std::vector<Path>&
-// {
-//   return optimal_paths;
-// }
-
-
 void Instance::calculate_heuristics(bool calculate_manhattan, bool calculate_euclidean)
 {
 
@@ -271,25 +245,6 @@ void Instance::precompute_neighbors()
   }
 }
 
-
-auto Instance::location_to_position(const int location) const -> Point2d
-{
-  return Point2d(location % map_data.width, (int)(location / map_data.width));
-}
-
-auto Instance::position_to_location(const Point2d& position) const -> int
-{
-  return position.y * map_data.width + position.x;
-}
-
-
-auto Instance::get_heuristic_euclidean(const int agent_num, const int loc) const -> double
-{
-  assertm(agent_num >= 0 && agent_num < (int)heuristic_euclidean.size(), "Agent number out of range of the heuristic vector.");
-  assertm(map_data.is_in(loc), "Trying to index a point that is not in the map.");
-  return heuristic_euclidean[agent_num][loc];
-}
-
 void Instance::calculate_distance_heuristic()
 {
   // calculate distance from each goal for each position
@@ -310,8 +265,7 @@ void Instance::calculate_distance_heuristic()
     while (!open_list.empty())
     {
       // pop the element with the highest priority
-      int priority, location;
-      std::tie(priority, location) = open_list.top();
+      auto [priority, location] = open_list.top();
       open_list.pop();
 
       // find the neighbor locations

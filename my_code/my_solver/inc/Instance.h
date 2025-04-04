@@ -23,41 +23,61 @@ public:
   void initialize(const std::string& map_fname, const std::string& scene_fname, int num_of_agents = 0, bool calculate_manhattan = false,
                   bool calculate_euclidean = false);
   void initialize(bool calculate_manhattan, bool calculate_euclidean);
-  [[nodiscard]] auto is_initialized() const -> bool;
-
-  // function to print the map
-  void print_map() const;
-
+  void calculate_heuristics(bool calculate_manhattan, bool calculate_euclidean);
+  void precompute_neighbors();
+  [[nodiscard]] auto path_to_pointpath(const Path& path) const -> PointPath;
+  [[nodiscard]] auto check_timepointpath_validity(const TimePointPath& tp_path) const -> bool;
+  void               reset();
   // function to print the agents starts and goal positions
   void print_agents() const;
+
+  [[nodiscard]] auto is_initialized() const -> bool
+  {
+    return initialized;
+  }
+
+  // function to print the map
+  void print_map() const
+  {
+    assertm(initialized, "Instance not initialized.");
+    map_data.print();
+  }
+
 
   // function to obtain the map data
   [[nodiscard]] inline auto get_map_data() const -> const Map&
   {
+    assertm(initialized, "Instance not initialized.");
     return map_data;
   }
 
   // functions to obtain the agent starts, goals and optimal paths
-  [[nodiscard]] auto        get_start_positions() const -> const std::vector<Point2d>&;
+  [[nodiscard]] auto get_start_positions() const -> const std::vector<Point2d>&
+  {
+    assertm(initialized, "Instance not initialized.");
+    return start_positions;
+  }
+
   [[nodiscard]] inline auto get_start_locations() const -> const std::vector<int>&
   {
+    assertm(initialized, "Instance not initialized.");
     return start_locations;
   }
 
-  [[nodiscard]] auto get_goal_positions() const -> const std::vector<Point2d>&;
-  [[nodiscard]] auto get_goal_locations() const -> const std::vector<int>&
+  [[nodiscard]] auto get_goal_positions() const -> const std::vector<Point2d>&
   {
+    assertm(initialized, "Instance not initialized.");
+    return goal_positions;
+  }
+  [[nodiscard]] inline auto get_goal_locations() const -> const std::vector<int>&
+  {
+    assertm(initialized, "Instance not initialized.");
     return goal_locations;
   }
 
-  // [[nodiscard]] auto get_optimal_paths() const -> const std::vector<Path>&;
-
-  void calculate_heuristics(bool calculate_manhattan, bool calculate_euclidean);
-  void precompute_neighbors();
-  //[[nodiscard]] auto get_heuristic_manhattan(int agent_num, int loc) const -> int;
   [[nodiscard]] inline auto get_heuristic_manhattan(const int agent_num, const int loc) const -> int
   {
-
+    assertm(initialized, "Instance not initialized.");
     assertm(agent_num >= 0 && agent_num < (int)heuristic_manhattan.size(), "Agent number out of range of the heuristic vector.");
     assertm(map_data.is_in(loc), "Trying to index a point that is not in the map.");
     return heuristic_manhattan[agent_num][loc];
@@ -65,13 +85,19 @@ public:
 
   [[nodiscard]] inline auto get_heuristic_distance(const int agent_num, const int loc) const -> int
   {
-
     assertm(agent_num >= 0 && agent_num < (int)heuristic_distance.size(), "Agent number out of range of the heuristic vector.");
     assertm(map_data.is_in(loc), "Trying to index a point that is not in the map.");
     return heuristic_distance[agent_num][loc];
   };
 
-  [[nodiscard]] auto        get_heuristic_euclidean(int agent_num, int loc) const -> double;
+  [[nodiscard]] auto get_heuristic_euclidean(int agent_num, int loc) const -> double
+  {
+    assertm(initialized, "Instance not initialized.");
+    assertm(agent_num >= 0 && agent_num < (int)heuristic_euclidean.size(), "Agent number out of range of the heuristic vector.");
+    assertm(map_data.is_in(loc), "Trying to index a point that is not in the map.");
+    return heuristic_euclidean[agent_num][loc];
+  }
+
   [[nodiscard]] inline auto get_neighbor_locations(int loc) const -> const std::vector<int>&
   {
     assertm(map_data.is_in(loc), "Trying to get neighbors of invalid location.");
@@ -79,37 +105,67 @@ public:
     return neighbors[loc];
   }
 
-  [[nodiscard]] auto get_sum_of_distances() const -> int
+  [[nodiscard]] inline auto get_sum_of_distances() const -> int
   {
+    assertm(initialized, "Instance not initialized.");
     return sum_of_distances;
   }
 
-  [[nodiscard]] auto location_to_position(int location) const -> Point2d;
-  [[nodiscard]] auto position_to_location(const Point2d& position) const -> int;
-  [[nodiscard]] auto path_to_pointpath(const Path& path) const -> PointPath;
-
-  [[nodiscard]] auto check_timepointpath_validity(const TimePointPath& tp_path) const -> bool;
-  void               reset();
-
-  [[nodiscard]] auto get_num_cells() const -> int
+  [[nodiscard]] auto location_to_position(int location) const -> Point2d
   {
-    return map_data.width * map_data.height;
+    assertm(initialized, "Instance not initialized.");
+    return Point2d(location % map_data.width, (int)(location / map_data.width));
   }
 
-  [[nodiscard]] auto is_goal_location(int loc) const -> bool
+  [[nodiscard]] auto position_to_location(const Point2d& position) const -> int
   {
+    assertm(initialized, "Instance not initialized.");
+    return position.y * map_data.width + position.x;
+  }
+
+
+  [[nodiscard]] inline auto get_num_cells() const -> int
+  {
+    return map_data.get_num_cells();
+  }
+
+  [[nodiscard]] inline auto get_num_free_cells() const -> int
+  {
+    assertm(initialized, "Instance not initialized.");
+    return map_data.get_num_free_cells();
+  }
+
+  [[nodiscard]] inline auto is_goal_location(int loc) const -> bool
+  {
+    assertm(initialized, "Instance not initialized.");
     assertm(map_data.is_in(loc), "Invalid location.");
     return location_to_goal_array[loc] != -1;
   }
 
-  [[nodiscard]] auto whose_goal(int loc) const -> int
+  [[nodiscard]] inline auto whose_goal(int loc) const -> int
   {
+    assertm(initialized, "Instance not initialized.");
     assertm(map_data.is_in(loc), "Invalid location.");
     return location_to_goal_array[loc];
   }
 
+  [[nodiscard]] inline auto get_num_of_agents() const -> int
+  {
+    assertm(initialized, "Instance not initialized.");
+    return num_of_agents;
+  }
 
-  int num_of_agents;
+  [[nodiscard]] inline auto location_to_free_location(int loc) const -> int
+  {
+    assertm(initialized, "Instance not initialized.");
+    return map_data.location_to_free_location(loc);
+  }
+
+  [[nodiscard]] inline auto free_location_to_location(int free_loc) const -> int
+  {
+    assertm(initialized, "Instance not initialized.");
+    return map_data.free_location_to_location(free_loc);
+  }
 
 private:
   /**
@@ -142,5 +198,6 @@ private:
   std::vector<std::vector<int>>    heuristic_distance;
 
   int sum_of_distances = 0;
+  int num_of_agents;
 };
 

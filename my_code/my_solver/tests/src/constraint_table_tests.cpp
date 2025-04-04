@@ -30,7 +30,7 @@ protected:
     std::string base_path = get_base_path_tests();  // path to my_solver
 
     instance =
-        std::make_unique<Instance>(base_path + "/tests/test_maps/dummy_3_3.map", base_path + "/tests/test_scen/dummy_3_3_scen_1.scen", 1);
+        std::make_unique<Instance>(base_path + "/tests/test_maps/empty_3_3.map", base_path + "/tests/test_scen/dummy_3_3_scen_1.scen", 1);
     table = std::make_unique<ConstraintTable>(*instance);
   }
 

@@ -204,8 +204,8 @@ auto LNS::find_initial_solution() -> bool
 auto LNS::PrioritizedPlanning(SIPP_implementation sipp_implementation) -> Solution
 {
   Solution sol;
-  sol.paths.resize(instance.num_of_agents, TimePointPath());
-  const int agent_num = instance.num_of_agents;
+  sol.paths.resize(instance.get_num_of_agents(), TimePointPath());
+  const int agent_num = instance.get_num_of_agents();
 
   // create a sequence from 0 to agent_num
   std::vector<int> priorities(agent_num);
@@ -283,12 +283,13 @@ auto LNS::PrioritizedPlanning(SIPP_implementation sipp_implementation) -> Soluti
 void LNS::destroy_random(Solution& sol) const
 {
   last_destroy_strategy = DESTROY_TYPE::RANDOM;
-  assertm(settings.destroy_settings.size >= 0 && settings.destroy_settings.size <= instance.num_of_agents, "Invalid neighborhood size.");
+  assertm(settings.destroy_settings.size >= 0 && settings.destroy_settings.size <= instance.get_num_of_agents(),
+          "Invalid neighborhood size.");
   std::vector<int> path_idcs(sol.paths.size());
   std::iota(path_idcs.begin(), path_idcs.end(), 0);
   std::shuffle(path_idcs.begin(), path_idcs.end(), rnd_generator);
   assertm((int)path_idcs.size() > settings.destroy_settings.size, "Not enough paths for the destroy operator.");
-  int num_to_destroy = std::min(settings.destroy_settings.size, instance.num_of_agents);
+  int num_to_destroy = std::min(settings.destroy_settings.size, instance.get_num_of_agents());
   sol.destroyed_paths =
       std::vector(std::make_move_iterator(path_idcs.begin()), std::make_move_iterator(path_idcs.begin() + num_to_destroy));
   assertm(sol.destroyed_paths.size() > 0, "No paths were destroyed.");
@@ -300,9 +301,10 @@ void LNS::destroy_randomwalk(Solution& sol) const
   last_destroy_strategy = DESTROY_TYPE::RANDOMWALK;
 
   assertm(constraint_table_initialized, "Constraint table is not initialized.");
-  assertm(settings.destroy_settings.size >= 0 && settings.destroy_settings.size <= instance.num_of_agents, "Invalid neighborhood size.");
+  assertm(settings.destroy_settings.size >= 0 && settings.destroy_settings.size <= instance.get_num_of_agents(),
+          "Invalid neighborhood size.");
   // if neighborhood size the same as number of agents or more, return all agents
-  if (settings.destroy_settings.size >= instance.num_of_agents)
+  if (settings.destroy_settings.size >= instance.get_num_of_agents())
   {
     destroy_random(sol);
     return;
@@ -312,13 +314,13 @@ void LNS::destroy_randomwalk(Solution& sol) const
   static std::unordered_set<int> tabu_list;
 
   // find the most delayed agent that is not on the tabu list
-  assertm(static_cast<int>(sol.delays.size()) == instance.num_of_agents,
+  assertm(static_cast<int>(sol.delays.size()) == instance.get_num_of_agents(),
           "The length of delay list must be the same as the numebr of agents.");
 
   int max_delay    = 0;
   int most_delayed = -1;
   int latest_time  = 0;
-  for (int i = 0; i < instance.num_of_agents; i++)
+  for (int i = 0; i < instance.get_num_of_agents(); i++)
   {
     if (sol.paths[i].back().interval.t_min > latest_time)
     {
@@ -355,7 +357,7 @@ void LNS::destroy_randomwalk(Solution& sol) const
   }
 
   assertm(max_delay > 0, "Max delay is invalid.");
-  assertm(most_delayed >= 0 && most_delayed < instance.num_of_agents && sol.delays[most_delayed] == max_delay,
+  assertm(most_delayed >= 0 && most_delayed < instance.get_num_of_agents() && sol.delays[most_delayed] == max_delay,
           "Invalid id of most delayed agent");
 
   std::unordered_set<int> chosen     = {most_delayed};
@@ -392,7 +394,7 @@ void LNS::destroy_randomwalk(Solution& sol) const
   // if not enough agents selected, fill with random agents
   // find all agents that were not selected yet
   std::vector<int> not_chosen;
-  for (int i = 0; i < instance.num_of_agents; i++)
+  for (int i = 0; i < instance.get_num_of_agents(); i++)
   {
     if (chosen.find(i) == chosen.end())
     {
@@ -464,15 +466,15 @@ void LNS::destroy_intersection(Solution& sol) const
   assertm(constraint_table_initialized, "Constraint table is not initialized.");
 
   // find all intersection vertices
-  std::vector<int> intersection_vertices;
-  intersection_vertices.reserve(instance.get_num_cells());  // upperbound on number of intersection vertices
+  std::vector<int> intersection_vertices_free;
+  intersection_vertices_free.reserve(instance.get_num_free_cells());  // upperbound on number of intersection vertices
 
-  for (int i = 0; i < instance.get_num_cells(); i++)
+  for (int i = 0; i < instance.get_num_free_cells(); i++)
   {
-    const auto& agents_counts = constraint_table.get_agents_counts(i);
+    const auto& agents_counts = constraint_table.get_agents_counts_free(i);
     if (static_cast<int>(agents_counts.size()) >= 3)
     {
-      intersection_vertices.push_back(i);
+      intersection_vertices_free.push_back(i);
     }
   }
 
@@ -481,9 +483,9 @@ void LNS::destroy_intersection(Solution& sol) const
 
   // pick a random intersection vertex
   {
-    std::uniform_int_distribution<int> dist(0, intersection_vertices.size() - 1);
+    std::uniform_int_distribution<int> dist(0, intersection_vertices_free.size() - 1);
     int                                idx    = dist(rnd_generator);
-    int                                chosen = intersection_vertices[idx];
+    int                                chosen = instance.free_location_to_location(intersection_vertices_free[idx]);
     openlist.push(chosen);
   }
 
@@ -529,7 +531,7 @@ void LNS::destroy_intersection(Solution& sol) const
   // if not enough agents selected, fill with random agents
   // find all agents that were not selected yet
   std::vector<int> not_chosen;
-  for (int i = 0; i < instance.num_of_agents; i++)
+  for (int i = 0; i < instance.get_num_of_agents(); i++)
   {
     if (neighborhood.find(i) == neighborhood.end())
     {

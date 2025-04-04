@@ -16,7 +16,7 @@
 auto Solution::is_valid(const Instance& instance) const -> bool
 {
   // check that each agent has a path
-  if (instance.num_of_agents != (int)paths.size())
+  if (instance.get_num_of_agents() != (int)paths.size())
   {
     // std::cout << "Agent without a path." << std::endl;
     return false;

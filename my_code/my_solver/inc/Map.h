@@ -14,7 +14,8 @@ public:
   int                  height = 0;
   bool                 loaded = false;
   std::string          type;
-  std::vector<int>     free_cells;
+  std::vector<int>     free_location_to_location_vec;
+  std::vector<int>     location_to_free_location_vec;
   std::vector<uint8_t> data;
 
   Map() = default;
@@ -57,8 +58,15 @@ public:
   [[nodiscard]] inline auto free_location_to_location(int free_loc) const -> int
   {
     assertm(loaded, "Map not loaded.");
-    assertm(0 <= free_loc && free_loc < static_cast<int>(free_cells.size()), "Invalid free location index.");
-    return free_cells[free_loc];
+    assertm(0 <= free_loc && free_loc < static_cast<int>(free_location_to_location_vec.size()), "Invalid free location index.");
+    return free_location_to_location_vec[free_loc];
+  }
+
+  [[nodiscard]] inline auto location_to_free_location(int loc) const -> int
+  {
+    assertm(loaded, "Map not loaded.");
+    assertm(index(loc) == 0, "Not a free location");
+    return location_to_free_location_vec[loc];
   }
 
   [[nodiscard]] inline auto position_to_index(const Point2d& p) const -> int
@@ -70,6 +78,13 @@ public:
   [[nodiscard]] inline auto get_num_free_cells() const -> int
   {
     assertm(loaded, "Map not loaded.");
-    return static_cast<int>(free_cells.size());
+    return static_cast<int>(free_location_to_location_vec.size());
+  }
+
+  [[nodiscard]] inline auto get_num_cells() const -> int
+  {
+    assertm(loaded, "Map not loaded.");
+    assertm(width * height == static_cast<int>(data.size()), "Width and height inconsistent with the map data.");
+    return static_cast<int>(data.size());
   }
 };

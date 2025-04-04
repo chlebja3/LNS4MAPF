@@ -313,7 +313,7 @@ void Visualizer::mapToTexture(const Map& map_data)
 }
 void Visualizer::update_agent_circles(const std::vector<Point2d>& positions)
 {
-  assertm((int)positions.size() == instance.num_of_agents, "Wrong number of agent positions.");
+  assertm((int)positions.size() == instance.get_num_of_agents(), "Wrong number of agent positions.");
 
   // initialize the vector
   if (agents_circles.size() != positions.size())
@@ -349,7 +349,7 @@ void Visualizer::draw_agents(sf::RenderWindow& window)
 
 void Visualizer::update_goal_circles(const std::vector<Point2d>& positions)
 {
-  assertm((int)positions.size() == instance.num_of_agents, "Wrong number of agent positions.");
+  assertm((int)positions.size() == instance.get_num_of_agents(), "Wrong number of agent positions.");
 
   // initialize the vector
   if (goal_circles.size() != positions.size())
@@ -505,7 +505,7 @@ void Visualizer::draw_cell_rectangles(sf::RenderWindow& window)
 
 void Visualizer::update_path_vis(const int agent_num, const Path& path)
 {
-  assertm(agent_num >= 0 && agent_num < (int)agents_colors.size() && agent_num < instance.num_of_agents, "Invalid agent number.");
+  assertm(agent_num >= 0 && agent_num < (int)agents_colors.size() && agent_num < instance.get_num_of_agents(), "Invalid agent number.");
 
   // check whether the vector is big enough
   if (agent_num >= (int)agents_paths_vis.size())
@@ -620,11 +620,11 @@ void Visualizer::update_all_paths(int time)
 {
   // std::cout << "Updating all paths." << std::endl;
   agents_paths = &lns_info[time].sol.converted_paths;
-  assertm(instance.num_of_agents == (int)(*agents_paths).size(), "Number of paths should be the same as the number of agents.");
+  assertm(instance.get_num_of_agents() == (int)(*agents_paths).size(), "Number of paths should be the same as the number of agents.");
 
   int max_path_len = 0;
   // construct the path visualizations and find the new length of the visualization
-  for (int i = 0; i < instance.num_of_agents; i++)
+  for (int i = 0; i < instance.get_num_of_agents(); i++)
   {
     int len = (int)(*agents_paths)[i].size() - 1;
     if (len > 0)
