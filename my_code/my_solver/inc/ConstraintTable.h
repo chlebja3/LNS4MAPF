@@ -72,8 +72,10 @@ public:
   void               build_parallel_2(const std::vector<TimePointPath>& paths);
   void               add_constraint(const TimePoint& timepoint, int agent_num);
   void               add_constraints(const TimePointPath& path, int agent_num);
+  void               add_constraints_parallel(const TimePointPath& path, int agent_num);
   void               remove_constraint(const TimePoint& timepoint, int agent_num);
   void               remove_constraints(const TimePointPath& path, int agent_num);
+  void               remove_constraints_parallel(const TimePointPath& path, int agent_num);
   [[nodiscard]] auto get_blocking_agent(int from, int to, int time) const -> int;
   [[nodiscard]] auto get_agents_counts(int location) const -> const std::unordered_map<int, int>&
   {

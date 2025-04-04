@@ -118,6 +118,29 @@ void ConstraintTable::add_constraints(const TimePointPath& path, int agent_num)
   }
 }
 
+
+void ConstraintTable::add_constraints_parallel(const TimePointPath& path, int agent_num)
+{
+#pragma omp parallel for
+  for (int i = 0; i < (int)path.size(); i++)
+  {
+    // lock the location
+    omp_set_lock(&locks.locks[path[i].location]);
+
+    // add the point constraint
+    add_constraint(path[i], agent_num);
+
+    // add the edge constraint
+    if (i > 0)  // skip the first point as there is no edge
+    {
+      // the time when the edge is used is the start time of the later interval
+      edge_constraint_table.add(path[i - 1].location, path[i].location, path[i].interval.t_min, agent_num);
+    }
+    // release the lock
+    omp_unset_lock(&locks.locks[path[i].location]);
+  }
+}
+
 void ConstraintTable::remove_constraints(const TimePointPath& path, int agent_num)
 {
   for (int i = 0; i < (int)path.size(); i++)
@@ -131,6 +154,28 @@ void ConstraintTable::remove_constraints(const TimePointPath& path, int agent_nu
     {
       edge_constraint_table.remove(path[i - 1].location, path[i].location, path[i].interval.t_min);
     }
+  }
+}
+
+void ConstraintTable::remove_constraints_parallel(const TimePointPath& path, int agent_num)
+{
+#pragma omp parallel for
+  for (int i = 0; i < (int)path.size(); i++)
+  {
+    // lock the location
+    omp_set_lock(&locks.locks[path[i].location]);
+
+    // remove the point constraint
+    remove_constraint(path[i], agent_num);
+
+    // remove the edge constraint
+    if (i > 0)  // skip the first point as there is no edge
+    {
+      edge_constraint_table.remove(path[i - 1].location, path[i].location, path[i].interval.t_min);
+    }
+
+    // unlock the location
+    omp_unset_lock(&locks.locks[path[i].location]);
   }
 }
 
