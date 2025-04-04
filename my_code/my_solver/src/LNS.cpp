@@ -51,6 +51,21 @@ LNS::LNS(const Instance& instance_, std::mt19937& rnd_generator_, SharedData* sh
   }
 }
 
+
+void LNS::initialize_constraint_table(const std::vector<TimePointPath>& paths)
+{
+  assertm(!constraint_table_initialized, "Constraint table already initialized");
+  constraint_table_initialized = true;
+  // build the constraint table
+  // Clock time_ct_build;
+  // time_ct_build.start();
+  constraint_table.build_sequential(solution.paths);
+  // constraint_table.build_parallel(solution.paths);
+  // constraint_table.build_parallel_2(solution.paths);
+  // auto [time_wall, time_cpu] = time_ct_build.end();
+  // std::cout << "Building the constraint_table took: " << time_wall << " s wall time and " << time_cpu << " s cpu_time" << std::endl;
+}
+
 void LNS::solve()
 {
   // start measuring time
@@ -73,15 +88,7 @@ void LNS::solve()
   // initialize the constraint table (needed for randomwalk and intersection destroy operator)
   if (settings.destroy_settings.type != DESTROY_TYPE::RANDOM && !constraint_table_initialized)
   {
-    constraint_table_initialized = true;
-    // build the constraint table
-    // Clock time_ct_build;
-    // time_ct_build.start();
-    constraint_table.build_sequential(solution.paths);
-    // constraint_table.build_parallel(solution.paths);
-    // constraint_table.build_parallel_2(solution.paths);
-    // auto [time_wall, time_cpu] = time_ct_build.end();
-    // std::cout << "Building the constraint_table took: " << time_wall << " s wall time and " << time_cpu << " s cpu_time" << std::endl;
+    initialize_constraint_table(solution.paths);
   }
 
   // improve the solution

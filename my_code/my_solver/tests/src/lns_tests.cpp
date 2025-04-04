@@ -36,6 +36,7 @@ TEST(LNSDestroyOperators, RightNumberOfDestroyed)
       LNS_settings lns_settings(0, 5, {destroy_type, neighborhood_size}, {SIPP_implementation::SIPP_mine, INFO_type::no_info, 1.0});
       LNS          lns(*instance, rnd_generator, nullptr, lns_settings);
       lns.find_initial_solution();
+      lns.initialize_constraint_table(lns.solution.paths);
       ASSERT_TRUE(lns.solution.feasible) << "Initial solution is not feasible";
       ASSERT_TRUE(lns.solution.is_valid(*instance)) << "Initial solution is not valid";
 
@@ -65,6 +66,7 @@ TEST(LNSDestroyRandomWalk, MostDelayedPresent)
                               {SIPP_implementation::SIPP_mine, INFO_type::no_info, 1.0});
     LNS          lns(*instance, rnd_generator, nullptr, lns_settings);
     lns.find_initial_solution();
+    lns.initialize_constraint_table(lns.solution.paths);
     ASSERT_TRUE(lns.solution.feasible) << "Initial solution is not feasible";
     ASSERT_TRUE(lns.solution.is_valid(*instance)) << "Initial solution is not valid";
 
@@ -109,6 +111,7 @@ TEST(LNSDestroyRandomWalk, TabuList)
   LNS_settings lns_settings(0, 5, {DESTROY_TYPE::RANDOMWALK, 1}, {SIPP_implementation::SIPP_mine, INFO_type::no_info, 1.0});
   LNS          lns(*instance, rnd_generator, nullptr, lns_settings);
   lns.find_initial_solution();
+  lns.initialize_constraint_table(lns.solution.paths);
   ASSERT_TRUE(lns.solution.feasible) << "Initial solution is not feasible";
   ASSERT_TRUE(lns.solution.is_valid(*instance)) << "Initial solution is not valid";
 

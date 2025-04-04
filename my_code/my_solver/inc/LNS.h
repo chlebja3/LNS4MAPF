@@ -88,6 +88,8 @@ public:
   }
   void discard_solution(const Solution& sol, const Solution& prev_sol) const;
 
+  void initialize_constraint_table(const std::vector<TimePointPath>& paths);
+
   Operator destroy_operator;
 
 private:

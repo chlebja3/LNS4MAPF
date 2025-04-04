@@ -9,6 +9,7 @@
 #include <string>
 #include <vector>
 
+#include "Map.h"
 #include "utils.h"
 
 class Instance
