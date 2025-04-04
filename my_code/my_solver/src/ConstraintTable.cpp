@@ -13,7 +13,8 @@
 
 constexpr int NUM_DIRECTIONS = magic_enum::enum_count<Direction>() - 1;  // dont consider NONE direction
                                                                          //
-ConstraintTable::ConstraintTable(const Instance& instance_) : edge_constraint_table(instance_.get_num_cells()), instance(instance_)
+ConstraintTable::ConstraintTable(const Instance& instance_)
+    : edge_constraint_table(instance_.get_num_cells()), locks(instance_.get_num_cells()), instance(instance_)
 {
   // initialize the constraint vectors TODO static obstacles dont need constraint vectors
   const int num_cells = instance.get_num_cells();
@@ -169,6 +170,83 @@ auto ConstraintTable::get_blocking_agent(int from, int to, int time) const -> in
   return -1;
 }
 
+
+void ConstraintTable::build_sequential(const std::vector<TimePointPath>& paths)
+{
+  assertm(static_cast<int>(paths.size()) > 0, "No paths to add.");
+  for (int i = 0; i < static_cast<int>(paths.size()); i++)
+  {
+    add_constraints(paths[i], i);
+  }
+}
+
+void ConstraintTable::build_parallel(const std::vector<TimePointPath>& paths)
+{
+#pragma omp parallel for
+  for (int agent_num = 0; agent_num < static_cast<int>(paths.size()); agent_num++)
+  {
+    const TimePointPath& path = paths[agent_num];
+    for (int i = 0; i < (int)path.size(); i++)
+    {
+      // add the point constraint
+      omp_set_lock(&locks.locks[path[i].location]);
+      add_constraint(path[i], agent_num);
+      // add the edge constraint
+      if (i > 0)  // skip the first point as there is no edge
+      {
+        // the time when the edge is used is the start time of the later interval
+        edge_constraint_table.add(path[i - 1].location, path[i].location, path[i].interval.t_min, agent_num);
+      }
+      omp_unset_lock(&locks.locks[path[i].location]);
+    }
+  }
+}
+
+void ConstraintTable::build_parallel_2(const std::vector<TimePointPath>& paths)
+{
+  // calculate how many constraints to add
+  int total_work = 0;
+  for (const auto& path : paths)
+  {
+    total_work += static_cast<int>(path.size());
+  }
+  assertm(total_work > 0, "No constraints to add.");
+
+  std::vector<const TimePoint*> timepoints(total_work);
+  std::vector<int>              agent_nums(total_work);
+  std::vector<int>              prev_location(total_work, -1);
+  int                           idx = 0;
+  for (int i = 0; i < static_cast<int>(paths.size()); i++)
+  {
+    const auto& path = paths[i];
+    for (int j = 0; j < (int)path.size(); j++)
+    {
+      timepoints[idx] = &path[j];
+      agent_nums[idx] = i;
+      if (j > 0)
+      {
+        prev_location[idx] = path[j - 1].location;
+      }
+      idx++;
+    }
+  }
+
+#pragma omp parallel for
+  for (int i = 0; i < total_work; i++)
+  {
+    // add the point constraint
+    omp_set_lock(&locks.locks[timepoints[i]->location]);
+    add_constraint(*timepoints[i], agent_nums[i]);
+    // add the edge constraint
+    if (prev_location[i] != -1)  // skip the first point as there is no edge
+    {
+      // the time when the edge is used is the start time of the later interval
+      edge_constraint_table.add(prev_location[i], timepoints[i]->location, timepoints[i]->interval.t_min, agent_nums[i]);
+    }
+    omp_unset_lock(&locks.locks[timepoints[i]->location]);
+  }
+}
+
 EdgeConstraintTableWithAgentNums::EdgeConstraintTableWithAgentNums(int num_locations)
 {
   // initialize the edge constraints
@@ -225,4 +303,24 @@ auto EdgeConstraintTableWithAgentNums::get(int loc1, int loc2, int time) const -
     return -1;
   }
   return it->second;
+}
+
+
+omp_locks::omp_locks(int num_cells)
+{
+  locks.resize(num_cells, omp_lock_t());
+  // initialize the locks
+  for (int i = 0; i < num_cells; i++)
+  {
+    omp_init_lock(&locks[i]);
+  }
+}
+
+omp_locks::~omp_locks()
+{
+  // destroy the locks
+  for (auto& lock : locks)
+  {
+    omp_destroy_lock(&lock);
+  }
 }

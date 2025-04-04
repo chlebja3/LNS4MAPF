@@ -70,6 +70,20 @@ void LNS::solve()
 
   curr_time = initial_solution_time;
 
+  // initialize the constraint table (needed for randomwalk and intersection destroy operator)
+  if (settings.destroy_settings.type != DESTROY_TYPE::RANDOM && !constraint_table_initialized)
+  {
+    constraint_table_initialized = true;
+    // build the constraint table
+    // Clock time_ct_build;
+    // time_ct_build.start();
+    constraint_table.build_sequential(solution.paths);
+    // constraint_table.build_parallel(solution.paths);
+    // constraint_table.build_parallel_2(solution.paths);
+    // auto [time_wall, time_cpu] = time_ct_build.end();
+    // std::cout << "Building the constraint_table took: " << time_wall << " s wall time and " << time_cpu << " s cpu_time" << std::endl;
+  }
+
   // improve the solution
   while (iteration_num < settings.max_iter && curr_time < settings.time_limit)
   {
@@ -261,7 +275,6 @@ auto LNS::PrioritizedPlanning(SIPP_implementation sipp_implementation) -> Soluti
 
 void LNS::destroy_random(Solution& sol) const
 {
-  // TODO optimize
   last_destroy_strategy = DESTROY_TYPE::RANDOM;
   assertm(settings.destroy_settings.size >= 0 && settings.destroy_settings.size <= instance.num_of_agents, "Invalid neighborhood size.");
   std::vector<int> path_idcs(sol.paths.size());
@@ -278,6 +291,8 @@ void LNS::destroy_random(Solution& sol) const
 void LNS::destroy_randomwalk(Solution& sol) const
 {
   last_destroy_strategy = DESTROY_TYPE::RANDOMWALK;
+
+  assertm(constraint_table_initialized, "Constraint table is not initialized.");
   assertm(settings.destroy_settings.size >= 0 && settings.destroy_settings.size <= instance.num_of_agents, "Invalid neighborhood size.");
   // if neighborhood size the same as number of agents or more, return all agents
   if (settings.destroy_settings.size >= instance.num_of_agents)
@@ -339,18 +354,6 @@ void LNS::destroy_randomwalk(Solution& sol) const
   std::unordered_set<int> chosen     = {most_delayed};
   int                     upperbound = sol.paths[most_delayed].back().interval.t_min - 1;
   assertm(upperbound > 0, "Upperbound is too small.");
-
-  // build the list of agents for each location and time which will be used in the random walk
-  // auto [location_time_to_agentnum, edge_collisions] = create_collision_vectors(sol, latest_time + 1);
-  if (!constraint_table_initialized)
-  {
-    constraint_table_initialized = true;
-    // add all paths to the constraint table
-    for (int i = 0; i < instance.num_of_agents; i++)
-    {
-      constraint_table.add_constraints(sol.paths[i], i);
-    }
-  }
 
   // perform the random walk, maximum 10 iterations
   for (int i = 0; i < 10; i++)
@@ -451,17 +454,7 @@ auto LNS::random_walk(int agent_num, int neighborhood_size, int start_location, 
 void LNS::destroy_intersection(Solution& sol) const
 {
   last_destroy_strategy = DESTROY_TYPE::INTERSECTION;
-
-  // initialize the constraint table if it isnt initialized yet
-  if (!constraint_table_initialized)
-  {
-    constraint_table_initialized = true;
-    // add all paths to the constraint table
-    for (int i = 0; i < instance.num_of_agents; i++)
-    {
-      constraint_table.add_constraints(sol.paths[i], i);
-    }
-  }
+  assertm(constraint_table_initialized, "Constraint table is not initialized.");
 
   // find all intersection vertices
   std::vector<int> intersection_vertices;

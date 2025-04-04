@@ -6,6 +6,8 @@
  */
 
 #pragma once
+#include <omp.h>
+
 #include <climits>
 #include <iostream>
 #include <list>
@@ -17,6 +19,17 @@
 #include "Instance.h"
 #include "magic_enum/magic_enum.hpp"
 #include "utils.h"
+
+struct omp_locks
+{
+  // constructor
+  explicit omp_locks(int num_cells);
+
+  // destructor
+  ~omp_locks();
+
+  std::vector<omp_lock_t> locks;  // for parallelization
+};
 
 class EdgeConstraintWithAgentNum
 {
@@ -54,6 +67,9 @@ public:
   explicit ConstraintTable(const Instance& instance_);
   EdgeConstraintTableWithAgentNums edge_constraint_table;
 
+  void               build_sequential(const std::vector<TimePointPath>& paths);
+  void               build_parallel(const std::vector<TimePointPath>& paths);
+  void               build_parallel_2(const std::vector<TimePointPath>& paths);
   void               add_constraint(const TimePoint& timepoint, int agent_num);
   void               add_constraints(const TimePointPath& path, int agent_num);
   void               remove_constraint(const TimePoint& timepoint, int agent_num);
@@ -72,6 +88,7 @@ public:
 
 private:
   std::vector<std::list<std::pair<TimeInterval, int>>> constraints;  // constraints for each location
+  omp_locks                                            locks;
   const Instance&                                      instance;
   std::vector<std::unordered_map<int, int>>            agents_counts;  // unordered map of times the agents visit each location
 };
