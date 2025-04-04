@@ -62,7 +62,6 @@ void Instance::reset()
   initialized   = false;
   map_fname     = "";
   scene_fname   = "";
-  type          = "";
   map_data      = Map();
   start_positions.clear();
   start_locations.clear();
@@ -86,111 +85,14 @@ void Instance::load_map()
 {
   // reset the map data
   Map new_map;
-  int num_of_cols = 0;
-  int num_of_rows = 0;
-
-  // open the map file
-  std::ifstream map_file(map_fname.c_str());
-
-  // check if the open was successful
-  if (!map_file.is_open())
+  try
   {
-    throw std::runtime_error("Cannot open file '" + map_fname + "'");
+    new_map.load(map_fname);
   }
-
-  // read the file line by line
-  std::string line;
-  while (getline(map_file, line))
+  catch (const std::exception& e)
   {
-    // split the line
-    std::vector<std::string> split_line;
-    boost::split(split_line, line, boost::is_any_of(" "));
-
-    // filter out invalid lines
-    if (split_line.empty())
-    {
-      continue;
-    }
-
-    if (boost::iequals(split_line[0], "type"))
-    {
-      type = split_line[1];  // read type
-    }
-    else if (boost::iequals(split_line[0], "height"))  // read height
-    {
-      try
-      {
-        num_of_rows = stoi(split_line[1]);
-      }
-      catch (const std::exception& e)
-      {
-        throw std::runtime_error("Unable to read the number of rows.");
-      }
-    }
-    else if (boost::iequals(split_line[0], "width"))  // read width
-    {
-      try
-      {
-        num_of_cols = stoi(split_line[1]);
-      }
-      catch (const std::exception& e)
-      {
-        throw std::runtime_error("Unable to read the number of rows.");
-      }
-    }
-    else if (boost::iequals(split_line[0], "map"))  // read the map
-    {
-      while (getline(map_file, line))
-      {
-        for (char i : line)
-        {
-          // treat . as free cell
-          if (i == '.')
-          {
-            new_map.data.push_back(0);
-            new_map.free_cells++;
-          }
-          // treat @, T as obstacle
-          else if (i == '@' || i == 'T')
-          {
-            new_map.data.push_back(1);
-          }
-          // report all other symbols as unknown
-          else
-          {
-            throw std::runtime_error("Unknown symbol in map description.");
-          }
-        }
-        // check whether the number of cells in this row is consistent with num_of_columns
-        if (new_map.data.size() % num_of_cols != 0)
-        {
-          throw std::runtime_error("Inconsistent number of symbols in a row in the map description.");
-        }
-      }
-      // check whether the number of lines is consistent with num_of_rows
-      if ((int)new_map.data.size() != num_of_cols * num_of_rows)
-      {
-        throw std::runtime_error("Inconsistent number of rows in the map description.");
-      }
-    }
+    throw std::runtime_error("Unable to load map: '" + std::string(e.what()) + "'");
   }
-
-  if (num_of_cols <= 0)
-  {
-    throw std::runtime_error("Invalid number of columns.");
-  }
-  if (num_of_rows <= 0)
-  {
-    throw std::runtime_error("Invalid number of rows.");
-  }
-
-  // close the map file
-  map_file.close();
-
-  // assign the size of the map
-  new_map.height = num_of_rows;
-  new_map.width  = num_of_cols;
-
   map_data = std::move(new_map);
 }
 
@@ -299,7 +201,7 @@ void Instance::calculate_heuristics(bool calculate_manhattan, bool calculate_euc
   // check map validity
   assertm(map_data.width * map_data.height > 0, "Invalid map.");
   assertm((int)map_data.data.size() == map_data.width * map_data.height, "Map size invalid");
-  assertm(map_data.free_cells > 0 && map_data.free_cells <= (int)map_data.data.size(), "Invalid free cell count.");
+  assertm(map_data.get_num_free_cells() > 0 && map_data.get_num_free_cells() <= (int)map_data.data.size(), "Invalid free cell count.");
 
   if (calculate_euclidean)
   {

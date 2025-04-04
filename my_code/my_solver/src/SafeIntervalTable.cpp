@@ -17,7 +17,9 @@ auto EdgeConstraint::operator==(const EdgeConstraint& other) const -> bool
 }
 
 SafeIntervalTable::SafeIntervalTable(const Instance& instance_)
-    : edge_constraint_table(instance_.get_num_cells()), instance(instance_), unlimited_safe_intervals(instance_.get_map_data().free_cells)
+    : edge_constraint_table(instance_.get_num_cells()),
+      instance(instance_),
+      unlimited_safe_intervals(instance_.get_map_data().get_num_free_cells())
 {
   const int num_cells = instance.get_map_data().width * instance.get_map_data().height;
 
@@ -114,7 +116,7 @@ void SafeIntervalTable::remove_constraint(const TimePoint& timepoint)
   if (timepoint.interval.t_max == INT_MAX)
   {
     unlimited_safe_intervals++;
-    assertm(unlimited_safe_intervals <= instance.get_map_data().free_cells, "Invalid unlimited safe interval count.");
+    assertm(unlimited_safe_intervals <= instance.get_map_data().get_num_free_cells(), "Invalid unlimited safe interval count.");
 
     // update latest constraint end TODO (done in remove constraints)
   }

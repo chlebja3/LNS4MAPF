@@ -127,7 +127,6 @@ private:
   bool                 initialized = false;
   std::string          map_fname;
   std::string          scene_fname;
-  std::string          type;
   Map                  map_data;
   std::vector<Point2d> start_positions;
   std::vector<int>     start_locations;

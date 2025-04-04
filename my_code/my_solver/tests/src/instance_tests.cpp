@@ -65,7 +65,7 @@ TEST(InstanceTest, LoadMap)
   // check that the loaded map is right
   EXPECT_EQ(loaded_map.width, 3) << "Width of the map is not correct";
   EXPECT_EQ(loaded_map.height, 3) << "Height of the map is not correct";
-  EXPECT_EQ(loaded_map.free_cells, 8) << "Number of free cells is not correct";
+  EXPECT_EQ(loaded_map.get_num_free_cells(), 8) << "Number of free cells is not correct";
 
   EXPECT_EQ(loaded_map.data, expected_map) << "Map is not correct";
 }

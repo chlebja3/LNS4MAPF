@@ -10,28 +10,66 @@
 class Map
 {
 public:
-  int                  width      = 0;
-  int                  height     = 0;
-  int                  free_cells = 0;
+  int                  width  = 0;
+  int                  height = 0;
+  bool                 loaded = false;
+  std::string          type;
+  std::vector<int>     free_cells;
   std::vector<uint8_t> data;
 
   Map() = default;
   void               print() const;
-  [[nodiscard]] auto is_in(const Point2d& point) const -> bool;
-  [[nodiscard]] auto is_in(int loc) const -> bool;
-  [[nodiscard]] auto index(const Point2d& point) const -> uint8_t;
-  [[nodiscard]] auto index(int loc) const -> uint8_t;
-  [[nodiscard]] auto position_to_index(const Point2d& p) const -> int;
-
-
-  /**
-   * @brief Get the neighbors of a point.
-   *
-   * @param p The point to find neighbors for.
-   *
-   * @return A vector of points that are neighbors of the input point.
-   */
   [[nodiscard]] auto find_neighbors(const Point2d& p) const -> std::vector<Point2d>;
-
   [[nodiscard]] auto find_neighbors(int loc) const -> std::vector<int>;
+  void               load(const std::string& map_fname);
+
+  [[nodiscard]] inline auto is_in(const Point2d& p) const -> bool
+  {
+    assertm(loaded, "Map not loaded.");
+    return !(p.x < 0 || p.x >= width || p.y < 0 || p.y >= height);
+  }
+
+  [[nodiscard]] inline auto is_in(int loc) const -> bool
+  {
+    assertm(loaded, "Map not loaded.");
+    return loc >= 0 && loc < width * height;
+  }
+
+  [[nodiscard]] inline auto index(const Point2d& point) const -> uint8_t
+  {
+    assertm(loaded, "Map not loaded.");
+    assertm(is_in(point), "Trying to index a point that is not in the map.");
+    return data[point.y * width + point.x];
+  }
+
+  [[nodiscard]] inline auto index(int loc) const -> uint8_t
+  {
+    assertm(loaded, "Map not loaded.");
+    assertm(is_in(loc), "Trying to index a point that is not in the map.");
+    return data[loc];
+  }
+
+  [[nodiscard]] inline auto index_free(int free_loc) const -> uint8_t
+  {
+    return index(free_location_to_location(free_loc));
+  }
+
+  [[nodiscard]] inline auto free_location_to_location(int free_loc) const -> int
+  {
+    assertm(loaded, "Map not loaded.");
+    assertm(0 <= free_loc && free_loc < static_cast<int>(free_cells.size()), "Invalid free location index.");
+    return free_cells[free_loc];
+  }
+
+  [[nodiscard]] inline auto position_to_index(const Point2d& p) const -> int
+  {
+    assertm(loaded, "Map not loaded.");
+    return p.y * width + p.x;
+  }
+
+  [[nodiscard]] inline auto get_num_free_cells() const -> int
+  {
+    assertm(loaded, "Map not loaded.");
+    return static_cast<int>(free_cells.size());
+  }
 };

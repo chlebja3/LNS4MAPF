@@ -179,6 +179,7 @@ Map create_test_map()
   my_map.width  = 3;
   my_map.height = 3;
   my_map.data   = {0, 1, 0, 0, 0, 1, 1, 0, 1};
+  my_map.loaded = true;
   return my_map;
 }
 }  // namespace UTILS_TEST
@@ -315,6 +316,7 @@ TEST(FindNeighborsTest, LargeMapEdge)
   my_map.width  = 100;
   my_map.height = 100;
   my_map.data.resize(100 * 100, 0);  // All free cells
+  my_map.loaded = true;
 
   // Check the Point2d version
   std::vector<Point2d> neighbors = my_map.find_neighbors({99, 99});
