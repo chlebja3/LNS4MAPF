@@ -18,6 +18,7 @@
 #include "utils.h"
 
 constexpr int NUM_DIRECTIONS = magic_enum::enum_count<Direction>() - 1;  // dont consider NONE direction
+#define SIT_PARALLELIZATION
 
 class EdgeConstraint
 {
@@ -36,25 +37,26 @@ public:
 class EdgeConstraintTable
 {
 public:
-  explicit EdgeConstraintTable(int num_locations);
+  explicit EdgeConstraintTable(const Instance& instance_);
   void add(int loc1, int loc2, int time);
   void remove(int loc1, int loc2, int time);
   // auto get(int loc1, int loc2, int time) const -> bool;
 
-  [[nodiscard]] inline auto get(int loc1, int loc2, int time) const -> bool
+  [[nodiscard]] auto get(int loc1, int loc2, int time) const -> bool
   {
     const int dir = static_cast<int>(find_direction(loc1, loc2)) - 1;  // dont consider NONE direction
     assertm(dir >= 0 && dir < NUM_DIRECTIONS, "Invalid direction.");
-
+    int loc2_free = instance.location_to_free_location(loc2);
     // return edge_constraints[dir][loc2].find(time) != edge_constraints[dir][loc2].end(); // unordered set implementation
-    return std::find(edge_constraints[dir][loc2].begin(), edge_constraints[dir][loc2].end(), time) !=
-           edge_constraints[dir][loc2].end();  // vector implementation
+    return std::find(edge_constraints[dir][loc2_free].begin(), edge_constraints[dir][loc2_free].end(), time) !=
+           edge_constraints[dir][loc2_free].end();  // vector implementation
   }
 
 private:
   // std::unordered_set<EdgeConstraint, EdgeConstraint::hash_edge_collision> edge_constraints;  // constraints for edges
   // std::vector<std::vector<std::unordered_set<int>>> edge_constraints; // unordered set implementation
   std::vector<std::vector<std::vector<int>>> edge_constraints;  // vector implementation
+  const Instance&                            instance;
 };
 
 class SafeIntervalTable
@@ -63,7 +65,10 @@ public:
   explicit SafeIntervalTable(const Instance& instance_);
   EdgeConstraintTable edge_constraint_table;
 
-  // new implementation
+#ifdef SIT_PARALLELIZATION
+  void add_constraints_parallel(const TimePointPath& path);
+  void remove_constraints_parallel(const TimePointPath& path);
+#endif
   void               add_constraint(const TimePoint& timepoint);
   void               add_constraints(const TimePointPath& path);
   void               remove_constraint(const TimePoint& timepoint);
@@ -73,10 +78,17 @@ public:
   [[nodiscard]] auto get_first_safe_interval(int location) const -> std::list<TimeInterval>::const_iterator;
   [[nodiscard]] auto get_max_path_len_estimate() const -> int;
   void               update_latest_constraint_end_estimate();
-  [[nodiscard]] auto get_min_reach_time(int goal) const -> int;
+
+  [[nodiscard]] auto get_min_reach_time(int goal) const -> int
+  {
+    assertm(instance.get_map_data().is_in(goal), "Invalid goal location.");
+    return safe_intervals[instance.location_to_free_location(goal)].back().t_min;
+  }
+
   [[nodiscard]] auto get_last_safe_interval(int location) const -> const TimeInterval&
   {
-    return safe_intervals[location].back();
+    assertm(instance.get_map_data().is_in(location), "Invalid location");
+    return safe_intervals[instance.location_to_free_location(location)].back();
   }
 
 private:
@@ -85,4 +97,7 @@ private:
   int                                  max_path_len_estimate = INT_MAX;
   int                                  unlimited_safe_intervals;
   int                                  latest_constraint_end = 0;
+#ifdef SIT_PARALLELIZATION
+  omp_locks locks;
+#endif
 };

@@ -6,6 +6,8 @@
  */
 
 #pragma once
+#include <omp.h>
+
 #include <SFML/Graphics.hpp>
 #include <any>
 #include <cassert>
@@ -42,6 +44,18 @@ enum class INFO_type
   no_info,
   visualisation,
   experiment
+};
+
+
+struct omp_locks
+{
+  // constructor
+  explicit omp_locks(int num_cells);
+
+  // destructor
+  ~omp_locks();
+
+  std::vector<omp_lock_t> locks;  // for parallelization
 };
 
 class Clock

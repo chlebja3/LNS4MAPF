@@ -14,6 +14,25 @@
 #include <iostream>
 #include <nfd.hpp>
 
+omp_locks::omp_locks(int num_cells)
+{
+  locks.resize(num_cells, omp_lock_t());
+  // initialize the locks
+  for (int i = 0; i < num_cells; i++)
+  {
+    omp_init_lock(&locks[i]);
+  }
+}
+
+omp_locks::~omp_locks()
+{
+  // destroy the locks
+  for (auto& lock : locks)
+  {
+    omp_destroy_lock(&lock);
+  }
+}
+
 void Clock::start()
 {
   // wall time

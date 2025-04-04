@@ -23,12 +23,13 @@ using namespace sipp;
 SIPP::SIPP(const Instance& instance_, std::mt19937& rnd_generator_, const SIPP_settings& settings_)
     : safe_interval_table(SafeIntervalTable(instance_)),
       instance(instance_),
-      node_pool(NodePool(INITIAL_NODE_POOL_SIZE * instance.get_map_data().width * instance.get_map_data().height)),
+      node_pool(NodePool(INITIAL_NODE_POOL_SIZE * instance.get_num_cells())),
       rnd_generator(rnd_generator_),
       settings(settings_)
 {
-  known_max.resize(instance.get_map_data().width * instance.get_map_data().height, -1);
-  known_min.resize(instance.get_map_data().width * instance.get_map_data().height, -1);
+  known_max.resize(instance.get_num_cells(), -1);
+  known_min.resize(instance.get_num_cells(), -1);
+  // TODO maybe only remember free cells?
 }
 
 

@@ -6,7 +6,6 @@
  */
 
 #pragma once
-#include <omp.h>
 
 #include <climits>
 #include <iostream>
@@ -20,16 +19,7 @@
 #include "magic_enum/magic_enum.hpp"
 #include "utils.h"
 
-struct omp_locks
-{
-  // constructor
-  explicit omp_locks(int num_cells);
-
-  // destructor
-  ~omp_locks();
-
-  std::vector<omp_lock_t> locks;  // for parallelization
-};
+#define CT_PARALLELIZATION
 
 class EdgeConstraintWithAgentNum
 {
@@ -68,15 +58,17 @@ public:
   explicit ConstraintTable(const Instance& instance_);
   EdgeConstraintTableWithAgentNums edge_constraint_table;
 
-  void               build_sequential(const std::vector<TimePointPath>& paths);
-  void               build_parallel(const std::vector<TimePointPath>& paths);
-  void               build_parallel_2(const std::vector<TimePointPath>& paths);
+  void build_sequential(const std::vector<TimePointPath>& paths);
+#ifdef CT_PARALLELIZATION
+  void build_parallel(const std::vector<TimePointPath>& paths);
+  void build_parallel_2(const std::vector<TimePointPath>& paths);
+  void add_constraints_parallel(const TimePointPath& path, int agent_num);
+  void remove_constraints_parallel(const TimePointPath& path, int agent_num);
+#endif
   void               add_constraint(const TimePoint& timepoint, int agent_num);
   void               add_constraints(const TimePointPath& path, int agent_num);
-  void               add_constraints_parallel(const TimePointPath& path, int agent_num);
   void               remove_constraint(const TimePoint& timepoint, int agent_num);
   void               remove_constraints(const TimePointPath& path, int agent_num);
-  void               remove_constraints_parallel(const TimePointPath& path, int agent_num);
   [[nodiscard]] auto get_blocking_agent(int from, int to, int time) const -> int;
   [[nodiscard]] auto get_agents_counts(int location) const -> const std::unordered_map<int, int>&
   {
@@ -97,7 +89,9 @@ public:
 
 private:
   std::vector<std::list<std::pair<TimeInterval, int>>> constraints;  // constraints for each location
-  omp_locks                                            locks;
   const Instance&                                      instance;
   std::vector<std::unordered_map<int, int>>            agents_counts;  // unordered map of times the agents visit each location
+#ifdef CT_PARALLELIZATION
+  omp_locks locks;
+#endif
 };

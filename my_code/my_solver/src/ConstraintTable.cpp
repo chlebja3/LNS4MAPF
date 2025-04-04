@@ -14,7 +14,12 @@
 constexpr int NUM_DIRECTIONS = magic_enum::enum_count<Direction>() - 1;  // dont consider NONE direction
                                                                          //
 ConstraintTable::ConstraintTable(const Instance& instance_)
-    : edge_constraint_table(instance_), locks(instance_.get_num_free_cells()), instance(instance_)
+    : edge_constraint_table(instance_),
+      instance(instance_)
+#ifdef CT_PARALLELIZATION
+      ,
+      locks(instance_.get_num_free_cells())
+#endif
 {
   // initialize the constraint vectors, static obstacles dont need constraint vectors
   const int num_free_cells = instance.get_num_free_cells();
@@ -120,6 +125,7 @@ void ConstraintTable::add_constraints(const TimePointPath& path, int agent_num)
 }
 
 
+#ifdef CT_PARALLELIZATION
 void ConstraintTable::add_constraints_parallel(const TimePointPath& path, int agent_num)
 {
 #pragma omp parallel for
@@ -141,6 +147,7 @@ void ConstraintTable::add_constraints_parallel(const TimePointPath& path, int ag
     omp_unset_lock(&locks.locks[instance.location_to_free_location(path[i].location)]);
   }
 }
+#endif
 
 void ConstraintTable::remove_constraints(const TimePointPath& path, int agent_num)
 {
@@ -158,6 +165,7 @@ void ConstraintTable::remove_constraints(const TimePointPath& path, int agent_nu
   }
 }
 
+#ifdef CT_PARALLELIZATION
 void ConstraintTable::remove_constraints_parallel(const TimePointPath& path, int agent_num)
 {
 #pragma omp parallel for
@@ -179,6 +187,7 @@ void ConstraintTable::remove_constraints_parallel(const TimePointPath& path, int
     omp_unset_lock(&locks.locks[instance.location_to_free_location(path[i].location)]);
   }
 }
+#endif
 
 auto ConstraintTable::get_blocking_agent(int from, int to, int time) const -> int
 {
@@ -228,6 +237,7 @@ void ConstraintTable::build_sequential(const std::vector<TimePointPath>& paths)
   }
 }
 
+#ifdef CT_PARALLELIZATION
 void ConstraintTable::build_parallel(const std::vector<TimePointPath>& paths)
 {
 #pragma omp parallel for
@@ -249,7 +259,9 @@ void ConstraintTable::build_parallel(const std::vector<TimePointPath>& paths)
     }
   }
 }
+#endif
 
+#ifdef CT_PARALLELIZATION
 void ConstraintTable::build_parallel_2(const std::vector<TimePointPath>& paths)
 {
   // calculate how many constraints to add
@@ -294,6 +306,7 @@ void ConstraintTable::build_parallel_2(const std::vector<TimePointPath>& paths)
     omp_unset_lock(&locks.locks[instance.location_to_free_location(timepoints[i]->location)]);
   }
 }
+#endif
 
 EdgeConstraintTableWithAgentNums::EdgeConstraintTableWithAgentNums(const Instance& instance_) : instance(instance_)
 {
@@ -355,22 +368,3 @@ auto EdgeConstraintTableWithAgentNums::get(int loc1, int loc2, int time) const -
   return it->second;
 }
 
-
-omp_locks::omp_locks(int num_cells)
-{
-  locks.resize(num_cells, omp_lock_t());
-  // initialize the locks
-  for (int i = 0; i < num_cells; i++)
-  {
-    omp_init_lock(&locks[i]);
-  }
-}
-
-omp_locks::~omp_locks()
-{
-  // destroy the locks
-  for (auto& lock : locks)
-  {
-    omp_destroy_lock(&lock);
-  }
-}

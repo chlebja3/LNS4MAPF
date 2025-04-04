@@ -11,20 +11,26 @@
 #include <climits>
 #include <iostream>
 
+// TODO implement the parallelized functions
+
 auto EdgeConstraint::operator==(const EdgeConstraint& other) const -> bool
 {
   return from == other.from && to == other.to && t == other.t;
 }
 
 SafeIntervalTable::SafeIntervalTable(const Instance& instance_)
-    : edge_constraint_table(instance_.get_num_cells()),
+    : edge_constraint_table(instance_),
       instance(instance_),
       unlimited_safe_intervals(instance_.get_map_data().get_num_free_cells())
+#ifdef SIT_PARALLELIZATION
+      ,
+      locks(instance_.get_num_free_cells())
+#endif
 {
-  const int num_cells = instance.get_map_data().width * instance.get_map_data().height;
+  const int num_free_cells = instance.get_num_free_cells();
 
-  // initialize the safe interval vectors TODO free cells dont need safe interval
-  safe_intervals = std::vector<std::list<TimeInterval>>(num_cells, std::list<TimeInterval>(1, TimeInterval(0, INT_MAX)));
+  // initialize the safe interval vectors, cells with static obstacles dont need safe interval
+  safe_intervals = std::vector<std::list<TimeInterval>>(num_free_cells, std::list<TimeInterval>(1, TimeInterval(0, INT_MAX)));
 }
 
 void SafeIntervalTable::add_constraint(const TimePoint& timepoint)
@@ -44,7 +50,8 @@ void SafeIntervalTable::add_constraint(const TimePoint& timepoint)
     latest_constraint_end = std::max(latest_constraint_end, timepoint.interval.t_max);
   }
 
-  std::list<TimeInterval>& cur_TI_list = safe_intervals[timepoint.location];
+  int                      free_location = instance.location_to_free_location(timepoint.location);
+  std::list<TimeInterval>& cur_TI_list   = safe_intervals[free_location];
 
   // modify intervals that have some intersections with the time range
   auto it = cur_TI_list.begin();
@@ -118,10 +125,11 @@ void SafeIntervalTable::remove_constraint(const TimePoint& timepoint)
     unlimited_safe_intervals++;
     assertm(unlimited_safe_intervals <= instance.get_map_data().get_num_free_cells(), "Invalid unlimited safe interval count.");
 
-    // update latest constraint end TODO (done in remove constraints)
+    // update latest constraint done in remove constraints
   }
 
-  std::list<TimeInterval>& cur_TI_list = safe_intervals[timepoint.location];
+  int                      free_location = instance.location_to_free_location(timepoint.location);
+  std::list<TimeInterval>& cur_TI_list   = safe_intervals[free_location];
 
   // check whether there are any safe intervals
   if (cur_TI_list.empty())
@@ -208,6 +216,31 @@ void SafeIntervalTable::add_constraints(const TimePointPath& path)
   }
 }
 
+
+#ifdef SIT_PARALLELIZATION
+void SafeIntervalTable::add_constraints_parallel(const TimePointPath& path)
+{
+#pragma omp parallel for
+  for (int i = 0; i < (int)path.size(); i++)
+  {
+    // lock the location
+    omp_set_lock(&locks.locks[instance.location_to_free_location(path[i].location)]);
+
+    // add the point constraint
+    add_constraint(path[i]);
+
+    // add the edge constraint
+    if (i > 0)  // skip the first point as there is no edge
+    {
+      // the time when the edge is used is the start time of the later interval
+      edge_constraint_table.add(path[i - 1].location, path[i].location, path[i].interval.t_min);
+    }
+    // release the lock
+    omp_unset_lock(&locks.locks[instance.location_to_free_location(path[i].location)]);
+  }
+}
+#endif
+
 void SafeIntervalTable::remove_constraints(const TimePointPath& path)
 {
   for (int i = 0; i < (int)path.size(); i++)
@@ -226,12 +259,37 @@ void SafeIntervalTable::remove_constraints(const TimePointPath& path)
   update_latest_constraint_end_estimate();
 }
 
+#ifdef SIT_PARALLELIZATION
+void SafeIntervalTable::remove_constraints_parallel(const TimePointPath& path)
+{
+#pragma omp parallel for
+  for (int i = 0; i < (int)path.size(); i++)
+  {
+    // lock the location
+    omp_set_lock(&locks.locks[instance.location_to_free_location(path[i].location)]);
+
+    // remove the point constraint
+    remove_constraint(path[i]);
+
+    // remove the edge constraint
+    if (i > 0)  // skip the first point as there is no edge
+    {
+      edge_constraint_table.remove(path[i - 1].location, path[i].location, path[i].interval.t_min);
+    }
+
+    // unlock the location
+    omp_unset_lock(&locks.locks[instance.location_to_free_location(path[i].location)]);
+  }
+}
+#endif
+
 auto SafeIntervalTable::get_first_safe_interval(int location) const -> std::list<TimeInterval>::const_iterator
 {
   // check the location is valid
   assertm(instance.get_map_data().is_in(location), "Invalid location.");
 
-  const std::list<TimeInterval>& cur_TI_list = safe_intervals[location];
+  int                            free_location = instance.location_to_free_location(location);
+  const std::list<TimeInterval>& cur_TI_list   = safe_intervals[free_location];
 
   // there is no safe interval
   if (cur_TI_list.empty())
@@ -247,25 +305,26 @@ auto SafeIntervalTable::get_safe_intervals(int location, const TimeInterval& tim
 {
   // this implementation does not check edge collisions, so they must be handled elsewhere.
   assertm(instance.get_map_data().is_in(location), "Invalid location.");
-  assertm(location < (int)safe_intervals.size(), "Safe intervals not precomputed for this location.");
+  int free_location = instance.location_to_free_location(location);
+  assertm(free_location < static_cast<int>(safe_intervals.size()), "Safe intervals not precomputed for this location.");
 
   // iterate over the list to find the first and last safe interval
-  auto start = safe_intervals[location].cend();
-  auto end   = safe_intervals[location].cend();
-  for (auto it = safe_intervals[location].cbegin(); it != safe_intervals[location].cend(); it++)
+  auto start = safe_intervals[free_location].cend();
+  auto end   = safe_intervals[free_location].cend();
+  for (auto it = safe_intervals[free_location].cbegin(); it != safe_intervals[free_location].cend(); it++)
   {
     // std::cout << "Interval: " << it->t_min << " " << it->t_max << std::endl;
     // check whether the interval is inside the given time range
     if (it->t_max >= time_interval.t_min && it->t_min <= time_interval.t_max)
     {
       // remember the first interval in the range
-      if (start == safe_intervals[location].end())
+      if (start == safe_intervals[free_location].end())
       {
         start = it;
       }
     }
     // if the interval is not inside the time range, check whether already found some intervals
-    else if (start != safe_intervals[location].cend())
+    else if (start != safe_intervals[free_location].cend())
     {
       // if already found some intervals, return the found safe intervals
       end = it;
@@ -304,19 +363,13 @@ void SafeIntervalTable::update_latest_constraint_end_estimate()
   return INT_MAX;
 }
 
-
-auto SafeIntervalTable::get_min_reach_time(int goal) const -> int
-{
-  return safe_intervals[goal].back().t_min;
-}
-
-EdgeConstraintTable::EdgeConstraintTable(int num_locations)
+EdgeConstraintTable::EdgeConstraintTable(const Instance& instance_) : instance(instance_)
 {
   // initialize the edge constraints
   edge_constraints.resize(NUM_DIRECTIONS);
   for (int i = 0; i < NUM_DIRECTIONS; i++)
   {
-    edge_constraints[i].resize(num_locations);
+    edge_constraints[i].resize(instance.get_num_free_cells());
   }
 }
 
@@ -326,10 +379,12 @@ void EdgeConstraintTable::add(int loc1, int loc2, int time)
   const int dir = static_cast<int>(find_direction(loc1, loc2)) - 1;
   assertm(dir >= 0 && dir <= NUM_DIRECTIONS, "Invalid direction.");
   // assertm(edge_constraints[dir][loc2].find(time) == edge_constraints[dir][loc2].end(), "Edge constraint already exists.");
-  assertm(std::find(edge_constraints[dir][loc2].begin(), edge_constraints[dir][loc2].end(), time) == edge_constraints[dir][loc2].end(),
+  int loc2_free = instance.location_to_free_location(loc2);
+  assertm(std::find(edge_constraints[dir][loc2_free].begin(), edge_constraints[dir][loc2_free].end(), time) ==
+              edge_constraints[dir][loc2_free].end(),
           "Edge constraint already exists.");
   // edge_constraints[dir][loc2].insert(time);     // unordered set implementation
-  edge_constraints[dir][loc2].push_back(time);  // vector implementation
+  edge_constraints[dir][loc2_free].push_back(time);  // vector implementation
 }
 
 void EdgeConstraintTable::remove(int loc1, int loc2, int time)
@@ -337,15 +392,17 @@ void EdgeConstraintTable::remove(int loc1, int loc2, int time)
   const int dir = static_cast<int>(find_direction(loc1, loc2)) - 1;
   assertm(dir >= 0 && dir <= NUM_DIRECTIONS, "Invalid direction.");
 
-// int erased = edge_constraints[dir][loc2].erase(time);
-// assertm(erased == 1, "Trying to erase an edge constraint that is not present.");
+  // int erased = edge_constraints[dir][loc2].erase(time);
+  // assertm(erased == 1, "Trying to erase an edge constraint that is not present.");
+  int loc2_free = instance.location_to_free_location(loc2);
 #ifndef NDEBUG
-  int constraints_before = edge_constraints[dir][loc2].size();
+  int constraints_before = edge_constraints[dir][loc2_free].size();
   // std::cout << "Constraints before: " << constraints_before << std::endl;
 #endif
-  edge_constraints[dir][loc2].erase(std::remove(edge_constraints[dir][loc2].begin(), edge_constraints[dir][loc2].end(), time),
-                                    edge_constraints[dir][loc2].end());
+  edge_constraints[dir][loc2_free].erase(
+      std::remove(edge_constraints[dir][loc2_free].begin(), edge_constraints[dir][loc2_free].end(), time),
+      edge_constraints[dir][loc2_free].end());
   // std::cout << "Constraints after: " << edge_constraints[dir][loc2].size() << std::endl;
-  assertm(constraints_before - edge_constraints[dir][loc2].size() == 1, "Should erase exactly one edge constraint.");
+  assertm(constraints_before - edge_constraints[dir][loc2_free].size() == 1, "Should erase exactly one edge constraint.");
 }
 
