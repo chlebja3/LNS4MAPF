@@ -146,6 +146,7 @@ public:
   {
     assertm(initialized, "Instance not initialized.");
     assertm(map_data.is_in(loc), "Invalid location.");
+    assertm(loc >= 0 && loc < static_cast<int>(location_to_goal_array.size()), "Location outside the vector size");
     return location_to_goal_array[loc];
   }
 

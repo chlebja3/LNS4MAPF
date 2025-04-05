@@ -35,7 +35,9 @@ enum class Direction
 enum class SIPP_implementation
 {
   SIPP_mine,
+  SIPP_mine_ap,
   SIPP_suboptimal,
+  SIPP_suboptimal_ap,
   SIPP_mapf_lns,
 };
 
