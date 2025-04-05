@@ -34,7 +34,7 @@ TEST(SIPPTest, BasicPathEmptyMap)
     SIPP          sipp(*instance, rnd_generator, sipp_settings);
 
     // from (0,0) to (4,4)
-    TimePointPath path = sipp.plan(0);
+    TimePointPath path = sipp.plan(0, {});
 
     ASSERT_EQ(path.size(), 9) << "SIPP failed to find a basic path!";
     EXPECT_EQ(path.front().location, instance->get_start_locations()[0]) << "Path does not start at the correct point!";
@@ -58,7 +58,7 @@ TEST(SIPPTest, StaticObstacleAvoidance)
     SIPP          sipp(*instance, rnd_generator, sipp_settings);
 
     // from (0,0) to (4,4)
-    TimePointPath path = sipp.plan(0);
+    TimePointPath path = sipp.plan(0, {});
 
     // check that the path size is correct
     ASSERT_EQ(path.size(), 9) << "SIPP failed to find a path around obstacles!";
@@ -100,7 +100,7 @@ TEST(SIPPTest, TimeConstraintHandling)
       sipp.safe_interval_table.add_constraint(TimePoint(instance->position_to_location({i, 2}), {0, 20}));
     }
 
-    TimePointPath path = sipp.plan(0);
+    TimePointPath path = sipp.plan(0, {});
 
     ASSERT_EQ(path.size(), 9) << "Path length invalid!";
 
@@ -133,7 +133,7 @@ TEST(SIPPTest, NoPathPossible)
     SIPP_settings sipp_settings(algo, INFO_type::no_info, 1.0);
     SIPP          sipp(*instance, rnd_generator, sipp_settings);
 
-    TimePointPath path = sipp.plan(0);
+    TimePointPath path = sipp.plan(0, {});
 
     ASSERT_TRUE(path.empty()) << "SIPP should return an empty path when no path exists!";
   }
@@ -166,7 +166,7 @@ TEST(SIPPTest, NoPathDueToTimeConstraints)
     EXPECT_EQ(sipp.safe_interval_table.get_max_path_len_estimate(), 20 + 5 * 5) << "Invalid path length estimate.";
 
     // plan path
-    TimePointPath path = sipp.plan(0);
+    TimePointPath path = sipp.plan(0, {});
 
     // check that path was found
     ASSERT_FALSE(path.empty()) << "SIPP returned no path!";
@@ -209,7 +209,7 @@ TEST(SIPPTest, DynamicObstacleAtGoal)
     // add a constraint that blocks the goal after time 20
     sipp.safe_interval_table.add_constraint(TimePoint(instance->get_goal_locations()[0], {20, 30}));
 
-    TimePointPath path = sipp.plan(0);
+    TimePointPath path = sipp.plan(0, {});
 
     // the path should be found
     ASSERT_FALSE(path.empty()) << "SIPP should find a path when the goal is blocked after possible arrival time!";
@@ -242,7 +242,7 @@ TEST(SIPPTest, EdgeConstraintsAtGoal)
                                               TimePoint(3, {4, 4}), TimePoint(6, {5, 5}), TimePoint(7, {6, 6}), TimePoint(8, {7, 7})});
 
 
-    TimePointPath path = sipp.plan(0);
+    TimePointPath path = sipp.plan(0, {});
 
     // check that the path has the right length
     ASSERT_EQ(path.size(), 8) << "SIPP should find a path.";
@@ -278,7 +278,7 @@ TEST(SIPPTest, SamePathAsAStar1)
     ASSERT_FALSE(path_astar.empty()) << "A* should find a path when no constraints are present!";
 
     // plan path by SIPP
-    TimePointPath path_sipp = sipp.plan(0);
+    TimePointPath path_sipp = sipp.plan(0, {});
 
     // assert that SIPP found a path
     ASSERT_FALSE(path_sipp.empty()) << "SIPP should find a path when no constraints are present!";
@@ -315,7 +315,7 @@ TEST(SIPPTest, SamePathAsAStar2)
     ASSERT_FALSE(path_astar.empty()) << "A* should find a path when no constraints are present!";
 
     // plan path by SIPP
-    TimePointPath path_sipp = sipp.plan(0);
+    TimePointPath path_sipp = sipp.plan(0, {});
 
     // assert that SIPP found a path
     ASSERT_FALSE(path_sipp.empty()) << "SIPP should find a path when no constraints are present!";
@@ -346,7 +346,7 @@ TEST(SIPPTest, PrioritizedPlanning1agent)
     auto         rnd_generator = std::mt19937(0);
     LNS_settings lns_settings(0, 5, {DESTROY_TYPE::RANDOM, 10}, {algo, INFO_type::no_info, 1.0});
     LNS          lns(*instance, rnd_generator, nullptr, lns_settings);
-    Solution     sol = lns.PrioritizedPlanning(algo);
+    Solution     sol = lns.PrioritizedPlanning();
     // check solution validity
     EXPECT_TRUE(sol.is_valid(*instance)) << "Solution is invalid!";
   }
@@ -368,7 +368,7 @@ TEST(SIPPTest, PrioritizedPlanningEmpty2agents)
     auto         rnd_generator = std::mt19937(0);
     LNS_settings lns_settings(0, 5, {DESTROY_TYPE::RANDOM, 10}, {algo, INFO_type::no_info, 1.0});
     LNS          lns(*instance, rnd_generator, nullptr, lns_settings);
-    Solution     sol = lns.PrioritizedPlanning(algo);
+    Solution     sol = lns.PrioritizedPlanning();
 
     // check solution validity
     EXPECT_TRUE(sol.is_valid(*instance)) << "Solution is invalid!";
@@ -391,7 +391,7 @@ TEST(SIPPTest, PrioritizedPlanning)
     auto         rnd_generator = std::mt19937(0);
     LNS_settings lns_settings(0, 5, {DESTROY_TYPE::RANDOM, 10}, {algo, INFO_type::no_info, 1.0});
     LNS          lns(*instance, rnd_generator, nullptr, lns_settings);
-    Solution     sol = lns.PrioritizedPlanning(algo);
+    Solution     sol = lns.PrioritizedPlanning();
     // check solution validity
     EXPECT_TRUE(sol.is_valid(*instance)) << "Solution is invalid!";
   }
@@ -412,16 +412,17 @@ TEST(SIPPTest, SameAfterDestroy)
     auto         rnd_generator = std::mt19937(0);
     LNS_settings lns_settings(0, 5, {DESTROY_TYPE::RANDOM, 10}, {algo, INFO_type::no_info, 1.0});
     LNS          lns(*instance, rnd_generator, nullptr, lns_settings);
-    Solution     sol = lns.PrioritizedPlanning(algo);
+    Solution     sol = lns.PrioritizedPlanning();
     // check solution validity
     EXPECT_TRUE(sol.is_valid(*instance)) << "Solution is invalid!";
     int           agent_num = 100;
     TimePointPath path0     = sol.paths[agent_num];
     // remove the path
     lns.planner->safe_interval_table.remove_constraints(path0);
+    lns.already_planned.erase(agent_num);
 
     // replan
-    TimePointPath path1 = lns.planner->plan(agent_num);
+    TimePointPath path1 = lns.planner->plan(agent_num, lns.already_planned);
 
     // expect the same path
     EXPECT_EQ(path0.back().interval.t_min, path1.back().interval.t_min) << "Paths should have the same length!";

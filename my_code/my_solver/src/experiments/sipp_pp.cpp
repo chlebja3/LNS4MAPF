@@ -219,7 +219,7 @@ auto main(int argc, char** argv) -> int
           // find the solution
           Clock clock;
           clock.start();
-          Solution sol                             = solver.PrioritizedPlanning(sipp_implementation);
+          Solution sol                             = solver.PrioritizedPlanning();
           auto [pp_duration_wall, pp_duration_cpu] = clock.end();
           solver.solution                          = sol;
 

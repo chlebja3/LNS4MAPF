@@ -126,8 +126,34 @@ void NodePool::merge_extra()
   end = 0;
 }
 
-auto SIPP::plan(const int agent_num) -> TimePointPath
+auto SIPP::plan(int agent_num, const std::unordered_set<int>& already_planned) -> TimePointPath
 {
+  // plan path for agent
+  if (settings.implementation == SIPP_implementation::SIPP_suboptimal)
+  {
+    // suboptimal sipp
+    return plan_suboptimal(agent_num, already_planned, settings.w);
+  }
+
+  assertm(settings.w == 1.0, "Suboptimality factor must be 1 for optimal algorithms.");
+  // optimal sipp
+  if (settings.implementation == SIPP_implementation::SIPP_mine)
+  {
+    return plan_sipp_mine(agent_num, already_planned);
+  }
+
+  if (settings.implementation == SIPP_implementation::SIPP_mapf_lns)
+  {
+    return plan_mapflns_heuristic(agent_num);
+  }
+
+  throw std::runtime_error("Unknown SIPP implementation");
+}
+
+auto SIPP::plan_sipp_mine(const int agent_num, const std::unordered_set<int>& already_planned) -> TimePointPath
+{
+  assertm(already_planned.find(agent_num) == already_planned.end(), "Planning agent that was already planned.");
+
   if (settings.info_type != INFO_type::no_info)
   {
     initialize_iter_info();
@@ -235,11 +261,18 @@ auto SIPP::plan(const int agent_num) -> TimePointPath
       double h2 = instance.get_heuristic_distance(agent_num, neighbor);
 
       double h3 = 0;
+      // prefer non goal locations
       if (neighbor != goal && instance.is_goal_location(neighbor))
       {
-        h3 = 1.0;  // this is the logically right option
-        // h2 += 1.0; // this works well but shouldnt
+        h3 = 0.5;  // this is the logically right option
+                   // h2 += 1.0; // this works well but shouldnt
       }
+      // if a goal must be taken, prefer goal of already planned agent
+      // else if (neighbor != goal && instance.whose_goal(neighbor) != -1 &&
+      //          already_planned.find(instance.whose_goal(neighbor)) == already_planned.end())
+      // {
+      //   h3 = 1.0;
+      // }
       // std::cout << "Neighbor: " << instance.location_to_position(neighbor) << ", h2: " << h2 << std::endl;
 
       // retrieve the safe intervals for the neighbor
@@ -319,9 +352,10 @@ auto SIPP::plan(const int agent_num) -> TimePointPath
 }
 
 
-auto SIPP::plan_suboptimal(const int agent_num, double w) -> TimePointPath
+auto SIPP::plan_suboptimal(const int agent_num, const std::unordered_set<int>& already_planned, double w) -> TimePointPath
 {
   assertm(w >= 1.0, "Suboptimality factor must be more than 1");
+  assertm(already_planned.find(agent_num) == already_planned.end(), "Planning agent that was already planned.");
 
   if (settings.info_type != INFO_type::no_info)
   {
@@ -436,10 +470,13 @@ auto SIPP::plan_suboptimal(const int agent_num, double w) -> TimePointPath
         // h3 = 1.0;
         h2 += w;
       }
+      /*else if (neighbor != goal && instance.whose_goal(neighbor) != -1 &&
+               already_planned.find(instance.whose_goal(neighbor)) == already_planned.end())
+      {
+        h2 += 2 * w;
+      }*/
       // retrieve the safe intervals for the neighbor
-
-      std::list<TimeInterval>::const_iterator sf_start, sf_end;
-      std::tie(sf_start, sf_end) = safe_interval_table.get_safe_intervals(neighbor, neighbor_entry_time_interval);
+      auto [sf_start, sf_end] = safe_interval_table.get_safe_intervals(neighbor, neighbor_entry_time_interval);
 
       for (auto it = sf_start; it != sf_end; it++)
       {
@@ -691,7 +728,7 @@ void SIPP::update_iter_info(const sipp::SIPPNode& expanded, const bool last_iter
   // store information about the expanded node for visualization only
   if (settings.info_type == INFO_type::visualisation)
   {
-    iter_info.emplace_back(expanded.time_point, expanded.g, expanded.h, expanded.h2, generated_this_iter, expanded_this_iter,
+    iter_info.emplace_back(expanded.time_point, expanded.g, expanded.h, expanded.h2, expanded.h3, generated_this_iter, expanded_this_iter,
                            iteration_num);
   }
 

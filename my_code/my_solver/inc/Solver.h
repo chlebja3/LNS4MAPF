@@ -25,6 +25,7 @@ public:
   mutable std::vector<Path>  converted_paths;
   std::vector<int>           delays;
   std::vector<int>           destroyed_paths;
+  std::vector<int>           priorities;
 
   int cost;
   int sum_of_delays;  // cost - distance

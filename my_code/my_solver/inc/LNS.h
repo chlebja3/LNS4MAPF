@@ -76,7 +76,7 @@ public:
   void solve() override;
 
   auto find_initial_solution() -> bool;
-  auto PrioritizedPlanning(SIPP_implementation sipp_implementation) -> Solution;
+  auto PrioritizedPlanning() -> Solution;
 
   [[nodiscard]] auto get_num_of_generated_nodes() const -> int
   {
@@ -90,7 +90,8 @@ public:
 
   void initialize_constraint_table(const std::vector<TimePointPath>& paths);
 
-  Operator destroy_operator;
+  Operator                        destroy_operator;
+  mutable std::unordered_set<int> already_planned;
 
 private:
   void destroy_random(Solution& sol) const;

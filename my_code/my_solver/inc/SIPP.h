@@ -132,9 +132,10 @@ public:
   // destructor
   ~SIPP() = default;
 
-  auto plan(int agent_num) -> TimePointPath;
+  auto plan(int agent_num, const std::unordered_set<int>& already_planned) -> TimePointPath;
+  auto plan_sipp_mine(int agent_num, const std::unordered_set<int>& already_planned) -> TimePointPath;
   auto plan_mapflns_heuristic(int agent_num) -> TimePointPath;
-  auto plan_suboptimal(int agent_num, double w = 1.0) -> TimePointPath;
+  auto plan_suboptimal(int agent_num, const std::unordered_set<int>& already_planned, double w = 1.0) -> TimePointPath;
 
 private:
   void                 initialize_iter_info();

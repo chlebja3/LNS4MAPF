@@ -27,7 +27,7 @@ void BM_SIPP_helper(benchmark::State& state, std::string map_name, std::string s
     LNS          lns(*instance, rnd_generator, nullptr, lns_settings);
 
     // plan path by Prioritized Planning
-    Solution sol = lns.PrioritizedPlanning(SIPP_implementation::SIPP_mine);
+    Solution sol = lns.PrioritizedPlanning();
   }
 }
 
