@@ -6,6 +6,8 @@
  */
 
 #pragma once
+#include <omp.h>
+
 #include <SFML/Graphics.hpp>
 #include <any>
 #include <cassert>
@@ -33,7 +35,9 @@ enum class Direction
 enum class SIPP_implementation
 {
   SIPP_mine,
+  SIPP_mine_ap,
   SIPP_suboptimal,
+  SIPP_suboptimal_ap,
   SIPP_mapf_lns,
 };
 
@@ -42,6 +46,18 @@ enum class INFO_type
   no_info,
   visualisation,
   experiment
+};
+
+
+struct omp_locks
+{
+  // constructor
+  explicit omp_locks(int num_cells);
+
+  // destructor
+  ~omp_locks();
+
+  std::vector<omp_lock_t> locks;  // for parallelization
 };
 
 class Clock

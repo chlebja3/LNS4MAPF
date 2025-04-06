@@ -49,28 +49,31 @@ auto main(int argc, char** argv) -> int
   std::uniform_int_distribution<int> dist(0, std::numeric_limits<int>::max());
   // prepare the algorithms
   std::vector<Algorithm> algorithms;
+
   for (const auto& algo_type : magic_enum::enum_values<SIPP_implementation>())
   {
     if (algo_type == SIPP_implementation::SIPP_suboptimal)
     {
       for (double w : SUBOPTIMALITIES)
       {
-        algorithms.emplace_back(algo_type, std::make_pair("w", w));
+        LNS_settings lns_settings(1, 1, {DESTROY_TYPE::RANDOM, 10}, {algo_type, INFO_type::experiment, w});
+        algorithms.emplace_back(algo_type, lns_settings, std::make_pair("w", w));
       }
     }
     else
     {
-      algorithms.emplace_back(algo_type);
+      LNS_settings lns_settings(1, 1, {DESTROY_TYPE::RANDOM, 10}, {algo_type, INFO_type::experiment, 1.0});
+      algorithms.emplace_back(algo_type, lns_settings);
     }
   }
 
   // Create a MultiProgress object to handle multiple progress bars
 #ifdef SHOW_PROGRESS
-  indicators::ProgressBar                               bar1 = create_progress_bar("Maps:\t\t", static_cast<int>(maps.size()));
-  indicators::ProgressBar                               bar2 = create_progress_bar("Agent nums:\t", agent_nums[0].size());
-  indicators::ProgressBar                               bar3 = create_progress_bar("Scene:\t\t", RUNS_PER_MAP);
-  indicators::ProgressBar                               bar4 = create_progress_bar("Algo:\t\t", static_cast<int>(algorithms.size()));
-  indicators::MultiProgress<indicators::ProgressBar, 3> bars(bar1, bar2, bar3);
+  std::unique_ptr<indicators::ProgressBar> bar1 = create_progress_bar("Maps:\t\t", static_cast<int>(maps.size()));
+  std::unique_ptr<indicators::ProgressBar> bar2 = create_progress_bar("Agent nums:\t", agent_nums[0].size());
+  std::unique_ptr<indicators::ProgressBar> bar3 = create_progress_bar("Scene:\t\t", RUNS_PER_MAP);
+  // indicators::ProgressBar                               bar4 = create_progress_bar("Algo:\t\t", static_cast<int>(algorithms.size()));
+  indicators::MultiProgress<indicators::ProgressBar, 3> bars(*bar1, *bar2, *bar3);
 
   // first tick
   bars.set_progress<0>(static_cast<size_t>(0));
@@ -86,7 +89,6 @@ auto main(int argc, char** argv) -> int
   int               skipped_runs            = 0;
   int               skipped_implementations = 0;
   int               sum_agent_nums          = 0;
-
 
   // iterate over all maps
   for (int i = 0; i < static_cast<int>(static_cast<int>(maps.size())); i++)
@@ -213,13 +215,13 @@ auto main(int argc, char** argv) -> int
           }
 
           // create solver
-          LNS_settings lns_settings(1, 1, {DESTROY_TYPE::RANDOM, 10}, {sipp_implementation, INFO_type::experiment, w});
-          LNS          solver(instance, rnd_generator, nullptr, lns_settings);
+          // LNS_settings lns_settings(1, 1, {DESTROY_TYPE::RANDOM, 10}, {sipp_implementation, INFO_type::experiment, w});
+          LNS solver(instance, rnd_generator, nullptr, algo.lns_settings);
 
           // find the solution
           Clock clock;
           clock.start();
-          Solution sol                             = solver.PrioritizedPlanning(sipp_implementation);
+          Solution sol                             = solver.PrioritizedPlanning();
           auto [pp_duration_wall, pp_duration_cpu] = clock.end();
           solver.solution                          = sol;
 

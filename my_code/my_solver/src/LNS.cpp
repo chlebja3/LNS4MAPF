@@ -183,7 +183,7 @@ void LNS::solve()
 auto LNS::find_initial_solution() -> bool
 {
   // create initial solution
-  solution = PrioritizedPlanning(settings.sipp_settings.implementation);
+  solution = PrioritizedPlanning();
   if (solution.feasible)
   {
     solution.calculate_cost(instance);
@@ -201,7 +201,7 @@ auto LNS::find_initial_solution() -> bool
   return solution.feasible;
 }
 
-auto LNS::PrioritizedPlanning(SIPP_implementation sipp_implementation) -> Solution
+auto LNS::PrioritizedPlanning() -> Solution
 {
   Solution sol;
   sol.paths.resize(instance.get_num_of_agents(), TimePointPath());
@@ -222,36 +222,14 @@ auto LNS::PrioritizedPlanning(SIPP_implementation sipp_implementation) -> Soluti
   }
 
   // plan path for each agent according to its priority
+  assertm(already_planned.empty(), "Running Prioritized Planning when some agents were already planned.");
   for (int i = 0; i < agent_num; i++)
   {
     // get agent with priority i
     int agent_id = priorities[i];
 
     // plan path for agent
-    TimePointPath tp_path;
-    if (sipp_implementation == SIPP_implementation::SIPP_suboptimal)
-    {
-      assertm(settings.sipp_settings.w >= 1.0, "SIPP suboptimality factor must be 1.0 or more.");
-      // suboptimal sipp
-      tp_path = planner->plan_suboptimal(agent_id, settings.sipp_settings.w);
-    }
-    else
-    {
-      assertm(settings.sipp_settings.w == 1.0, "Suboptimality factor must be 1 for optimal algorithms.");
-      // optimal sipp
-      if (sipp_implementation == SIPP_implementation::SIPP_mine)
-      {
-        tp_path = planner->plan(agent_id);
-      }
-      else if (sipp_implementation == SIPP_implementation::SIPP_mapf_lns)
-      {
-        tp_path = planner->plan_mapflns_heuristic(agent_id);
-      }
-      else
-      {
-        throw std::runtime_error("Not implemented yet");
-      }
-    }
+    TimePointPath tp_path = planner->plan(agent_id, already_planned);
 
     // get the visualization info
     if (settings.sipp_settings.info_type == INFO_type::visualisation)
@@ -276,6 +254,14 @@ auto LNS::PrioritizedPlanning(SIPP_implementation sipp_implementation) -> Soluti
 
     // add to the solution
     sol.paths[agent_id] = tp_path;
+
+    // add to the already planned agents
+    already_planned.insert(agent_id);
+  }
+  // add priorities to the visualization info
+  if (settings.sipp_settings.info_type == INFO_type::visualisation)
+  {
+    sol.priorities = std::move(priorities);
   }
   return sol;
 }
@@ -662,6 +648,7 @@ void LNS::repair_default(Solution& sol) const
       constraint_table.remove_constraints(sol.paths[it], it);
     }
     sol.paths[it].clear();
+    already_planned.erase(it);
   }
   sol.feasible = true;
 
@@ -669,10 +656,10 @@ void LNS::repair_default(Solution& sol) const
   for (int i = 0; i < static_cast<int>(sol.destroyed_paths.size()); i++)
   {
     int           path_idx = sol.destroyed_paths[i];
-    TimePointPath tp_path  = planner->plan(path_idx);
+    TimePointPath tp_path  = planner->plan(path_idx, already_planned);
     if (tp_path.empty())
     {
-      // TODO reset the safe interval table and constrant table
+      // TODO reset the safe interval table and constrant table (is done in discard solution)
       sol.feasible = false;
       return;
     }

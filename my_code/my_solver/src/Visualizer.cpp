@@ -912,9 +912,31 @@ void Visualizer::create_left_panel()
       ImGui::Text("\tg: %lf", cur_info.g);
       ImGui::Text("\th: %lf", cur_info.h);
       ImGui::Text("\th2: %lf", cur_info.h2);
+      ImGui::Text("\th3: %lf", cur_info.h3);
       ImGui::Text("\tf: %lf", cur_info.g + cur_info.h);
+      int whose_goal = instance.whose_goal(cur_info.cur_expanded.location);
+      ImGui::Text("\tWhose goal: %s", std::to_string(whose_goal).c_str());
       ImGui::Text("\tNum generated: %d", cur_info.generated);
       ImGui::Text("\tNum expanded: %d", cur_info.expanded);
+
+      // print all already planned agents
+      std::stringstream ss;
+      int               i = 0;
+      for (const auto& it : lns_info[lns_vis.time].sol.priorities)
+      {
+        if (it == selected_agent)
+        {
+          break;
+        }
+        ss << it << " ";
+        i++;
+      }
+      float panelWidth = ImGui::GetContentRegionAvail().x;
+
+      // Enable text wrapping at the panel's width
+      ImGui::PushTextWrapPos(ImGui::GetCursorPos().x + panelWidth);
+      ImGui::Text("\tAlready planned: %s", ss.str().c_str());
+      ImGui::PopTextWrapPos();
     }
   }
   ImGui::End();

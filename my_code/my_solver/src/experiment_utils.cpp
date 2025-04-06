@@ -52,20 +52,14 @@ auto get_scene_names(const std::string& map_name, int runs_per_map) -> std::vect
   return result;
 }
 
-auto create_progress_bar(std::string name, int max_iter) -> indicators::ProgressBar
+auto create_progress_bar(std::string name, int max_iter) -> std::unique_ptr<indicators::ProgressBar>
 {
-  return indicators::ProgressBar{indicators::option::BarWidth{PROGRESS_BAR_WIDTH},
-                                 indicators::option::Start{"["},
-                                 indicators::option::Fill{"■"},
-                                 indicators::option::Lead{"■"},
-                                 indicators::option::Remainder{" "},
-                                 indicators::option::End{" ]"},
-                                 indicators::option::ForegroundColor{indicators::Color::white},
-                                 indicators::option::ShowElapsedTime{true},
-                                 indicators::option::MaxProgress{max_iter},
-                                 indicators::option::ShowRemainingTime{true},
-                                 indicators::option::PrefixText{name},
-                                 indicators::option::FontStyles{std::vector<indicators::FontStyle>{indicators::FontStyle::bold}}};
+  return std::make_unique<indicators::ProgressBar>(
+      indicators::option::BarWidth{PROGRESS_BAR_WIDTH}, indicators::option::Start{"["}, indicators::option::Fill{"■"},
+      indicators::option::Lead{"■"}, indicators::option::Remainder{" "}, indicators::option::End{" ]"},
+      indicators::option::ForegroundColor{indicators::Color::white}, indicators::option::ShowElapsedTime{true},
+      indicators::option::MaxProgress{max_iter}, indicators::option::ShowRemainingTime{true}, indicators::option::PrefixText{name},
+      indicators::option::FontStyles{std::vector<indicators::FontStyle>{indicators::FontStyle::bold}});
 }
 
 auto load_instances(const std::vector<std::string>& scenes, const std::string& map_name, int agent_num)
@@ -111,7 +105,7 @@ void save_experiment(nlohmann::json& experiment_res, int agent_num, const std::s
 }
 
 auto what_can_be_skipped(const std::string& experiment_name, const std::vector<std::string>& maps,
-                         const std::vector<std::vector<int>>& agent_nums, int runs_per_map, std::vector<Algorithm>& algorithms)
+                         const std::vector<std::vector<int>>& agent_nums, int runs_per_map, const std::vector<Algorithm>& algorithms)
     -> std::vector<bool>
 {
   assertm(maps.size() == agent_nums.size(), "The number of maps must be the same as the number of agent numbers lists");

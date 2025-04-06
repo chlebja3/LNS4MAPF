@@ -17,10 +17,12 @@ public:
   const double    g;
   const double    h;
   const double    h2;
+  const double    h3;
   const int       generated;
   const int       expanded;
   const int       iteration_num;
-  SIPPIterationInfo(const TimePoint& cur_expanded_, double g_, double h_, double h2_, int generated_, int expanded_, int iteration_num_);
+  SIPPIterationInfo(const TimePoint& cur_expanded_, double g_, double h_, double h2_, double h3_, int generated_, int expanded_,
+                    int iteration_num_);
 };
 
 using SIPPInfo = std::vector<SIPPIterationInfo>;
@@ -33,6 +35,7 @@ public:
   int                   improvement;
   std::vector<SIPPInfo> sipp_info;
   Solution              sol;
+  std::vector<int>      planning_order;
   LNSIterationInfo(int iteration_num_, bool accepted_, int improvement_, std::vector<SIPPInfo>& sipp_info_, Solution sol_)
       : iteration_num(iteration_num_),
         accepted(accepted_),

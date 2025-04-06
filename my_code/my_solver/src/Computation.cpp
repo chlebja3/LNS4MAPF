@@ -61,6 +61,13 @@ void Computation::join_thread()
 void Computation::run()
 {
   solver->solve();
-  std::cout << "Final solution has sum of costs: " << solver->solution.sum_of_costs << std::endl;
+  if (solver->solution.feasible)
+  {
+    std::cout << "Final solution has sum of costs: " << solver->solution.sum_of_costs << std::endl;
+  }
+  else
+  {
+    std::cout << "Unable to find feasible solution." << std::endl;
+  }
   running.store(false, std::memory_order_release);
 }

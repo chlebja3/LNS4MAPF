@@ -1,5 +1,7 @@
 /build/*
 /experiments/sipp_pp/*
+/experiment/*
+/experiment/dummy/*
 .cache/
 *.swp
 *.ini

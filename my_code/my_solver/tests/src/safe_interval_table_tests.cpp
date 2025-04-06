@@ -106,17 +106,15 @@ TEST_F(SafeIntervalTableTest, RemoveConstraint)
   EXPECT_EQ(*start, TimeInterval(0, INT_MAX));
 }
 
-// the other method
 TEST_F(SafeIntervalTableTest, GetSafeIntervalEmpty)
 {
-  auto first_si = table->get_first_safe_interval(4);
+  auto first_si = table->get_first_safe_interval(8);
   EXPECT_TRUE(first_si->t_min == 0 && first_si->t_max == INT_MAX) << "No constraints should mean an unlimited safe interval.";
 
   // check the path len estimate
   EXPECT_EQ(table->get_max_path_len_estimate(), 8);
 
-  std::list<TimeInterval>::const_iterator start, end;
-  std::tie(start, end) = table->get_safe_intervals(4, {0, INT_MAX});
+  auto [start, end] = table->get_safe_intervals(8, {0, INT_MAX});
   ASSERT_EQ(std::distance(start, end), 1) << "Expected one safe interval for an empty position!";
   EXPECT_EQ(*start, TimeInterval(0, INT_MAX));
 }
@@ -125,15 +123,15 @@ TEST_F(SafeIntervalTableTest, GetSafeIntervalEmpty)
 // Handling constraints dynamically (adding and removing in sequence)
 TEST_F(SafeIntervalTableTest, DynamicAddRemove)
 {
-  table->add_constraint(TimePoint(4, {2, 4}));
-  table->add_constraint(TimePoint(4, {6, 8}));
-  table->remove_constraint(TimePoint(4, {2, 4}));
+  table->add_constraint(TimePoint(2, {2, 4}));
+  table->add_constraint(TimePoint(2, {6, 8}));
+  table->remove_constraint(TimePoint(2, {2, 4}));
 
   // test the estimate of the maximal path len
   EXPECT_EQ(table->get_max_path_len_estimate(), 16);
 
   std::list<TimeInterval>::const_iterator start, end;
-  std::tie(start, end) = table->get_safe_intervals(4, {0, 10});
+  std::tie(start, end) = table->get_safe_intervals(2, {0, 10});
   ASSERT_EQ(std::distance(start, end), 2) << "Expected two safe intervals after removal.";
   EXPECT_EQ(*start, TimeInterval(0, 5));
   EXPECT_EQ(*std::next(start), TimeInterval(9, INT_MAX));
@@ -146,7 +144,7 @@ TEST_F(SafeIntervalTableTest, DISABLED_RemoveFromEmptyTable)
 TEST_F(SafeIntervalTableTest, RemoveFromEmptyTable)
 #endif
 {
-  TimePoint tp(4, {3, 6});
+  TimePoint tp(3, {3, 6});
   // expect assert death
   EXPECT_DEATH(table->remove_constraint(tp), "Constraint interval can not have any overlap with safe interval.");
 }
@@ -154,7 +152,7 @@ TEST_F(SafeIntervalTableTest, RemoveFromEmptyTable)
 // Constraint removal when no constraint exists
 TEST_F(SafeIntervalTableTest, RemoveNonExistentConstraint)
 {
-  TimePoint tp(4, {3, 6});
+  TimePoint tp(3, {3, 6});
   // test the second method
   EXPECT_DEATH(table->remove_constraint(tp), "Constraint interval can not have any overlap with safe interval.");
 }
@@ -166,7 +164,7 @@ TEST_F(SafeIntervalTableTest, DISABLED_AddExistingConstraint)
 TEST_F(SafeIntervalTableTest, AddExistingConstraint)
 #endif
 {
-  TimePoint tp(4, {3, 6});
+  TimePoint tp(3, {3, 6});
   table->add_constraint(tp);
   ASSERT_DEATH(table->add_constraint(tp), "Can not add an overlapping constraint.");
 }
@@ -175,28 +173,27 @@ TEST_F(SafeIntervalTableTest, AddExistingConstraint)
 // Adding a path that forms constraints, test whether edge constraints are added
 TEST_F(SafeIntervalTableTest, AddPathConstraints)
 {
-  std::vector<TimePoint> path1 = {TimePoint(4, {0, 2}), TimePoint(7, {3, 4}), TimePoint(8, {5, 6})};
+  std::vector<TimePoint> path1 = {TimePoint(6, {0, 2}), TimePoint(7, {3, 4}), TimePoint(8, {5, 6})};
   table->add_constraints(path1);
-  std::vector<TimePoint> path2 = {TimePoint(5, {0, 5}), TimePoint(4, {6, 8}), TimePoint(7, {9, 10})};
+  std::vector<TimePoint> path2 = {TimePoint(3, {0, 5}), TimePoint(6, {6, 8}), TimePoint(7, {9, 10})};
   table->add_constraints(path2);
 
   // test the estimate of the maximal path len
   EXPECT_EQ(table->get_max_path_len_estimate(), 18);
 
   // test first edge conflict
-  std::list<TimeInterval>::const_iterator start, end;
-  std::vector<TimeInterval> safe_intervals = filter_time_intervals(table->get_safe_intervals(4, {0, 3}), {0, 3}, 7, 4, *table);
+  std::vector<TimeInterval> safe_intervals = filter_time_intervals(table->get_safe_intervals(6, {0, 3}), {0, 3}, 7, 6, *table);
   EXPECT_EQ(safe_intervals.size(), 0) << "Expected no safe interval due to an edge conflict.";
 
   // test going to 1, 1 from a non constrained position
-  std::tie(start, end) = table->get_safe_intervals(4, {0, 10});
+  auto [start, end] = table->get_safe_intervals(6, {0, 10});
   ASSERT_EQ(std::distance(start, end), 2) << "Expected two safe intervals after adding path constraints.";
   EXPECT_EQ(*start, TimeInterval(3, 5));
   EXPECT_EQ(*std::next(start), TimeInterval(9, INT_MAX));
 
   // test second edge conflict
-  std::tie(start, end) = table->get_safe_intervals(4, {5, 9});
-  safe_intervals       = filter_time_intervals(table->get_safe_intervals(4, {5, 9}), {5, 9}, 7, 4, *table);
+  std::tie(start, end) = table->get_safe_intervals(6, {5, 9});
+  safe_intervals       = filter_time_intervals(table->get_safe_intervals(6, {5, 9}), {5, 9}, 7, 6, *table);
   EXPECT_EQ(safe_intervals.size(), 1) << "Expected only one safe interval.";
   EXPECT_EQ(safe_intervals[0], TimeInterval(5, 5));
 }
@@ -204,11 +201,11 @@ TEST_F(SafeIntervalTableTest, AddPathConstraints)
 // check that the edge conflict is resolved correctly when there are more constraints in the list
 TEST_F(SafeIntervalTableTest, EdgeConflictMoreConstraints)
 {
-  std::vector<TimePoint> path1 = {TimePoint(4, {0, 1}), TimePoint(7, {2, 4}), TimePoint(4, {5, 6}), TimePoint(7, {7, 8}),
-                                  TimePoint(4, {9, 10})};
+  std::vector<TimePoint> path1 = {TimePoint(6, {0, 1}), TimePoint(7, {2, 4}), TimePoint(6, {5, 6}), TimePoint(7, {7, 8}),
+                                  TimePoint(6, {9, 10})};
   table->add_constraints(path1);
 
-  std::vector<TimeInterval> safe_intervals = filter_time_intervals(table->get_safe_intervals(4, {0, 2}), {0, 2}, 7, 4, *table);
+  std::vector<TimeInterval> safe_intervals = filter_time_intervals(table->get_safe_intervals(6, {0, 2}), {0, 2}, 7, 6, *table);
   EXPECT_EQ(safe_intervals.size(), 0) << "Expected no safe intervals due to edge conflict.";
 }
 
@@ -217,14 +214,14 @@ TEST_F(SafeIntervalTableTest, EdgeConflictMoreConstraints)
 TEST_F(SafeIntervalTableTest, EdgeConstraintTableAdd)
 {
   // add a constraint to the table
-  table->edge_constraint_table.add(4, 7, 3);
+  table->edge_constraint_table.add(6, 7, 3);
 
   // check that the constraint is in the table
-  EXPECT_TRUE(table->edge_constraint_table.get(4, 7, 3));
+  EXPECT_TRUE(table->edge_constraint_table.get(6, 7, 3));
 
   // check that the other times are not there
-  EXPECT_FALSE(table->edge_constraint_table.get(4, 7, 2));
-  EXPECT_FALSE(table->edge_constraint_table.get(4, 7, 4));
+  EXPECT_FALSE(table->edge_constraint_table.get(6, 7, 2));
+  EXPECT_FALSE(table->edge_constraint_table.get(6, 7, 4));
 }
 
 // remove from edge constraint table
