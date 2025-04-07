@@ -186,11 +186,8 @@ void Experiment::run()
           experiment_function(solver);
           auto [pp_duration_wall, pp_duration_cpu] = clock.end();
 
-          // if feasible, calculate the cost
-          if (solver.solution.feasible)
-          {
-            solver.solution.calculate_cost(instance);
-          }
+          // calculate the cost
+          solver.solution.calculate_cost(instance);
 
           // write the results of the experiment
           const std::string algorithm_name = algo.get_name();
@@ -202,12 +199,15 @@ void Experiment::run()
                                            {"algo_parameters", algo.get_parameters_str()},
                                            {"feasible", solver.solution.feasible},
                                            {"sum_of_dist", instance.get_sum_of_distances()},
-                                           {"sum_of_cost", solver.solution.sum_of_costs},
-                                           {"makespan", solver.solution.makespan},
+                                           {"sum_of_cost", solver.log.bsf_solution_cost},
+                                           {"makespan", solver.log.bsf_makespan},
                                            {"preprocessing_time_wall", preprocessing_times[idx].first},
                                            {"preprocessing_time_cpu", preprocessing_times[idx].second},
                                            {"experiment_time_wall", pp_duration_wall},
                                            {"experiment_time_cpu", pp_duration_cpu},
+                                           {"iteration_time_wall", solver.log.iteration_time_wall},
+                                           {"iteration_time_cpu", solver.log.iteration_time_cpu},
+                                           {"operators", solver.log.get_used_operator_str()},
                                            {"expanded", solver.get_num_of_expanded_nodes()},
                                            {"generated", solver.get_num_of_generated_nodes()},
                                            {"seed", seed}};

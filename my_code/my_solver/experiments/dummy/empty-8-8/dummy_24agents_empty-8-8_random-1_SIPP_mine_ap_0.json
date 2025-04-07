@@ -1,0 +1,32 @@
+{
+    "algo_name": "SIPP_mine_ap",
+    "algo_parameters": [],
+    "expanded": 217,
+    "experiment_name": "dummy",
+    "experiment_time_cpu": 0.000122188,
+    "experiment_time_wall": 0.000122309,
+    "feasible": true,
+    "generated": 501,
+    "iteration_time_cpu": [
+        0.00012002
+    ],
+    "iteration_time_wall": [
+        0.00011996
+    ],
+    "makespan": [
+        11
+    ],
+    "map_name": "empty-8-8",
+    "num_agents": 24,
+    "operators": [
+        "ADAPTIVE"
+    ],
+    "preprocessing_time_cpu": 0.015944462,
+    "preprocessing_time_wall": 0.001045432,
+    "scene_name": "empty-8-8-random-1.scen",
+    "seed": 1111963632,
+    "sum_of_cost": [
+        144
+    ],
+    "sum_of_dist": 116
+}

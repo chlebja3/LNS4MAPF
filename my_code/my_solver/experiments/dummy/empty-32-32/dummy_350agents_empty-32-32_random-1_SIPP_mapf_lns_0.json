@@ -1,0 +1,32 @@
+{
+    "algo_name": "SIPP_mapf_lns",
+    "algo_parameters": [],
+    "expanded": 15943,
+    "experiment_name": "dummy",
+    "experiment_time_cpu": 0.008496213,
+    "experiment_time_wall": 0.008496419,
+    "feasible": false,
+    "generated": 42376,
+    "iteration_time_cpu": [
+        0.008493764
+    ],
+    "iteration_time_wall": [
+        0.008493627
+    ],
+    "makespan": [
+        -1
+    ],
+    "map_name": "empty-32-32",
+    "num_agents": 350,
+    "operators": [
+        "ADAPTIVE"
+    ],
+    "preprocessing_time_cpu": 0.018404764,
+    "preprocessing_time_wall": 0.005122152,
+    "scene_name": "empty-32-32-random-1.scen",
+    "seed": 1384061730,
+    "sum_of_cost": [
+        -1
+    ],
+    "sum_of_dist": 7404
+}

@@ -69,30 +69,29 @@ void LNS::initialize_constraint_table(const std::vector<TimePointPath>& paths)
 void LNS::solve()
 {
   // start measuring time
-  Time::time_point start_find_initial_solution = Time::now();
+  Clock clock;
+  clock.start();
 
   // calculate initial solution
   bool found = find_initial_solution();
-  if (!found)
+
+  if (!found)  // TODO restarts
   {
     return;
   }
   assertm(found, "Could not find the initial solution");
   assertm(solution.is_valid(instance), "Found invalid solution");
 
-  initial_solution_time = ((dsec)(Time::now() - start_find_initial_solution)).count();
-  std::cout << "Initial solution found in " << initial_solution_time << " second." << std::endl;
-
-  curr_time = initial_solution_time;
+  // std::cout << "Initial solution found in " << initial_solution_time << " second." << std::endl;
 
   // initialize the constraint table (needed for randomwalk and intersection destroy operator)
-  if (settings.destroy_settings.type != DESTROY_TYPE::RANDOM && !constraint_table_initialized)
+  if (settings.destroy_settings.type != DESTROY_TYPE::RANDOM)
   {
     initialize_constraint_table(solution.paths);
   }
 
   // improve the solution
-  while (iteration_num < settings.max_iter && curr_time < settings.time_limit)
+  while (iteration_num < settings.max_iter && clock.get_current_time().first < settings.time_limit)
   {
     // check for visualization thread end
     if (settings.sipp_settings.info_type == INFO_type::visualisation)
@@ -102,7 +101,12 @@ void LNS::solve()
         break;
       }
     }
+
     iteration_num++;
+
+    // time the iteration
+    Clock iteration_clock;
+    iteration_clock.start();
 
     // copy solution
     Solution perturbed_sol = solution;
@@ -112,7 +116,6 @@ void LNS::solve()
 
     // repair operator
     repair_operator.apply(perturbed_sol);
-
 
     // accept only feasible solutions
     bool accepted    = false;
@@ -140,7 +143,7 @@ void LNS::solve()
 
       if (improvement <= 0)
       {
-        // TODO update the weights
+        // update the weights
         if (settings.destroy_settings.type == DESTROY_TYPE::ADAPTIVE)
         {
           destroy_weights[destroy_strategy_index] = (1 - decay_factor) * destroy_weights[destroy_strategy_index];
@@ -163,6 +166,7 @@ void LNS::solve()
         solution = std::move(perturbed_sol);
       }
     }
+    auto [iteration_time_wall, iteration_time_cpu] = iteration_clock.end();
 
     // construct LNS iteration info and add to the shared data
     if (settings.sipp_settings.info_type == INFO_type::visualisation)
@@ -177,17 +181,27 @@ void LNS::solve()
       sipp_info.clear();
       shared_data->update_lns_info(lns_info);
     }
+    // log the iteration
+    else if (settings.sipp_settings.info_type == INFO_type::experiment)
+    {
+      log.bsf_solution_cost.push_back(solution.sum_of_costs);
+      log.bsf_makespan.push_back(solution.makespan);
+      log.used_operator.push_back(last_destroy_strategy);
+      log.iteration_time_wall.push_back(iteration_time_wall);
+      log.iteration_time_cpu.push_back(iteration_time_cpu);
+    }
   }
 }
 
 auto LNS::find_initial_solution() -> bool
 {
+  Clock clock;
+  clock.start();
+
   // create initial solution
-  solution = PrioritizedPlanning();
-  if (solution.feasible)
-  {
-    solution.calculate_cost(instance);
-  }
+  solution                                     = PrioritizedPlanning();
+  auto [init_sol_time_wall, init_sol_time_cpu] = clock.get_current_time();
+  solution.calculate_cost(instance);
 
   // construct LNS iteration info and add to the shared data
   if (settings.sipp_settings.info_type == INFO_type::visualisation)
@@ -196,8 +210,17 @@ auto LNS::find_initial_solution() -> bool
     sipp_info.clear();
     shared_data->update_lns_info(lns_info);
   }
+  // log the experiment data
+  else if (settings.sipp_settings.info_type == INFO_type::experiment)
+  {
+    log.bsf_solution_cost.push_back(solution.sum_of_costs);
+    log.bsf_makespan.push_back(solution.makespan);
+    log.used_operator.push_back(DESTROY_TYPE::ADAPTIVE);
+    log.iteration_time_wall.push_back(init_sol_time_wall);
+    log.iteration_time_cpu.push_back(init_sol_time_cpu);
+  }
 
-  std::cout << "Solution has sum of costs: " << solution.sum_of_costs << ", sol has delay: " << solution.sum_of_delays << std::endl;
+  // std::cout << "Solution has sum of costs: " << solution.sum_of_costs << ", sol has delay: " << solution.sum_of_delays << std::endl;
   return solution.feasible;
 }
 

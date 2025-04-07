@@ -62,5 +62,5 @@ auto main() -> int
 
 void experiment_function(LNS& lns)
 {
-  lns.solution = lns.PrioritizedPlanning();
+  lns.find_initial_solution();
 }

@@ -7,6 +7,7 @@
 
 #pragma once
 #include <random>
+#include <utility>
 
 #include "ConstraintTable.h"
 #include "SIPP.h"
@@ -47,7 +48,7 @@ public:
 class Operator
 {
 public:
-  explicit Operator(std::function<void(Solution& sol)> func_) : func(func_)
+  explicit Operator(std::function<void(Solution& sol)> func_) : func(std::move(func_))
   {
   }
 
@@ -58,6 +59,26 @@ public:
 
 private:
   const std::function<void(Solution& sol)> func;
+};
+
+struct Logger
+{
+  [[nodiscard]] auto get_used_operator_str() const -> std::vector<std::string>
+  {
+    std::vector<std::string> used_operator_str;
+    for (const auto& it : used_operator)
+    {
+      // convert the enum to string
+      used_operator_str.emplace_back(magic_enum::enum_name(it));
+    }
+    return used_operator_str;
+  }
+
+  std::vector<DESTROY_TYPE> used_operator;
+  std::vector<int>          bsf_solution_cost;
+  std::vector<int>          bsf_makespan;
+  std::vector<double>       iteration_time_cpu;
+  std::vector<double>       iteration_time_wall;
 };
 
 class LNS : public Solver
@@ -92,6 +113,7 @@ public:
 
   Operator                        destroy_operator;
   mutable std::unordered_set<int> already_planned;
+  Logger                          log;
 
 private:
   void destroy_random(Solution& sol) const;

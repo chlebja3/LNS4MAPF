@@ -1,0 +1,37 @@
+{
+    "algo_name": "SIPP_suboptimal_w_1,00",
+    "algo_parameters": [
+        [
+            "w",
+            "1,00"
+        ]
+    ],
+    "expanded": 28579,
+    "experiment_name": "dummy",
+    "experiment_time_cpu": 0.014310827,
+    "experiment_time_wall": 0.014310993,
+    "feasible": false,
+    "generated": 73276,
+    "iteration_time_cpu": [
+        0.014308459
+    ],
+    "iteration_time_wall": [
+        0.014308324
+    ],
+    "makespan": [
+        -1
+    ],
+    "map_name": "empty-32-32",
+    "num_agents": 400,
+    "operators": [
+        "ADAPTIVE"
+    ],
+    "preprocessing_time_cpu": 0.025010422,
+    "preprocessing_time_wall": 0.004381182,
+    "scene_name": "empty-32-32-random-1.scen",
+    "seed": 1749045628,
+    "sum_of_cost": [
+        -1
+    ],
+    "sum_of_dist": 8574
+}
