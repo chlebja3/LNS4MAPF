@@ -24,11 +24,13 @@ Experiment::Experiment(std::string experiment_name_, std::function<void(LNS& vis
       rnd_gen(std::mt19937(std::random_device{}())),
       dist(0, std::numeric_limits<int>::max())
 {
+  // assertm(false, "Experiments should be compiled in Release mode to have reliable results!");
   skips = what_can_be_skipped(experiment_name, maps, agent_nums, runs_per_map, algorithms);
   if (show_progress)
   {
     create_progress_bars(agent_nums[0].size());
   }
+  open_database();
 }
 
 void Experiment::create_progress_bars(int agent_nums_init)
@@ -160,6 +162,20 @@ void Experiment::run()
             continue;
           }
 
+          // look into the database for a seed
+          size_t dot_pos = scene_name.find('.');
+          if (dot_pos == std::string::npos)
+          {
+            throw std::runtime_error("Could not find dot in scene name: '" + scene_name + "'");
+          }
+          const std::string scene_name_stripped = scene_name.substr(map_name.size() + 1, scene_name.find('.') - map_name.size() - 1);
+          int               seed_from_db = get_seed_from_db(agent_num, map_name, scene_name_stripped, k / static_cast<int>(scenes.size()));
+          // std::cout << "Seed from db: " << seed_from_db << std::endl;
+          if (seed_from_db > 0)
+          {
+            seed = seed_from_db;
+          }
+
           const Algorithm& algo = algorithms[l];
 
           // create the seeded random generator (for experiment reproducibility)
@@ -217,5 +233,74 @@ void Experiment::run()
         }
       }
     }
+  }
+  // mark all progress bars as finished
+  if (show_progress)
+  {
+    multi_progress_bar->set_option<0>(indicators::option::PostfixText{std::to_string(static_cast<int>(maps.size())) + "/" +
+                                                                      std::to_string(static_cast<int>(maps.size()))});
+    multi_progress_bar->set_progress<0>(maps.size());
+    multi_progress_bar->set_progress<1>(agent_nums.back().size());
+    multi_progress_bar->set_option<1>(
+        indicators::option::PostfixText{std::to_string(agent_nums.back().size()) + "/" + std::to_string(agent_nums.back().size())});
+    multi_progress_bar->set_option<2>(indicators::option::PostfixText{std::to_string(runs_per_map) + "/" + std::to_string(runs_per_map)});
+    multi_progress_bar->set_progress<2>(static_cast<size_t>(runs_per_map));
+  }
+
+  std::cout << "Experiment finished. Skipped: " << skipped_maps << "/" << static_cast<int>(maps.size()) << " maps, " << skipped_agent_nums
+            << "/" << sum_agent_nums << " agent_nums, " << skipped_runs << "/" << sum_agent_nums * runs_per_map << " runs, "
+            << skipped_implementations << "/" << sum_agent_nums * runs_per_map * static_cast<int>(algorithms.size()) << " implementations."
+            << std::endl;
+}
+
+auto Experiment::get_seed_from_db(int agent_num, const std::string& map_name, const std::string& scene_name_stripped, int run) -> int
+{
+  // Query the database
+  std::string command = "SELECT seed FROM experiments WHERE file_name = ?";
+  // std::string       command             = "SELECT seed FROM experiments";
+  const std::string experiment_filename = experiment_name + "_" + std::to_string(agent_num) + "agents_" + map_name + "-" +
+                                          scene_name_stripped + "SIPP_lns_orig_" + std::to_string(run);
+  // std::cout << "Filename: '" << experiment_filename << "'" << std::endl;
+  sqlite3_stmt* stmt = nullptr;
+
+  int rc = sqlite3_prepare_v2(db, command.c_str(), -1, &stmt, nullptr);
+  if (rc == SQLITE_OK)  // fetched data
+  {
+    rc = sqlite3_bind_text(stmt, 1, experiment_filename.c_str(), experiment_filename.size(), SQLITE_TRANSIENT);
+    if (rc != SQLITE_OK)
+    {
+      throw std::runtime_error("Unable to bind text in the sql statement.");
+    }
+
+    if (sqlite3_step(stmt) == SQLITE_ROW)
+    {
+      int seed = sqlite3_column_int(stmt, 0);
+      if (seed < 0)
+      {
+        throw std::runtime_error("Invalid seed: '" + std::to_string(seed) + "'");
+      }
+      sqlite3_finalize(stmt);
+      return seed;
+    }
+  }
+  else
+  {
+    throw std::runtime_error("Can not prepare the SQL statement.");
+  }
+
+  sqlite3_finalize(stmt);
+  return -1;
+}
+
+void Experiment::open_database()
+{
+  std::string path_to_database =
+      std::filesystem::canonical("/proc/self/exe").parent_path().parent_path().parent_path().parent_path().string() + "/experiments/" +
+      DATABASE_NAME;
+  int rc = sqlite3_open(path_to_database.c_str(), &db);
+  // check that the database was opened successfully
+  if (rc != SQLITE_OK)
+  {
+    std::cout << "WARNING: Can't open database: " << sqlite3_errmsg(db) << std::endl;
   }
 }

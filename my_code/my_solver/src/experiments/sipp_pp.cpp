@@ -7,9 +7,9 @@
 #include <nlohmann/json.hpp>
 #include <random>
 
+#include "Experiment.h"
 #include "Instance.h"
 #include "LNS.h"
-#include "experiment_utils.h"
 #include "indicators/indicators.hpp"
 #include "magic_enum/magic_enum.hpp"
 #include "utils.h"
@@ -19,17 +19,29 @@
 
 #define SHOW_PROGRESS
 
-#define MAPS                                                                                      \
-  {                                                                                               \
-    "empty-8-8", "empty-32-32", "random-32-32-20", "warehouse-10-20-10-2-1", "ost003d", "den520d" \
+//#define MAPS                                                                                      \
+//  {                                                                                               \
+//    "empty-8-8", "empty-32-32", "random-32-32-20", "warehouse-10-20-10-2-1", "ost003d", "den520d" \
+//  }
+//
+//#define NUMS_AGENTS                                                                                                          \
+//  {                                                                                                                          \
+//    {16, 24, 32}, {300, 350, 400, 450, 500}, {50, 100, 150, 200, 250}, {150, 200, 250, 300, 350}, {100, 200, 300, 400, 500}, \
+//    {                                                                                                                        \
+//      100, 200, 300, 400, 500                                                                                                \
+//    }                                                                                                                        \
+//  }
+//
+#define MAPS    \
+  {             \
+    "empty-8-8" \
   }
 
-#define NUMS_AGENTS                                                                                                          \
-  {                                                                                                                          \
-    {16, 24, 32}, {300, 350, 400, 450, 500}, {50, 100, 150, 200, 250}, {150, 200, 250, 300, 350}, {100, 200, 300, 400, 500}, \
-    {                                                                                                                        \
-      100, 200, 300, 400, 500                                                                                                \
-    }                                                                                                                        \
+#define NUMS_AGENTS \
+  {                 \
+    {               \
+      16            \
+    }               \
   }
 
 #define SUBOPTIMALITIES        \
@@ -37,16 +49,12 @@
     1.0, 1.01, 1.02, 1.05, 1.1 \
   }
 
+static void experiment_function(LNS& lns);
+
 auto main(int argc, char** argv) -> int
 {
   // assertm(false, "Experiments should be compiled in Release mode to have reliable results!");
-  const std::vector<std::string>      maps(MAPS);
-  const std::vector<std::vector<int>> agent_nums(NUMS_AGENTS);
 
-  // nondeterministic random generator for generating seeds
-  std::random_device                 rd;
-  auto                               nondeterministic_rnd_generator = std::mt19937(rd());
-  std::uniform_int_distribution<int> dist(0, std::numeric_limits<int>::max());
   // prepare the algorithms
   std::vector<Algorithm> algorithms;
 
@@ -66,212 +74,20 @@ auto main(int argc, char** argv) -> int
       algorithms.emplace_back(algo_type, lns_settings);
     }
   }
-
-  // Create a MultiProgress object to handle multiple progress bars
 #ifdef SHOW_PROGRESS
-  std::unique_ptr<indicators::ProgressBar> bar1 = create_progress_bar("Maps:\t\t", static_cast<int>(maps.size()));
-  std::unique_ptr<indicators::ProgressBar> bar2 = create_progress_bar("Agent nums:\t", agent_nums[0].size());
-  std::unique_ptr<indicators::ProgressBar> bar3 = create_progress_bar("Scene:\t\t", RUNS_PER_MAP);
-  // indicators::ProgressBar                               bar4 = create_progress_bar("Algo:\t\t", static_cast<int>(algorithms.size()));
-  indicators::MultiProgress<indicators::ProgressBar, 3> bars(*bar1, *bar2, *bar3);
-
-  // first tick
-  bars.set_progress<0>(static_cast<size_t>(0));
-  bars.set_progress<1>(static_cast<size_t>(0));
-  bars.set_progress<2>(static_cast<size_t>(0));
+  const bool show_progress = true;
+#else
+  const bool show_progress = false;
 #endif
 
+  // create the experiment
+  Experiment experiment("sipp_pp", experiment_function, MAPS, NUMS_AGENTS, algorithms, RUNS_PER_MAP, show_progress);
 
-  // precalculate what can be skipped
-  std::vector<bool> skips                   = what_can_be_skipped(EXPERIMENT_NAME, maps, agent_nums, RUNS_PER_MAP, algorithms);
-  int               skipped_maps            = 0;
-  int               skipped_agent_nums      = 0;
-  int               skipped_runs            = 0;
-  int               skipped_implementations = 0;
-  int               sum_agent_nums          = 0;
-
-  // iterate over all maps
-  for (int i = 0; i < static_cast<int>(static_cast<int>(maps.size())); i++)
-  {
-    // update the progress bar iteration number display
-#ifdef SHOW_PROGRESS
-    bars.set_progress<0>(static_cast<size_t>(i));
-    bars.set_option<0>(indicators::option::PostfixText{std::to_string(i) + "/" + std::to_string(static_cast<int>(maps.size()))});
-#endif
-
-    // skip maps that were already solved
-    const int start_offset_map = sum_agent_nums * RUNS_PER_MAP * static_cast<int>(algorithms.size());
-    sum_agent_nums += static_cast<int>(agent_nums[i].size());
-    const int end_offset_map = sum_agent_nums * RUNS_PER_MAP * static_cast<int>(algorithms.size());
-    if (std::all_of(skips.begin() + start_offset_map, skips.begin() + end_offset_map, [](bool b) { return b; }))
-    {
-#ifdef SHOW_PROGRESS
-      bars.set_progress<1>(agent_nums[i].size());
-      bars.set_progress<2>((size_t)RUNS_PER_MAP);
-#endif
-      skipped_maps++;
-      skipped_agent_nums += static_cast<int>(agent_nums[i].size());
-      skipped_runs += static_cast<int>(agent_nums[i].size()) * RUNS_PER_MAP;
-      skipped_implementations += static_cast<int>(agent_nums[i].size()) * RUNS_PER_MAP * static_cast<int>(algorithms.size());
-      continue;
-    }
-
-    const std::string map_name = maps[i];
-
-    const std::vector<std::string> scenes = get_scene_names(map_name, RUNS_PER_MAP);
-
-#ifdef SHOW_PROGRESS
-    bars.set_option<1>(indicators::option::MaxProgress{(int)agent_nums[i].size()});
-#endif
-    // iterate over agent numbers
-    for (int j = 0; j < static_cast<int>(agent_nums[i].size()); j++)
-    {
-      // update the progress bar iteration number display
-#ifdef SHOW_PROGRESS
-      bars.set_option<1>(indicators::option::PostfixText{std::to_string(j) + "/" + std::to_string(agent_nums[i].size())});
-      bars.set_progress<1>(static_cast<size_t>(j));
-#endif
-
-      // skip agent_nums that were already solved
-      const int start_offset_an = start_offset_map + j * RUNS_PER_MAP * static_cast<int>(algorithms.size());
-      const int end_offset_an   = start_offset_map + (j + 1) * RUNS_PER_MAP * static_cast<int>(algorithms.size());
-      if (std::all_of(skips.begin() + start_offset_an, skips.begin() + end_offset_an, [](bool b) { return b; }))
-      {
-#ifdef SHOW_PROGRESS
-        bars.set_progress<2>((size_t)RUNS_PER_MAP);
-#endif
-        skipped_agent_nums++;
-        skipped_runs += RUNS_PER_MAP;
-        skipped_implementations += RUNS_PER_MAP * static_cast<int>(algorithms.size());
-        continue;
-      }
-
-      int agent_num = agent_nums[i][j];
-
-      // load all instances TODO load only instances that will not be skipped
-      auto [instances, preprocessing_times] = load_instances(scenes, map_name, agent_num);
-
-      // make sure every map gets enough runs
-      for (int k = 0; k < RUNS_PER_MAP; k++)
-      {
-        // update the progress bar iteration number display
-#ifdef SHOW_PROGRESS
-        bars.set_option<2>(indicators::option::PostfixText{std::to_string(k) + "/" + std::to_string(RUNS_PER_MAP)});
-        bars.set_progress<2>(static_cast<size_t>(k));
-#endif
-
-
-        // skip runs that were already solved
-        const int start_offset_run = start_offset_an + k * static_cast<int>(algorithms.size());
-        const int end_offset_run   = start_offset_an + (k + 1) * static_cast<int>(algorithms.size());
-        if (std::all_of(skips.begin() + start_offset_run, skips.begin() + end_offset_run, [](bool b) { return b; }))
-        {
-          skipped_runs++;
-          skipped_implementations += static_cast<int>(algorithms.size());
-          continue;
-        }
-
-        // choose instance
-        assertm(scenes.size() == instances.size(), "The size of scenes and instances must be the same.");
-        const int          idx        = k % static_cast<int>(scenes.size());
-        const std::string& scene_name = scenes[idx];
-        const Instance&    instance   = instances[idx];
-        // check whether enough agents loaded
-        if (instance.get_num_of_agents() != agent_num)
-        {
-          throw std::runtime_error("Loaded " + std::to_string(instance.get_num_of_agents()) + " agents instead of " +
-                                   std::to_string(agent_num));
-        }
-
-        // generate a random seed (same for all implementations)
-        int seed = dist(nondeterministic_rnd_generator);
-
-        // iterate over all implementations
-        for (int l = 0; l < static_cast<int>(algorithms.size()); l++)
-        {
-
-          // skip already solved
-          if (skips[start_offset_run + l])
-          {
-            skipped_implementations++;
-            continue;
-          }
-
-          const Algorithm& algo = algorithms[l];
-
-          // create the seeded random generator (for experiment reproducibility)
-          auto                      rnd_generator       = std::mt19937(seed);
-          double                    w                   = 1.0;
-          const SIPP_implementation sipp_implementation = std::get<SIPP_implementation>(algo.type);
-          if (sipp_implementation == SIPP_implementation::SIPP_suboptimal)
-          {
-            for (const auto& it : algo.parameters)
-            {
-              if (it.first == "w")
-              {
-                w = std::any_cast<double>(it.second);
-              }
-            }
-          }
-
-          // create solver
-          // LNS_settings lns_settings(1, 1, {DESTROY_TYPE::RANDOM, 10}, {sipp_implementation, INFO_type::experiment, w});
-          LNS solver(instance, rnd_generator, nullptr, algo.lns_settings);
-
-          // find the solution
-          Clock clock;
-          clock.start();
-          Solution sol                             = solver.PrioritizedPlanning();
-          auto [pp_duration_wall, pp_duration_cpu] = clock.end();
-          solver.solution                          = sol;
-
-          // if feasible, calculate the cost
-          if (solver.solution.feasible)
-          {
-            solver.solution.calculate_cost(instance);
-          }
-
-          // write the results of the experiment
-          const std::string algorithm_name = algo.get_name();
-          nlohmann::json    experiment_res = {{"experiment_name", EXPERIMENT_NAME},
-                                           {"map_name", map_name},
-                                           {"scene_name", scene_name},
-                                           {"num_agents", agent_num},
-                                           {"algo_name", algorithm_name},
-                                           {"algo_parameters", algo.get_parameters_str()},
-                                           {"feasible", solver.solution.feasible},
-                                           {"sum_of_dist", instance.get_sum_of_distances()},
-                                           {"sum_of_cost", solver.solution.sum_of_costs},
-                                           {"makespan", solver.solution.makespan},
-                                           {"preprocessing_time_wall", preprocessing_times[idx].first},
-                                           {"preprocessing_time_cpu", preprocessing_times[idx].second},
-                                           {"computation_time_wall", pp_duration_wall},
-                                           {"computation_time_cpu", pp_duration_cpu},
-                                           {"expanded", solver.get_num_of_expanded_nodes()},
-                                           {"generated", solver.get_num_of_generated_nodes()},
-                                           {"seed", seed}};
-
-          // save the experiment
-          save_experiment(experiment_res, agent_num, map_name, scene_name, EXPERIMENT_NAME, algorithm_name);
-        }
-      }
-    }
-  }
-  // mark all progress bars as finished
-#ifdef SHOW_PROGRESS
-  bars.set_option<0>(
-      indicators::option::PostfixText{std::to_string(static_cast<int>(maps.size())) + "/" + std::to_string(static_cast<int>(maps.size()))});
-  bars.set_progress<0>(maps.size());
-  bars.set_progress<1>(agent_nums.back().size());
-  bars.set_option<1>(
-      indicators::option::PostfixText{std::to_string(agent_nums.back().size()) + "/" + std::to_string(agent_nums.back().size())});
-  bars.set_option<2>(indicators::option::PostfixText{std::to_string(RUNS_PER_MAP) + "/" + std::to_string(RUNS_PER_MAP)});
-  bars.set_progress<2>((size_t)RUNS_PER_MAP);
-#endif
-
-  std::cout << "Experiment finished. Skipped: " << skipped_maps << "/" << static_cast<int>(maps.size()) << " maps, " << skipped_agent_nums
-            << "/" << sum_agent_nums << " agent_nums, " << skipped_runs << "/" << sum_agent_nums * RUNS_PER_MAP << " runs, "
-            << skipped_implementations << "/" << sum_agent_nums * RUNS_PER_MAP * static_cast<int>(algorithms.size()) << " implementations."
-            << std::endl;
+  // run the experiment
+  experiment.run();
 }
 
+void experiment_function(LNS& lns)
+{
+  lns.find_initial_solution();
+}

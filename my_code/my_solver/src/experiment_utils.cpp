@@ -98,6 +98,7 @@ void save_experiment(nlohmann::json& experiment_res, int agent_num, const std::s
     filename = result_dir_path + experiment_name + "_" + std::to_string(agent_num) + "agents_" + map_name + "_" + scene_name_stripped +
                "_" + algorithm_name + "_" + std::to_string(num) + ".json";
   }
+  // std::cout << "Saving experiment to: " << filename << std::endl;
 
   std::ofstream file(filename);
   file << experiment_res.dump(4);  // Pretty print

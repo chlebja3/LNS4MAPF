@@ -4,11 +4,16 @@
  * Email: chlebja3@fel.cvut.cz
  * Description:
  */
+#pragma once
+#include <sqlite3.h>
+
 #include <string>
 #include <vector>
 
 #include "LNS.h"
 #include "experiment_utils.h"
+
+#define DATABASE_NAME "experiment_database.db"
 
 class Experiment
 {
@@ -16,10 +21,21 @@ public:
   Experiment(std::string experiment_name_, std::function<void(LNS& lns)> experiment_function, std::vector<std::string> maps_,
              std::vector<std::vector<int>> agent_nums_, const std::vector<Algorithm>& algorithms_, int runs_per_map_,
              bool show_progress_ = false);
+
+  ~Experiment()
+  {
+    if (db != nullptr)
+    {
+      sqlite3_close(db);
+    }
+  }
   void run();
 
 private:
   void create_progress_bars(int agent_nums_init);
+  void open_database();
+  auto get_seed_from_db(int agent_num, const std::string& map_name, const std::string& scen_name_stripped, int run) -> int;
+
   // experiment settings
   std::string                         experiment_name;
   std::function<void(LNS& lns)>       experiment_function;
@@ -44,4 +60,7 @@ private:
   // visualization
   std::vector<std::unique_ptr<indicators::ProgressBar>>                progress_bars;
   std::optional<indicators::MultiProgress<indicators::ProgressBar, 3>> multi_progress_bar;
+
+  // experiment database
+  sqlite3* db = nullptr;
 };

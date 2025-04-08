@@ -4,6 +4,7 @@
  * Email: chlebja3@fel.cvut.cz
  * Description:
  */
+#pragma once
 
 #include <any>
 #include <filesystem>

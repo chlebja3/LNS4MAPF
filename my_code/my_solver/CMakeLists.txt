@@ -72,6 +72,9 @@ find_package(OpenGL REQUIRED)  # Ensure OpenGL is found
 # Find nlohman json
 find_package(nlohmann_json REQUIRED)
 
+# find Sqlite3
+find_package(SQLite3 REQUIRED)
+
 # Add include directories for ImGui and ImGui-SFML (mark as system to indicate third party libraries)
 include_directories(SYSTEM third_party_libraries/imgui third_party_libraries/imgui-sfml third_party_libraries)
 
@@ -90,7 +93,7 @@ add_subdirectory("third_party_libraries/nativefiledialog-extended")
 target_include_directories(MAPF_lib PRIVATE "third_party_libraries/imgui" "third_party_libraries/imgui-sfml" "third_party_libraries/nativefiledialog-extended/src/include")
 
 # link the libraries
-target_link_libraries(MAPF_lib ${Boost_LIBRARIES} Eigen3::Eigen sfml-graphics sfml-window sfml-system OpenGL::GL nlohmann_json::nlohmann_json nfd)
+target_link_libraries(MAPF_lib ${Boost_LIBRARIES} Eigen3::Eigen sfml-graphics sfml-window sfml-system OpenGL::GL nlohmann_json::nlohmann_json nfd SQLite::SQLite3)
 target_link_libraries(simple_MAPF_solver MAPF_lib)
 
 # experiments

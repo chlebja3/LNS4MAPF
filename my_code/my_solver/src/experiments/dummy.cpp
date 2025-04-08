@@ -31,7 +31,7 @@
     1.0, 1.01           \
   }
 
-void experiment_function(LNS& lns);
+static void experiment_function(LNS& lns);
 
 auto main() -> int
 {
