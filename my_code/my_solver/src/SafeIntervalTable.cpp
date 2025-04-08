@@ -216,7 +216,7 @@ void SafeIntervalTable::add_constraints(const TimePointPath& path)
   }
 }
 
-
+// TODO dont use, there are probably race conditions because of latest_constraint_end and unlimited safe intervals
 #ifdef SIT_PARALLELIZATION
 void SafeIntervalTable::add_constraints_parallel(const TimePointPath& path)
 {
@@ -255,8 +255,9 @@ void SafeIntervalTable::remove_constraints(const TimePointPath& path)
     }
   }
 
-  // update the latest constraint estimate
-  update_latest_constraint_end_estimate();
+  // remember that it will be needed to update the latest constraint estimate
+  latest_constraint_end_updated = false;
+  // update_latest_constraint_end_estimate();
 }
 
 #ifdef SIT_PARALLELIZATION
@@ -280,6 +281,7 @@ void SafeIntervalTable::remove_constraints_parallel(const TimePointPath& path)
     // unlock the location
     omp_unset_lock(&locks.locks[instance.location_to_free_location(path[i].location)]);
   }
+  latest_constraint_end_updated = false;
 }
 #endif
 
@@ -337,6 +339,7 @@ auto SafeIntervalTable::get_safe_intervals(int location, const TimeInterval& tim
 void SafeIntervalTable::update_latest_constraint_end_estimate()
 {
   latest_constraint_end = 0;
+  // TODO iterate only for last intervals
   for (const auto& safe_interval_list : safe_intervals)
   {
     const auto last = safe_interval_list.back();
@@ -347,13 +350,20 @@ void SafeIntervalTable::update_latest_constraint_end_estimate()
       latest_constraint_end = std::max(latest_constraint_end, last.t_min - 1);
     }
   }
+
+  latest_constraint_end_updated = true;
 }
 
-[[nodiscard]] auto SafeIntervalTable::get_max_path_len_estimate() const -> int
+[[nodiscard]] auto SafeIntervalTable::get_max_path_len_estimate() -> int
 {
   if (unlimited_safe_intervals == 0)
   {
     return INT_MAX;
+  }
+
+  if (!latest_constraint_end_updated)
+  {
+    update_latest_constraint_end_estimate();
   }
   // check for overflow
   if (latest_constraint_end <= INT_MAX - unlimited_safe_intervals)

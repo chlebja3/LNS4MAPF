@@ -76,7 +76,7 @@ public:
   [[nodiscard]] auto get_safe_intervals(int location, const TimeInterval& time_interval) const
       -> std::pair<std::list<TimeInterval>::const_iterator, std::list<TimeInterval>::const_iterator>;
   [[nodiscard]] auto get_first_safe_interval(int location) const -> std::list<TimeInterval>::const_iterator;
-  [[nodiscard]] auto get_max_path_len_estimate() const -> int;
+  [[nodiscard]] auto get_max_path_len_estimate() -> int;
   void               update_latest_constraint_end_estimate();
 
   [[nodiscard]] auto get_min_reach_time(int goal) const -> int
@@ -96,7 +96,8 @@ private:
   const Instance&                      instance;
   int                                  max_path_len_estimate = INT_MAX;
   int                                  unlimited_safe_intervals;
-  int                                  latest_constraint_end = 0;
+  int                                  latest_constraint_end         = 0;
+  bool                                 latest_constraint_end_updated = true;
 #ifdef SIT_PARALLELIZATION
   omp_locks locks;
 #endif
