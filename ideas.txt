@@ -84,3 +84,15 @@ prohlednout implementaci sippu
 # porovnat moji heuristiku (a jeji varianty) s oficialni heuristikou (bez maxima s constrainem), pak s jejich realnou heuristikou, vliv vah suboptimalniho sippu, optionally taky manhattanskou distance, merit cas vypoctu, pocet expandovanych uzlu, makespan, sum of costs, pocet opakovani krat pocet scen aby byl 50, sipp + prioritized planning, mozna taky preprocessing, ruzne pocty agentu
 
 # kazdy experiment vlastni file - input a parametry, parametry algoritmu a pak vsechny vysledky, yaml, vysledky potom do databaze 
+
+# omezit puvodni solver aby nedelal restarty
+
+# seaborn na ploty?
+# destroy by mel hledat cesty co maj hodne alternativ
+# zkusit vymyslet jak pri planovani odhadovat pocet stejne drahych cest
+# mozna odhadovat podle poctu expandovanych nodu pri planovani 
+
+# zacit psat text, destroy operatory, experimenty
+# promyslet co vse jsem udelal, jake experimenty na to testovani
+
+# spojit constraint table a safe interval table do jedne struktury, pak pujde zjistit cisla agentu co blokuji dane casy, v sippu pocitat kolikrat ktery agent blokuje ktereho a z toho pak udelat matici provazanosti agentu, chytry destroy, ktery vybere ty provanaze (a zaroven zpozdene)
