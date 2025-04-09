@@ -6,7 +6,8 @@ import sqlite3
 conn = sqlite3.connect("experiment_database.db")
 cursor = conn.cursor()
 
-experiment_name = "sipp_pp"
+# experiment_name = "sipp_pp"
+experiment_name = "destroy"
 
 execute_str = "CREATE TABLE IF NOT EXISTS " + experiment_name + """ (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
