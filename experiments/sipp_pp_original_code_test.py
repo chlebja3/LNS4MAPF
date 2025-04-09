@@ -57,7 +57,7 @@ for map_name in tqdm.tqdm(map_names, desc="maps", position=0):
 
             # find the seed
             experiment_name = "sipp_pp_" + str(agent_num) + "agents_" + map_name + "_" + scen_name_stripped +  "_SIPP_mapf_lns_" + str(int(i/len(scenes))) + ".json"
-            df = pd.read_sql_query(f"SELECT * FROM experiments WHERE file_name = '{experiment_name}'", conn)
+            df = pd.read_sql_query(f"SELECT * FROM sipp_pp WHERE file_name = '{experiment_name}'", conn)
             seeds = df["seed"]
             if (len(seeds) != 1):
                 print("ERROR: Wrong seeds", seeds, experiment_name)

@@ -6,33 +6,40 @@ import sqlite3
 conn = sqlite3.connect("experiment_database.db")
 cursor = conn.cursor()
 
-# Create a table for the experiments
-cursor.execute("""
-CREATE TABLE IF NOT EXISTS experiments (
+experiment_name = "sipp_pp"
+
+execute_str = "CREATE TABLE IF NOT EXISTS " + experiment_name + """ (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
-    file_name TEXT UNIQUE, -- each experiment can be stored onyl once
+    file_name TEXT UNIQUE, -- each experiment can be stored only once
+    experiment_name TEXT,
+    map_name TEXT,
+    scene_name TEXT,
+    num_agents INTEGER,
     algo_name TEXT,
     algo_parameters TEXT,  -- Stored as JSON string
-    computation_time_cpu REAL,
-    computation_time_wall REAL,
-    expanded INTEGER,
-    experiment_name TEXT,
+    sum_of_dist INTEGER,
     feasible BOOLEAN,
+    init_sol_sum_of_cost INTEGER,
+    init_sol_makespan INTEGER,
+    experiment_time_cpu REAL,
+    experiment_time_wall REAL,
+    expanded INTEGER,
     generated INTEGER,
-    makespan INTEGER,
-    map_name TEXT,
-    num_agents INTEGER,
     preprocessing_time_cpu REAL,
     preprocessing_time_wall REAL,
-    scene_name TEXT,
     seed INTEGER,
-    sum_of_cost INTEGER,
-    sum_of_dist INTEGER
+    sum_of_cost TEXT,  --time evolutions, JSON string
+    makespan TEXT,
+    iteration_time_cpu TEXT,
+    iteration_time_wall TEXT,
+    operators TEXT
 )
-""")
+"""
+
+# Create a table for the experiments
+cursor.execute(execute_str)
 
 conn.commit()
-experiment_name = "sipp_pp"
 
 # path to the directory with the experiments
 experiment_dir = "../my_code/my_solver/experiments/"+ experiment_name
@@ -53,20 +60,28 @@ for map_dir in map_dirs:
             data = json.load(f) # loads the json as dictionary
             data["file_name"] = file
 
-            # convert the algorithm parameters to json string
-            data["algo_parameters"] = json.dumps(data["algo_parameters"])
-
             # check whether the experiment is already in the database
-            cursor.execute("""
-            SELECT 1 FROM experiments WHERE 
+            cursor.execute("SELECT 1 FROM " + experiment_name + """ WHERE 
                 file_name = ?
             """, (file,))
             if cursor.fetchone() is None:  # If no record found, insert new entry
+
+                # convert the algorithm parameters, solution time evolution etc to json string
+                data["algo_parameters"] = json.dumps(data["algo_parameters"])
+                data["init_sol_sum_of_cost"] = data["sum_of_cost"][0]
+                data["sum_of_cost"] = json.dumps(data["sum_of_cost"])
+                data["init_sol_makespan"] = data["makespan"][0]
+                data["makespan"] = json.dumps(data["makespan"])
+                data["iteration_time_cpu"] = json.dumps(data["iteration_time_cpu"])
+                data["iteration_time_wall"] = json.dumps(data["iteration_time_wall"])
+                data["operators"] = json.dumps(data["operators"])
+
+
                 # Dynamically create the SQL query
                 columns = ", ".join(data.keys())  # Get column names from JSON keys
                 placeholders = ", ".join(["?"] * len(data))  # Create placeholders (?, ?, ?, ...)
 
-                sql = f"INSERT INTO experiments ({columns}) VALUES ({placeholders})"
+                sql = "INSERT INTO " + experiment_name + f" ({columns}) VALUES ({placeholders})"
                 cursor.execute(sql, tuple(data.values()))
                 added += 1
             else:

@@ -1,6 +1,7 @@
 import csv
 import sqlite3
 from collections import defaultdict
+import json
 
 def read_file(name):
     lines = []
@@ -29,34 +30,42 @@ for experiment in file_res:
     idx1 = len("../MAPF-benchmark/mapf-scen-random/scen-random/")
     idx2 = instance_name.find(".scen")
     instance_name_stripped = instance_name[idx1:idx2]
-    experiment_name = "sipp_pp_" + str(agent_num) + "agents_"+ instance_name_stripped + algo_name
-    num = counts[experiment_name]
-    counts[experiment_name] += 1
-    experiment_name += "_" + str(num)
+    file_name = "sipp_pp_" + str(agent_num) + "agents_"+ instance_name_stripped + algo_name
+    num = counts[file_name]
+    counts[file_name] += 1
+    file_name += "_" + str(num)
     idx3 = instance_name_stripped.find("-random")
     map_name = instance_name_stripped[:idx3]
 
     feasible = (int(experiment[2]) > 0 and int(experiment[8]) == 0) # feasible when solution cost is not -1 and number of restarts is 0
 
+    algo_parameters = "[]"
+    computation_time_cpu = float(experiment[19])
+    computation_time_wall = float(experiment[0])
+    expanded = int(experiment[10])
+    generated = int(experiment[11]) + int(experiment[12])
+    makespan = int(experiment[18])
+    preprocessing_time_cpu = float(experiment[20])
+    preprocessing_time_wall = float(experiment[14])
+    seed = int(experiment[17])
+    sum_of_cost = int(experiment[2])
+    sum_of_dist = int(experiment[4])
+
+
     cursor.execute("""
-    SELECT 1 FROM experiments WHERE 
+    SELECT 1 FROM sipp_pp WHERE 
         file_name = ?
-    """, (experiment_name,))
+    """, (file_name,))
 
     if cursor.fetchone() is None:  # If no record found, insert new entry
         # Dynamically create the SQL query
         cursor.execute("""
-        INSERT INTO experiments (
-            file_name, algo_name, algo_parameters, computation_time_cpu, computation_time_wall,
-            expanded, experiment_name, feasible, generated, makespan, map_name, num_agents,
-            preprocessing_time_cpu, preprocessing_time_wall, scene_name, seed,
-            sum_of_cost, sum_of_dist
-        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+        INSERT INTO sipp_pp (
+            file_name, experiment_name, map_name, scene_name, num_agents,
+algo_name, algo_parameters, sum_of_dist, feasible, init_sol_sum_of_cost, init_sol_makespan, experiment_time_cpu, experiment_time_wall, expanded, generated, preprocessing_time_cpu, preprocessing_time_wall, seed, sum_of_cost, makespan, iteration_time_cpu, iteration_time_wall, operators
+        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
         """, (
-            experiment_name, 
-            algo_name, "[]", float(experiment[19]), float(experiment[0]), int(experiment[10]), "sipp_pp", feasible, int(experiment[11]) + int(experiment[12]), int(experiment[18]),
-            map_name, agent_num, float(experiment[20]), float(experiment[14]),
-            instance_name_stripped, int(experiment[17]), int(experiment[2]), int(experiment[4]) 
+            file_name, "sipp_pp", map_name, instance_name_stripped, agent_num, algo_name, algo_parameters, sum_of_dist, feasible, sum_of_cost, makespan, computation_time_cpu, computation_time_wall, expanded, generated, preprocessing_time_cpu, preprocessing_time_wall, seed, json.dumps([sum_of_cost]), json.dumps([makespan]), json.dumps([computation_time_cpu]), json.dumps([computation_time_wall]), json.dumps(["ADAPTIVE"])
         ))
         added += 1
     else:
