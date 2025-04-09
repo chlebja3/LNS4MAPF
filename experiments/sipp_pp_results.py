@@ -37,8 +37,8 @@ conn = sqlite3.connect("experiment_database.db")
 cursor = conn.cursor()
 
 # Load data into Pandas DataFrame
-df = pd.read_sql_query("SELECT * FROM experiments", conn)
-df["delay"] = df["sum_of_cost"] - df["sum_of_dist"]
+df = pd.read_sql_query("SELECT * FROM sipp_pp", conn)
+df["delay"] = df["init_sol_sum_of_cost"] - df["sum_of_dist"]
 
 # close the database
 conn.close()
@@ -55,31 +55,31 @@ df_grouped = df.groupby(["map_name", "num_agents", "algo_name"])
 # df_feasible_grouped = df_feasible.groupby(["map_name", "num_agents", "algo_name"])
 df_feasible_grouped = df_filtered.groupby(["map_name", "num_agents", "algo_name"])
 stats = df_grouped.agg({
-    "computation_time_cpu": ["mean", "std", "median", "min", "max"],
-    "computation_time_wall": ["mean", "std", "median", "min", "max"],
+    "experiment_time_cpu": ["mean", "std", "median", "min", "max"],
+    "experiment_time_wall": ["mean", "std", "median", "min", "max"],
     "expanded": ["mean", "std", "median", "min", "max"],
     "generated": ["mean", "std", "median", "min", "max"],
-    "makespan": ["mean", "std", "median", "min", "max"],
-    "sum_of_cost": ["mean", "std", "median", "min", "max"],
+    "init_sol_makespan": ["mean", "std", "median", "min", "max"],
+    "init_sol_sum_of_cost": ["mean", "std", "median", "min", "max"],
     "sum_of_dist": ["mean", "std", "median", "min", "max"],
     "delay": ["mean", "std", "median", "min", "max"],
     "feasible" : ["mean"] 
 }).reset_index()
 
 stats_feasible = df_feasible_grouped.agg({
-    "computation_time_cpu": ["mean", "std", "median", "min", "max"],
-    "computation_time_wall": ["mean", "std", "median", "min", "max"],
+    "experiment_time_cpu": ["mean", "std", "median", "min", "max"],
+    "experiment_time_wall": ["mean", "std", "median", "min", "max"],
     "expanded": ["mean", "std", "median", "min", "max"],
     "generated": ["mean", "std", "median", "min", "max"],
-    "makespan": ["mean", "std", "median", "min", "max"],
-    "sum_of_cost": ["mean", "std", "median", "min", "max"],
+    "init_sol_makespan": ["mean", "std", "median", "min", "max"],
+    "init_sol_sum_of_cost": ["mean", "std", "median", "min", "max"],
     "sum_of_dist": ["mean", "std", "median", "min", "max"],
     "delay": ["mean", "std", "median", "min", "max"],
     "feasible" : ["mean"] 
 }).reset_index()
 
 # Define the metrics to plot
-metric_names = ["feasible", "computation_time_cpu", "computation_time_wall", "expanded", "sum_of_cost", "delay"]
+metric_names = ["feasible", "experiment_time_cpu", "experiment_time_wall", "expanded", "init_sol_sum_of_cost", "delay"]
 
 # Get unique maps
 unique_maps = stats["map_name"].unique()
