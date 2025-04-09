@@ -128,6 +128,12 @@ void NodePool::merge_extra()
 
 auto SIPP::plan(int agent_num, const std::unordered_set<int>& already_planned) -> TimePointPath
 {
+  // reset vector of blocked counts
+  // if (settings.generate_blocked)
+  // {
+  //   blocked_counts.resize(0, instance.get_num_of_agents());
+  // }
+
   if (settings.implementation == SIPP_implementation::SIPP_suboptimal)
   {
     // suboptimal sipp

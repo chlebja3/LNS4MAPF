@@ -31,6 +31,7 @@ public:
   SIPP_implementation implementation;
   INFO_type           info_type;
   double              w;
+  // bool                generate_blocked = false;
 };
 
 namespace sipp
@@ -147,4 +148,7 @@ private:
   std::vector<int>     known_min;  // known node database
   std::mt19937&        rnd_generator;
   const SIPP_settings& settings;
+
+  // for destroy operator that takes into account which agents block other agents
+  // std::vector<int> blocked_counts;
 };

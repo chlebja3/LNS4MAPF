@@ -21,6 +21,35 @@
 #include "utils.h"
 #define PROGRESS_BAR_WIDTH 100
 
+enum class destroy_algorithm
+{
+  RANDOM_4,
+  RANDOM_8,
+  RANDOM_16,
+  RANDOM_32,
+  RANDOM_64,
+  RANDOMWALK_4,
+  RANDOMWALK_8,
+  RANDOMWALK_16,
+  RANDOMWALK_32,
+  RANDOMWALK_64,
+  INTERSECTION_4,
+  INTERSECTION_8,
+  INTERSECTION_16,
+  INTERSECTION_32,
+  INTERSECTION_64,
+  ADAPTIVE_4,
+  ADAPTIVE_8,
+  ADAPTIVE_16,
+  ADAPTIVE_32,
+  ADAPTIVE_64,
+  RANDOM_CHOOSE_4,
+  RANDOM_CHOOSE_8,
+  RANDOM_CHOOSE_16,
+  RANDOM_CHOOSE_32,
+  RANDOM_CHOOSE_64
+};
+
 using AlgorithmType = std::variant<SIPP_implementation>;
 
 class Algorithm
@@ -47,6 +76,8 @@ public:
 
   [[nodiscard]] auto get_parameters_str() const -> std::vector<std::pair<std::string, std::string>>;
 };
+
+auto destroy_algorithm_to_settings(destroy_algorithm destroy_algo) -> std::pair<DESTROY_TYPE, int>;
 
 auto get_mapf_benchmark_path() -> std::string;
 

@@ -256,7 +256,7 @@ void Experiment::run()
 auto Experiment::get_seed_from_db(int agent_num, const std::string& map_name, const std::string& scene_name_stripped, int run) -> int
 {
   // Query the database
-  std::string command = "SELECT seed FROM experiments WHERE file_name = ?";
+  std::string command = "SELECT seed FROM " + experiment_name + "sipp_pp WHERE file_name = ?";
   // std::string       command             = "SELECT seed FROM experiments";
   const std::string experiment_filename = experiment_name + "_" + std::to_string(agent_num) + "agents_" + map_name + "-" +
                                           scene_name_stripped + "SIPP_lns_orig_" + std::to_string(run);
@@ -285,7 +285,7 @@ auto Experiment::get_seed_from_db(int agent_num, const std::string& map_name, co
   }
   else
   {
-    throw std::runtime_error("Can not prepare the SQL statement.");
+    // the experiment table does not exist in the database yet
   }
 
   sqlite3_finalize(stmt);

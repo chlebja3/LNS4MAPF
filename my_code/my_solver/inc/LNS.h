@@ -19,7 +19,8 @@ enum class DESTROY_TYPE
   RANDOM,
   RANDOMWALK,
   INTERSECTION,
-  ADAPTIVE
+  ADAPTIVE,
+  RANDOM_CHOOSE
 };
 
 class Destroy_settings
@@ -122,6 +123,7 @@ private:
                    std::unordered_set<int>& chosen) const -> bool;
   void destroy_intersection(Solution& sol) const;
   void destroy_adaptive(Solution& sol) const;
+  void destroy_random_choose(Solution& sol) const;
   void get_intersection_agents(std::unordered_set<int>& neighborhood, int current) const;
   void repair_default(Solution& sol) const;
 

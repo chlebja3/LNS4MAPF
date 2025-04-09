@@ -30,6 +30,10 @@ LNS::LNS(const Instance& instance_, std::mt19937& rnd_generator_, SharedData* sh
         {
           destroy_adaptive(sol);
         }
+        else if (settings.destroy_settings.type == DESTROY_TYPE::RANDOM_CHOOSE)
+        {
+          destroy_random_choose(sol);
+        }
         else
         {
           destroy_random(sol);
@@ -47,7 +51,8 @@ LNS::LNS(const Instance& instance_, std::mt19937& rnd_generator_, SharedData* sh
   if (settings.destroy_settings.type == DESTROY_TYPE::ADAPTIVE)
   {
     // the number of destroy operator is 1 less than destoroy types, because ADAPTIVE is not an operator
-    destroy_weights.assign(magic_enum::enum_count<DESTROY_TYPE>() - 1, 1);
+    // destroy_weights.assign(magic_enum::enum_count<DESTROY_TYPE>() - 1, 1);
+    destroy_weights.assign(3, 1);  // RANDOM, RANDOMWALK, INTERSECTION
   }
 }
 
@@ -162,7 +167,7 @@ void LNS::solve()
         }
         accepted = true;
         // remember the perturbed solution
-        std::cout << "Solution improved by: " << solution.sum_of_delays - perturbed_sol.sum_of_delays << std::endl;
+        // std::cout << "Solution improved by: " << solution.sum_of_delays - perturbed_sol.sum_of_delays << std::endl;
         solution = std::move(perturbed_sol);
       }
     }
@@ -623,7 +628,7 @@ void LNS::destroy_adaptive(Solution& sol) const
       throw std::runtime_error("Unknown DESTROY_TYPE encountered in adaptive destroy.");
     }
   }
-  assertm(chosen_type != DESTROY_TYPE::ADAPTIVE, "Did not select any destroy strategy.");
+  assertm(chosen_type != DESTROY_TYPE::ADAPTIVE && chosen_type != DESTROY_TYPE::RANDOM_CHOOSE, "Did not select any destroy strategy.");
 
   // std::cout << "Weights are: " << std::endl;
   // for (auto it : destroy_weights)
@@ -643,6 +648,27 @@ void LNS::destroy_adaptive(Solution& sol) const
       destroy_randomwalk(sol);
       break;
     case DESTROY_TYPE::INTERSECTION:
+      destroy_intersection(sol);
+      break;
+    default:
+      throw std::runtime_error("Unknown DESTROY_TYPE encountered in adaptive destroy.");
+  }
+}
+
+void LNS::destroy_random_choose(Solution& sol) const
+{
+  static std::uniform_int_distribution<int> dist(0, 3);
+  int                                       rand_value = dist(rnd_generator);
+  // apply the destroy operator
+  switch (rand_value)
+  {
+    case 0:
+      destroy_random(sol);
+      break;
+    case 1:
+      destroy_randomwalk(sol);
+      break;
+    case 2:
       destroy_intersection(sol);
       break;
     default:

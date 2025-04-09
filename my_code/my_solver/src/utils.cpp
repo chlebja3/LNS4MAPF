@@ -361,6 +361,21 @@ auto double_to_str(double num, char separating_char, int precision) -> std::stri
 
 auto any_to_str(const std::any& value) -> std::string
 {
+  // string
+  if (value.type() == typeid(std::string))
+  {
+    return std::any_cast<std::string>(value);
+  }
+  // string_view
+  if (value.type() == typeid(std::string_view))
+  {
+    return std::string(std::any_cast<std::string_view>(value));
+  }
+  // const char*
+  if (value.type() == typeid(const char*))
+  {
+    return std::string(std::any_cast<const char*>(value));
+  }
   // int
   if (value.type() == typeid(int))
   {
@@ -382,7 +397,7 @@ auto any_to_str(const std::any& value) -> std::string
     return std::to_string(static_cast<int>(std::any_cast<bool>(value)));
   }
   // unknown type
-  throw std::runtime_error("Unsupported parameter type: " + std::string(value.type().name()));
+  throw std::runtime_error("Unsupported parameter type in any to str: " + std::string(value.type().name()));
 }
 
 auto find_last_number(const std::string& str) -> int

@@ -103,6 +103,9 @@ target_link_libraries(sipp_pp_experiment MAPF_lib)
 add_executable(dummy_experiment src/experiments/dummy.cpp)
 target_link_libraries(dummy_experiment MAPF_lib)
 
+add_executable(destroy_experiment src/experiments/destroy.cpp)
+target_link_libraries(destroy_experiment MAPF_lib)
+
 
 # Add subdirectory for tests
 if (${ENABLE_TESTS})
