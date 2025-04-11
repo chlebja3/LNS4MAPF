@@ -65,6 +65,7 @@ $(function() {
 <div class="header">
   <div class="summary">
 <a href="#pub-methods">Public Member Functions</a> &#124;
+<a href="#pub-attribs">Public Attributes</a> &#124;
 <a href="#pri-methods">Private Member Functions</a> &#124;
 <a href="#pri-attribs">Private Attributes</a> &#124;
 <a href="classLNS-members.html">List of all members</a>  </div>
@@ -88,55 +89,123 @@ Collaboration diagram for LNS:</div>
 <div class="dyncontent">
 <div class="center"><img src="classLNS__coll__graph.png" border="0" usemap="#LNS_coll__map" alt="Collaboration graph"/></div>
 <map name="LNS_coll__map" id="LNS_coll__map">
-<area shape="rect" title=" " alt="" coords="19,171,66,197"/>
-<area shape="rect" href="classSolver.html" title=" " alt="" coords="11,95,74,121"/>
-<area shape="rect" href="classSolution.html" title=" " alt="" coords="5,5,80,32"/>
+<area shape="rect" title=" " alt="" coords="1100,232,1147,259"/>
+<area shape="rect" href="classSolver.html" title=" " alt="" coords="458,169,521,196"/>
+<area shape="rect" href="classInstance.html" title=" " alt="" coords="173,108,251,135"/>
+<area shape="rect" href="classConstraintTable.html" title=" " alt="" coords="817,75,940,101"/>
+<area shape="rect" href="classEdgeConstraintTableWithAgentNums.html" title=" " alt="" coords="359,56,620,83"/>
+<area shape="rect" href="classMap.html" title=" " alt="" coords="5,108,56,135"/>
+<area shape="rect" href="classSolution.html" title=" " alt="" coords="175,188,249,215"/>
+<area shape="rect" href="structomp__locks.html" title=" " alt="" coords="443,5,535,32"/>
+<area shape="rect" href="classSharedData.html" title=" " alt="" coords="829,205,928,232"/>
+<area shape="rect" href="classOperator.html" title=" " alt="" coords="839,259,918,285"/>
+<area shape="rect" href="structLogger.html" title=" " alt="" coords="845,309,912,336"/>
+<area shape="rect" href="classLNS__settings.html" title=" " alt="" coords="825,360,932,387"/>
+<area shape="rect" href="classDestroy__settings.html" title=" " alt="" coords="423,335,555,361"/>
+<area shape="rect" href="classSIPP__settings.html" title=" " alt="" coords="435,385,544,412"/>
 </map>
 <center><span class="legend">[<a href="graph_legend.html">legend</a>]</span></center></div>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:a58d602859ed1ebd958f5ae9a115768f0"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classLNS.html#a58d602859ed1ebd958f5ae9a115768f0">LNS</a> (std::shared_ptr&lt; <a class="el" href="classInstance.html">Instance</a> &gt; <a class="el" href="classSolver.html#ae9b1fd3eb740c676d07821b379fd5378">instance</a>)</td></tr>
-<tr class="separator:a58d602859ed1ebd958f5ae9a115768f0"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ac83d4e6e4e1bc164c49e4eae36035364"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classLNS.html#ac83d4e6e4e1bc164c49e4eae36035364">~LNS</a> ()=default</td></tr>
-<tr class="separator:ac83d4e6e4e1bc164c49e4eae36035364"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a566e47ae5b4577e3a70dc6f819f302be"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classLNS.html#a566e47ae5b4577e3a70dc6f819f302be">LNS</a> (const <a class="el" href="classInstance.html">Instance</a> &amp;instance_, std::mt19937 &amp;rnd_generator_, <a class="el" href="classSharedData.html">SharedData</a> *shared_data_, const <a class="el" href="classLNS__settings.html">LNS_settings</a> &amp;settings_)</td></tr>
+<tr class="separator:a566e47ae5b4577e3a70dc6f819f302be"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0940ae0dc7588b19b32f5a13c0cc66aa"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classLNS.html#a0940ae0dc7588b19b32f5a13c0cc66aa">~LNS</a> () override=default</td></tr>
+<tr class="separator:a0940ae0dc7588b19b32f5a13c0cc66aa"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ab4a4826221160701ee3cf6ca93feb1f7"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classLNS.html#ab4a4826221160701ee3cf6ca93feb1f7">solve</a> () override</td></tr>
 <tr class="separator:ab4a4826221160701ee3cf6ca93feb1f7"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a290efe4a8ed01de2c3c646ab661e7b18"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classLNS.html#a290efe4a8ed01de2c3c646ab661e7b18">find_initial_solution</a> ()</td></tr>
-<tr class="separator:a290efe4a8ed01de2c3c646ab661e7b18"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab3adf7c10423f40dbbf163c99250bf02"><td class="memItemLeft" align="right" valign="top">auto&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classLNS.html#ab3adf7c10423f40dbbf163c99250bf02">find_initial_solution</a> () -&gt; bool</td></tr>
+<tr class="separator:ab3adf7c10423f40dbbf163c99250bf02"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:abdf4c5b6995536dc47e2327a045b5c58"><td class="memItemLeft" align="right" valign="top">auto&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classLNS.html#abdf4c5b6995536dc47e2327a045b5c58">PrioritizedPlanning</a> () -&gt; <a class="el" href="classSolution.html">Solution</a></td></tr>
+<tr class="separator:abdf4c5b6995536dc47e2327a045b5c58"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:acbd3a90edf83dc926ce444873cabc269"><td class="memItemLeft" align="right" valign="top">auto&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classLNS.html#acbd3a90edf83dc926ce444873cabc269">get_num_of_generated_nodes</a> () const -&gt; int</td></tr>
+<tr class="separator:acbd3a90edf83dc926ce444873cabc269"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a084bdc7fe557b0d491d07c4ec1b9f059"><td class="memItemLeft" align="right" valign="top">auto&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classLNS.html#a084bdc7fe557b0d491d07c4ec1b9f059">get_num_of_expanded_nodes</a> () const -&gt; int</td></tr>
+<tr class="separator:a084bdc7fe557b0d491d07c4ec1b9f059"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a319d877bb15af0145e03c374929d3ddc"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classLNS.html#a319d877bb15af0145e03c374929d3ddc">discard_solution</a> (const <a class="el" href="classSolution.html">Solution</a> &amp;sol, const <a class="el" href="classSolution.html">Solution</a> &amp;prev_sol) const</td></tr>
+<tr class="separator:a319d877bb15af0145e03c374929d3ddc"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a658e49decd804a9fa1a08d065ae6304d"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classLNS.html#a658e49decd804a9fa1a08d065ae6304d">initialize_constraint_table</a> (const std::vector&lt; <a class="el" href="utils_8h.html#a64881685b4fe27a0cf599222d5fb1c72">TimePointPath</a> &gt; &amp;paths)</td></tr>
+<tr class="separator:a658e49decd804a9fa1a08d065ae6304d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="inherit_header pub_methods_classSolver"><td colspan="2" onclick="javascript:toggleInherit('pub_methods_classSolver')"><img src="closed.png" alt="-"/>&#160;Public Member Functions inherited from <a class="el" href="classSolver.html">Solver</a></td></tr>
-<tr class="memitem:a25ed4ecbce291f8e077c66a386d3c4d9 inherit pub_methods_classSolver"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSolver.html#a25ed4ecbce291f8e077c66a386d3c4d9">Solver</a> (const std::string &amp;<a class="el" href="classSolver.html#aa4a44135625afde16684f6e372082851">name</a>, std::shared_ptr&lt; <a class="el" href="classInstance.html">Instance</a> &gt; <a class="el" href="classSolver.html#ae9b1fd3eb740c676d07821b379fd5378">instance</a>)</td></tr>
-<tr class="separator:a25ed4ecbce291f8e077c66a386d3c4d9 inherit pub_methods_classSolver"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a9f2fe57e946337cb3225e16004b4db70 inherit pub_methods_classSolver"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSolver.html#a9f2fe57e946337cb3225e16004b4db70">Solver</a> (std::string name_, const <a class="el" href="classInstance.html">Instance</a> &amp;instance_, std::mt19937 &amp;rnd_generator_)</td></tr>
+<tr class="separator:a9f2fe57e946337cb3225e16004b4db70 inherit pub_methods_classSolver"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a83ce5ff88fb25719ccfc5fc4584cece3 inherit pub_methods_classSolver"><td class="memItemLeft" align="right" valign="top">virtual&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSolver.html#a83ce5ff88fb25719ccfc5fc4584cece3">~Solver</a> ()=default</td></tr>
 <tr class="separator:a83ce5ff88fb25719ccfc5fc4584cece3 inherit pub_methods_classSolver"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
-<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pri-methods"></a>
-Private Member Functions</h2></td></tr>
-<tr class="memitem:aa069b8461751ab59f9e86885bb7a510a"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classSolution.html">Solution</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classLNS.html#aa069b8461751ab59f9e86885bb7a510a">PrioritizedPlanning</a> ()</td></tr>
-<tr class="separator:aa069b8461751ab59f9e86885bb7a510a"><td class="memSeparator" colspan="2">&#160;</td></tr>
-</table><table class="memberdecls">
-<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pri-attribs"></a>
-Private Attributes</h2></td></tr>
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-attribs"></a>
+Public Attributes</h2></td></tr>
+<tr class="memitem:a2cb43f61e571001c851515e31dfb3d92"><td class="memItemLeft" align="right" valign="top">std::vector&lt; <a class="el" href="IterInfo_8h.html#a59a5f038962657d012f917f2729557f4">SIPPInfo</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classLNS.html#a2cb43f61e571001c851515e31dfb3d92">sipp_info</a></td></tr>
+<tr class="separator:a2cb43f61e571001c851515e31dfb3d92"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a8378a9145deb56139e5de070bff49631"><td class="memItemLeft" align="right" valign="top">std::unique_ptr&lt; <a class="el" href="classSIPP.html">SIPP</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classLNS.html#a8378a9145deb56139e5de070bff49631">planner</a></td></tr>
 <tr class="separator:a8378a9145deb56139e5de070bff49631"><td class="memSeparator" colspan="2">&#160;</td></tr>
-</table><table class="memberdecls">
-<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="inherited"></a>
-Additional Inherited Members</h2></td></tr>
+<tr class="memitem:aa3a69d859bc8fdafcb7d1edb77b7588b"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classOperator.html">Operator</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classLNS.html#aa3a69d859bc8fdafcb7d1edb77b7588b">destroy_operator</a></td></tr>
+<tr class="separator:aa3a69d859bc8fdafcb7d1edb77b7588b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a06e41e84eb4a32488fc76c32b611fdb4"><td class="memItemLeft" align="right" valign="top">std::unordered_set&lt; int &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classLNS.html#a06e41e84eb4a32488fc76c32b611fdb4">already_planned</a></td></tr>
+<tr class="separator:a06e41e84eb4a32488fc76c32b611fdb4"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a77618e63b8ce77b718ff2c184a4d5f16"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structLogger.html">Logger</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classLNS.html#a77618e63b8ce77b718ff2c184a4d5f16">log</a></td></tr>
+<tr class="separator:a77618e63b8ce77b718ff2c184a4d5f16"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="inherit_header pub_attribs_classSolver"><td colspan="2" onclick="javascript:toggleInherit('pub_attribs_classSolver')"><img src="closed.png" alt="-"/>&#160;Public Attributes inherited from <a class="el" href="classSolver.html">Solver</a></td></tr>
 <tr class="memitem:aa4a44135625afde16684f6e372082851 inherit pub_attribs_classSolver"><td class="memItemLeft" align="right" valign="top">const std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSolver.html#aa4a44135625afde16684f6e372082851">name</a></td></tr>
 <tr class="separator:aa4a44135625afde16684f6e372082851 inherit pub_attribs_classSolver"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ae9b1fd3eb740c676d07821b379fd5378 inherit pub_attribs_classSolver"><td class="memItemLeft" align="right" valign="top">std::shared_ptr&lt; <a class="el" href="classInstance.html">Instance</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSolver.html#ae9b1fd3eb740c676d07821b379fd5378">instance</a></td></tr>
-<tr class="separator:ae9b1fd3eb740c676d07821b379fd5378 inherit pub_attribs_classSolver"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="inherit_header pro_attribs_classSolver"><td colspan="2" onclick="javascript:toggleInherit('pro_attribs_classSolver')"><img src="closed.png" alt="-"/>&#160;Protected Attributes inherited from <a class="el" href="classSolver.html">Solver</a></td></tr>
-<tr class="memitem:aaac1eef7e7e0dbba4cb34e86110c2dc2 inherit pro_attribs_classSolver"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classSolution.html">Solution</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSolver.html#aaac1eef7e7e0dbba4cb34e86110c2dc2">solution</a></td></tr>
-<tr class="separator:aaac1eef7e7e0dbba4cb34e86110c2dc2 inherit pro_attribs_classSolver"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aab0194de0c17e2988aa14a59b7da6b45 inherit pub_attribs_classSolver"><td class="memItemLeft" align="right" valign="top">const <a class="el" href="classInstance.html">Instance</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSolver.html#aab0194de0c17e2988aa14a59b7da6b45">instance</a></td></tr>
+<tr class="separator:aab0194de0c17e2988aa14a59b7da6b45 inherit pub_attribs_classSolver"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aaac1eef7e7e0dbba4cb34e86110c2dc2 inherit pub_attribs_classSolver"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classSolution.html">Solution</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSolver.html#aaac1eef7e7e0dbba4cb34e86110c2dc2">solution</a></td></tr>
+<tr class="separator:aaac1eef7e7e0dbba4cb34e86110c2dc2 inherit pub_attribs_classSolver"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a189b8b0b44364f4eb7e360ac5dc81290 inherit pub_attribs_classSolver"><td class="memItemLeft" align="right" valign="top">std::mt19937 &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSolver.html#a189b8b0b44364f4eb7e360ac5dc81290">rnd_generator</a></td></tr>
+<tr class="separator:a189b8b0b44364f4eb7e360ac5dc81290 inherit pub_attribs_classSolver"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pri-methods"></a>
+Private Member Functions</h2></td></tr>
+<tr class="memitem:a27bbdb3f70a081c26dd031c6756b1e95"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classLNS.html#a27bbdb3f70a081c26dd031c6756b1e95">destroy_random</a> (<a class="el" href="classSolution.html">Solution</a> &amp;sol) const</td></tr>
+<tr class="separator:a27bbdb3f70a081c26dd031c6756b1e95"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a4888343908bdd86069e09e7a3796a437"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classLNS.html#a4888343908bdd86069e09e7a3796a437">destroy_randomwalk</a> (<a class="el" href="classSolution.html">Solution</a> &amp;sol) const</td></tr>
+<tr class="separator:a4888343908bdd86069e09e7a3796a437"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab1f4c7e8bab95f7208ea9f937070fc9e"><td class="memItemLeft" align="right" valign="top">auto&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classLNS.html#ab1f4c7e8bab95f7208ea9f937070fc9e">random_walk</a> (int agent_num, int neighborhood_size, int start_location, int start_time, int upperbound, std::unordered_set&lt; int &gt; &amp;chosen) const -&gt; bool</td></tr>
+<tr class="separator:ab1f4c7e8bab95f7208ea9f937070fc9e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a5ccad09a04930841c3615ecf8ec0972d"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classLNS.html#a5ccad09a04930841c3615ecf8ec0972d">destroy_intersection</a> (<a class="el" href="classSolution.html">Solution</a> &amp;sol) const</td></tr>
+<tr class="separator:a5ccad09a04930841c3615ecf8ec0972d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a412b23f4704dc3ce9e01fe0331ca8728"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classLNS.html#a412b23f4704dc3ce9e01fe0331ca8728">destroy_adaptive</a> (<a class="el" href="classSolution.html">Solution</a> &amp;sol) const</td></tr>
+<tr class="separator:a412b23f4704dc3ce9e01fe0331ca8728"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af68cb150f64a0c8f249057ab57364f48"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classLNS.html#af68cb150f64a0c8f249057ab57364f48">destroy_random_choose</a> (<a class="el" href="classSolution.html">Solution</a> &amp;sol) const</td></tr>
+<tr class="separator:af68cb150f64a0c8f249057ab57364f48"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a852ca0c6ca9152bef516c29f3c210f66"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classLNS.html#a852ca0c6ca9152bef516c29f3c210f66">get_intersection_agents</a> (std::unordered_set&lt; int &gt; &amp;neighborhood, int current) const</td></tr>
+<tr class="separator:a852ca0c6ca9152bef516c29f3c210f66"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af3084016c73f066f5e33e0d4847b50c2"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classLNS.html#af3084016c73f066f5e33e0d4847b50c2">repair_default</a> (<a class="el" href="classSolution.html">Solution</a> &amp;sol) const</td></tr>
+<tr class="separator:af3084016c73f066f5e33e0d4847b50c2"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pri-attribs"></a>
+Private Attributes</h2></td></tr>
+<tr class="memitem:afb4bb32a788697e266793ef0bcf3b0f0"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classSharedData.html">SharedData</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classLNS.html#afb4bb32a788697e266793ef0bcf3b0f0">shared_data</a></td></tr>
+<tr class="separator:afb4bb32a788697e266793ef0bcf3b0f0"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a97b14223f5dd82ff88993020c5ff1033"><td class="memItemLeft" align="right" valign="top">const <a class="el" href="classLNS__settings.html">LNS_settings</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classLNS.html#a97b14223f5dd82ff88993020c5ff1033">settings</a></td></tr>
+<tr class="separator:a97b14223f5dd82ff88993020c5ff1033"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae17baaf28f9e3ad95783e8d42c8a5ad4"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classLNS.html#ae17baaf28f9e3ad95783e8d42c8a5ad4">iteration_num</a> = 0</td></tr>
+<tr class="separator:ae17baaf28f9e3ad95783e8d42c8a5ad4"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a74f5c3ff08ec039b54e2b0d2e13d7902"><td class="memItemLeft" align="right" valign="top">double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classLNS.html#a74f5c3ff08ec039b54e2b0d2e13d7902">initial_solution_time</a></td></tr>
+<tr class="separator:a74f5c3ff08ec039b54e2b0d2e13d7902"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:acacfb0443661c0e8d6ce17593867cbc6"><td class="memItemLeft" align="right" valign="top">double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classLNS.html#acacfb0443661c0e8d6ce17593867cbc6">curr_time</a></td></tr>
+<tr class="separator:acacfb0443661c0e8d6ce17593867cbc6"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a734559daeb3e2ecfa465d9575a5da016"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classOperator.html">Operator</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classLNS.html#a734559daeb3e2ecfa465d9575a5da016">repair_operator</a></td></tr>
+<tr class="separator:a734559daeb3e2ecfa465d9575a5da016"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa4990dc0e715c5a94c1c30dbbf7c84ea"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classConstraintTable.html">ConstraintTable</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classLNS.html#aa4990dc0e715c5a94c1c30dbbf7c84ea">constraint_table</a></td></tr>
+<tr class="separator:aa4990dc0e715c5a94c1c30dbbf7c84ea"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a853e6f2210af2d01e2835c131270ade8"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classLNS.html#a853e6f2210af2d01e2835c131270ade8">constraint_table_initialized</a> = false</td></tr>
+<tr class="separator:a853e6f2210af2d01e2835c131270ade8"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad1354e3b4f6fd645e9cf32b29ccbee3e"><td class="memItemLeft" align="right" valign="top">std::vector&lt; double &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classLNS.html#ad1354e3b4f6fd645e9cf32b29ccbee3e">destroy_weights</a></td></tr>
+<tr class="separator:ad1354e3b4f6fd645e9cf32b29ccbee3e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac50a61432a275dd973a73b38c2af2eba"><td class="memItemLeft" align="right" valign="top">double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classLNS.html#ac50a61432a275dd973a73b38c2af2eba">reaction_factor</a> = 0.01</td></tr>
+<tr class="separator:ac50a61432a275dd973a73b38c2af2eba"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac9220182d3a84c5a247253967adaf2a5"><td class="memItemLeft" align="right" valign="top">double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classLNS.html#ac9220182d3a84c5a247253967adaf2a5">decay_factor</a> = 0.01</td></tr>
+<tr class="separator:ac9220182d3a84c5a247253967adaf2a5"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a53a18b76bacdfa7786da654785bd7ad7"><td class="memItemLeft" align="right" valign="top"><a class="el" href="LNS_8h.html#ad0e71dfd813044bba0ee48403ddcf2d0">DESTROY_TYPE</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classLNS.html#a53a18b76bacdfa7786da654785bd7ad7">last_destroy_strategy</a></td></tr>
+<tr class="separator:a53a18b76bacdfa7786da654785bd7ad7"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock">
-<p class="definition">Definition at line <a class="el" href="LNS_8h_source.html#l00012">12</a> of file <a class="el" href="LNS_8h_source.html">LNS.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="LNS_8h_source.html#l00085">85</a> of file <a class="el" href="LNS_8h_source.html">LNS.h</a>.</p>
 </div><h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
-<a id="a58d602859ed1ebd958f5ae9a115768f0"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a58d602859ed1ebd958f5ae9a115768f0">&#9670;&nbsp;</a></span>LNS()</h2>
+<a id="a566e47ae5b4577e3a70dc6f819f302be"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a566e47ae5b4577e3a70dc6f819f302be">&#9670;&nbsp;</a></span>LNS()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -144,19 +213,41 @@ Additional Inherited Members</h2></td></tr>
         <tr>
           <td class="memname">LNS::LNS </td>
           <td>(</td>
-          <td class="paramtype">std::shared_ptr&lt; <a class="el" href="classInstance.html">Instance</a> &gt;&#160;</td>
-          <td class="paramname"><em>instance</em></td><td>)</td>
+          <td class="paramtype">const <a class="el" href="classInstance.html">Instance</a> &amp;&#160;</td>
+          <td class="paramname"><em>instance_</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
           <td></td>
+          <td class="paramtype">std::mt19937 &amp;&#160;</td>
+          <td class="paramname"><em>rnd_generator_</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="classSharedData.html">SharedData</a> *&#160;</td>
+          <td class="paramname"><em>shared_data_</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const <a class="el" href="classLNS__settings.html">LNS_settings</a> &amp;&#160;</td>
+          <td class="paramname"><em>settings_</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
         </tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="LNS_8cpp_source.html#l00013">13</a> of file <a class="el" href="LNS_8cpp_source.html">LNS.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="LNS_8cpp_source.html#l00018">18</a> of file <a class="el" href="LNS_8cpp_source.html">LNS.cpp</a>.</p>
 
 </div>
 </div>
-<a id="ac83d4e6e4e1bc164c49e4eae36035364"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ac83d4e6e4e1bc164c49e4eae36035364">&#9670;&nbsp;</a></span>~LNS()</h2>
+<a id="a0940ae0dc7588b19b32f5a13c0cc66aa"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a0940ae0dc7588b19b32f5a13c0cc66aa">&#9670;&nbsp;</a></span>~LNS()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -173,7 +264,7 @@ Additional Inherited Members</h2></td></tr>
       </table>
   </td>
   <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">default</span></span>  </td>
+<span class="mlabels"><span class="mlabel">override</span><span class="mlabel">default</span></span>  </td>
   </tr>
 </table>
 </div><div class="memdoc">
@@ -181,36 +272,8 @@ Additional Inherited Members</h2></td></tr>
 </div>
 </div>
 <h2 class="groupheader">Member Function Documentation</h2>
-<a id="a290efe4a8ed01de2c3c646ab661e7b18"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a290efe4a8ed01de2c3c646ab661e7b18">&#9670;&nbsp;</a></span>find_initial_solution()</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">void LNS::find_initial_solution </td>
-          <td>(</td>
-          <td class="paramname"></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p class="definition">Definition at line <a class="el" href="LNS_8cpp_source.html#l00027">27</a> of file <a class="el" href="LNS_8cpp_source.html">LNS.cpp</a>.</p>
-<div class="dynheader">
-Here is the caller graph for this function:</div>
-<div class="dyncontent">
-<div class="center"><img src="classLNS_a290efe4a8ed01de2c3c646ab661e7b18_icgraph.png" border="0" usemap="#classLNS_a290efe4a8ed01de2c3c646ab661e7b18_icgraph" alt=""/></div>
-<map name="classLNS_a290efe4a8ed01de2c3c646ab661e7b18_icgraph" id="classLNS_a290efe4a8ed01de2c3c646ab661e7b18_icgraph">
-<area shape="rect" title=" " alt="" coords="144,5,327,32"/>
-<area shape="rect" href="classLNS.html#ab4a4826221160701ee3cf6ca93feb1f7" title=" " alt="" coords="5,5,96,32"/>
-</map>
-</div>
-
-</div>
-</div>
-<a id="aa069b8461751ab59f9e86885bb7a510a"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aa069b8461751ab59f9e86885bb7a510a">&#9670;&nbsp;</a></span>PrioritizedPlanning()</h2>
+<a id="a412b23f4704dc3ce9e01fe0331ca8728"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a412b23f4704dc3ce9e01fe0331ca8728">&#9670;&nbsp;</a></span>destroy_adaptive()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -219,10 +282,11 @@ Here is the caller graph for this function:</div>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="classSolution.html">Solution</a> LNS::PrioritizedPlanning </td>
+          <td class="memname">void LNS::destroy_adaptive </td>
           <td>(</td>
-          <td class="paramname"></td><td>)</td>
-          <td></td>
+          <td class="paramtype"><a class="el" href="classSolution.html">Solution</a> &amp;&#160;</td>
+          <td class="paramname"><em>sol</em></td><td>)</td>
+          <td> const</td>
         </tr>
       </table>
   </td>
@@ -232,17 +296,520 @@ Here is the caller graph for this function:</div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="LNS_8cpp_source.html#l00033">33</a> of file <a class="el" href="LNS_8cpp_source.html">LNS.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="LNS_8cpp_source.html#l00603">603</a> of file <a class="el" href="LNS_8cpp_source.html">LNS.cpp</a>.</p>
 <div class="dynheader">
 Here is the caller graph for this function:</div>
 <div class="dyncontent">
-<div class="center"><img src="classLNS_aa069b8461751ab59f9e86885bb7a510a_icgraph.png" border="0" usemap="#classLNS_aa069b8461751ab59f9e86885bb7a510a_icgraph" alt=""/></div>
-<map name="classLNS_aa069b8461751ab59f9e86885bb7a510a_icgraph" id="classLNS_aa069b8461751ab59f9e86885bb7a510a_icgraph">
-<area shape="rect" title=" " alt="" coords="375,5,552,32"/>
-<area shape="rect" href="classLNS.html#a290efe4a8ed01de2c3c646ab661e7b18" title=" " alt="" coords="144,5,327,32"/>
-<area shape="rect" href="classLNS.html#ab4a4826221160701ee3cf6ca93feb1f7" title=" " alt="" coords="5,5,96,32"/>
+<div class="center"><img src="classLNS_a412b23f4704dc3ce9e01fe0331ca8728_icgraph.png" border="0" usemap="#classLNS_a412b23f4704dc3ce9e01fe0331ca8728_icgraph" alt=""/></div>
+<map name="classLNS_a412b23f4704dc3ce9e01fe0331ca8728_icgraph" id="classLNS_a412b23f4704dc3ce9e01fe0331ca8728_icgraph">
+<area shape="rect" title=" " alt="" coords="133,5,301,32"/>
+<area shape="rect" href="classLNS.html#a566e47ae5b4577e3a70dc6f819f302be" title=" " alt="" coords="5,5,85,32"/>
 </map>
 </div>
+
+</div>
+</div>
+<a id="a5ccad09a04930841c3615ecf8ec0972d"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a5ccad09a04930841c3615ecf8ec0972d">&#9670;&nbsp;</a></span>destroy_intersection()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void LNS::destroy_intersection </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="classSolution.html">Solution</a> &amp;&#160;</td>
+          <td class="paramname"><em>sol</em></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">private</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="LNS_8cpp_source.html#l00477">477</a> of file <a class="el" href="LNS_8cpp_source.html">LNS.cpp</a>.</p>
+<div class="dynheader">
+Here is the caller graph for this function:</div>
+<div class="dyncontent">
+<div class="center"><img src="classLNS_a5ccad09a04930841c3615ecf8ec0972d_icgraph.png" border="0" usemap="#classLNS_a5ccad09a04930841c3615ecf8ec0972d_icgraph" alt=""/></div>
+<map name="classLNS_a5ccad09a04930841c3615ecf8ec0972d_icgraph" id="classLNS_a5ccad09a04930841c3615ecf8ec0972d_icgraph">
+<area shape="rect" title=" " alt="" coords="349,56,537,83"/>
+<area shape="rect" href="classLNS.html#a412b23f4704dc3ce9e01fe0331ca8728" title=" " alt="" coords="133,5,301,32"/>
+<area shape="rect" href="classLNS.html#a566e47ae5b4577e3a70dc6f819f302be" title=" " alt="" coords="5,56,85,83"/>
+<area shape="rect" href="classLNS.html#af68cb150f64a0c8f249057ab57364f48" title=" " alt="" coords="137,107,298,149"/>
+</map>
+</div>
+
+</div>
+</div>
+<a id="a27bbdb3f70a081c26dd031c6756b1e95"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a27bbdb3f70a081c26dd031c6756b1e95">&#9670;&nbsp;</a></span>destroy_random()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void LNS::destroy_random </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="classSolution.html">Solution</a> &amp;&#160;</td>
+          <td class="paramname"><em>sol</em></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">private</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="LNS_8cpp_source.html#l00297">297</a> of file <a class="el" href="LNS_8cpp_source.html">LNS.cpp</a>.</p>
+<div class="dynheader">
+Here is the caller graph for this function:</div>
+<div class="dyncontent">
+<div class="center"><img src="classLNS_a27bbdb3f70a081c26dd031c6756b1e95_icgraph.png" border="0" usemap="#classLNS_a27bbdb3f70a081c26dd031c6756b1e95_icgraph" alt=""/></div>
+<map name="classLNS_a27bbdb3f70a081c26dd031c6756b1e95_icgraph" id="classLNS_a27bbdb3f70a081c26dd031c6756b1e95_icgraph">
+<area shape="rect" title=" " alt="" coords="589,62,751,88"/>
+<area shape="rect" href="classLNS.html#a412b23f4704dc3ce9e01fe0331ca8728" title=" " alt="" coords="133,36,301,63"/>
+<area shape="rect" href="classLNS.html#a566e47ae5b4577e3a70dc6f819f302be" title=" " alt="" coords="5,62,85,88"/>
+<area shape="rect" href="classLNS.html#af68cb150f64a0c8f249057ab57364f48" title=" " alt="" coords="137,138,298,180"/>
+<area shape="rect" href="classLNS.html#a4888343908bdd86069e09e7a3796a437" title=" " alt="" coords="349,87,541,114"/>
+</map>
+</div>
+
+</div>
+</div>
+<a id="af68cb150f64a0c8f249057ab57364f48"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#af68cb150f64a0c8f249057ab57364f48">&#9670;&nbsp;</a></span>destroy_random_choose()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void LNS::destroy_random_choose </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="classSolution.html">Solution</a> &amp;&#160;</td>
+          <td class="paramname"><em>sol</em></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">private</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="LNS_8cpp_source.html#l00658">658</a> of file <a class="el" href="LNS_8cpp_source.html">LNS.cpp</a>.</p>
+<div class="dynheader">
+Here is the caller graph for this function:</div>
+<div class="dyncontent">
+<div class="center"><img src="classLNS_af68cb150f64a0c8f249057ab57364f48_icgraph.png" border="0" usemap="#classLNS_af68cb150f64a0c8f249057ab57364f48_icgraph" alt=""/></div>
+<map name="classLNS_af68cb150f64a0c8f249057ab57364f48_icgraph" id="classLNS_af68cb150f64a0c8f249057ab57364f48_icgraph">
+<area shape="rect" title=" " alt="" coords="133,5,295,47"/>
+<area shape="rect" href="classLNS.html#a566e47ae5b4577e3a70dc6f819f302be" title=" " alt="" coords="5,13,85,39"/>
+</map>
+</div>
+
+</div>
+</div>
+<a id="a4888343908bdd86069e09e7a3796a437"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a4888343908bdd86069e09e7a3796a437">&#9670;&nbsp;</a></span>destroy_randomwalk()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void LNS::destroy_randomwalk </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="classSolution.html">Solution</a> &amp;&#160;</td>
+          <td class="paramname"><em>sol</em></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">private</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="LNS_8cpp_source.html#l00313">313</a> of file <a class="el" href="LNS_8cpp_source.html">LNS.cpp</a>.</p>
+<div class="dynheader">
+Here is the caller graph for this function:</div>
+<div class="dyncontent">
+<div class="center"><img src="classLNS_a4888343908bdd86069e09e7a3796a437_icgraph.png" border="0" usemap="#classLNS_a4888343908bdd86069e09e7a3796a437_icgraph" alt=""/></div>
+<map name="classLNS_a4888343908bdd86069e09e7a3796a437_icgraph" id="classLNS_a4888343908bdd86069e09e7a3796a437_icgraph">
+<area shape="rect" title=" " alt="" coords="349,56,541,83"/>
+<area shape="rect" href="classLNS.html#a412b23f4704dc3ce9e01fe0331ca8728" title=" " alt="" coords="133,5,301,32"/>
+<area shape="rect" href="classLNS.html#a566e47ae5b4577e3a70dc6f819f302be" title=" " alt="" coords="5,56,85,83"/>
+<area shape="rect" href="classLNS.html#af68cb150f64a0c8f249057ab57364f48" title=" " alt="" coords="137,107,298,149"/>
+</map>
+</div>
+
+</div>
+</div>
+<a id="a319d877bb15af0145e03c374929d3ddc"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a319d877bb15af0145e03c374929d3ddc">&#9670;&nbsp;</a></span>discard_solution()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void LNS::discard_solution </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="classSolution.html">Solution</a> &amp;&#160;</td>
+          <td class="paramname"><em>sol</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const <a class="el" href="classSolution.html">Solution</a> &amp;&#160;</td>
+          <td class="paramname"><em>prev_sol</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td> const</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="LNS_8cpp_source.html#l00732">732</a> of file <a class="el" href="LNS_8cpp_source.html">LNS.cpp</a>.</p>
+<div class="dynheader">
+Here is the caller graph for this function:</div>
+<div class="dyncontent">
+<div class="center"><img src="classLNS_a319d877bb15af0145e03c374929d3ddc_icgraph.png" border="0" usemap="#classLNS_a319d877bb15af0145e03c374929d3ddc_icgraph" alt=""/></div>
+<map name="classLNS_a319d877bb15af0145e03c374929d3ddc_icgraph" id="classLNS_a319d877bb15af0145e03c374929d3ddc_icgraph">
+<area shape="rect" title=" " alt="" coords="452,5,613,32"/>
+<area shape="rect" href="classLNS.html#ab4a4826221160701ee3cf6ca93feb1f7" title=" " alt="" coords="313,5,404,32"/>
+<area shape="rect" href="destroy_8cpp.html#a1fe60ef45fb8a4e175eb3b737505f3d5" title=" " alt="" coords="108,5,265,32"/>
+<area shape="rect" href="destroy_8cpp.html#a808f40e2e9d6eb5463165c031dfa3eb1" title=" " alt="" coords="5,5,60,32"/>
+</map>
+</div>
+
+</div>
+</div>
+<a id="ab3adf7c10423f40dbbf163c99250bf02"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ab3adf7c10423f40dbbf163c99250bf02">&#9670;&nbsp;</a></span>find_initial_solution()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">auto LNS::find_initial_solution </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> -&gt; bool</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="LNS_8cpp_source.html#l00201">201</a> of file <a class="el" href="LNS_8cpp_source.html">LNS.cpp</a>.</p>
+<div class="dynheader">
+Here is the caller graph for this function:</div>
+<div class="dyncontent">
+<div class="center"><img src="classLNS_ab3adf7c10423f40dbbf163c99250bf02_icgraph.png" border="0" usemap="#classLNS_ab3adf7c10423f40dbbf163c99250bf02_icgraph" alt=""/></div>
+<map name="classLNS_ab3adf7c10423f40dbbf163c99250bf02_icgraph" id="classLNS_ab3adf7c10423f40dbbf163c99250bf02_icgraph">
+<area shape="rect" title=" " alt="" coords="519,31,701,57"/>
+<area shape="rect" href="dummy_8cpp.html#a1fe60ef45fb8a4e175eb3b737505f3d5" title=" " alt="" coords="313,5,471,32"/>
+<area shape="rect" href="classLNS.html#ab4a4826221160701ee3cf6ca93feb1f7" title=" " alt="" coords="347,56,437,83"/>
+<area shape="rect" href="dummy_8cpp.html#a8216c1645620cdb2f629cde3ac02ffef" title=" " alt="" coords="159,5,214,32"/>
+<area shape="rect" href="destroy_8cpp.html#a1fe60ef45fb8a4e175eb3b737505f3d5" title=" " alt="" coords="108,56,265,83"/>
+<area shape="rect" href="destroy_8cpp.html#a808f40e2e9d6eb5463165c031dfa3eb1" title=" " alt="" coords="5,56,60,83"/>
+</map>
+</div>
+
+</div>
+</div>
+<a id="a852ca0c6ca9152bef516c29f3c210f66"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a852ca0c6ca9152bef516c29f3c210f66">&#9670;&nbsp;</a></span>get_intersection_agents()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void LNS::get_intersection_agents </td>
+          <td>(</td>
+          <td class="paramtype">std::unordered_set&lt; int &gt; &amp;&#160;</td>
+          <td class="paramname"><em>neighborhood</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>current</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">private</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="LNS_8cpp_source.html#l00576">576</a> of file <a class="el" href="LNS_8cpp_source.html">LNS.cpp</a>.</p>
+<div class="dynheader">
+Here is the caller graph for this function:</div>
+<div class="dyncontent">
+<div class="center"><img src="classLNS_a852ca0c6ca9152bef516c29f3c210f66_icgraph.png" border="0" usemap="#classLNS_a852ca0c6ca9152bef516c29f3c210f66_icgraph" alt=""/></div>
+<map name="classLNS_a852ca0c6ca9152bef516c29f3c210f66_icgraph" id="classLNS_a852ca0c6ca9152bef516c29f3c210f66_icgraph">
+<area shape="rect" title=" " alt="" coords="585,49,745,90"/>
+<area shape="rect" href="classLNS.html#a5ccad09a04930841c3615ecf8ec0972d" title=" " alt="" coords="349,56,537,83"/>
+<area shape="rect" href="classLNS.html#a412b23f4704dc3ce9e01fe0331ca8728" title=" " alt="" coords="133,5,301,32"/>
+<area shape="rect" href="classLNS.html#a566e47ae5b4577e3a70dc6f819f302be" title=" " alt="" coords="5,56,85,83"/>
+<area shape="rect" href="classLNS.html#af68cb150f64a0c8f249057ab57364f48" title=" " alt="" coords="137,107,298,149"/>
+</map>
+</div>
+
+</div>
+</div>
+<a id="a084bdc7fe557b0d491d07c4ec1b9f059"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a084bdc7fe557b0d491d07c4ec1b9f059">&#9670;&nbsp;</a></span>get_num_of_expanded_nodes()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">auto LNS::get_num_of_expanded_nodes </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const -&gt; int
+  </td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="LNS_8h_source.html#l00107">107</a> of file <a class="el" href="LNS_8h_source.html">LNS.h</a>.</p>
+<div class="dynheader">
+Here is the caller graph for this function:</div>
+<div class="dyncontent">
+<div class="center"><img src="classLNS_a084bdc7fe557b0d491d07c4ec1b9f059_icgraph.png" border="0" usemap="#classLNS_a084bdc7fe557b0d491d07c4ec1b9f059_icgraph" alt=""/></div>
+<map name="classLNS_a084bdc7fe557b0d491d07c4ec1b9f059_icgraph" id="classLNS_a084bdc7fe557b0d491d07c4ec1b9f059_icgraph">
+<area shape="rect" title=" " alt="" coords="180,5,383,47"/>
+<area shape="rect" href="classExperiment.html#ac3467eb067f8623c9cf3cd7c736a8c80" title=" " alt="" coords="5,13,132,39"/>
+</map>
+</div>
+
+</div>
+</div>
+<a id="acbd3a90edf83dc926ce444873cabc269"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#acbd3a90edf83dc926ce444873cabc269">&#9670;&nbsp;</a></span>get_num_of_generated_nodes()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">auto LNS::get_num_of_generated_nodes </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const -&gt; int
+  </td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="LNS_8h_source.html#l00103">103</a> of file <a class="el" href="LNS_8h_source.html">LNS.h</a>.</p>
+<div class="dynheader">
+Here is the caller graph for this function:</div>
+<div class="dyncontent">
+<div class="center"><img src="classLNS_acbd3a90edf83dc926ce444873cabc269_icgraph.png" border="0" usemap="#classLNS_acbd3a90edf83dc926ce444873cabc269_icgraph" alt=""/></div>
+<map name="classLNS_acbd3a90edf83dc926ce444873cabc269_icgraph" id="classLNS_acbd3a90edf83dc926ce444873cabc269_icgraph">
+<area shape="rect" title=" " alt="" coords="180,5,385,47"/>
+<area shape="rect" href="classExperiment.html#ac3467eb067f8623c9cf3cd7c736a8c80" title=" " alt="" coords="5,13,132,39"/>
+</map>
+</div>
+
+</div>
+</div>
+<a id="a658e49decd804a9fa1a08d065ae6304d"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a658e49decd804a9fa1a08d065ae6304d">&#9670;&nbsp;</a></span>initialize_constraint_table()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void LNS::initialize_constraint_table </td>
+          <td>(</td>
+          <td class="paramtype">const std::vector&lt; <a class="el" href="utils_8h.html#a64881685b4fe27a0cf599222d5fb1c72">TimePointPath</a> &gt; &amp;&#160;</td>
+          <td class="paramname"><em>paths</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="LNS_8cpp_source.html#l00060">60</a> of file <a class="el" href="LNS_8cpp_source.html">LNS.cpp</a>.</p>
+<div class="dynheader">
+Here is the caller graph for this function:</div>
+<div class="dyncontent">
+<div class="center"><img src="classLNS_a658e49decd804a9fa1a08d065ae6304d_icgraph.png" border="0" usemap="#classLNS_a658e49decd804a9fa1a08d065ae6304d_icgraph" alt=""/></div>
+<map name="classLNS_a658e49decd804a9fa1a08d065ae6304d_icgraph" id="classLNS_a658e49decd804a9fa1a08d065ae6304d_icgraph">
+<area shape="rect" title=" " alt="" coords="452,5,635,47"/>
+<area shape="rect" href="classLNS.html#ab4a4826221160701ee3cf6ca93feb1f7" title=" " alt="" coords="313,13,404,39"/>
+<area shape="rect" href="destroy_8cpp.html#a1fe60ef45fb8a4e175eb3b737505f3d5" title=" " alt="" coords="108,13,265,39"/>
+<area shape="rect" href="destroy_8cpp.html#a808f40e2e9d6eb5463165c031dfa3eb1" title=" " alt="" coords="5,13,60,39"/>
+</map>
+</div>
+
+</div>
+</div>
+<a id="abdf4c5b6995536dc47e2327a045b5c58"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#abdf4c5b6995536dc47e2327a045b5c58">&#9670;&nbsp;</a></span>PrioritizedPlanning()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">auto LNS::PrioritizedPlanning </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> -&gt; <a class="el" href="classSolution.html">Solution</a></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="LNS_8cpp_source.html#l00232">232</a> of file <a class="el" href="LNS_8cpp_source.html">LNS.cpp</a>.</p>
+
+</div>
+</div>
+<a id="ab1f4c7e8bab95f7208ea9f937070fc9e"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ab1f4c7e8bab95f7208ea9f937070fc9e">&#9670;&nbsp;</a></span>random_walk()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">auto LNS::random_walk </td>
+          <td>(</td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>agent_num</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>neighborhood_size</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>start_location</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>start_time</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>upperbound</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">std::unordered_set&lt; int &gt; &amp;&#160;</td>
+          <td class="paramname"><em>chosen</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td> const -&gt; bool</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">private</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="LNS_8cpp_source.html#l00438">438</a> of file <a class="el" href="LNS_8cpp_source.html">LNS.cpp</a>.</p>
+<div class="dynheader">
+Here is the caller graph for this function:</div>
+<div class="dyncontent">
+<div class="center"><img src="classLNS_ab1f4c7e8bab95f7208ea9f937070fc9e_icgraph.png" border="0" usemap="#classLNS_ab1f4c7e8bab95f7208ea9f937070fc9e_icgraph" alt=""/></div>
+<map name="classLNS_ab1f4c7e8bab95f7208ea9f937070fc9e_icgraph" id="classLNS_ab1f4c7e8bab95f7208ea9f937070fc9e_icgraph">
+<area shape="rect" title=" " alt="" coords="589,56,732,83"/>
+<area shape="rect" href="classLNS.html#a4888343908bdd86069e09e7a3796a437" title=" " alt="" coords="349,56,541,83"/>
+<area shape="rect" href="classLNS.html#a412b23f4704dc3ce9e01fe0331ca8728" title=" " alt="" coords="133,5,301,32"/>
+<area shape="rect" href="classLNS.html#a566e47ae5b4577e3a70dc6f819f302be" title=" " alt="" coords="5,56,85,83"/>
+<area shape="rect" href="classLNS.html#af68cb150f64a0c8f249057ab57364f48" title=" " alt="" coords="137,107,298,149"/>
+</map>
+</div>
+
+</div>
+</div>
+<a id="af3084016c73f066f5e33e0d4847b50c2"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#af3084016c73f066f5e33e0d4847b50c2">&#9670;&nbsp;</a></span>repair_default()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void LNS::repair_default </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="classSolution.html">Solution</a> &amp;&#160;</td>
+          <td class="paramname"><em>sol</em></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">private</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="LNS_8cpp_source.html#l00679">679</a> of file <a class="el" href="LNS_8cpp_source.html">LNS.cpp</a>.</p>
 
 </div>
 </div>
@@ -271,13 +838,23 @@ Here is the caller graph for this function:</div>
 
 <p>Implements <a class="el" href="classSolver.html#ad073be705a5da281c18b5f8423fda216">Solver</a>.</p>
 
-<p class="definition">Definition at line <a class="el" href="LNS_8cpp_source.html#l00019">19</a> of file <a class="el" href="LNS_8cpp_source.html">LNS.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="LNS_8cpp_source.html#l00074">74</a> of file <a class="el" href="LNS_8cpp_source.html">LNS.cpp</a>.</p>
+<div class="dynheader">
+Here is the caller graph for this function:</div>
+<div class="dyncontent">
+<div class="center"><img src="classLNS_ab4a4826221160701ee3cf6ca93feb1f7_icgraph.png" border="0" usemap="#classLNS_ab4a4826221160701ee3cf6ca93feb1f7_icgraph" alt=""/></div>
+<map name="classLNS_ab4a4826221160701ee3cf6ca93feb1f7_icgraph" id="classLNS_ab4a4826221160701ee3cf6ca93feb1f7_icgraph">
+<area shape="rect" title=" " alt="" coords="313,5,404,32"/>
+<area shape="rect" href="destroy_8cpp.html#a1fe60ef45fb8a4e175eb3b737505f3d5" title=" " alt="" coords="108,5,265,32"/>
+<area shape="rect" href="destroy_8cpp.html#a808f40e2e9d6eb5463165c031dfa3eb1" title=" " alt="" coords="5,5,60,32"/>
+</map>
+</div>
 
 </div>
 </div>
 <h2 class="groupheader">Member Data Documentation</h2>
-<a id="a8378a9145deb56139e5de070bff49631"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a8378a9145deb56139e5de070bff49631">&#9670;&nbsp;</a></span>planner</h2>
+<a id="a06e41e84eb4a32488fc76c32b611fdb4"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a06e41e84eb4a32488fc76c32b611fdb4">&#9670;&nbsp;</a></span>already_planned</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -286,7 +863,79 @@ Here is the caller graph for this function:</div>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">std::unique_ptr&lt;<a class="el" href="classSIPP.html">SIPP</a>&gt; LNS::planner</td>
+          <td class="memname">std::unordered_set&lt;int&gt; LNS::already_planned</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">mutable</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="LNS_8h_source.html#l00116">116</a> of file <a class="el" href="LNS_8h_source.html">LNS.h</a>.</p>
+
+</div>
+</div>
+<a id="aa4990dc0e715c5a94c1c30dbbf7c84ea"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aa4990dc0e715c5a94c1c30dbbf7c84ea">&#9670;&nbsp;</a></span>constraint_table</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classConstraintTable.html">ConstraintTable</a> LNS::constraint_table</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">mutable</span><span class="mlabel">private</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="LNS_8h_source.html#l00136">136</a> of file <a class="el" href="LNS_8h_source.html">LNS.h</a>.</p>
+
+</div>
+</div>
+<a id="a853e6f2210af2d01e2835c131270ade8"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a853e6f2210af2d01e2835c131270ade8">&#9670;&nbsp;</a></span>constraint_table_initialized</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool LNS::constraint_table_initialized = false</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">mutable</span><span class="mlabel">private</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="LNS_8h_source.html#l00137">137</a> of file <a class="el" href="LNS_8h_source.html">LNS.h</a>.</p>
+
+</div>
+</div>
+<a id="acacfb0443661c0e8d6ce17593867cbc6"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#acacfb0443661c0e8d6ce17593867cbc6">&#9670;&nbsp;</a></span>curr_time</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">double LNS::curr_time</td>
         </tr>
       </table>
   </td>
@@ -296,7 +945,295 @@ Here is the caller graph for this function:</div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="LNS_8h_source.html#l00028">28</a> of file <a class="el" href="LNS_8h_source.html">LNS.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="LNS_8h_source.html#l00134">134</a> of file <a class="el" href="LNS_8h_source.html">LNS.h</a>.</p>
+
+</div>
+</div>
+<a id="ac9220182d3a84c5a247253967adaf2a5"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ac9220182d3a84c5a247253967adaf2a5">&#9670;&nbsp;</a></span>decay_factor</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">double LNS::decay_factor = 0.01</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">private</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="LNS_8h_source.html#l00140">140</a> of file <a class="el" href="LNS_8h_source.html">LNS.h</a>.</p>
+
+</div>
+</div>
+<a id="aa3a69d859bc8fdafcb7d1edb77b7588b"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aa3a69d859bc8fdafcb7d1edb77b7588b">&#9670;&nbsp;</a></span>destroy_operator</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classOperator.html">Operator</a> LNS::destroy_operator</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="LNS_8h_source.html#l00115">115</a> of file <a class="el" href="LNS_8h_source.html">LNS.h</a>.</p>
+
+</div>
+</div>
+<a id="ad1354e3b4f6fd645e9cf32b29ccbee3e"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ad1354e3b4f6fd645e9cf32b29ccbee3e">&#9670;&nbsp;</a></span>destroy_weights</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::vector&lt;double&gt; LNS::destroy_weights</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">private</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="LNS_8h_source.html#l00138">138</a> of file <a class="el" href="LNS_8h_source.html">LNS.h</a>.</p>
+
+</div>
+</div>
+<a id="a74f5c3ff08ec039b54e2b0d2e13d7902"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a74f5c3ff08ec039b54e2b0d2e13d7902">&#9670;&nbsp;</a></span>initial_solution_time</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">double LNS::initial_solution_time</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">private</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="LNS_8h_source.html#l00133">133</a> of file <a class="el" href="LNS_8h_source.html">LNS.h</a>.</p>
+
+</div>
+</div>
+<a id="ae17baaf28f9e3ad95783e8d42c8a5ad4"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ae17baaf28f9e3ad95783e8d42c8a5ad4">&#9670;&nbsp;</a></span>iteration_num</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">int LNS::iteration_num = 0</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">private</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="LNS_8h_source.html#l00132">132</a> of file <a class="el" href="LNS_8h_source.html">LNS.h</a>.</p>
+
+</div>
+</div>
+<a id="a53a18b76bacdfa7786da654785bd7ad7"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a53a18b76bacdfa7786da654785bd7ad7">&#9670;&nbsp;</a></span>last_destroy_strategy</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="LNS_8h.html#ad0e71dfd813044bba0ee48403ddcf2d0">DESTROY_TYPE</a> LNS::last_destroy_strategy</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">mutable</span><span class="mlabel">private</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="LNS_8h_source.html#l00141">141</a> of file <a class="el" href="LNS_8h_source.html">LNS.h</a>.</p>
+
+</div>
+</div>
+<a id="a77618e63b8ce77b718ff2c184a4d5f16"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a77618e63b8ce77b718ff2c184a4d5f16">&#9670;&nbsp;</a></span>log</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="structLogger.html">Logger</a> LNS::log</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="LNS_8h_source.html#l00117">117</a> of file <a class="el" href="LNS_8h_source.html">LNS.h</a>.</p>
+
+</div>
+</div>
+<a id="a8378a9145deb56139e5de070bff49631"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a8378a9145deb56139e5de070bff49631">&#9670;&nbsp;</a></span>planner</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::unique_ptr&lt;<a class="el" href="classSIPP.html">SIPP</a>&gt; LNS::planner</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="LNS_8h_source.html#l00089">89</a> of file <a class="el" href="LNS_8h_source.html">LNS.h</a>.</p>
+
+</div>
+</div>
+<a id="ac50a61432a275dd973a73b38c2af2eba"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ac50a61432a275dd973a73b38c2af2eba">&#9670;&nbsp;</a></span>reaction_factor</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">double LNS::reaction_factor = 0.01</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">private</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="LNS_8h_source.html#l00139">139</a> of file <a class="el" href="LNS_8h_source.html">LNS.h</a>.</p>
+
+</div>
+</div>
+<a id="a734559daeb3e2ecfa465d9575a5da016"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a734559daeb3e2ecfa465d9575a5da016">&#9670;&nbsp;</a></span>repair_operator</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classOperator.html">Operator</a> LNS::repair_operator</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">private</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="LNS_8h_source.html#l00135">135</a> of file <a class="el" href="LNS_8h_source.html">LNS.h</a>.</p>
+
+</div>
+</div>
+<a id="a97b14223f5dd82ff88993020c5ff1033"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a97b14223f5dd82ff88993020c5ff1033">&#9670;&nbsp;</a></span>settings</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">const <a class="el" href="classLNS__settings.html">LNS_settings</a>&amp; LNS::settings</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">private</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="LNS_8h_source.html#l00131">131</a> of file <a class="el" href="LNS_8h_source.html">LNS.h</a>.</p>
+
+</div>
+</div>
+<a id="afb4bb32a788697e266793ef0bcf3b0f0"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#afb4bb32a788697e266793ef0bcf3b0f0">&#9670;&nbsp;</a></span>shared_data</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classSharedData.html">SharedData</a>* LNS::shared_data</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">private</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="LNS_8h_source.html#l00130">130</a> of file <a class="el" href="LNS_8h_source.html">LNS.h</a>.</p>
+
+</div>
+</div>
+<a id="a2cb43f61e571001c851515e31dfb3d92"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a2cb43f61e571001c851515e31dfb3d92">&#9670;&nbsp;</a></span>sipp_info</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::vector&lt;<a class="el" href="IterInfo_8h.html#a59a5f038962657d012f917f2729557f4">SIPPInfo</a>&gt; LNS::sipp_info</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">mutable</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="LNS_8h_source.html#l00088">88</a> of file <a class="el" href="LNS_8h_source.html">LNS.h</a>.</p>
 
 </div>
 </div>

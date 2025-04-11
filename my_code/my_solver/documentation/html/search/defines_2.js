@@ -1,4 +1,6 @@
 var searchData=
 [
-  ['goal_5fvis_5fthickness_269',['GOAL_VIS_THICKNESS',['../Visualizer_8cpp.html#adc8dced17a7a01c522597ffe1a6740ee',1,'Visualizer.cpp']]]
+  ['cell_5fsize_2037',['CELL_SIZE',['../Visualizer_8cpp.html#a7a4127f14f16563da90eb3c836bc404f',1,'Visualizer.cpp']]],
+  ['color_5fgrey_2038',['COLOR_GREY',['../Visualizer_8cpp.html#a502b77f3a488ac4b6331e37d0ee3a80e',1,'Visualizer.cpp']]],
+  ['ct_5fparallelization_2039',['CT_PARALLELIZATION',['../ConstraintTable_8h.html#a9c351cd9bc8a54e4f2e857bf1692e5c3',1,'ConstraintTable.h']]]
 ];

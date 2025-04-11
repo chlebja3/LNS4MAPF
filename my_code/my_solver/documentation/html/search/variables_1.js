@@ -1,5 +1,5 @@
 var searchData=
 [
-  ['comp_5fthread_226',['comp_thread',['../classComputation.html#a73090532312ed5f81ebcad2157607515',1,'Computation']]],
-  ['cost_227',['cost',['../classSolution.html#a2631db5798943bb7cc5cf0ab58951069',1,'Solution']]]
+  ['bsf_5fmakespan_1805',['bsf_makespan',['../structLogger.html#abba837b6a8793f9c213a90088c2ac46e',1,'Logger']]],
+  ['bsf_5fsolution_5fcost_1806',['bsf_solution_cost',['../structLogger.html#a5091656716eb80fdaefd1f10aeb8e4c5',1,'Logger']]]
 ];

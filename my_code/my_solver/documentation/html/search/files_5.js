@@ -1,7 +1,6 @@
 var searchData=
 [
-  ['sipp_2ecpp_157',['SIPP.cpp',['../SIPP_8cpp.html',1,'']]],
-  ['sipp_2eh_158',['SIPP.h',['../SIPP_8h.html',1,'']]],
-  ['solver_2ecpp_159',['Solver.cpp',['../Solver_8cpp.html',1,'']]],
-  ['solver_2eh_160',['Solver.h',['../Solver_8h.html',1,'']]]
+  ['main_2ecpp_1564',['main.cpp',['../main_8cpp.html',1,'']]],
+  ['map_2ecpp_1565',['Map.cpp',['../Map_8cpp.html',1,'']]],
+  ['map_2eh_1566',['Map.h',['../Map_8h.html',1,'']]]
 ];

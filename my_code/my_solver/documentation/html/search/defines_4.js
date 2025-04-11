@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['menu_5fbar_5fsize_271',['MENU_BAR_SIZE',['../Visualizer_8cpp.html#a1af5ada62e6a9082b879f52f96591d3b',1,'Visualizer.cpp']]]
+  ['experiment_5fname_2042',['EXPERIMENT_NAME',['../destroy_8cpp.html#a48874fb2ca6c431cc7a2659395a9abd9',1,'EXPERIMENT_NAME():&#160;destroy.cpp'],['../dummy_8cpp.html#a48874fb2ca6c431cc7a2659395a9abd9',1,'EXPERIMENT_NAME():&#160;dummy.cpp'],['../sipp__pp_8cpp.html#a48874fb2ca6c431cc7a2659395a9abd9',1,'EXPERIMENT_NAME():&#160;sipp_pp.cpp']]]
 ];

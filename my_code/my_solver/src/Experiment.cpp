@@ -12,7 +12,7 @@
 #include "Solver.h"
 
 Experiment::Experiment(std::string experiment_name_, std::function<void(LNS& vis)> experiment_function_, std::vector<std::string> maps_,
-                       std::vector<std::vector<int>> agent_nums_, const std::vector<Algorithm>& algorithms_, int runs_per_map_,
+                       std::vector<std::vector<int>> agent_nums_, std::vector<Algorithm>& algorithms_, int runs_per_map_,
                        bool show_progress_)
     : experiment_name(std::move(experiment_name_)),
       experiment_function(std::move(experiment_function_)),
@@ -176,7 +176,7 @@ void Experiment::run()
             seed = seed_from_db;
           }
 
-          const Algorithm& algo = algorithms[l];
+          Algorithm& algo = algorithms[l];
 
           // create the seeded random generator (for experiment reproducibility)
           auto                      rnd_generator       = std::mt19937(seed);

@@ -1,7 +1,4 @@
 <map id="Visualizer::start" name="Visualizer::start">
-<area shape="rect" id="node1" title=" " alt="" coords="597,56,721,83"/>
-<area shape="rect" id="node2" href="$classVisualizer.html#a26b09c3766ced9ebb8e7d2b278434d92" title=" " alt="" coords="379,5,549,32"/>
-<area shape="rect" id="node5" href="$main_8cpp.html#a3c04138a5bfe5d72780bb7e82a18e627" title=" " alt="" coords="437,56,491,83"/>
-<area shape="rect" id="node3" href="$classVisualizer.html#a2cb8ddcc81f5c0208f5113cee2d9806d" title=" " alt="" coords="168,31,331,57"/>
-<area shape="rect" id="node4" href="$classVisualizer.html#a531350c5ec8ec39867647997690fc9fb" title=" " alt="" coords="5,81,120,108"/>
+<area shape="rect" id="node1" title=" " alt="" coords="108,5,232,32"/>
+<area shape="rect" id="node2" href="$main_8cpp.html#a808f40e2e9d6eb5463165c031dfa3eb1" title=" " alt="" coords="5,5,60,32"/>
 </map>

@@ -1,0 +1,6 @@
+<map id="sipp::SIPPNode" name="sipp::SIPPNode">
+<area shape="rect" id="node1" title=" " alt="" coords="5,184,124,211"/>
+<area shape="rect" id="node2" href="$classNode.html" title=" " alt="" coords="15,95,71,121"/>
+<area shape="rect" id="node3" href="$classTimePoint.html" title=" " alt="" coords="96,95,183,121"/>
+<area shape="rect" id="node4" href="$classTimeInterval.html" title=" " alt="" coords="87,5,191,32"/>
+</map>

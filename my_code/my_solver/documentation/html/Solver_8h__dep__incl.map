@@ -1,9 +1,24 @@
 <map id="inc/Solver.h" name="inc/Solver.h">
-<area shape="rect" id="node1" title=" " alt="" coords="203,5,302,32"/>
-<area shape="rect" id="node2" href="$LNS_8h.html" title=" " alt="" coords="150,80,233,107"/>
-<area shape="rect" id="node7" href="$Solver_8cpp.html" title=" " alt="" coords="257,80,371,107"/>
-<area shape="rect" id="node3" href="$Computation_8h.html" title=" " alt="" coords="121,155,262,181"/>
-<area shape="rect" id="node4" href="$Computation_8cpp.html" title=" " alt="" coords="5,229,161,256"/>
-<area shape="rect" id="node6" href="$LNS_8cpp.html" title=" " alt="" coords="287,155,384,181"/>
-<area shape="rect" id="node5" href="$main_8cpp.html" title=" " alt="" coords="185,229,291,256"/>
+<area shape="rect" id="node1" title=" " alt="" coords="616,5,715,32"/>
+<area shape="rect" id="node2" href="$IterInfo_8h.html" title=" " alt="" coords="724,80,828,107"/>
+<area shape="rect" id="node4" href="$LNS_8h.html" title=" " alt="" coords="604,229,687,256"/>
+<area shape="rect" id="node11" href="$Experiment_8cpp.html" title=" " alt="" coords="5,461,152,487"/>
+<area shape="rect" id="node22" href="$Solver_8cpp.html" title=" " alt="" coords="853,80,966,107"/>
+<area shape="rect" id="node3" href="$SIPP_8h.html" title=" " alt="" coords="797,155,880,181"/>
+<area shape="rect" id="node6" href="$Visualizer_8h.html" title=" " alt="" coords="1222,379,1343,405"/>
+<area shape="rect" id="node19" href="$SharedData_8h.html" title=" " alt="" coords="949,155,1083,181"/>
+<area shape="rect" id="node21" href="$IterInfo_8cpp.html" title=" " alt="" coords="655,155,774,181"/>
+<area shape="rect" id="node7" href="$main_8cpp.html" title=" " alt="" coords="1081,461,1186,487"/>
+<area shape="rect" id="node17" href="$LNS_8cpp.html" title=" " alt="" coords="774,304,871,331"/>
+<area shape="rect" id="node18" href="$SIPP_8cpp.html" title=" " alt="" coords="773,229,872,256"/>
+<area shape="rect" id="node5" href="$Computation_8h.html" title=" " alt="" coords="947,304,1088,331"/>
+<area shape="rect" id="node9" href="$Computation_8cpp.html" title=" " alt="" coords="939,379,1095,405"/>
+<area shape="rect" id="node10" href="$Experiment_8h.html" title=" " alt="" coords="207,379,339,405"/>
+<area shape="rect" id="node12" href="$destroy_8cpp.html" title=" " alt="" coords="408,461,613,487"/>
+<area shape="rect" id="node14" href="$sipp__pp_8cpp.html" title=" " alt="" coords="638,453,797,495"/>
+<area shape="rect" id="node15" href="$experiment__utils_8h.html" title=" " alt="" coords="371,304,538,331"/>
+<area shape="rect" id="node8" href="$Visualizer_8cpp.html" title=" " alt="" coords="1215,461,1351,487"/>
+<area shape="rect" id="node13" href="$dummy_8cpp.html" title=" " alt="" coords="177,461,383,487"/>
+<area shape="rect" id="node16" href="$experiment__utils_8cpp.html" title=" " alt="" coords="363,379,546,405"/>
+<area shape="rect" id="node20" href="$SharedData_8cpp.html" title=" " alt="" coords="998,229,1146,256"/>
 </map>

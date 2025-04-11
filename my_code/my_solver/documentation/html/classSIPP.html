@@ -65,6 +65,8 @@ $(function() {
 <div class="header">
   <div class="summary">
 <a href="#pub-methods">Public Member Functions</a> &#124;
+<a href="#pub-attribs">Public Attributes</a> &#124;
+<a href="#pri-methods">Private Member Functions</a> &#124;
 <a href="#pri-attribs">Private Attributes</a> &#124;
 <a href="classSIPP-members.html">List of all members</a>  </div>
   <div class="headertitle">
@@ -78,31 +80,79 @@ Collaboration diagram for SIPP:</div>
 <div class="dyncontent">
 <div class="center"><img src="classSIPP__coll__graph.png" border="0" usemap="#SIPP_coll__map" alt="Collaboration graph"/></div>
 <map name="SIPP_coll__map" id="SIPP_coll__map">
-<area shape="rect" title=" " alt="" coords="5,95,56,121"/>
-<area shape="rect" href="classMap.html" title=" " alt="" coords="5,5,56,32"/>
+<area shape="rect" title=" " alt="" coords="154,363,205,389"/>
+<area shape="rect" href="classSafeIntervalTable.html" title=" " alt="" coords="37,273,172,300"/>
+<area shape="rect" href="classEdgeConstraintTable.html" title=" " alt="" coords="133,184,287,211"/>
+<area shape="rect" href="classInstance.html" title=" " alt="" coords="10,95,87,121"/>
+<area shape="rect" href="classMap.html" title=" " alt="" coords="23,5,74,32"/>
+<area shape="rect" href="structomp__locks.html" title=" " alt="" coords="312,184,404,211"/>
+<area shape="rect" href="classsipp_1_1NodePool.html" title=" " alt="" coords="200,273,319,300"/>
+<area shape="rect" href="classSIPP__settings.html" title=" " alt="" coords="343,273,453,300"/>
 </map>
 <center><span class="legend">[<a href="graph_legend.html">legend</a>]</span></center></div>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:aba7b0d1b66aa30198f93936060a51b55"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSIPP.html#aba7b0d1b66aa30198f93936060a51b55">SIPP</a> (const <a class="el" href="classMap.html">Map</a> &amp;<a class="el" href="classSIPP.html#af10f214f9cbd063536d3238fc45a7392">map_data</a>)</td></tr>
-<tr class="separator:aba7b0d1b66aa30198f93936060a51b55"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a87c760657e7e2503a4e82c5be14f285f"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSIPP.html#a87c760657e7e2503a4e82c5be14f285f">SIPP</a> (const <a class="el" href="classInstance.html">Instance</a> &amp;instance_, std::mt19937 &amp;rnd_generator_, const <a class="el" href="classSIPP__settings.html">SIPP_settings</a> &amp;settings_)</td></tr>
+<tr class="separator:a87c760657e7e2503a4e82c5be14f285f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ae3b0caeeef506ea4bf0a47bd3933729e"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSIPP.html#ae3b0caeeef506ea4bf0a47bd3933729e">~SIPP</a> ()=default</td></tr>
 <tr class="separator:ae3b0caeeef506ea4bf0a47bd3933729e"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a35258e94140f3de07b765cb91ce13c50"><td class="memItemLeft" align="right" valign="top"><a class="el" href="utils_8h.html#a4b0c12fdb9bfd266c909605f8aa6e3d6">Path</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSIPP.html#a35258e94140f3de07b765cb91ce13c50">plan</a> (const <a class="el" href="classPoint2d.html">Point2d</a> &amp;start, const <a class="el" href="classPoint2d.html">Point2d</a> &amp;goal, const <a class="el" href="classMap.html">Map</a> &amp;<a class="el" href="classSIPP.html#af10f214f9cbd063536d3238fc45a7392">map_data</a>)</td></tr>
-<tr class="separator:a35258e94140f3de07b765cb91ce13c50"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a79e516cff213d00f124e815a2edf2ea8"><td class="memItemLeft" align="right" valign="top">auto&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSIPP.html#a79e516cff213d00f124e815a2edf2ea8">plan</a> (int agent_num, const std::unordered_set&lt; int &gt; &amp;already_planned) -&gt; <a class="el" href="utils_8h.html#a64881685b4fe27a0cf599222d5fb1c72">TimePointPath</a></td></tr>
+<tr class="separator:a79e516cff213d00f124e815a2edf2ea8"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a99ea39d64a73b10e97046debfcd2d873"><td class="memItemLeft" align="right" valign="top">auto&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSIPP.html#a99ea39d64a73b10e97046debfcd2d873">plan_sipp_mine</a> (int agent_num) -&gt; <a class="el" href="utils_8h.html#a64881685b4fe27a0cf599222d5fb1c72">TimePointPath</a></td></tr>
+<tr class="separator:a99ea39d64a73b10e97046debfcd2d873"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a9c3c0bb8577a4af7cc66dc11b639cb18"><td class="memItemLeft" align="right" valign="top">auto&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSIPP.html#a9c3c0bb8577a4af7cc66dc11b639cb18">plan_sipp_mine_ap</a> (int agent_num, const std::unordered_set&lt; int &gt; &amp;already_planned) -&gt; <a class="el" href="utils_8h.html#a64881685b4fe27a0cf599222d5fb1c72">TimePointPath</a></td></tr>
+<tr class="separator:a9c3c0bb8577a4af7cc66dc11b639cb18"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a554425ea66302db84cbbd55252347ddc"><td class="memItemLeft" align="right" valign="top">auto&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSIPP.html#a554425ea66302db84cbbd55252347ddc">plan_mapflns_heuristic</a> (int agent_num) -&gt; <a class="el" href="utils_8h.html#a64881685b4fe27a0cf599222d5fb1c72">TimePointPath</a></td></tr>
+<tr class="separator:a554425ea66302db84cbbd55252347ddc"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a440a585afee1b9ff3ae38ed91960b353"><td class="memItemLeft" align="right" valign="top">auto&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSIPP.html#a440a585afee1b9ff3ae38ed91960b353">plan_suboptimal</a> (int agent_num, const std::unordered_set&lt; int &gt; &amp;already_planned, double w=1.0, bool ap=false) -&gt; <a class="el" href="utils_8h.html#a64881685b4fe27a0cf599222d5fb1c72">TimePointPath</a></td></tr>
+<tr class="separator:a440a585afee1b9ff3ae38ed91960b353"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-attribs"></a>
+Public Attributes</h2></td></tr>
+<tr class="memitem:a09191853170fcdf8e13a8e8c41aa6bbf"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classSafeIntervalTable.html">SafeIntervalTable</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSIPP.html#a09191853170fcdf8e13a8e8c41aa6bbf">safe_interval_table</a></td></tr>
+<tr class="separator:a09191853170fcdf8e13a8e8c41aa6bbf"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a74c663e64a9320cb8ad33745e89a52b9"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSIPP.html#a74c663e64a9320cb8ad33745e89a52b9">generated_all_iter</a> = 0</td></tr>
+<tr class="separator:a74c663e64a9320cb8ad33745e89a52b9"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:afc65cfb0ca54271d80a7b3b0b255dce9"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSIPP.html#afc65cfb0ca54271d80a7b3b0b255dce9">generated_this_iter</a> = 0</td></tr>
+<tr class="separator:afc65cfb0ca54271d80a7b3b0b255dce9"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af0ef27270a4ecc1c100c0a33bf835f31"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSIPP.html#af0ef27270a4ecc1c100c0a33bf835f31">expanded_all_iter</a> = 0</td></tr>
+<tr class="separator:af0ef27270a4ecc1c100c0a33bf835f31"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:acb9908f3d36988da3dd7d771630da697"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSIPP.html#acb9908f3d36988da3dd7d771630da697">expanded_this_iter</a> = 0</td></tr>
+<tr class="separator:acb9908f3d36988da3dd7d771630da697"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:adb10cd876a91a96f24adc94510d4f553"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSIPP.html#adb10cd876a91a96f24adc94510d4f553">iteration_num</a> = 0</td></tr>
+<tr class="separator:adb10cd876a91a96f24adc94510d4f553"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1542d58fab728f77bd99133e4539ba6b"><td class="memItemLeft" align="right" valign="top"><a class="el" href="IterInfo_8h.html#a59a5f038962657d012f917f2729557f4">SIPPInfo</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSIPP.html#a1542d58fab728f77bd99133e4539ba6b">iter_info</a></td></tr>
+<tr class="separator:a1542d58fab728f77bd99133e4539ba6b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pri-methods"></a>
+Private Member Functions</h2></td></tr>
+<tr class="memitem:a2352e85621cb95837dcf2e4b7d66d926"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSIPP.html#a2352e85621cb95837dcf2e4b7d66d926">initialize_iter_info</a> ()</td></tr>
+<tr class="separator:a2352e85621cb95837dcf2e4b7d66d926"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a278b2398771180c83f6ad7db5254f6c2"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSIPP.html#a278b2398771180c83f6ad7db5254f6c2">update_iter_info</a> (const <a class="el" href="classsipp_1_1SIPPNode.html">sipp::SIPPNode</a> &amp;expanded, bool last_iter)</td></tr>
+<tr class="separator:a278b2398771180c83f6ad7db5254f6c2"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pri-attribs"></a>
 Private Attributes</h2></td></tr>
-<tr class="memitem:af10f214f9cbd063536d3238fc45a7392"><td class="memItemLeft" align="right" valign="top">const <a class="el" href="classMap.html">Map</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSIPP.html#af10f214f9cbd063536d3238fc45a7392">map_data</a></td></tr>
-<tr class="separator:af10f214f9cbd063536d3238fc45a7392"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a7955c116424afc30af1bd0aab34e289d"><td class="memItemLeft" align="right" valign="top">const <a class="el" href="classInstance.html">Instance</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSIPP.html#a7955c116424afc30af1bd0aab34e289d">instance</a></td></tr>
+<tr class="separator:a7955c116424afc30af1bd0aab34e289d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a54371977b1a93442604d9fe37f5e3963"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classsipp_1_1NodePool.html">sipp::NodePool</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSIPP.html#a54371977b1a93442604d9fe37f5e3963">node_pool</a></td></tr>
+<tr class="separator:a54371977b1a93442604d9fe37f5e3963"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa14d05aba04119008162df90fb0c8f5c"><td class="memItemLeft" align="right" valign="top">std::vector&lt; int &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSIPP.html#aa14d05aba04119008162df90fb0c8f5c">known_max</a></td></tr>
+<tr class="separator:aa14d05aba04119008162df90fb0c8f5c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a94bb0a195bba1d55156a94664f7318bb"><td class="memItemLeft" align="right" valign="top">std::vector&lt; int &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSIPP.html#a94bb0a195bba1d55156a94664f7318bb">known_min</a></td></tr>
+<tr class="separator:a94bb0a195bba1d55156a94664f7318bb"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:abd907d2e0065714cd3f6f7c84208c07d"><td class="memItemLeft" align="right" valign="top">std::mt19937 &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSIPP.html#abd907d2e0065714cd3f6f7c84208c07d">rnd_generator</a></td></tr>
+<tr class="separator:abd907d2e0065714cd3f6f7c84208c07d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a7afaeba2df9261f5e339d9631a31919f"><td class="memItemLeft" align="right" valign="top">const <a class="el" href="classSIPP__settings.html">SIPP_settings</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSIPP.html#a7afaeba2df9261f5e339d9631a31919f">settings</a></td></tr>
+<tr class="separator:a7afaeba2df9261f5e339d9631a31919f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock">
-<p class="definition">Definition at line <a class="el" href="SIPP_8h_source.html#l00010">10</a> of file <a class="el" href="SIPP_8h_source.html">SIPP.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="SIPP_8h_source.html#l00119">119</a> of file <a class="el" href="SIPP_8h_source.html">SIPP.h</a>.</p>
 </div><h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
-<a id="aba7b0d1b66aa30198f93936060a51b55"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aba7b0d1b66aa30198f93936060a51b55">&#9670;&nbsp;</a></span>SIPP()</h2>
+<a id="a87c760657e7e2503a4e82c5be14f285f"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a87c760657e7e2503a4e82c5be14f285f">&#9670;&nbsp;</a></span>SIPP()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -110,14 +160,30 @@ Private Attributes</h2></td></tr>
         <tr>
           <td class="memname">SIPP::SIPP </td>
           <td>(</td>
-          <td class="paramtype">const <a class="el" href="classMap.html">Map</a> &amp;&#160;</td>
-          <td class="paramname"><em>map_data</em></td><td>)</td>
+          <td class="paramtype">const <a class="el" href="classInstance.html">Instance</a> &amp;&#160;</td>
+          <td class="paramname"><em>instance_</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
           <td></td>
+          <td class="paramtype">std::mt19937 &amp;&#160;</td>
+          <td class="paramname"><em>rnd_generator_</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const <a class="el" href="classSIPP__settings.html">SIPP_settings</a> &amp;&#160;</td>
+          <td class="paramname"><em>settings_</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
         </tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="SIPP_8cpp_source.html#l00015">15</a> of file <a class="el" href="SIPP_8cpp_source.html">SIPP.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="SIPP_8cpp_source.html#l00023">23</a> of file <a class="el" href="SIPP_8cpp_source.html">SIPP.cpp</a>.</p>
 
 </div>
 </div>
@@ -147,45 +213,8 @@ Private Attributes</h2></td></tr>
 </div>
 </div>
 <h2 class="groupheader">Member Function Documentation</h2>
-<a id="a35258e94140f3de07b765cb91ce13c50"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a35258e94140f3de07b765cb91ce13c50">&#9670;&nbsp;</a></span>plan()</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname"><a class="el" href="utils_8h.html#a4b0c12fdb9bfd266c909605f8aa6e3d6">Path</a> SIPP::plan </td>
-          <td>(</td>
-          <td class="paramtype">const <a class="el" href="classPoint2d.html">Point2d</a> &amp;&#160;</td>
-          <td class="paramname"><em>start</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">const <a class="el" href="classPoint2d.html">Point2d</a> &amp;&#160;</td>
-          <td class="paramname"><em>goal</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">const <a class="el" href="classMap.html">Map</a> &amp;&#160;</td>
-          <td class="paramname"><em>map_data</em>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p class="definition">Definition at line <a class="el" href="SIPP_8cpp_source.html#l00089">89</a> of file <a class="el" href="SIPP_8cpp_source.html">SIPP.cpp</a>.</p>
-
-</div>
-</div>
-<h2 class="groupheader">Member Data Documentation</h2>
-<a id="af10f214f9cbd063536d3238fc45a7392"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#af10f214f9cbd063536d3238fc45a7392">&#9670;&nbsp;</a></span>map_data</h2>
+<a id="a2352e85621cb95837dcf2e4b7d66d926"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a2352e85621cb95837dcf2e4b7d66d926">&#9670;&nbsp;</a></span>initialize_iter_info()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -194,7 +223,10 @@ Private Attributes</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">const <a class="el" href="classMap.html">Map</a>&amp; SIPP::map_data</td>
+          <td class="memname">void SIPP::initialize_iter_info </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
         </tr>
       </table>
   </td>
@@ -204,7 +236,444 @@ Private Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="SIPP_8h_source.html#l00022">22</a> of file <a class="el" href="SIPP_8h_source.html">SIPP.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="SIPP_8cpp_source.html#l00918">918</a> of file <a class="el" href="SIPP_8cpp_source.html">SIPP.cpp</a>.</p>
+
+</div>
+</div>
+<a id="a79e516cff213d00f124e815a2edf2ea8"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a79e516cff213d00f124e815a2edf2ea8">&#9670;&nbsp;</a></span>plan()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">auto SIPP::plan </td>
+          <td>(</td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>agent_num</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const std::unordered_set&lt; int &gt; &amp;&#160;</td>
+          <td class="paramname"><em>already_planned</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td> -&gt; <a class="el" href="utils_8h.html#a64881685b4fe27a0cf599222d5fb1c72">TimePointPath</a></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="SIPP_8cpp_source.html#l00129">129</a> of file <a class="el" href="SIPP_8cpp_source.html">SIPP.cpp</a>.</p>
+
+</div>
+</div>
+<a id="a554425ea66302db84cbbd55252347ddc"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a554425ea66302db84cbbd55252347ddc">&#9670;&nbsp;</a></span>plan_mapflns_heuristic()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">auto SIPP::plan_mapflns_heuristic </td>
+          <td>(</td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>agent_num</em></td><td>)</td>
+          <td> -&gt; <a class="el" href="utils_8h.html#a64881685b4fe27a0cf599222d5fb1c72">TimePointPath</a></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="SIPP_8cpp_source.html#l00752">752</a> of file <a class="el" href="SIPP_8cpp_source.html">SIPP.cpp</a>.</p>
+
+</div>
+</div>
+<a id="a99ea39d64a73b10e97046debfcd2d873"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a99ea39d64a73b10e97046debfcd2d873">&#9670;&nbsp;</a></span>plan_sipp_mine()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">auto SIPP::plan_sipp_mine </td>
+          <td>(</td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>agent_num</em></td><td>)</td>
+          <td> -&gt; <a class="el" href="utils_8h.html#a64881685b4fe27a0cf599222d5fb1c72">TimePointPath</a></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="SIPP_8cpp_source.html#l00169">169</a> of file <a class="el" href="SIPP_8cpp_source.html">SIPP.cpp</a>.</p>
+
+</div>
+</div>
+<a id="a9c3c0bb8577a4af7cc66dc11b639cb18"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a9c3c0bb8577a4af7cc66dc11b639cb18">&#9670;&nbsp;</a></span>plan_sipp_mine_ap()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">auto SIPP::plan_sipp_mine_ap </td>
+          <td>(</td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>agent_num</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const std::unordered_set&lt; int &gt; &amp;&#160;</td>
+          <td class="paramname"><em>already_planned</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td> -&gt; <a class="el" href="utils_8h.html#a64881685b4fe27a0cf599222d5fb1c72">TimePointPath</a></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="SIPP_8cpp_source.html#l00356">356</a> of file <a class="el" href="SIPP_8cpp_source.html">SIPP.cpp</a>.</p>
+
+</div>
+</div>
+<a id="a440a585afee1b9ff3ae38ed91960b353"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a440a585afee1b9ff3ae38ed91960b353">&#9670;&nbsp;</a></span>plan_suboptimal()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">auto SIPP::plan_suboptimal </td>
+          <td>(</td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>agent_num</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const std::unordered_set&lt; int &gt; &amp;&#160;</td>
+          <td class="paramname"><em>already_planned</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">double&#160;</td>
+          <td class="paramname"><em>w</em> = <code>1.0</code>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">bool&#160;</td>
+          <td class="paramname"><em>ap</em> = <code>false</code>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td> -&gt; <a class="el" href="utils_8h.html#a64881685b4fe27a0cf599222d5fb1c72">TimePointPath</a></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="SIPP_8cpp_source.html#l00551">551</a> of file <a class="el" href="SIPP_8cpp_source.html">SIPP.cpp</a>.</p>
+
+</div>
+</div>
+<a id="a278b2398771180c83f6ad7db5254f6c2"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a278b2398771180c83f6ad7db5254f6c2">&#9670;&nbsp;</a></span>update_iter_info()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void SIPP::update_iter_info </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="classsipp_1_1SIPPNode.html">sipp::SIPPNode</a> &amp;&#160;</td>
+          <td class="paramname"><em>expanded</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">bool&#160;</td>
+          <td class="paramname"><em>last_iter</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">private</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="SIPP_8cpp_source.html#l00925">925</a> of file <a class="el" href="SIPP_8cpp_source.html">SIPP.cpp</a>.</p>
+
+</div>
+</div>
+<h2 class="groupheader">Member Data Documentation</h2>
+<a id="af0ef27270a4ecc1c100c0a33bf835f31"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#af0ef27270a4ecc1c100c0a33bf835f31">&#9670;&nbsp;</a></span>expanded_all_iter</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">int SIPP::expanded_all_iter = 0</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="SIPP_8h_source.html#l00125">125</a> of file <a class="el" href="SIPP_8h_source.html">SIPP.h</a>.</p>
+
+</div>
+</div>
+<a id="acb9908f3d36988da3dd7d771630da697"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#acb9908f3d36988da3dd7d771630da697">&#9670;&nbsp;</a></span>expanded_this_iter</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">int SIPP::expanded_this_iter = 0</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="SIPP_8h_source.html#l00126">126</a> of file <a class="el" href="SIPP_8h_source.html">SIPP.h</a>.</p>
+
+</div>
+</div>
+<a id="a74c663e64a9320cb8ad33745e89a52b9"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a74c663e64a9320cb8ad33745e89a52b9">&#9670;&nbsp;</a></span>generated_all_iter</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">int SIPP::generated_all_iter = 0</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="SIPP_8h_source.html#l00123">123</a> of file <a class="el" href="SIPP_8h_source.html">SIPP.h</a>.</p>
+
+</div>
+</div>
+<a id="afc65cfb0ca54271d80a7b3b0b255dce9"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#afc65cfb0ca54271d80a7b3b0b255dce9">&#9670;&nbsp;</a></span>generated_this_iter</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">int SIPP::generated_this_iter = 0</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="SIPP_8h_source.html#l00124">124</a> of file <a class="el" href="SIPP_8h_source.html">SIPP.h</a>.</p>
+
+</div>
+</div>
+<a id="a7955c116424afc30af1bd0aab34e289d"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a7955c116424afc30af1bd0aab34e289d">&#9670;&nbsp;</a></span>instance</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">const <a class="el" href="classInstance.html">Instance</a>&amp; SIPP::instance</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">private</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="SIPP_8h_source.html#l00145">145</a> of file <a class="el" href="SIPP_8h_source.html">SIPP.h</a>.</p>
+
+</div>
+</div>
+<a id="a1542d58fab728f77bd99133e4539ba6b"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a1542d58fab728f77bd99133e4539ba6b">&#9670;&nbsp;</a></span>iter_info</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="IterInfo_8h.html#a59a5f038962657d012f917f2729557f4">SIPPInfo</a> SIPP::iter_info</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="SIPP_8h_source.html#l00128">128</a> of file <a class="el" href="SIPP_8h_source.html">SIPP.h</a>.</p>
+
+</div>
+</div>
+<a id="adb10cd876a91a96f24adc94510d4f553"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#adb10cd876a91a96f24adc94510d4f553">&#9670;&nbsp;</a></span>iteration_num</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">int SIPP::iteration_num = 0</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="SIPP_8h_source.html#l00127">127</a> of file <a class="el" href="SIPP_8h_source.html">SIPP.h</a>.</p>
+
+</div>
+</div>
+<a id="aa14d05aba04119008162df90fb0c8f5c"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aa14d05aba04119008162df90fb0c8f5c">&#9670;&nbsp;</a></span>known_max</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::vector&lt;int&gt; SIPP::known_max</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">private</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="SIPP_8h_source.html#l00147">147</a> of file <a class="el" href="SIPP_8h_source.html">SIPP.h</a>.</p>
+
+</div>
+</div>
+<a id="a94bb0a195bba1d55156a94664f7318bb"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a94bb0a195bba1d55156a94664f7318bb">&#9670;&nbsp;</a></span>known_min</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::vector&lt;int&gt; SIPP::known_min</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">private</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="SIPP_8h_source.html#l00148">148</a> of file <a class="el" href="SIPP_8h_source.html">SIPP.h</a>.</p>
+
+</div>
+</div>
+<a id="a54371977b1a93442604d9fe37f5e3963"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a54371977b1a93442604d9fe37f5e3963">&#9670;&nbsp;</a></span>node_pool</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classsipp_1_1NodePool.html">sipp::NodePool</a> SIPP::node_pool</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">private</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="SIPP_8h_source.html#l00146">146</a> of file <a class="el" href="SIPP_8h_source.html">SIPP.h</a>.</p>
+
+</div>
+</div>
+<a id="abd907d2e0065714cd3f6f7c84208c07d"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#abd907d2e0065714cd3f6f7c84208c07d">&#9670;&nbsp;</a></span>rnd_generator</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::mt19937&amp; SIPP::rnd_generator</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">private</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="SIPP_8h_source.html#l00149">149</a> of file <a class="el" href="SIPP_8h_source.html">SIPP.h</a>.</p>
+
+</div>
+</div>
+<a id="a09191853170fcdf8e13a8e8c41aa6bbf"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a09191853170fcdf8e13a8e8c41aa6bbf">&#9670;&nbsp;</a></span>safe_interval_table</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classSafeIntervalTable.html">SafeIntervalTable</a> SIPP::safe_interval_table</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="SIPP_8h_source.html#l00122">122</a> of file <a class="el" href="SIPP_8h_source.html">SIPP.h</a>.</p>
+
+</div>
+</div>
+<a id="a7afaeba2df9261f5e339d9631a31919f"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a7afaeba2df9261f5e339d9631a31919f">&#9670;&nbsp;</a></span>settings</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">const <a class="el" href="classSIPP__settings.html">SIPP_settings</a>&amp; SIPP::settings</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">private</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="SIPP_8h_source.html#l00150">150</a> of file <a class="el" href="SIPP_8h_source.html">SIPP.h</a>.</p>
 
 </div>
 </div>

@@ -15,7 +15,7 @@
 #include "utils.h"
 
 
-LNS::LNS(const Instance& instance_, std::mt19937& rnd_generator_, SharedData* shared_data_, const LNS_settings& settings_)
+LNS::LNS(const Instance& instance_, std::mt19937& rnd_generator_, SharedData* shared_data_, LNS_settings& settings_)
     : Solver("LNS", instance_, rnd_generator_),
       destroy_operator(Operator([this](Solution& sol) {
         if (settings.destroy_settings.type == DESTROY_TYPE::RANDOMWALK)
@@ -78,13 +78,29 @@ void LNS::solve()
   clock.start();
 
   // calculate initial solution
-  bool found = find_initial_solution();
+  while (!found_initial_solution && clock.get_current_time().first < settings.time_limit)
+  {
+    found_initial_solution = find_initial_solution();
 
-  if (!found)  // TODO restarts
+    // reset the safe interval table and already planned if needed
+    if (!found_initial_solution)
+    {
+      planner->reset();
+      already_planned.clear();
+    }
+
+    // restart only if the settings allow it
+    if (!settings.restarts)
+    {
+      break;
+    }
+  }
+
+  if (!found_initial_solution || settings.max_iter == 0)
   {
     return;
   }
-  assertm(found, "Could not find the initial solution");
+  assertm(found_initial_solution, "Could not find the initial solution");
   assertm(solution.is_valid(instance), "Found invalid solution");
 
   // std::cout << "Initial solution found in " << initial_solution_time << " second." << std::endl;
@@ -128,7 +144,7 @@ void LNS::solve()
     if (!perturbed_sol.feasible)
     {
       discard_solution(perturbed_sol, solution);
-      std::cout << "Discarded infeasible solution." << std::endl;
+      // std::cout << "Discarded infeasible solution." << std::endl;
     }
     else
     {
@@ -607,6 +623,7 @@ void LNS::destroy_adaptive(Solution& sol) const
   auto sum_of_weights = std::reduce(destroy_weights.begin(), destroy_weights.end());
   assertm(sum_of_weights > 0, "Invalid weights.");
 
+
   // choose a random number in the range [0, sum_of_weights]
   std::uniform_real_distribution<double> dist(0.0, sum_of_weights);
   double                                 rand_value = dist(rnd_generator);
@@ -625,11 +642,20 @@ void LNS::destroy_adaptive(Solution& sol) const
         chosen_type = chosen.value();
         break;
       }
-      throw std::runtime_error("Unknown DESTROY_TYPE encountered in adaptive destroy.");
+      throw std::runtime_error(std::string("Unknown DESTROY_TYPE ") + std::string(magic_enum::enum_name<DESTROY_TYPE>(chosen_type)) +
+                               std::string(" encountered in adaptive destroy."));
     }
   }
   assertm(chosen_type != DESTROY_TYPE::ADAPTIVE && chosen_type != DESTROY_TYPE::RANDOM_CHOOSE, "Did not select any destroy strategy.");
 
+  // if sum of weights too small, increase it
+  if (sum_of_weights < 0.1)
+  {
+    for (int i = 0; i < static_cast<int>(destroy_weights.size()); i++)
+    {
+      destroy_weights[i] *= 10;
+    }
+  }
   // std::cout << "Weights are: " << std::endl;
   // for (auto it : destroy_weights)
   // {
@@ -651,13 +677,14 @@ void LNS::destroy_adaptive(Solution& sol) const
       destroy_intersection(sol);
       break;
     default:
-      throw std::runtime_error("Unknown DESTROY_TYPE encountered in adaptive destroy.");
+      throw std::runtime_error(std::string("Unknown DESTROY_TYPE ") + std::string(magic_enum::enum_name<DESTROY_TYPE>(chosen_type)) +
+                               std::string(" encountered in adaptive destroy."));
   }
 }
 
 void LNS::destroy_random_choose(Solution& sol) const
 {
-  static std::uniform_int_distribution<int> dist(0, 3);
+  static std::uniform_int_distribution<int> dist(0, 2);
   int                                       rand_value = dist(rnd_generator);
   // apply the destroy operator
   switch (rand_value)

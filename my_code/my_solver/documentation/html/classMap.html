@@ -72,19 +72,40 @@ $(function() {
 </div><!--header-->
 <div class="contents">
 
-<p><code>#include &lt;<a class="el" href="utils_8h_source.html">utils.h</a>&gt;</code></p>
+<p><code>#include &lt;<a class="el" href="Map_8h_source.html">Map.h</a>&gt;</code></p>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
+<tr class="memitem:a1197ab65e40dd20b891ba165471e3163"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classMap.html#a1197ab65e40dd20b891ba165471e3163">Map</a> ()=default</td></tr>
+<tr class="separator:a1197ab65e40dd20b891ba165471e3163"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ae2ca3cf38d86f86a0ac819db71fd3354"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classMap.html#ae2ca3cf38d86f86a0ac819db71fd3354">print</a> () const</td></tr>
 <tr class="separator:ae2ca3cf38d86f86a0ac819db71fd3354"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ad8ad608fa4101052d04723fe490b3ba2"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classMap.html#ad8ad608fa4101052d04723fe490b3ba2">is_in</a> (const <a class="el" href="classPoint2d.html">Point2d</a> &amp;point) const</td></tr>
-<tr class="separator:ad8ad608fa4101052d04723fe490b3ba2"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ae227a6a7f0314afb2489184f289c2279"><td class="memItemLeft" align="right" valign="top">uint8_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classMap.html#ae227a6a7f0314afb2489184f289c2279">index</a> (const <a class="el" href="classPoint2d.html">Point2d</a> &amp;point) const</td></tr>
-<tr class="separator:ae227a6a7f0314afb2489184f289c2279"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a2cf78d7ad8412ceb350090b72ad06a3d"><td class="memItemLeft" align="right" valign="top">std::vector&lt; <a class="el" href="classPoint2d.html">Point2d</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classMap.html#a2cf78d7ad8412ceb350090b72ad06a3d">find_neighbors</a> (const <a class="el" href="classPoint2d.html">Point2d</a> &amp;p) const</td></tr>
-<tr class="memdesc:a2cf78d7ad8412ceb350090b72ad06a3d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the neighbors of a point.  <a href="classMap.html#a2cf78d7ad8412ceb350090b72ad06a3d">More...</a><br /></td></tr>
-<tr class="separator:a2cf78d7ad8412ceb350090b72ad06a3d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1d228d90280298bc86d0159b11daae2c"><td class="memItemLeft" align="right" valign="top">auto&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classMap.html#a1d228d90280298bc86d0159b11daae2c">find_neighbors</a> (const <a class="el" href="classPoint2d.html">Point2d</a> &amp;p) const -&gt; std::vector&lt; <a class="el" href="classPoint2d.html">Point2d</a> &gt;</td></tr>
+<tr class="separator:a1d228d90280298bc86d0159b11daae2c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a4edf068ca99228f590cca8a80e33851e"><td class="memItemLeft" align="right" valign="top">auto&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classMap.html#a4edf068ca99228f590cca8a80e33851e">find_neighbors</a> (int loc) const -&gt; std::vector&lt; int &gt;</td></tr>
+<tr class="separator:a4edf068ca99228f590cca8a80e33851e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a002979d7be9208d237c982efeb2887e2"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classMap.html#a002979d7be9208d237c982efeb2887e2">load</a> (const std::string &amp;map_fname)</td></tr>
+<tr class="separator:a002979d7be9208d237c982efeb2887e2"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a11fdc9fa5646551a2db1e22dac5e8b24"><td class="memItemLeft" align="right" valign="top">auto&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classMap.html#a11fdc9fa5646551a2db1e22dac5e8b24">is_in</a> (const <a class="el" href="classPoint2d.html">Point2d</a> &amp;p) const -&gt; bool</td></tr>
+<tr class="separator:a11fdc9fa5646551a2db1e22dac5e8b24"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a4871cd884d0050babf6a4ffe52feec54"><td class="memItemLeft" align="right" valign="top">auto&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classMap.html#a4871cd884d0050babf6a4ffe52feec54">is_in</a> (int loc) const -&gt; bool</td></tr>
+<tr class="separator:a4871cd884d0050babf6a4ffe52feec54"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a8a5cde487f74a10b65956763b5ae02dc"><td class="memItemLeft" align="right" valign="top">auto&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classMap.html#a8a5cde487f74a10b65956763b5ae02dc">index</a> (const <a class="el" href="classPoint2d.html">Point2d</a> &amp;point) const -&gt; uint8_t</td></tr>
+<tr class="separator:a8a5cde487f74a10b65956763b5ae02dc"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a3b01c378795e5c4345d10cc21bd74c3a"><td class="memItemLeft" align="right" valign="top">auto&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classMap.html#a3b01c378795e5c4345d10cc21bd74c3a">index</a> (int loc) const -&gt; uint8_t</td></tr>
+<tr class="separator:a3b01c378795e5c4345d10cc21bd74c3a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a892ee6a5183c96c64f9070c2373e0421"><td class="memItemLeft" align="right" valign="top">auto&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classMap.html#a892ee6a5183c96c64f9070c2373e0421">index_free</a> (int free_loc) const -&gt; uint8_t</td></tr>
+<tr class="separator:a892ee6a5183c96c64f9070c2373e0421"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a6479e3c2bea966f3cbcced15c9034845"><td class="memItemLeft" align="right" valign="top">auto&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classMap.html#a6479e3c2bea966f3cbcced15c9034845">free_location_to_location</a> (int free_loc) const -&gt; int</td></tr>
+<tr class="separator:a6479e3c2bea966f3cbcced15c9034845"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:addc1c2f9e3dc7dcccb3a934879aafc3b"><td class="memItemLeft" align="right" valign="top">auto&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classMap.html#addc1c2f9e3dc7dcccb3a934879aafc3b">location_to_free_location</a> (int loc) const -&gt; int</td></tr>
+<tr class="separator:addc1c2f9e3dc7dcccb3a934879aafc3b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a59bd171a11b9e9a55cee1d7b6e057d56"><td class="memItemLeft" align="right" valign="top">auto&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classMap.html#a59bd171a11b9e9a55cee1d7b6e057d56">position_to_index</a> (const <a class="el" href="classPoint2d.html">Point2d</a> &amp;p) const -&gt; int</td></tr>
+<tr class="separator:a59bd171a11b9e9a55cee1d7b6e057d56"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a5b661f42bc9b09f533f6d773f1bf8dab"><td class="memItemLeft" align="right" valign="top">auto&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classMap.html#a5b661f42bc9b09f533f6d773f1bf8dab">get_num_free_cells</a> () const -&gt; int</td></tr>
+<tr class="separator:a5b661f42bc9b09f533f6d773f1bf8dab"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a3097d719313189fed69b274a1f314559"><td class="memItemLeft" align="right" valign="top">auto&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classMap.html#a3097d719313189fed69b274a1f314559">get_num_cells</a> () const -&gt; int</td></tr>
+<tr class="separator:a3097d719313189fed69b274a1f314559"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-attribs"></a>
 Public Attributes</h2></td></tr>
@@ -92,112 +113,618 @@ Public Attributes</h2></td></tr>
 <tr class="separator:a9ecfe932ad2d2bc22492416033bdacfd"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a0546fef98caebe38385bb2e0c7a15da1"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classMap.html#a0546fef98caebe38385bb2e0c7a15da1">height</a> = 0</td></tr>
 <tr class="separator:a0546fef98caebe38385bb2e0c7a15da1"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae7fbbd85e0cbd7219a468c56797a694f"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classMap.html#ae7fbbd85e0cbd7219a468c56797a694f">loaded</a> = false</td></tr>
+<tr class="separator:ae7fbbd85e0cbd7219a468c56797a694f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa6e7a427f467c84f33079371231b69c0"><td class="memItemLeft" align="right" valign="top">std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classMap.html#aa6e7a427f467c84f33079371231b69c0">type</a></td></tr>
+<tr class="separator:aa6e7a427f467c84f33079371231b69c0"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a7a05ba5cccf5a410fba1ed4406dcede1"><td class="memItemLeft" align="right" valign="top">std::vector&lt; int &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classMap.html#a7a05ba5cccf5a410fba1ed4406dcede1">free_location_to_location_vec</a></td></tr>
+<tr class="separator:a7a05ba5cccf5a410fba1ed4406dcede1"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab83934742f20c3211adf8ed155674d7e"><td class="memItemLeft" align="right" valign="top">std::vector&lt; int &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classMap.html#ab83934742f20c3211adf8ed155674d7e">location_to_free_location_vec</a></td></tr>
+<tr class="separator:ab83934742f20c3211adf8ed155674d7e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a338b22b5f2e52eebaaf547990c4204c2"><td class="memItemLeft" align="right" valign="top">std::vector&lt; uint8_t &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classMap.html#a338b22b5f2e52eebaaf547990c4204c2">data</a></td></tr>
 <tr class="separator:a338b22b5f2e52eebaaf547990c4204c2"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock">
-<p class="definition">Definition at line <a class="el" href="utils_8h_source.html#l00088">88</a> of file <a class="el" href="utils_8h_source.html">utils.h</a>.</p>
-</div><h2 class="groupheader">Member Function Documentation</h2>
-<a id="a2cf78d7ad8412ceb350090b72ad06a3d"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a2cf78d7ad8412ceb350090b72ad06a3d">&#9670;&nbsp;</a></span>find_neighbors()</h2>
+<p class="definition">Definition at line <a class="el" href="Map_8h_source.html#l00010">10</a> of file <a class="el" href="Map_8h_source.html">Map.h</a>.</p>
+</div><h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
+<a id="a1197ab65e40dd20b891ba165471e3163"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a1197ab65e40dd20b891ba165471e3163">&#9670;&nbsp;</a></span>Map()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">Map::Map </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">default</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<h2 class="groupheader">Member Function Documentation</h2>
+<a id="a1d228d90280298bc86d0159b11daae2c"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a1d228d90280298bc86d0159b11daae2c">&#9670;&nbsp;</a></span>find_neighbors() <span class="overload">[1/2]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">std::vector&lt; <a class="el" href="classPoint2d.html">Point2d</a> &gt; Map::find_neighbors </td>
+          <td class="memname">auto Map::find_neighbors </td>
           <td>(</td>
           <td class="paramtype">const <a class="el" href="classPoint2d.html">Point2d</a> &amp;&#160;</td>
           <td class="paramname"><em>p</em></td><td>)</td>
-          <td> const</td>
+          <td> const -&gt; std::vector&lt;<a class="el" href="classPoint2d.html">Point2d</a>&gt;</td>
         </tr>
       </table>
 </div><div class="memdoc">
 
-<p>Get the neighbors of a point. </p>
-<dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramname">p</td><td>The point to find neighbors for.</td></tr>
-  </table>
-  </dd>
-</dl>
-<dl class="section return"><dt>Returns</dt><dd>A vector of points that are neighbors of the input point. </dd></dl>
-
-<p class="definition">Definition at line <a class="el" href="utils_8cpp_source.html#l00072">72</a> of file <a class="el" href="utils_8cpp_source.html">utils.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="Map_8cpp_source.html#l00039">39</a> of file <a class="el" href="Map_8cpp_source.html">Map.cpp</a>.</p>
 <div class="dynheader">
 Here is the caller graph for this function:</div>
 <div class="dyncontent">
-<div class="center"><img src="classMap_a2cf78d7ad8412ceb350090b72ad06a3d_icgraph.png" border="0" usemap="#classMap_a2cf78d7ad8412ceb350090b72ad06a3d_icgraph" alt=""/></div>
-<map name="classMap_a2cf78d7ad8412ceb350090b72ad06a3d_icgraph" id="classMap_a2cf78d7ad8412ceb350090b72ad06a3d_icgraph">
-<area shape="rect" title="Get the neighbors of a point." alt="" coords="415,46,569,73"/>
-<area shape="rect" href="namespaceASTAR.html#a467e25eb7296335b44dd88b208bd4b01" title="An implementation of the A* algorithm, find the shortest path between two points in a grid map consid..." alt="" coords="232,46,367,73"/>
-<area shape="rect" href="classInstance.html#a06bfc2787b952c7c33f700eb71367b99" title=" " alt="" coords="23,5,167,47"/>
-<area shape="rect" href="classInstance.html#ae3bd691dd618ce7cbe48455bd32e8b2c" title=" " alt="" coords="5,71,184,112"/>
+<div class="center"><img src="classMap_a1d228d90280298bc86d0159b11daae2c_icgraph.png" border="0" usemap="#classMap_a1d228d90280298bc86d0159b11daae2c_icgraph" alt=""/></div>
+<map name="classMap_a1d228d90280298bc86d0159b11daae2c_icgraph" id="classMap_a1d228d90280298bc86d0159b11daae2c_icgraph">
+<area shape="rect" title=" " alt="" coords="405,13,560,39"/>
+<area shape="rect" href="classInstance.html#a314514e5ae9a143aeafafa44ada894a9" title=" " alt="" coords="195,5,357,47"/>
+<area shape="rect" href="classInstance.html#aad5fc735ca29a154449c86c1690c743b" title=" " alt="" coords="5,13,147,39"/>
 </map>
 </div>
 
 </div>
 </div>
-<a id="ae227a6a7f0314afb2489184f289c2279"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ae227a6a7f0314afb2489184f289c2279">&#9670;&nbsp;</a></span>index()</h2>
+<a id="a4edf068ca99228f590cca8a80e33851e"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a4edf068ca99228f590cca8a80e33851e">&#9670;&nbsp;</a></span>find_neighbors() <span class="overload">[2/2]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">uint8_t Map::index </td>
+          <td class="memname">auto Map::find_neighbors </td>
           <td>(</td>
-          <td class="paramtype">const <a class="el" href="classPoint2d.html">Point2d</a> &amp;&#160;</td>
-          <td class="paramname"><em>point</em></td><td>)</td>
-          <td> const</td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>loc</em></td><td>)</td>
+          <td> const -&gt; std::vector&lt;int&gt;</td>
         </tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="utils_8cpp_source.html#l00062">62</a> of file <a class="el" href="utils_8cpp_source.html">utils.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="Map_8cpp_source.html#l00013">13</a> of file <a class="el" href="Map_8cpp_source.html">Map.cpp</a>.</p>
+
+</div>
+</div>
+<a id="a6479e3c2bea966f3cbcced15c9034845"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a6479e3c2bea966f3cbcced15c9034845">&#9670;&nbsp;</a></span>free_location_to_location()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">auto Map::free_location_to_location </td>
+          <td>(</td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>free_loc</em></td><td>)</td>
+          <td> const -&gt; int
+  </td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="Map_8h_source.html#l00058">58</a> of file <a class="el" href="Map_8h_source.html">Map.h</a>.</p>
 <div class="dynheader">
 Here is the caller graph for this function:</div>
 <div class="dyncontent">
-<div class="center"><img src="classMap_ae227a6a7f0314afb2489184f289c2279_icgraph.png" border="0" usemap="#classMap_ae227a6a7f0314afb2489184f289c2279_icgraph" alt=""/></div>
-<map name="classMap_ae227a6a7f0314afb2489184f289c2279_icgraph" id="classMap_ae227a6a7f0314afb2489184f289c2279_icgraph">
-<area shape="rect" title=" " alt="" coords="415,70,509,97"/>
-<area shape="rect" href="namespaceASTAR.html#a467e25eb7296335b44dd88b208bd4b01" title="An implementation of the A* algorithm, find the shortest path between two points in a grid map consid..." alt="" coords="232,45,367,71"/>
-<area shape="rect" href="classSIPP.html#a35258e94140f3de07b765cb91ce13c50" title=" " alt="" coords="256,95,343,122"/>
-<area shape="rect" href="classInstance.html#a06bfc2787b952c7c33f700eb71367b99" title=" " alt="" coords="23,5,167,47"/>
-<area shape="rect" href="classInstance.html#ae3bd691dd618ce7cbe48455bd32e8b2c" title=" " alt="" coords="5,71,184,112"/>
+<div class="center"><img src="classMap_a6479e3c2bea966f3cbcced15c9034845_icgraph.png" border="0" usemap="#classMap_a6479e3c2bea966f3cbcced15c9034845_icgraph" alt=""/></div>
+<map name="classMap_a6479e3c2bea966f3cbcced15c9034845_icgraph" id="classMap_a6479e3c2bea966f3cbcced15c9034845_icgraph">
+<area shape="rect" title=" " alt="" coords="1008,78,1151,119"/>
+<area shape="rect" href="classInstance.html#a68675431153581bf354b34374b845caf" title=" " alt="" coords="789,49,960,90"/>
+<area shape="rect" href="classMap.html#a892ee6a5183c96c64f9070c2373e0421" title=" " alt="" coords="811,115,938,141"/>
+<area shape="rect" href="classLNS.html#a5ccad09a04930841c3615ecf8ec0972d" title=" " alt="" coords="349,56,537,83"/>
+<area shape="rect" href="classConstraintTable.html#a3944425bf22c03daf70bf254f7a226ed" title=" " alt="" coords="585,78,741,119"/>
+<area shape="rect" href="classLNS.html#a412b23f4704dc3ce9e01fe0331ca8728" title=" " alt="" coords="133,5,301,32"/>
+<area shape="rect" href="classLNS.html#a566e47ae5b4577e3a70dc6f819f302be" title=" " alt="" coords="5,56,85,83"/>
+<area shape="rect" href="classLNS.html#af68cb150f64a0c8f249057ab57364f48" title=" " alt="" coords="137,107,298,149"/>
 </map>
 </div>
 
 </div>
 </div>
-<a id="ad8ad608fa4101052d04723fe490b3ba2"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ad8ad608fa4101052d04723fe490b3ba2">&#9670;&nbsp;</a></span>is_in()</h2>
+<a id="a3097d719313189fed69b274a1f314559"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a3097d719313189fed69b274a1f314559">&#9670;&nbsp;</a></span>get_num_cells()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">auto Map::get_num_cells </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const -&gt; int
+  </td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="Map_8h_source.html#l00084">84</a> of file <a class="el" href="Map_8h_source.html">Map.h</a>.</p>
+<div class="dynheader">
+Here is the caller graph for this function:</div>
+<div class="dyncontent">
+<div class="center"><img src="classMap_a3097d719313189fed69b274a1f314559_icgraph.png" border="0" usemap="#classMap_a3097d719313189fed69b274a1f314559_icgraph" alt=""/></div>
+<map name="classMap_a3097d719313189fed69b274a1f314559_icgraph" id="classMap_a3097d719313189fed69b274a1f314559_icgraph">
+<area shape="rect" title=" " alt="" coords="812,107,964,133"/>
+<area shape="rect" href="classInstance.html#a3ae20b7d21547d33c6a787fc5331ccc3" title=" " alt="" coords="585,107,764,133"/>
+<area shape="rect" href="classLNS.html#a5ccad09a04930841c3615ecf8ec0972d" title=" " alt="" coords="349,56,537,83"/>
+<area shape="rect" href="classInstance.html#aad5fc735ca29a154449c86c1690c743b" title=" " alt="" coords="373,107,514,133"/>
+<area shape="rect" href="classSIPP.html#a87c760657e7e2503a4e82c5be14f285f" title=" " alt="" coords="400,157,487,184"/>
+<area shape="rect" href="classLNS.html#a412b23f4704dc3ce9e01fe0331ca8728" title=" " alt="" coords="133,5,301,32"/>
+<area shape="rect" href="classLNS.html#a566e47ae5b4577e3a70dc6f819f302be" title=" " alt="" coords="5,56,85,83"/>
+<area shape="rect" href="classLNS.html#af68cb150f64a0c8f249057ab57364f48" title=" " alt="" coords="137,107,298,149"/>
+</map>
+</div>
+
+</div>
+</div>
+<a id="a5b661f42bc9b09f533f6d773f1bf8dab"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a5b661f42bc9b09f533f6d773f1bf8dab">&#9670;&nbsp;</a></span>get_num_free_cells()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">auto Map::get_num_free_cells </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const -&gt; int
+  </td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="Map_8h_source.html#l00078">78</a> of file <a class="el" href="Map_8h_source.html">Map.h</a>.</p>
+<div class="dynheader">
+Here is the caller graph for this function:</div>
+<div class="dyncontent">
+<div class="center"><img src="classMap_a5b661f42bc9b09f533f6d773f1bf8dab_icgraph.png" border="0" usemap="#classMap_a5b661f42bc9b09f533f6d773f1bf8dab_icgraph" alt=""/></div>
+<map name="classMap_a5b661f42bc9b09f533f6d773f1bf8dab_icgraph" id="classMap_a5b661f42bc9b09f533f6d773f1bf8dab_icgraph">
+<area shape="rect" title=" " alt="" coords="927,120,1112,147"/>
+<area shape="rect" href="classInstance.html#ab0a13882331419777eaa2870fbbf3c0a" title=" " alt="" coords="719,39,863,81"/>
+<area shape="rect" href="classInstance.html#a0575e9709197df95038612049a6bbc09" title=" " alt="" coords="704,145,879,186"/>
+<area shape="rect" href="classInstance.html#aad5fc735ca29a154449c86c1690c743b" title=" " alt="" coords="432,5,573,32"/>
+<area shape="rect" href="classConstraintTable.html#a5c386191610acb6c7f06ece5c799dc76" title=" " alt="" coords="403,57,602,98"/>
+<area shape="rect" href="classLNS.html#a5ccad09a04930841c3615ecf8ec0972d" title=" " alt="" coords="409,123,597,149"/>
+<area shape="rect" href="classEdgeConstraintTable.html#a9d043f53a556d662f54999671de2e552" title=" " alt="" coords="421,174,584,215"/>
+<area shape="rect" href="classEdgeConstraintTableWithAgentNums.html#a5458ba7fc89e5e277415e996b2ed4cc0" title=" " alt="" coords="349,239,656,281"/>
+<area shape="rect" href="classSafeIntervalTable.html#a6e918fffce85020e3be33bbca96d7695" title=" " alt="" coords="431,305,574,346"/>
+<area shape="rect" href="classLNS.html#a412b23f4704dc3ce9e01fe0331ca8728" title=" " alt="" coords="133,72,301,99"/>
+<area shape="rect" href="classLNS.html#a566e47ae5b4577e3a70dc6f819f302be" title=" " alt="" coords="5,123,85,149"/>
+<area shape="rect" href="classLNS.html#af68cb150f64a0c8f249057ab57364f48" title=" " alt="" coords="137,174,298,215"/>
+</map>
+</div>
+
+</div>
+</div>
+<a id="a8a5cde487f74a10b65956763b5ae02dc"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a8a5cde487f74a10b65956763b5ae02dc">&#9670;&nbsp;</a></span>index() <span class="overload">[1/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">auto Map::index </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="classPoint2d.html">Point2d</a> &amp;&#160;</td>
+          <td class="paramname"><em>point</em></td><td>)</td>
+          <td> const -&gt; uint8_t
+  </td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="Map_8h_source.html#l00039">39</a> of file <a class="el" href="Map_8h_source.html">Map.h</a>.</p>
+<div class="dynheader">
+Here is the caller graph for this function:</div>
+<div class="dyncontent">
+<div class="center"><img src="classMap_a8a5cde487f74a10b65956763b5ae02dc_icgraph.png" border="0" usemap="#classMap_a8a5cde487f74a10b65956763b5ae02dc_icgraph" alt=""/></div>
+<map name="classMap_a8a5cde487f74a10b65956763b5ae02dc_icgraph" id="classMap_a8a5cde487f74a10b65956763b5ae02dc_icgraph">
+<area shape="rect" title=" " alt="" coords="1860,261,1955,287"/>
+<area shape="rect" href="classInstance.html#a1fcfa01479d534f22741adddf23c4473" title=" " alt="" coords="1647,71,1794,112"/>
+<area shape="rect" href="classVisualizer.html#a5b9e61af0811391b1e32524439d77432" title=" " alt="" coords="1653,136,1788,177"/>
+<area shape="rect" href="classMap.html#a892ee6a5183c96c64f9070c2373e0421" title=" " alt="" coords="1657,202,1784,229"/>
+<area shape="rect" href="classMap.html#addc1c2f9e3dc7dcccb3a934879aafc3b" title=" " alt="" coords="1639,253,1802,295"/>
+<area shape="rect" href="classSIPP.html#a554425ea66302db84cbbd55252347ddc" title=" " alt="" coords="1647,319,1794,360"/>
+<area shape="rect" href="classSIPP.html#a99ea39d64a73b10e97046debfcd2d873" title=" " alt="" coords="1641,385,1801,411"/>
+<area shape="rect" href="classSIPP.html#a9c3c0bb8577a4af7cc66dc11b639cb18" title=" " alt="" coords="1629,435,1812,462"/>
+<area shape="rect" href="classSIPP.html#a440a585afee1b9ff3ae38ed91960b353" title=" " alt="" coords="1637,486,1804,513"/>
+<area shape="rect" href="classInstance.html#a314514e5ae9a143aeafafa44ada894a9" title=" " alt="" coords="1419,5,1581,47"/>
+<area shape="rect" href="classInstance.html#ab0a13882331419777eaa2870fbbf3c0a" title=" " alt="" coords="1428,71,1572,112"/>
+<area shape="rect" href="classInstance.html#aad5fc735ca29a154449c86c1690c743b" title=" " alt="" coords="1189,13,1330,39"/>
+<area shape="rect" href="classInstance.html#a169d34ab72276c674151fc9478714ba1" title=" " alt="" coords="1431,409,1569,451"/>
+<area shape="rect" href="classEdgeConstraintTable.html#a0a2eaab4ddac33b637461db8c7b7802c" title=" " alt="" coords="1166,261,1353,287"/>
+<area shape="rect" href="classEdgeConstraintTableWithAgentNums.html#aad915f6b894d5da8aa3ac0d7c503a3c7" title=" " alt="" coords="1148,129,1371,171"/>
+<area shape="rect" href="classConstraintTable.html#aff82442aa2588d601799d3e192f085db" title=" " alt="" coords="1182,195,1337,236"/>
+<area shape="rect" href="classSafeIntervalTable.html#a7323895f0831d0be6a4e6689f65cfee4" title=" " alt="" coords="1188,312,1331,353"/>
+<area shape="rect" href="classEdgeConstraintTable.html#ad09d951be4e60f6a73eea0f873e50aa7" title=" " alt="" coords="1167,639,1351,666"/>
+<area shape="rect" href="classConstraintTable.html#add338b302f24339c2c648cd1eb1018a5" title=" " alt="" coords="933,721,1085,763"/>
+<area shape="rect" href="classConstraintTable.html#a2c52de5157e198d0d8961de4c31ee302" title=" " alt="" coords="1178,508,1341,549"/>
+<area shape="rect" href="classSafeIntervalTable.html#a3c935b379679efb82451596f8c1a1f2b" title=" " alt="" coords="1176,808,1343,849"/>
+<area shape="rect" href="classSafeIntervalTable.html#a2c2c1dce378dd039c872a55b1d8dab8c" title=" " alt="" coords="1182,64,1337,105"/>
+<area shape="rect" href="classEdgeConstraintTable.html#a2d5dd7016a7603735b0c9b4ebc61a857" title=" " alt="" coords="1182,691,1337,732"/>
+<area shape="rect" href="classEdgeConstraintTableWithAgentNums.html#af83c763a4c4a384a887bb1c01f712bc6" title=" " alt="" coords="1148,377,1371,419"/>
+<area shape="rect" href="classConstraintTable.html#a337ab1a6d473a1e46934c312cba144c6" title=" " alt="" coords="1169,443,1350,484"/>
+<area shape="rect" href="classSafeIntervalTable.html#a4c7d822c436caf8822ed179e00b6c94e" title=" " alt="" coords="1187,573,1331,615"/>
+<area shape="rect" href="classSafeIntervalTable.html#a787f99329e3378787106076ecaf026a9" title=" " alt="" coords="938,280,1081,321"/>
+<area shape="rect" href="classConstraintTable.html#a26372c16fc3dc1796c362d19489a78de" title=" " alt="" coords="932,201,1087,243"/>
+<area shape="rect" href="classConstraintTable.html#ab2bd3a0825989119ce58b5194e294a1d" title=" " alt="" coords="695,201,858,243"/>
+<area shape="rect" href="classLNS.html#a319d877bb15af0145e03c374929d3ddc" title=" " alt="" coords="696,267,857,294"/>
+<area shape="rect" href="classLNS.html#af3084016c73f066f5e33e0d4847b50c2" title=" " alt="" coords="703,349,850,375"/>
+<area shape="rect" href="classLNS.html#a658e49decd804a9fa1a08d065ae6304d" title=" " alt="" coords="452,201,635,243"/>
+<area shape="rect" href="classLNS.html#ab4a4826221160701ee3cf6ca93feb1f7" title=" " alt="" coords="313,238,404,265"/>
+<area shape="rect" href="destroy_8cpp.html#a1fe60ef45fb8a4e175eb3b737505f3d5" title=" " alt="" coords="108,238,265,265"/>
+<area shape="rect" href="destroy_8cpp.html#a808f40e2e9d6eb5463165c031dfa3eb1" title=" " alt="" coords="5,238,60,265"/>
+<area shape="rect" href="classLNS.html#a5ccad09a04930841c3615ecf8ec0972d" title=" " alt="" coords="683,649,871,675"/>
+<area shape="rect" href="classLNS.html#a412b23f4704dc3ce9e01fe0331ca8728" title=" " alt="" coords="459,590,627,617"/>
+<area shape="rect" href="classLNS.html#a566e47ae5b4577e3a70dc6f819f302be" title=" " alt="" coords="319,649,399,675"/>
+<area shape="rect" href="classLNS.html#af68cb150f64a0c8f249057ab57364f48" title=" " alt="" coords="463,641,624,683"/>
+<area shape="rect" href="classLNS.html#a852ca0c6ca9152bef516c29f3c210f66" title=" " alt="" coords="929,535,1089,576"/>
+<area shape="rect" href="classSafeIntervalTable.html#a468afa97880d6f8daeada75d8cc08cf2" title=" " alt="" coords="934,628,1085,669"/>
+<area shape="rect" href="classConstraintTable.html#af360477b2e043a058cbb2b82d24fd37f" title=" " alt="" coords="919,371,1100,412"/>
+</map>
+</div>
+
+</div>
+</div>
+<a id="a3b01c378795e5c4345d10cc21bd74c3a"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a3b01c378795e5c4345d10cc21bd74c3a">&#9670;&nbsp;</a></span>index() <span class="overload">[2/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">auto Map::index </td>
+          <td>(</td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>loc</em></td><td>)</td>
+          <td> const -&gt; uint8_t
+  </td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="Map_8h_source.html#l00046">46</a> of file <a class="el" href="Map_8h_source.html">Map.h</a>.</p>
+
+</div>
+</div>
+<a id="a892ee6a5183c96c64f9070c2373e0421"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a892ee6a5183c96c64f9070c2373e0421">&#9670;&nbsp;</a></span>index_free()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">auto Map::index_free </td>
+          <td>(</td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>free_loc</em></td><td>)</td>
+          <td> const -&gt; uint8_t
+  </td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="Map_8h_source.html#l00053">53</a> of file <a class="el" href="Map_8h_source.html">Map.h</a>.</p>
+
+</div>
+</div>
+<a id="a11fdc9fa5646551a2db1e22dac5e8b24"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a11fdc9fa5646551a2db1e22dac5e8b24">&#9670;&nbsp;</a></span>is_in() <span class="overload">[1/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">auto Map::is_in </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="classPoint2d.html">Point2d</a> &amp;&#160;</td>
+          <td class="paramname"><em>p</em></td><td>)</td>
+          <td> const -&gt; bool
+  </td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="Map_8h_source.html#l00027">27</a> of file <a class="el" href="Map_8h_source.html">Map.h</a>.</p>
+<div class="dynheader">
+Here is the caller graph for this function:</div>
+<div class="dyncontent">
+<div class="center"><img src="classMap_a11fdc9fa5646551a2db1e22dac5e8b24_icgraph.png" border="0" usemap="#classMap_a11fdc9fa5646551a2db1e22dac5e8b24_icgraph" alt=""/></div>
+<map name="classMap_a11fdc9fa5646551a2db1e22dac5e8b24_icgraph" id="classMap_a11fdc9fa5646551a2db1e22dac5e8b24_icgraph">
+<area shape="rect" title=" " alt="" coords="2105,529,2193,555"/>
+<area shape="rect" href="classInstance.html#aea24592eae44de7ddbd4c456e7730240" title=" " alt="" coords="1419,45,1588,87"/>
+<area shape="rect" href="classInstance.html#afc521666dcc3735db259dfda6666522a" title=" " alt="" coords="1877,631,2047,672"/>
+<area shape="rect" href="classInstance.html#aa7ca448dfeff607fbdd8d5d32e334ea3" title=" " alt="" coords="1877,696,2047,737"/>
+<area shape="rect" href="classInstance.html#a598a85457c8d381be2377fd245f736a0" title=" " alt="" coords="1877,112,2047,153"/>
+<area shape="rect" href="classMap.html#a8a5cde487f74a10b65956763b5ae02dc" title=" " alt="" coords="1915,365,2009,391"/>
+<area shape="rect" href="classSIPP.html#a554425ea66302db84cbbd55252347ddc" title=" " alt="" coords="1654,413,1801,455"/>
+<area shape="rect" href="classSIPP.html#a99ea39d64a73b10e97046debfcd2d873" title=" " alt="" coords="1647,479,1807,506"/>
+<area shape="rect" href="classSIPP.html#a9c3c0bb8577a4af7cc66dc11b639cb18" title=" " alt="" coords="1636,530,1819,557"/>
+<area shape="rect" href="classSIPP.html#a440a585afee1b9ff3ae38ed91960b353" title=" " alt="" coords="1644,581,1811,607"/>
+<area shape="rect" href="classInstance.html#a7ab8e6c77f6c5cd23e1e4f4499d34e3e" title=" " alt="" coords="1867,762,2057,789"/>
+<area shape="rect" href="classInstance.html#a09380c28db3c0a6a45e2590eeebc4710" title=" " alt="" coords="1881,830,2043,857"/>
+<area shape="rect" href="classSolution.html#a1802864ca1ab7bffdb1710644daf3877" title=" " alt="" coords="1171,45,1347,71"/>
+<area shape="rect" href="classInstance.html#aad5fc735ca29a154449c86c1690c743b" title=" " alt="" coords="1189,95,1330,122"/>
+<area shape="rect" href="classExperiment.html#ac3467eb067f8623c9cf3cd7c736a8c80" title=" " alt="" coords="946,45,1073,71"/>
+<area shape="rect" href="classLNS.html#ab4a4826221160701ee3cf6ca93feb1f7" title=" " alt="" coords="313,371,404,398"/>
+<area shape="rect" href="destroy_8cpp.html#a1fe60ef45fb8a4e175eb3b737505f3d5" title=" " alt="" coords="108,371,265,398"/>
+<area shape="rect" href="destroy_8cpp.html#a808f40e2e9d6eb5463165c031dfa3eb1" title=" " alt="" coords="5,371,60,398"/>
+<area shape="rect" href="classInstance.html#a1fcfa01479d534f22741adddf23c4473" title=" " alt="" coords="1654,112,1801,153"/>
+<area shape="rect" href="classLNS.html#a5ccad09a04930841c3615ecf8ec0972d" title=" " alt="" coords="683,74,871,101"/>
+<area shape="rect" href="classInstance.html#ab0a13882331419777eaa2870fbbf3c0a" title=" " alt="" coords="1431,111,1575,152"/>
+<area shape="rect" href="classLNS.html#a412b23f4704dc3ce9e01fe0331ca8728" title=" " alt="" coords="459,45,627,71"/>
+<area shape="rect" href="classLNS.html#a566e47ae5b4577e3a70dc6f819f302be" title=" " alt="" coords="319,45,399,71"/>
+<area shape="rect" href="classLNS.html#af68cb150f64a0c8f249057ab57364f48" title=" " alt="" coords="463,96,624,137"/>
+<area shape="rect" href="classVisualizer.html#a5b9e61af0811391b1e32524439d77432" title=" " alt="" coords="1660,348,1795,389"/>
+<area shape="rect" href="classMap.html#a892ee6a5183c96c64f9070c2373e0421" title=" " alt="" coords="1664,231,1791,258"/>
+<area shape="rect" href="classMap.html#addc1c2f9e3dc7dcccb3a934879aafc3b" title=" " alt="" coords="1646,283,1809,324"/>
+<area shape="rect" href="classInstance.html#a314514e5ae9a143aeafafa44ada894a9" title=" " alt="" coords="1422,176,1585,217"/>
+<area shape="rect" href="classInstance.html#a169d34ab72276c674151fc9478714ba1" title=" " alt="" coords="1435,481,1572,523"/>
+<area shape="rect" href="classEdgeConstraintTable.html#a0a2eaab4ddac33b637461db8c7b7802c" title=" " alt="" coords="1166,459,1353,486"/>
+<area shape="rect" href="classEdgeConstraintTableWithAgentNums.html#aad915f6b894d5da8aa3ac0d7c503a3c7" title=" " alt="" coords="1148,263,1371,304"/>
+<area shape="rect" href="classConstraintTable.html#aff82442aa2588d601799d3e192f085db" title=" " alt="" coords="1182,393,1337,435"/>
+<area shape="rect" href="classSafeIntervalTable.html#a7323895f0831d0be6a4e6689f65cfee4" title=" " alt="" coords="1188,576,1331,617"/>
+<area shape="rect" href="classEdgeConstraintTable.html#ad09d951be4e60f6a73eea0f873e50aa7" title=" " alt="" coords="1167,903,1351,930"/>
+<area shape="rect" href="classConstraintTable.html#add338b302f24339c2c648cd1eb1018a5" title=" " alt="" coords="933,96,1085,137"/>
+<area shape="rect" href="classConstraintTable.html#a2c52de5157e198d0d8961de4c31ee302" title=" " alt="" coords="1178,197,1341,239"/>
+<area shape="rect" href="classSafeIntervalTable.html#a3c935b379679efb82451596f8c1a1f2b" title=" " alt="" coords="1176,328,1343,369"/>
+<area shape="rect" href="classSafeIntervalTable.html#a2c2c1dce378dd039c872a55b1d8dab8c" title=" " alt="" coords="1182,511,1337,552"/>
+<area shape="rect" href="classEdgeConstraintTable.html#a2d5dd7016a7603735b0c9b4ebc61a857" title=" " alt="" coords="1182,772,1337,813"/>
+<area shape="rect" href="classEdgeConstraintTableWithAgentNums.html#af83c763a4c4a384a887bb1c01f712bc6" title=" " alt="" coords="1148,641,1371,683"/>
+<area shape="rect" href="classConstraintTable.html#a337ab1a6d473a1e46934c312cba144c6" title=" " alt="" coords="1169,707,1350,748"/>
+<area shape="rect" href="classSafeIntervalTable.html#a4c7d822c436caf8822ed179e00b6c94e" title=" " alt="" coords="1187,837,1331,879"/>
+<area shape="rect" href="classSafeIntervalTable.html#a787f99329e3378787106076ecaf026a9" title=" " alt="" coords="938,517,1081,559"/>
+<area shape="rect" href="classConstraintTable.html#a26372c16fc3dc1796c362d19489a78de" title=" " alt="" coords="932,393,1087,435"/>
+<area shape="rect" href="classConstraintTable.html#ab2bd3a0825989119ce58b5194e294a1d" title=" " alt="" coords="695,364,858,405"/>
+<area shape="rect" href="classLNS.html#a319d877bb15af0145e03c374929d3ddc" title=" " alt="" coords="696,481,857,507"/>
+<area shape="rect" href="classLNS.html#af3084016c73f066f5e33e0d4847b50c2" title=" " alt="" coords="703,430,850,457"/>
+<area shape="rect" href="classLNS.html#a658e49decd804a9fa1a08d065ae6304d" title=" " alt="" coords="452,364,635,405"/>
+<area shape="rect" href="classLNS.html#a852ca0c6ca9152bef516c29f3c210f66" title=" " alt="" coords="929,213,1089,255"/>
+<area shape="rect" href="classSafeIntervalTable.html#a468afa97880d6f8daeada75d8cc08cf2" title=" " alt="" coords="934,804,1085,845"/>
+<area shape="rect" href="classConstraintTable.html#af360477b2e043a058cbb2b82d24fd37f" title=" " alt="" coords="919,612,1100,653"/>
+<area shape="rect" href="classVisualizer.html#a5039ba670d8066a94163e5f6460d7236" title=" " alt="" coords="1660,859,1795,900"/>
+<area shape="rect" href="classVisualizer.html#a531350c5ec8ec39867647997690fc9fb" title=" " alt="" coords="1446,938,1561,965"/>
+<area shape="rect" href="classVisualizer.html#a2b6436ec715468955ebb9f53b908773f" title=" " alt="" coords="1197,954,1321,981"/>
+<area shape="rect" href="main_8cpp.html#a808f40e2e9d6eb5463165c031dfa3eb1" title=" " alt="" coords="982,954,1037,981"/>
+</map>
+</div>
+
+</div>
+</div>
+<a id="a4871cd884d0050babf6a4ffe52feec54"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a4871cd884d0050babf6a4ffe52feec54">&#9670;&nbsp;</a></span>is_in() <span class="overload">[2/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">auto Map::is_in </td>
+          <td>(</td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>loc</em></td><td>)</td>
+          <td> const -&gt; bool
+  </td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="Map_8h_source.html#l00033">33</a> of file <a class="el" href="Map_8h_source.html">Map.h</a>.</p>
+
+</div>
+</div>
+<a id="a002979d7be9208d237c982efeb2887e2"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a002979d7be9208d237c982efeb2887e2">&#9670;&nbsp;</a></span>load()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">bool Map::is_in </td>
+          <td class="memname">void Map::load </td>
           <td>(</td>
-          <td class="paramtype">const <a class="el" href="classPoint2d.html">Point2d</a> &amp;&#160;</td>
-          <td class="paramname"><em>point</em></td><td>)</td>
-          <td> const</td>
+          <td class="paramtype">const std::string &amp;&#160;</td>
+          <td class="paramname"><em>map_fname</em></td><td>)</td>
+          <td></td>
         </tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="utils_8cpp_source.html#l00057">57</a> of file <a class="el" href="utils_8cpp_source.html">utils.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="Map_8cpp_source.html#l00086">86</a> of file <a class="el" href="Map_8cpp_source.html">Map.cpp</a>.</p>
 <div class="dynheader">
 Here is the caller graph for this function:</div>
 <div class="dyncontent">
-<div class="center"><img src="classMap_ad8ad608fa4101052d04723fe490b3ba2_icgraph.png" border="0" usemap="#classMap_ad8ad608fa4101052d04723fe490b3ba2_icgraph" alt=""/></div>
-<map name="classMap_ad8ad608fa4101052d04723fe490b3ba2_icgraph" id="classMap_ad8ad608fa4101052d04723fe490b3ba2_icgraph">
-<area shape="rect" title=" " alt="" coords="415,70,503,97"/>
-<area shape="rect" href="namespaceASTAR.html#a467e25eb7296335b44dd88b208bd4b01" title="An implementation of the A* algorithm, find the shortest path between two points in a grid map consid..." alt="" coords="232,45,367,71"/>
-<area shape="rect" href="classSIPP.html#a35258e94140f3de07b765cb91ce13c50" title=" " alt="" coords="256,95,343,122"/>
-<area shape="rect" href="classInstance.html#a06bfc2787b952c7c33f700eb71367b99" title=" " alt="" coords="23,5,167,47"/>
-<area shape="rect" href="classInstance.html#ae3bd691dd618ce7cbe48455bd32e8b2c" title=" " alt="" coords="5,71,184,112"/>
+<div class="center"><img src="classMap_a002979d7be9208d237c982efeb2887e2_icgraph.png" border="0" usemap="#classMap_a002979d7be9208d237c982efeb2887e2_icgraph" alt=""/></div>
+<map name="classMap_a002979d7be9208d237c982efeb2887e2_icgraph" id="classMap_a002979d7be9208d237c982efeb2887e2_icgraph">
+<area shape="rect" title=" " alt="" coords="392,5,479,32"/>
+<area shape="rect" href="classInstance.html#a1a88380161d5aeac8db660127470fed7" title="Load the map from a file specified during Instance initialization." alt="" coords="195,5,344,32"/>
+<area shape="rect" href="classInstance.html#aad5fc735ca29a154449c86c1690c743b" title=" " alt="" coords="5,5,147,32"/>
+</map>
+</div>
+
+</div>
+</div>
+<a id="addc1c2f9e3dc7dcccb3a934879aafc3b"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#addc1c2f9e3dc7dcccb3a934879aafc3b">&#9670;&nbsp;</a></span>location_to_free_location()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">auto Map::location_to_free_location </td>
+          <td>(</td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>loc</em></td><td>)</td>
+          <td> const -&gt; int
+  </td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="Map_8h_source.html#l00065">65</a> of file <a class="el" href="Map_8h_source.html">Map.h</a>.</p>
+<div class="dynheader">
+Here is the caller graph for this function:</div>
+<div class="dyncontent">
+<div class="center"><img src="classMap_addc1c2f9e3dc7dcccb3a934879aafc3b_icgraph.png" border="0" usemap="#classMap_addc1c2f9e3dc7dcccb3a934879aafc3b_icgraph" alt=""/></div>
+<map name="classMap_addc1c2f9e3dc7dcccb3a934879aafc3b_icgraph" id="classMap_addc1c2f9e3dc7dcccb3a934879aafc3b_icgraph">
+<area shape="rect" title=" " alt="" coords="1604,377,1767,419"/>
+<area shape="rect" href="classInstance.html#a169d34ab72276c674151fc9478714ba1" title=" " alt="" coords="1419,377,1556,419"/>
+<area shape="rect" href="classEdgeConstraintTable.html#a0a2eaab4ddac33b637461db8c7b7802c" title=" " alt="" coords="1166,71,1353,98"/>
+<area shape="rect" href="classEdgeConstraintTableWithAgentNums.html#aad915f6b894d5da8aa3ac0d7c503a3c7" title=" " alt="" coords="1148,188,1371,229"/>
+<area shape="rect" href="classConstraintTable.html#aff82442aa2588d601799d3e192f085db" title=" " alt="" coords="1182,123,1337,164"/>
+<area shape="rect" href="classSafeIntervalTable.html#a7323895f0831d0be6a4e6689f65cfee4" title=" " alt="" coords="1188,5,1331,47"/>
+<area shape="rect" href="classEdgeConstraintTable.html#ad09d951be4e60f6a73eea0f873e50aa7" title=" " alt="" coords="1167,385,1351,411"/>
+<area shape="rect" href="classConstraintTable.html#add338b302f24339c2c648cd1eb1018a5" title=" " alt="" coords="933,424,1085,465"/>
+<area shape="rect" href="classConstraintTable.html#a2c52de5157e198d0d8961de4c31ee302" title=" " alt="" coords="1178,487,1341,528"/>
+<area shape="rect" href="classSafeIntervalTable.html#a3c935b379679efb82451596f8c1a1f2b" title=" " alt="" coords="1176,552,1343,593"/>
+<area shape="rect" href="classSafeIntervalTable.html#a2c2c1dce378dd039c872a55b1d8dab8c" title=" " alt="" coords="1182,617,1337,659"/>
+<area shape="rect" href="classEdgeConstraintTable.html#a2d5dd7016a7603735b0c9b4ebc61a857" title=" " alt="" coords="1182,748,1337,789"/>
+<area shape="rect" href="classEdgeConstraintTableWithAgentNums.html#af83c763a4c4a384a887bb1c01f712bc6" title=" " alt="" coords="1148,319,1371,360"/>
+<area shape="rect" href="classConstraintTable.html#a337ab1a6d473a1e46934c312cba144c6" title=" " alt="" coords="1169,253,1350,295"/>
+<area shape="rect" href="classSafeIntervalTable.html#a4c7d822c436caf8822ed179e00b6c94e" title=" " alt="" coords="1187,683,1331,724"/>
+<area shape="rect" href="classSafeIntervalTable.html#a787f99329e3378787106076ecaf026a9" title=" " alt="" coords="938,35,1081,76"/>
+<area shape="rect" href="classConstraintTable.html#a26372c16fc3dc1796c362d19489a78de" title=" " alt="" coords="932,188,1087,229"/>
+<area shape="rect" href="classConstraintTable.html#ab2bd3a0825989119ce58b5194e294a1d" title=" " alt="" coords="695,144,858,185"/>
+<area shape="rect" href="classLNS.html#a319d877bb15af0145e03c374929d3ddc" title=" " alt="" coords="696,210,857,237"/>
+<area shape="rect" href="classLNS.html#af3084016c73f066f5e33e0d4847b50c2" title=" " alt="" coords="703,261,850,287"/>
+<area shape="rect" href="classLNS.html#a658e49decd804a9fa1a08d065ae6304d" title=" " alt="" coords="452,144,635,185"/>
+<area shape="rect" href="classLNS.html#ab4a4826221160701ee3cf6ca93feb1f7" title=" " alt="" coords="313,181,404,207"/>
+<area shape="rect" href="destroy_8cpp.html#a1fe60ef45fb8a4e175eb3b737505f3d5" title=" " alt="" coords="108,181,265,207"/>
+<area shape="rect" href="destroy_8cpp.html#a808f40e2e9d6eb5463165c031dfa3eb1" title=" " alt="" coords="5,181,60,207"/>
+<area shape="rect" href="classLNS.html#a5ccad09a04930841c3615ecf8ec0972d" title=" " alt="" coords="683,463,871,490"/>
+<area shape="rect" href="classLNS.html#a412b23f4704dc3ce9e01fe0331ca8728" title=" " alt="" coords="459,463,627,490"/>
+<area shape="rect" href="classLNS.html#a566e47ae5b4577e3a70dc6f819f302be" title=" " alt="" coords="319,463,399,490"/>
+<area shape="rect" href="classLNS.html#af68cb150f64a0c8f249057ab57364f48" title=" " alt="" coords="463,515,624,556"/>
+<area shape="rect" href="classLNS.html#a852ca0c6ca9152bef516c29f3c210f66" title=" " alt="" coords="929,489,1089,531"/>
+<area shape="rect" href="classSafeIntervalTable.html#a468afa97880d6f8daeada75d8cc08cf2" title=" " alt="" coords="934,715,1085,756"/>
+<area shape="rect" href="classConstraintTable.html#af360477b2e043a058cbb2b82d24fd37f" title=" " alt="" coords="919,253,1100,295"/>
+</map>
+</div>
+
+</div>
+</div>
+<a id="a59bd171a11b9e9a55cee1d7b6e057d56"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a59bd171a11b9e9a55cee1d7b6e057d56">&#9670;&nbsp;</a></span>position_to_index()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">auto Map::position_to_index </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="classPoint2d.html">Point2d</a> &amp;&#160;</td>
+          <td class="paramname"><em>p</em></td><td>)</td>
+          <td> const -&gt; int
+  </td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="Map_8h_source.html#l00072">72</a> of file <a class="el" href="Map_8h_source.html">Map.h</a>.</p>
+<div class="dynheader">
+Here is the caller graph for this function:</div>
+<div class="dyncontent">
+<div class="center"><img src="classMap_a59bd171a11b9e9a55cee1d7b6e057d56_icgraph.png" border="0" usemap="#classMap_a59bd171a11b9e9a55cee1d7b6e057d56_icgraph" alt=""/></div>
+<map name="classMap_a59bd171a11b9e9a55cee1d7b6e057d56_icgraph" id="classMap_a59bd171a11b9e9a55cee1d7b6e057d56_icgraph">
+<area shape="rect" title=" " alt="" coords="401,5,575,32"/>
+<area shape="rect" href="classInstance.html#ad2a9e09a28e59f4eece0fa8f124e5cf2" title=" " alt="" coords="195,5,353,32"/>
+<area shape="rect" href="classInstance.html#aad5fc735ca29a154449c86c1690c743b" title=" " alt="" coords="5,5,147,32"/>
 </map>
 </div>
 
@@ -218,14 +745,14 @@ Here is the caller graph for this function:</div>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="Instance_8cpp_source.html#l00019">19</a> of file <a class="el" href="Instance_8cpp_source.html">Instance.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="Map_8cpp_source.html#l00061">61</a> of file <a class="el" href="Map_8cpp_source.html">Map.cpp</a>.</p>
 <div class="dynheader">
 Here is the caller graph for this function:</div>
 <div class="dyncontent">
 <div class="center"><img src="classMap_ae2ca3cf38d86f86a0ac819db71fd3354_icgraph.png" border="0" usemap="#classMap_ae2ca3cf38d86f86a0ac819db71fd3354_icgraph" alt=""/></div>
 <map name="classMap_ae2ca3cf38d86f86a0ac819db71fd3354_icgraph" id="classMap_ae2ca3cf38d86f86a0ac819db71fd3354_icgraph">
 <area shape="rect" title=" " alt="" coords="204,5,292,32"/>
-<area shape="rect" href="classInstance.html#a4bdcc6b3fa14bc9d74f290cc56b7ab19" title=" " alt="" coords="5,5,156,32"/>
+<area shape="rect" href="classInstance.html#a177e628611a4e91f89029c9536fb51a0" title=" " alt="" coords="5,5,156,32"/>
 </map>
 </div>
 
@@ -244,7 +771,23 @@ Here is the caller graph for this function:</div>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="utils_8h_source.html#l00093">93</a> of file <a class="el" href="utils_8h_source.html">utils.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="Map_8h_source.html#l00019">19</a> of file <a class="el" href="Map_8h_source.html">Map.h</a>.</p>
+
+</div>
+</div>
+<a id="a7a05ba5cccf5a410fba1ed4406dcede1"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a7a05ba5cccf5a410fba1ed4406dcede1">&#9670;&nbsp;</a></span>free_location_to_location_vec</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::vector&lt;int&gt; Map::free_location_to_location_vec</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="Map_8h_source.html#l00017">17</a> of file <a class="el" href="Map_8h_source.html">Map.h</a>.</p>
 
 </div>
 </div>
@@ -260,7 +803,55 @@ Here is the caller graph for this function:</div>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="utils_8h_source.html#l00092">92</a> of file <a class="el" href="utils_8h_source.html">utils.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="Map_8h_source.html#l00014">14</a> of file <a class="el" href="Map_8h_source.html">Map.h</a>.</p>
+
+</div>
+</div>
+<a id="ae7fbbd85e0cbd7219a468c56797a694f"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ae7fbbd85e0cbd7219a468c56797a694f">&#9670;&nbsp;</a></span>loaded</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool Map::loaded = false</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="Map_8h_source.html#l00015">15</a> of file <a class="el" href="Map_8h_source.html">Map.h</a>.</p>
+
+</div>
+</div>
+<a id="ab83934742f20c3211adf8ed155674d7e"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ab83934742f20c3211adf8ed155674d7e">&#9670;&nbsp;</a></span>location_to_free_location_vec</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::vector&lt;int&gt; Map::location_to_free_location_vec</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="Map_8h_source.html#l00018">18</a> of file <a class="el" href="Map_8h_source.html">Map.h</a>.</p>
+
+</div>
+</div>
+<a id="aa6e7a427f467c84f33079371231b69c0"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aa6e7a427f467c84f33079371231b69c0">&#9670;&nbsp;</a></span>type</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::string Map::type</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="Map_8h_source.html#l00016">16</a> of file <a class="el" href="Map_8h_source.html">Map.h</a>.</p>
 
 </div>
 </div>
@@ -276,14 +867,13 @@ Here is the caller graph for this function:</div>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="utils_8h_source.html#l00091">91</a> of file <a class="el" href="utils_8h_source.html">utils.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="Map_8h_source.html#l00013">13</a> of file <a class="el" href="Map_8h_source.html">Map.h</a>.</p>
 
 </div>
 </div>
 <hr/>The documentation for this class was generated from the following files:<ul>
-<li>inc/<a class="el" href="utils_8h_source.html">utils.h</a></li>
-<li>src/<a class="el" href="Instance_8cpp_source.html">Instance.cpp</a></li>
-<li>src/<a class="el" href="utils_8cpp_source.html">utils.cpp</a></li>
+<li>inc/<a class="el" href="Map_8h_source.html">Map.h</a></li>
+<li>src/<a class="el" href="Map_8cpp_source.html">Map.cpp</a></li>
 </ul>
 </div><!-- contents -->
 <!-- start footer part -->

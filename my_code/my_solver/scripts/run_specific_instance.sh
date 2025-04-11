@@ -11,6 +11,12 @@ then
 elif [ $1 == "empty" ]
 then
 ./scripts/run.sh -m ../../MAPF-benchmark/mapf-map/empty-16-16.map -a ../../MAPF-benchmark/mapf-scen-random/scen-random/empty-16-16-random-1.scen -k 60 $@
+elif [ $1 == "empty-32-32" ]
+then
+./scripts/run.sh -m ../../MAPF-benchmark/mapf-map/empty-32-32.map -a ../../MAPF-benchmark/mapf-scen-random/scen-random/empty-32-32-random-1.scen -k 150 $@
+elif [ $1 == "random-32-32-10" ]
+then
+./scripts/run.sh -m ../../MAPF-benchmark/mapf-map/random-32-32-10.map -a ../../MAPF-benchmark/mapf-scen-random/scen-random/random-32-32-10-random-1.scen -k 100 $@
 elif [ $1 == "empty-8-8" ]
 then
 ./scripts/run.sh -m ../../MAPF-benchmark/mapf-map/empty-8-8.map -a ../../MAPF-benchmark/mapf-scen-random/scen-random/empty-8-8-random-1.scen -k 32 -s 2119874029 -i 1 $@

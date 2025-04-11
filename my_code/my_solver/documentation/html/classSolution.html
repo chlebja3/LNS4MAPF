@@ -76,45 +76,188 @@ $(function() {
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:a6383372af56bfeeb693745593d933e91"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSolution.html#a6383372af56bfeeb693745593d933e91">is_valid</a> (std::shared_ptr&lt; <a class="el" href="classInstance.html">Instance</a> &gt; instance) const</td></tr>
-<tr class="separator:a6383372af56bfeeb693745593d933e91"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0088a845fe8eb84b23ce4adbb8820890"><td class="memItemLeft" align="right" valign="top">auto&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSolution.html#a0088a845fe8eb84b23ce4adbb8820890">is_valid</a> (const <a class="el" href="classInstance.html">Instance</a> &amp;instance) const -&gt; bool</td></tr>
+<tr class="separator:a0088a845fe8eb84b23ce4adbb8820890"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a9df6f3a07aa7d31c13349b1d1d837eb7"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSolution.html#a9df6f3a07aa7d31c13349b1d1d837eb7">load</a> (const std::string &amp;filename, const <a class="el" href="classInstance.html">Instance</a> &amp;instance)</td></tr>
+<tr class="separator:a9df6f3a07aa7d31c13349b1d1d837eb7"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1802864ca1ab7bffdb1710644daf3877"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSolution.html#a1802864ca1ab7bffdb1710644daf3877">calculate_cost</a> (const <a class="el" href="classInstance.html">Instance</a> &amp;instance)</td></tr>
+<tr class="separator:a1802864ca1ab7bffdb1710644daf3877"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae31036e45ea6efd6047225db796af803"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSolution.html#ae31036e45ea6efd6047225db796af803">convert_paths</a> () const</td></tr>
+<tr class="separator:ae31036e45ea6efd6047225db796af803"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-attribs"></a>
 Public Attributes</h2></td></tr>
-<tr class="memitem:a85e0f424008f65d394cc7d992a69d462"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSolution.html#a85e0f424008f65d394cc7d992a69d462">feasible</a></td></tr>
+<tr class="memitem:a85e0f424008f65d394cc7d992a69d462"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSolution.html#a85e0f424008f65d394cc7d992a69d462">feasible</a> = true</td></tr>
 <tr class="separator:a85e0f424008f65d394cc7d992a69d462"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:af112eace99b7e64ef0d78ce6f45e30c9"><td class="memItemLeft" align="right" valign="top">std::vector&lt; <a class="el" href="utils_8h.html#a4b0c12fdb9bfd266c909605f8aa6e3d6">Path</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSolution.html#af112eace99b7e64ef0d78ce6f45e30c9">paths</a></td></tr>
-<tr class="separator:af112eace99b7e64ef0d78ce6f45e30c9"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad53ac21a51f00f663407a0115a534ee0"><td class="memItemLeft" align="right" valign="top">std::vector&lt; <a class="el" href="utils_8h.html#a64881685b4fe27a0cf599222d5fb1c72">TimePointPath</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSolution.html#ad53ac21a51f00f663407a0115a534ee0">paths</a></td></tr>
+<tr class="separator:ad53ac21a51f00f663407a0115a534ee0"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a8084822afa1f7c66aa8685aec7f3e1e5"><td class="memItemLeft" align="right" valign="top">std::vector&lt; <a class="el" href="utils_8h.html#aeafaa6f891ae3667bf528a84285282b3">Path</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSolution.html#a8084822afa1f7c66aa8685aec7f3e1e5">converted_paths</a></td></tr>
+<tr class="separator:a8084822afa1f7c66aa8685aec7f3e1e5"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac3fb8b31d6160ddce5da11a299cef58a"><td class="memItemLeft" align="right" valign="top">std::vector&lt; int &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSolution.html#ac3fb8b31d6160ddce5da11a299cef58a">delays</a></td></tr>
+<tr class="separator:ac3fb8b31d6160ddce5da11a299cef58a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a295aa3588361b00de059cf683848cb50"><td class="memItemLeft" align="right" valign="top">std::vector&lt; int &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSolution.html#a295aa3588361b00de059cf683848cb50">destroyed_paths</a></td></tr>
+<tr class="separator:a295aa3588361b00de059cf683848cb50"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a014414db3395643f715c5a350f9e4399"><td class="memItemLeft" align="right" valign="top">std::vector&lt; int &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSolution.html#a014414db3395643f715c5a350f9e4399">priorities</a></td></tr>
+<tr class="separator:a014414db3395643f715c5a350f9e4399"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a2631db5798943bb7cc5cf0ab58951069"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSolution.html#a2631db5798943bb7cc5cf0ab58951069">cost</a></td></tr>
 <tr class="separator:a2631db5798943bb7cc5cf0ab58951069"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ac1a90e57dcbd81492773be9110b72562"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSolution.html#ac1a90e57dcbd81492773be9110b72562">delay</a></td></tr>
-<tr class="separator:ac1a90e57dcbd81492773be9110b72562"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a6bd2c7034b08774dfbce6b1ef9475577"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSolution.html#a6bd2c7034b08774dfbce6b1ef9475577">sum_of_delays</a></td></tr>
+<tr class="separator:a6bd2c7034b08774dfbce6b1ef9475577"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a30361073b628a332697cabf5df5e6322"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSolution.html#a30361073b628a332697cabf5df5e6322">sum_of_costs</a></td></tr>
+<tr class="separator:a30361073b628a332697cabf5df5e6322"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a06fbca8c6117b43d1933d6315b47db88"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSolution.html#a06fbca8c6117b43d1933d6315b47db88">makespan</a></td></tr>
+<tr class="separator:a06fbca8c6117b43d1933d6315b47db88"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock">
-<p class="definition">Definition at line <a class="el" href="Solver_8h_source.html#l00016">16</a> of file <a class="el" href="Solver_8h_source.html">Solver.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="Solver_8h_source.html#l00017">17</a> of file <a class="el" href="Solver_8h_source.html">Solver.h</a>.</p>
 </div><h2 class="groupheader">Member Function Documentation</h2>
-<a id="a6383372af56bfeeb693745593d933e91"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a6383372af56bfeeb693745593d933e91">&#9670;&nbsp;</a></span>is_valid()</h2>
+<a id="a1802864ca1ab7bffdb1710644daf3877"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a1802864ca1ab7bffdb1710644daf3877">&#9670;&nbsp;</a></span>calculate_cost()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">bool Solution::is_valid </td>
+          <td class="memname">void Solution::calculate_cost </td>
           <td>(</td>
-          <td class="paramtype">std::shared_ptr&lt; <a class="el" href="classInstance.html">Instance</a> &gt;&#160;</td>
+          <td class="paramtype">const <a class="el" href="classInstance.html">Instance</a> &amp;&#160;</td>
           <td class="paramname"><em>instance</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="Solver_8cpp_source.html#l00269">269</a> of file <a class="el" href="Solver_8cpp_source.html">Solver.cpp</a>.</p>
+<div class="dynheader">
+Here is the caller graph for this function:</div>
+<div class="dyncontent">
+<div class="center"><img src="classSolution_a1802864ca1ab7bffdb1710644daf3877_icgraph.png" border="0" usemap="#classSolution_a1802864ca1ab7bffdb1710644daf3877_icgraph" alt=""/></div>
+<map name="classSolution_a1802864ca1ab7bffdb1710644daf3877_icgraph" id="classSolution_a1802864ca1ab7bffdb1710644daf3877_icgraph">
+<area shape="rect" title=" " alt="" coords="488,31,664,57"/>
+<area shape="rect" href="classExperiment.html#ac3467eb067f8623c9cf3cd7c736a8c80" title=" " alt="" coords="313,5,440,32"/>
+<area shape="rect" href="classLNS.html#ab4a4826221160701ee3cf6ca93feb1f7" title=" " alt="" coords="331,56,422,83"/>
+<area shape="rect" href="destroy_8cpp.html#a1fe60ef45fb8a4e175eb3b737505f3d5" title=" " alt="" coords="108,56,265,83"/>
+<area shape="rect" href="destroy_8cpp.html#a808f40e2e9d6eb5463165c031dfa3eb1" title=" " alt="" coords="5,56,60,83"/>
+</map>
+</div>
+
+</div>
+</div>
+<a id="ae31036e45ea6efd6047225db796af803"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ae31036e45ea6efd6047225db796af803">&#9670;&nbsp;</a></span>convert_paths()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void Solution::convert_paths </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
           <td> const</td>
         </tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="Solver_8cpp_source.html#l00010">10</a> of file <a class="el" href="Solver_8cpp_source.html">Solver.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="Solver_8cpp_source.html#l00298">298</a> of file <a class="el" href="Solver_8cpp_source.html">Solver.cpp</a>.</p>
+<div class="dynheader">
+Here is the caller graph for this function:</div>
+<div class="dyncontent">
+<div class="center"><img src="classSolution_ae31036e45ea6efd6047225db796af803_icgraph.png" border="0" usemap="#classSolution_ae31036e45ea6efd6047225db796af803_icgraph" alt=""/></div>
+<map name="classSolution_ae31036e45ea6efd6047225db796af803_icgraph" id="classSolution_ae31036e45ea6efd6047225db796af803_icgraph">
+<area shape="rect" title=" " alt="" coords="293,5,468,32"/>
+<area shape="rect" href="classLNSIterationInfo.html#aa5b661137d39dc8a92ec6870a5692f2b" title=" " alt="" coords="5,5,245,32"/>
+</map>
+</div>
+
+</div>
+</div>
+<a id="a0088a845fe8eb84b23ce4adbb8820890"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a0088a845fe8eb84b23ce4adbb8820890">&#9670;&nbsp;</a></span>is_valid()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">auto Solution::is_valid </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="classInstance.html">Instance</a> &amp;&#160;</td>
+          <td class="paramname"><em>instance</em></td><td>)</td>
+          <td> const -&gt; bool</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="Solver_8cpp_source.html#l00016">16</a> of file <a class="el" href="Solver_8cpp_source.html">Solver.cpp</a>.</p>
+<div class="dynheader">
+Here is the caller graph for this function:</div>
+<div class="dyncontent">
+<div class="center"><img src="classSolution_a0088a845fe8eb84b23ce4adbb8820890_icgraph.png" border="0" usemap="#classSolution_a0088a845fe8eb84b23ce4adbb8820890_icgraph" alt=""/></div>
+<map name="classSolution_a0088a845fe8eb84b23ce4adbb8820890_icgraph" id="classSolution_a0088a845fe8eb84b23ce4adbb8820890_icgraph">
+<area shape="rect" title=" " alt="" coords="452,5,585,32"/>
+<area shape="rect" href="classLNS.html#ab4a4826221160701ee3cf6ca93feb1f7" title=" " alt="" coords="313,5,404,32"/>
+<area shape="rect" href="destroy_8cpp.html#a1fe60ef45fb8a4e175eb3b737505f3d5" title=" " alt="" coords="108,5,265,32"/>
+<area shape="rect" href="destroy_8cpp.html#a808f40e2e9d6eb5463165c031dfa3eb1" title=" " alt="" coords="5,5,60,32"/>
+</map>
+</div>
+
+</div>
+</div>
+<a id="a9df6f3a07aa7d31c13349b1d1d837eb7"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a9df6f3a07aa7d31c13349b1d1d837eb7">&#9670;&nbsp;</a></span>load()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void Solution::load </td>
+          <td>(</td>
+          <td class="paramtype">const std::string &amp;&#160;</td>
+          <td class="paramname"><em>filename</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const <a class="el" href="classInstance.html">Instance</a> &amp;&#160;</td>
+          <td class="paramname"><em>instance</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="Solver_8cpp_source.html#l00156">156</a> of file <a class="el" href="Solver_8cpp_source.html">Solver.cpp</a>.</p>
 
 </div>
 </div>
 <h2 class="groupheader">Member Data Documentation</h2>
+<a id="a8084822afa1f7c66aa8685aec7f3e1e5"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a8084822afa1f7c66aa8685aec7f3e1e5">&#9670;&nbsp;</a></span>converted_paths</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::vector&lt;<a class="el" href="utils_8h.html#aeafaa6f891ae3667bf528a84285282b3">Path</a>&gt; Solution::converted_paths</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">mutable</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="Solver_8h_source.html#l00025">25</a> of file <a class="el" href="Solver_8h_source.html">Solver.h</a>.</p>
+
+</div>
+</div>
 <a id="a2631db5798943bb7cc5cf0ab58951069"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a2631db5798943bb7cc5cf0ab58951069">&#9670;&nbsp;</a></span>cost</h2>
 
@@ -127,23 +270,39 @@ Public Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="Solver_8h_source.html#l00025">25</a> of file <a class="el" href="Solver_8h_source.html">Solver.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="Solver_8h_source.html#l00030">30</a> of file <a class="el" href="Solver_8h_source.html">Solver.h</a>.</p>
 
 </div>
 </div>
-<a id="ac1a90e57dcbd81492773be9110b72562"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ac1a90e57dcbd81492773be9110b72562">&#9670;&nbsp;</a></span>delay</h2>
+<a id="ac3fb8b31d6160ddce5da11a299cef58a"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ac3fb8b31d6160ddce5da11a299cef58a">&#9670;&nbsp;</a></span>delays</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">int Solution::delay</td>
+          <td class="memname">std::vector&lt;int&gt; Solution::delays</td>
         </tr>
       </table>
 </div><div class="memdoc">
 
 <p class="definition">Definition at line <a class="el" href="Solver_8h_source.html#l00026">26</a> of file <a class="el" href="Solver_8h_source.html">Solver.h</a>.</p>
+
+</div>
+</div>
+<a id="a295aa3588361b00de059cf683848cb50"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a295aa3588361b00de059cf683848cb50">&#9670;&nbsp;</a></span>destroyed_paths</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::vector&lt;int&gt; Solution::destroyed_paths</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="Solver_8h_source.html#l00027">27</a> of file <a class="el" href="Solver_8h_source.html">Solver.h</a>.</p>
 
 </div>
 </div>
@@ -154,28 +313,92 @@ Public Attributes</h2></td></tr>
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">bool Solution::feasible</td>
+          <td class="memname">bool Solution::feasible = true</td>
         </tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="Solver_8h_source.html#l00020">20</a> of file <a class="el" href="Solver_8h_source.html">Solver.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="Solver_8h_source.html#l00021">21</a> of file <a class="el" href="Solver_8h_source.html">Solver.h</a>.</p>
 
 </div>
 </div>
-<a id="af112eace99b7e64ef0d78ce6f45e30c9"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#af112eace99b7e64ef0d78ce6f45e30c9">&#9670;&nbsp;</a></span>paths</h2>
+<a id="a06fbca8c6117b43d1933d6315b47db88"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a06fbca8c6117b43d1933d6315b47db88">&#9670;&nbsp;</a></span>makespan</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">std::vector&lt;<a class="el" href="utils_8h.html#a4b0c12fdb9bfd266c909605f8aa6e3d6">Path</a>&gt; Solution::paths</td>
+          <td class="memname">int Solution::makespan</td>
         </tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="Solver_8h_source.html#l00023">23</a> of file <a class="el" href="Solver_8h_source.html">Solver.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="Solver_8h_source.html#l00033">33</a> of file <a class="el" href="Solver_8h_source.html">Solver.h</a>.</p>
+
+</div>
+</div>
+<a id="ad53ac21a51f00f663407a0115a534ee0"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ad53ac21a51f00f663407a0115a534ee0">&#9670;&nbsp;</a></span>paths</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::vector&lt;<a class="el" href="utils_8h.html#a64881685b4fe27a0cf599222d5fb1c72">TimePointPath</a>&gt; Solution::paths</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="Solver_8h_source.html#l00024">24</a> of file <a class="el" href="Solver_8h_source.html">Solver.h</a>.</p>
+
+</div>
+</div>
+<a id="a014414db3395643f715c5a350f9e4399"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a014414db3395643f715c5a350f9e4399">&#9670;&nbsp;</a></span>priorities</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::vector&lt;int&gt; Solution::priorities</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="Solver_8h_source.html#l00028">28</a> of file <a class="el" href="Solver_8h_source.html">Solver.h</a>.</p>
+
+</div>
+</div>
+<a id="a30361073b628a332697cabf5df5e6322"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a30361073b628a332697cabf5df5e6322">&#9670;&nbsp;</a></span>sum_of_costs</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">int Solution::sum_of_costs</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="Solver_8h_source.html#l00032">32</a> of file <a class="el" href="Solver_8h_source.html">Solver.h</a>.</p>
+
+</div>
+</div>
+<a id="a6bd2c7034b08774dfbce6b1ef9475577"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a6bd2c7034b08774dfbce6b1ef9475577">&#9670;&nbsp;</a></span>sum_of_delays</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">int Solution::sum_of_delays</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="Solver_8h_source.html#l00031">31</a> of file <a class="el" href="Solver_8h_source.html">Solver.h</a>.</p>
 
 </div>
 </div>

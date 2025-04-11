@@ -75,20 +75,32 @@ $(function() {
 <div class="contents">
 <div class="textblock"><code>#include &lt;<a class="el" href="utils_8h_source.html">utils.h</a>&gt;</code><br />
 <code>#include &lt;array&gt;</code><br />
+<code>#include &lt;boost/functional/hash.hpp&gt;</code><br />
 <code>#include &lt;cmath&gt;</code><br />
 <code>#include &lt;filesystem&gt;</code><br />
+<code>#include &lt;iostream&gt;</code><br />
+<code>#include &lt;nfd.hpp&gt;</code><br />
 </div><div class="textblock"><div class="dynheader">
 Include dependency graph for utils.cpp:</div>
 <div class="dyncontent">
 <div class="center"><img src="utils_8cpp__incl.png" border="0" usemap="#src_2utils_8cpp" alt=""/></div>
 <map name="src_2utils_8cpp" id="src_2utils_8cpp">
-<area shape="rect" title=" " alt="" coords="218,5,318,32"/>
-<area shape="rect" href="utils_8h.html" title=" " alt="" coords="111,80,174,107"/>
-<area shape="rect" title=" " alt="" coords="199,80,255,107"/>
-<area shape="rect" title=" " alt="" coords="279,80,342,107"/>
-<area shape="rect" title=" " alt="" coords="367,80,457,107"/>
-<area shape="rect" title=" " alt="" coords="5,155,152,181"/>
-<area shape="rect" title=" " alt="" coords="177,155,239,181"/>
+<area shape="rect" title=" " alt="" coords="748,5,848,32"/>
+<area shape="rect" href="utils_8h.html" title=" " alt="" coords="384,80,447,107"/>
+<area shape="rect" title=" " alt="" coords="471,80,527,107"/>
+<area shape="rect" title=" " alt="" coords="552,80,743,107"/>
+<area shape="rect" title=" " alt="" coords="767,80,829,107"/>
+<area shape="rect" title=" " alt="" coords="854,80,945,107"/>
+<area shape="rect" title=" " alt="" coords="969,80,1049,107"/>
+<area shape="rect" title=" " alt="" coords="1073,80,1144,107"/>
+<area shape="rect" title=" " alt="" coords="5,155,68,181"/>
+<area shape="rect" title=" " alt="" coords="93,155,239,181"/>
+<area shape="rect" title=" " alt="" coords="264,155,311,181"/>
+<area shape="rect" title=" " alt="" coords="335,155,405,181"/>
+<area shape="rect" title=" " alt="" coords="429,155,495,181"/>
+<area shape="rect" title=" " alt="" coords="519,155,586,181"/>
+<area shape="rect" title=" " alt="" coords="610,155,677,181"/>
+<area shape="rect" title=" " alt="" coords="701,155,764,181"/>
 </map>
 </div>
 </div>
@@ -96,90 +108,327 @@ Include dependency graph for utils.cpp:</div>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="func-members"></a>
 Functions</h2></td></tr>
-<tr class="memitem:afede3732fe3bbe3cd4b263ac2c7ea46a"><td class="memItemLeft" align="right" valign="top">std::ostream &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="utils_8cpp.html#afede3732fe3bbe3cd4b263ac2c7ea46a">operator&lt;&lt;</a> (std::ostream &amp;os, <a class="el" href="classPoint2d.html">Point2d</a> const &amp;p)</td></tr>
-<tr class="separator:afede3732fe3bbe3cd4b263ac2c7ea46a"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aca7ece3811dea8c953a7e8090a93f41a"><td class="memItemLeft" align="right" valign="top">sf::Color&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="utils_8cpp.html#aca7ece3811dea8c953a7e8090a93f41a">generate_random_color</a> (const int mix_r, const int mix_g, const int mix_b, const double mix_ratio)</td></tr>
-<tr class="memdesc:aca7ece3811dea8c953a7e8090a93f41a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Generate a random color. To make the color palette look more visually pleasing, the random color is mixed with (mix_r, mix_g, mix_b).  <a href="utils_8cpp.html#aca7ece3811dea8c953a7e8090a93f41a">More...</a><br /></td></tr>
-<tr class="separator:aca7ece3811dea8c953a7e8090a93f41a"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a6962d5b6ad4c7ddbdd4ad3f1fcb14352"><td class="memItemLeft" align="right" valign="top">std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="utils_8cpp.html#a6962d5b6ad4c7ddbdd4ad3f1fcb14352">get_base_path</a> ()</td></tr>
-<tr class="memdesc:a6962d5b6ad4c7ddbdd4ad3f1fcb14352"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the path to the project directory, assuming the project is run from the build directory. This function is useful for loading files from the project directory.  <a href="utils_8cpp.html#a6962d5b6ad4c7ddbdd4ad3f1fcb14352">More...</a><br /></td></tr>
-<tr class="separator:a6962d5b6ad4c7ddbdd4ad3f1fcb14352"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad40794556b5c5d0b7a0d99603a3870e6"><td class="memItemLeft" align="right" valign="top">auto&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="utils_8cpp.html#ad40794556b5c5d0b7a0d99603a3870e6">find_direction</a> (const <a class="el" href="classPoint2d.html">Point2d</a> &amp;start, const <a class="el" href="classPoint2d.html">Point2d</a> &amp;end) -&gt; <a class="el" href="utils_8h.html#a224b9163917ac32fc95a60d8c1eec3aa">Direction</a></td></tr>
+<tr class="separator:ad40794556b5c5d0b7a0d99603a3870e6"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a7d69a8cf9f16d8425fc7ad0339695655"><td class="memItemLeft" align="right" valign="top">auto&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="utils_8cpp.html#a7d69a8cf9f16d8425fc7ad0339695655">find_direction</a> (const int start, const int end) -&gt; <a class="el" href="utils_8h.html#a224b9163917ac32fc95a60d8c1eec3aa">Direction</a></td></tr>
+<tr class="separator:a7d69a8cf9f16d8425fc7ad0339695655"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad1153070a4c72871285269278510ea15"><td class="memItemLeft" align="right" valign="top">auto&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="utils_8cpp.html#ad1153070a4c72871285269278510ea15">overlap</a> (const <a class="el" href="classTimeInterval.html">TimeInterval</a> &amp;i1, const <a class="el" href="classTimeInterval.html">TimeInterval</a> &amp;i2) -&gt; bool</td></tr>
+<tr class="separator:ad1153070a4c72871285269278510ea15"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:acd8e17bc2bbfc593e1b867e247f50ba2"><td class="memItemLeft" align="right" valign="top">auto&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="utils_8cpp.html#acd8e17bc2bbfc593e1b867e247f50ba2">operator&lt;&lt;</a> (std::ostream &amp;os, <a class="el" href="classPoint2d.html">Point2d</a> const &amp;p) -&gt; std::ostream &amp;</td></tr>
+<tr class="separator:acd8e17bc2bbfc593e1b867e247f50ba2"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a171f9677abb749e47d9ed30d5449f65e"><td class="memItemLeft" align="right" valign="top">auto&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="utils_8cpp.html#a171f9677abb749e47d9ed30d5449f65e">operator&lt;&lt;</a> (std::ostream &amp;os, <a class="el" href="classTimeInterval.html">TimeInterval</a> const &amp;i) -&gt; std::ostream &amp;</td></tr>
+<tr class="separator:a171f9677abb749e47d9ed30d5449f65e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad0a882ee24f2d4df5c0b0b9983a43f01"><td class="memItemLeft" align="right" valign="top">auto&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="utils_8cpp.html#ad0a882ee24f2d4df5c0b0b9983a43f01">timepointpath_to_path</a> (const <a class="el" href="utils_8h.html#a64881685b4fe27a0cf599222d5fb1c72">TimePointPath</a> &amp;tp_path) -&gt; <a class="el" href="utils_8h.html#aeafaa6f891ae3667bf528a84285282b3">Path</a></td></tr>
+<tr class="separator:ad0a882ee24f2d4df5c0b0b9983a43f01"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa4d4622416209b56c0372cd6fff6e09d"><td class="memItemLeft" align="right" valign="top">auto&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="utils_8cpp.html#aa4d4622416209b56c0372cd6fff6e09d">path_to_timepointpath</a> (const <a class="el" href="utils_8h.html#aeafaa6f891ae3667bf528a84285282b3">Path</a> &amp;path) -&gt; <a class="el" href="utils_8h.html#a64881685b4fe27a0cf599222d5fb1c72">TimePointPath</a></td></tr>
+<tr class="separator:aa4d4622416209b56c0372cd6fff6e09d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1eade41189268b322ac0c4072243786d"><td class="memItemLeft" align="right" valign="top">auto&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="utils_8cpp.html#a1eade41189268b322ac0c4072243786d">check_timepointpath_interval_no_overlap</a> (const <a class="el" href="utils_8h.html#a64881685b4fe27a0cf599222d5fb1c72">TimePointPath</a> &amp;tp_path) -&gt; bool</td></tr>
+<tr class="separator:a1eade41189268b322ac0c4072243786d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a01325747a91db3355d110c9b24093e28"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="utils_8cpp.html#a01325747a91db3355d110c9b24093e28">fix_timepointpath_interval_overlap</a> (<a class="el" href="utils_8h.html#a64881685b4fe27a0cf599222d5fb1c72">TimePointPath</a> &amp;tp_path)</td></tr>
+<tr class="separator:a01325747a91db3355d110c9b24093e28"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1ea92eadf840712a905d9df25e95ccb1"><td class="memItemLeft" align="right" valign="top">auto&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="utils_8cpp.html#a1ea92eadf840712a905d9df25e95ccb1">is_valid_timepointpath</a> (const <a class="el" href="utils_8h.html#a64881685b4fe27a0cf599222d5fb1c72">TimePointPath</a> &amp;tp_path) -&gt; bool</td></tr>
+<tr class="separator:a1ea92eadf840712a905d9df25e95ccb1"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1b9bfe107938c1da00c1fb0a8a3be930"><td class="memItemLeft" align="right" valign="top">auto&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="utils_8cpp.html#a1b9bfe107938c1da00c1fb0a8a3be930">get_base_path</a> () -&gt; std::string</td></tr>
+<tr class="memdesc:a1b9bfe107938c1da00c1fb0a8a3be930"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the path to the project directory, assuming the project is run from the build directory. This function is useful for loading files from the project directory.  <a href="utils_8cpp.html#a1b9bfe107938c1da00c1fb0a8a3be930">More...</a><br /></td></tr>
+<tr class="separator:a1b9bfe107938c1da00c1fb0a8a3be930"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af4091671fab08e84c34a3afa2f3db97a"><td class="memItemLeft" align="right" valign="top">auto&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="utils_8cpp.html#af4091671fab08e84c34a3afa2f3db97a">fast_random_bool</a> () -&gt; bool</td></tr>
+<tr class="separator:af4091671fab08e84c34a3afa2f3db97a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a10333a8335936ab4f1dab5c056bbc549"><td class="memItemLeft" align="right" valign="top">auto&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="utils_8cpp.html#a10333a8335936ab4f1dab5c056bbc549">double_to_str</a> (double num, char separating_char, int precision) -&gt; std::string</td></tr>
+<tr class="separator:a10333a8335936ab4f1dab5c056bbc549"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a78394d80bfa78ae2a46e1b4380f75a93"><td class="memItemLeft" align="right" valign="top">auto&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="utils_8cpp.html#a78394d80bfa78ae2a46e1b4380f75a93">any_to_str</a> (const std::any &amp;value) -&gt; std::string</td></tr>
+<tr class="separator:a78394d80bfa78ae2a46e1b4380f75a93"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa6fa73bc28a2f2aeec44217f30b357be"><td class="memItemLeft" align="right" valign="top">auto&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="utils_8cpp.html#aa6fa73bc28a2f2aeec44217f30b357be">find_last_number</a> (const std::string &amp;str) -&gt; int</td></tr>
+<tr class="separator:aa6fa73bc28a2f2aeec44217f30b357be"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad1a183d836f1ef487e4879ca131135ea"><td class="memItemLeft" align="right" valign="top">auto&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="utils_8cpp.html#ad1a183d836f1ef487e4879ca131135ea">location_at_time</a> (<a class="el" href="utils_8h.html#a64881685b4fe27a0cf599222d5fb1c72">TimePointPath</a> &amp;path, int time) -&gt; int</td></tr>
+<tr class="separator:ad1a183d836f1ef487e4879ca131135ea"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1b8ad33b03039be65c10ba7a9e142dbe"><td class="memItemLeft" align="right" valign="top">auto&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="utils_8cpp.html#a1b8ad33b03039be65c10ba7a9e142dbe">open_file_dialog</a> (const std::string &amp;type, const std::string &amp;file_extensions) -&gt; std::string</td></tr>
+<tr class="separator:a1b8ad33b03039be65c10ba7a9e142dbe"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <h2 class="groupheader">Function Documentation</h2>
-<a id="aca7ece3811dea8c953a7e8090a93f41a"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aca7ece3811dea8c953a7e8090a93f41a">&#9670;&nbsp;</a></span>generate_random_color()</h2>
+<a id="a78394d80bfa78ae2a46e1b4380f75a93"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a78394d80bfa78ae2a46e1b4380f75a93">&#9670;&nbsp;</a></span>any_to_str()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">sf::Color generate_random_color </td>
+          <td class="memname">auto any_to_str </td>
           <td>(</td>
-          <td class="paramtype">const int&#160;</td>
-          <td class="paramname"><em>mix_r</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">const int&#160;</td>
-          <td class="paramname"><em>mix_g</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">const int&#160;</td>
-          <td class="paramname"><em>mix_b</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">const double&#160;</td>
-          <td class="paramname"><em>mix_ratio</em> = <code>0.5</code>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
+          <td class="paramtype">const std::any &amp;&#160;</td>
+          <td class="paramname"><em>value</em></td><td>)</td>
+          <td> -&gt; std::string
+</td>
         </tr>
       </table>
 </div><div class="memdoc">
 
-<p>Generate a random color. To make the color palette look more visually pleasing, the random color is mixed with (mix_r, mix_g, mix_b). </p>
-<dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramname">mix_r</td><td>The red channel value of the mix color, recommended value is 255. </td></tr>
-    <tr><td class="paramname">mix_g</td><td>The green channel value of the mix color, recommended value is 255. </td></tr>
-    <tr><td class="paramname">mix_b</td><td>The blue channel value of the mix color, recommended value is 255. </td></tr>
-    <tr><td class="paramname">mix_ratio</td><td>The ratio at which to blend the randomly generated color with the mix color.</td></tr>
-  </table>
-  </dd>
-</dl>
-<dl class="section return"><dt>Returns</dt><dd>A random color. </dd></dl>
-
-<p class="definition">Definition at line <a class="el" href="utils_8cpp_source.html#l00088">88</a> of file <a class="el" href="utils_8cpp_source.html">utils.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="utils_8cpp_source.html#l00362">362</a> of file <a class="el" href="utils_8cpp_source.html">utils.cpp</a>.</p>
 <div class="dynheader">
 Here is the caller graph for this function:</div>
 <div class="dyncontent">
-<div class="center"><img src="utils_8cpp_aca7ece3811dea8c953a7e8090a93f41a_icgraph.png" border="0" usemap="#utils_8cpp_aca7ece3811dea8c953a7e8090a93f41a_icgraph" alt=""/></div>
-<map name="utils_8cpp_aca7ece3811dea8c953a7e8090a93f41a_icgraph" id="utils_8cpp_aca7ece3811dea8c953a7e8090a93f41a_icgraph">
-<area shape="rect" title="Generate a random color. To make the color palette look more visually pleasing, the random color is m..." alt="" coords="212,5,388,32"/>
-<area shape="rect" href="classVisualizer.html#ab2ce0e69dcc009a7ead6df33bca1ca77" title=" " alt="" coords="5,5,164,32"/>
+<div class="center"><img src="utils_8cpp_a78394d80bfa78ae2a46e1b4380f75a93_icgraph.png" border="0" usemap="#utils_8cpp_a78394d80bfa78ae2a46e1b4380f75a93_icgraph" alt=""/></div>
+<map name="utils_8cpp_a78394d80bfa78ae2a46e1b4380f75a93_icgraph" id="utils_8cpp_a78394d80bfa78ae2a46e1b4380f75a93_icgraph">
+<area shape="rect" title=" " alt="" coords="449,31,540,57"/>
+<area shape="rect" href="classAlgorithm.html#af1ead5c4936488b44578473e55f5a9d3" title=" " alt="" coords="211,5,370,32"/>
+<area shape="rect" href="classAlgorithm.html#a24f689b0d24daf6b7b6d39113dbdbc0c" title=" " alt="" coords="180,56,401,83"/>
+<area shape="rect" href="classExperiment.html#ac3467eb067f8623c9cf3cd7c736a8c80" title=" " alt="" coords="5,31,132,57"/>
 </map>
 </div>
 
 </div>
 </div>
-<a id="a6962d5b6ad4c7ddbdd4ad3f1fcb14352"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a6962d5b6ad4c7ddbdd4ad3f1fcb14352">&#9670;&nbsp;</a></span>get_base_path()</h2>
+<a id="a1eade41189268b322ac0c4072243786d"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a1eade41189268b322ac0c4072243786d">&#9670;&nbsp;</a></span>check_timepointpath_interval_no_overlap()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">std::string get_base_path </td>
+          <td class="memname">auto check_timepointpath_interval_no_overlap </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="utils_8h.html#a64881685b4fe27a0cf599222d5fb1c72">TimePointPath</a> &amp;&#160;</td>
+          <td class="paramname"><em>tp_path</em></td><td>)</td>
+          <td> -&gt; bool
+</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="utils_8cpp_source.html#l00260">260</a> of file <a class="el" href="utils_8cpp_source.html">utils.cpp</a>.</p>
+
+</div>
+</div>
+<a id="a10333a8335936ab4f1dab5c056bbc549"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a10333a8335936ab4f1dab5c056bbc549">&#9670;&nbsp;</a></span>double_to_str()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">auto double_to_str </td>
+          <td>(</td>
+          <td class="paramtype">double&#160;</td>
+          <td class="paramname"><em>num</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">char&#160;</td>
+          <td class="paramname"><em>separating_char</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>precision</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td> -&gt; std::string
+</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="utils_8cpp_source.html#l00352">352</a> of file <a class="el" href="utils_8cpp_source.html">utils.cpp</a>.</p>
+<div class="dynheader">
+Here is the caller graph for this function:</div>
+<div class="dyncontent">
+<div class="center"><img src="utils_8cpp_a10333a8335936ab4f1dab5c056bbc549_icgraph.png" border="0" usemap="#utils_8cpp_a10333a8335936ab4f1dab5c056bbc549_icgraph" alt=""/></div>
+<map name="utils_8cpp_a10333a8335936ab4f1dab5c056bbc549_icgraph" id="utils_8cpp_a10333a8335936ab4f1dab5c056bbc549_icgraph">
+<area shape="rect" title=" " alt="" coords="937,159,1048,186"/>
+<area shape="rect" href="classVisualizer.html#a59e5f57df1ebdc25e41fe26618f55644" title=" " alt="" coords="724,101,889,127"/>
+<area shape="rect" href="utils_8cpp.html#a78394d80bfa78ae2a46e1b4380f75a93" title=" " alt="" coords="761,189,852,215"/>
+<area shape="rect" href="classVisualizer.html#a4c89b9ca89d4217f3abc02252517d555" title=" " alt="" coords="498,5,633,47"/>
+<area shape="rect" href="classVisualizer.html#a531350c5ec8ec39867647997690fc9fb" title=" " alt="" coords="286,71,401,98"/>
+<area shape="rect" href="classVisualizer.html#ab826718bf82d1ffafdcf991d1015d8a7" title=" " alt="" coords="493,123,637,164"/>
+<area shape="rect" href="classVisualizer.html#a2b6436ec715468955ebb9f53b908773f" title=" " alt="" coords="108,71,232,98"/>
+<area shape="rect" href="main_8cpp.html#a808f40e2e9d6eb5463165c031dfa3eb1" title=" " alt="" coords="5,71,60,98"/>
+<area shape="rect" href="classAlgorithm.html#af1ead5c4936488b44578473e55f5a9d3" title=" " alt="" coords="486,189,645,215"/>
+<area shape="rect" href="classAlgorithm.html#a24f689b0d24daf6b7b6d39113dbdbc0c" title=" " alt="" coords="455,239,676,266"/>
+<area shape="rect" href="classExperiment.html#ac3467eb067f8623c9cf3cd7c736a8c80" title=" " alt="" coords="280,214,407,241"/>
+</map>
+</div>
+
+</div>
+</div>
+<a id="af4091671fab08e84c34a3afa2f3db97a"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#af4091671fab08e84c34a3afa2f3db97a">&#9670;&nbsp;</a></span>fast_random_bool()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">auto fast_random_bool </td>
           <td>(</td>
           <td class="paramname"></td><td>)</td>
+          <td> -&gt; bool
+</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="utils_8cpp_source.html#l00338">338</a> of file <a class="el" href="utils_8cpp_source.html">utils.cpp</a>.</p>
+
+</div>
+</div>
+<a id="a7d69a8cf9f16d8425fc7ad0339695655"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a7d69a8cf9f16d8425fc7ad0339695655">&#9670;&nbsp;</a></span>find_direction() <span class="overload">[1/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">auto find_direction </td>
+          <td>(</td>
+          <td class="paramtype">const int&#160;</td>
+          <td class="paramname"><em>start</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
           <td></td>
+          <td class="paramtype">const int&#160;</td>
+          <td class="paramname"><em>end</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td> -&gt; <a class="el" href="utils_8h.html#a224b9163917ac32fc95a60d8c1eec3aa">Direction</a>
+</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="utils_8cpp_source.html#l00142">142</a> of file <a class="el" href="utils_8cpp_source.html">utils.cpp</a>.</p>
+
+</div>
+</div>
+<a id="ad40794556b5c5d0b7a0d99603a3870e6"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ad40794556b5c5d0b7a0d99603a3870e6">&#9670;&nbsp;</a></span>find_direction() <span class="overload">[2/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">auto find_direction </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="classPoint2d.html">Point2d</a> &amp;&#160;</td>
+          <td class="paramname"><em>start</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const <a class="el" href="classPoint2d.html">Point2d</a> &amp;&#160;</td>
+          <td class="paramname"><em>end</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td> -&gt; <a class="el" href="utils_8h.html#a224b9163917ac32fc95a60d8c1eec3aa">Direction</a>
+</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="utils_8cpp_source.html#l00121">121</a> of file <a class="el" href="utils_8cpp_source.html">utils.cpp</a>.</p>
+<div class="dynheader">
+Here is the caller graph for this function:</div>
+<div class="dyncontent">
+<div class="center"><img src="utils_8cpp_ad40794556b5c5d0b7a0d99603a3870e6_icgraph.png" border="0" usemap="#utils_8cpp_ad40794556b5c5d0b7a0d99603a3870e6_icgraph" alt=""/></div>
+<map name="utils_8cpp_ad40794556b5c5d0b7a0d99603a3870e6_icgraph" id="utils_8cpp_ad40794556b5c5d0b7a0d99603a3870e6_icgraph">
+<area shape="rect" title=" " alt="" coords="1433,202,1544,229"/>
+<area shape="rect" href="classEdgeConstraintTable.html#a0a2eaab4ddac33b637461db8c7b7802c" title=" " alt="" coords="1181,15,1367,42"/>
+<area shape="rect" href="classEdgeConstraintTableWithAgentNums.html#aad915f6b894d5da8aa3ac0d7c503a3c7" title=" " alt="" coords="1163,71,1385,112"/>
+<area shape="rect" href="classEdgeConstraintTable.html#ad09d951be4e60f6a73eea0f873e50aa7" title=" " alt="" coords="1182,202,1366,229"/>
+<area shape="rect" href="classEdgeConstraintTableWithAgentNums.html#abdeb8d7c06d3732094b5a75aa87de57e" title=" " alt="" coords="1163,253,1385,295"/>
+<area shape="rect" href="classEdgeConstraintTable.html#a2d5dd7016a7603735b0c9b4ebc61a857" title=" " alt="" coords="1197,319,1351,360"/>
+<area shape="rect" href="classEdgeConstraintTableWithAgentNums.html#af83c763a4c4a384a887bb1c01f712bc6" title=" " alt="" coords="1163,136,1385,177"/>
+<area shape="rect" href="classVisualizer.html#a9bcf1d67b84c80b368b51ad5b1d7ea0d" title=" " alt="" coords="1205,384,1343,425"/>
+<area shape="rect" href="classSafeIntervalTable.html#a787f99329e3378787106076ecaf026a9" title=" " alt="" coords="953,5,1095,47"/>
+<area shape="rect" href="classConstraintTable.html#a26372c16fc3dc1796c362d19489a78de" title=" " alt="" coords="947,71,1101,112"/>
+<area shape="rect" href="classConstraintTable.html#ab2bd3a0825989119ce58b5194e294a1d" title=" " alt="" coords="703,27,865,68"/>
+<area shape="rect" href="classLNS.html#a319d877bb15af0145e03c374929d3ddc" title=" " alt="" coords="703,143,865,170"/>
+<area shape="rect" href="classLNS.html#af3084016c73f066f5e33e0d4847b50c2" title=" " alt="" coords="711,93,857,119"/>
+<area shape="rect" href="classLNS.html#a658e49decd804a9fa1a08d065ae6304d" title=" " alt="" coords="452,40,635,81"/>
+<area shape="rect" href="classLNS.html#ab4a4826221160701ee3cf6ca93feb1f7" title=" " alt="" coords="313,90,404,117"/>
+<area shape="rect" href="destroy_8cpp.html#a1fe60ef45fb8a4e175eb3b737505f3d5" title=" " alt="" coords="108,90,265,117"/>
+<area shape="rect" href="destroy_8cpp.html#a808f40e2e9d6eb5463165c031dfa3eb1" title=" " alt="" coords="5,90,60,117"/>
+<area shape="rect" href="classSafeIntervalTable.html#a468afa97880d6f8daeada75d8cc08cf2" title=" " alt="" coords="949,319,1099,360"/>
+<area shape="rect" href="classConstraintTable.html#af360477b2e043a058cbb2b82d24fd37f" title=" " alt="" coords="933,136,1115,177"/>
+<area shape="rect" href="classVisualizer.html#aaab67ee59ad133348e5adbf351bb6c8f" title=" " alt="" coords="955,384,1093,425"/>
+<area shape="rect" href="classVisualizer.html#a03e8dce489dd159edb7670dc0726978f" title=" " alt="" coords="955,449,1093,491"/>
+<area shape="rect" href="classVisualizer.html#aeef8596fea2b78a0754537da7813b14e" title=" " alt="" coords="702,384,866,425"/>
+<area shape="rect" href="classVisualizer.html#a2e676a4ed17244fa3ab7eaf9ad342982" title=" " alt="" coords="464,391,623,418"/>
+<area shape="rect" href="classVisualizer.html#acce90236fdc5b00a22d087a34a9e3787" title=" " alt="" coords="683,449,885,491"/>
+</map>
+</div>
+
+</div>
+</div>
+<a id="aa6fa73bc28a2f2aeec44217f30b357be"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aa6fa73bc28a2f2aeec44217f30b357be">&#9670;&nbsp;</a></span>find_last_number()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">auto find_last_number </td>
+          <td>(</td>
+          <td class="paramtype">const std::string &amp;&#160;</td>
+          <td class="paramname"><em>str</em></td><td>)</td>
+          <td> -&gt; int
+</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="utils_8cpp_source.html#l00403">403</a> of file <a class="el" href="utils_8cpp_source.html">utils.cpp</a>.</p>
+<div class="dynheader">
+Here is the caller graph for this function:</div>
+<div class="dyncontent">
+<div class="center"><img src="utils_8cpp_aa6fa73bc28a2f2aeec44217f30b357be_icgraph.png" border="0" usemap="#utils_8cpp_aa6fa73bc28a2f2aeec44217f30b357be_icgraph" alt=""/></div>
+<map name="utils_8cpp_aa6fa73bc28a2f2aeec44217f30b357be_icgraph" id="utils_8cpp_aa6fa73bc28a2f2aeec44217f30b357be_icgraph">
+<area shape="rect" title=" " alt="" coords="405,31,540,57"/>
+<area shape="rect" href="experiment__utils_8cpp.html#a029b8942324912237f1abecce6bdced7" title=" " alt="" coords="219,31,357,57"/>
+<area shape="rect" href="classExperiment.html#ac3467eb067f8623c9cf3cd7c736a8c80" title=" " alt="" coords="25,5,151,32"/>
+<area shape="rect" href="experiment__utils_8cpp.html#a4a4290ed3a3fa3c91fb32e2ef58bbd82" title=" " alt="" coords="5,56,171,83"/>
+</map>
+</div>
+
+</div>
+</div>
+<a id="a01325747a91db3355d110c9b24093e28"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a01325747a91db3355d110c9b24093e28">&#9670;&nbsp;</a></span>fix_timepointpath_interval_overlap()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void fix_timepointpath_interval_overlap </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="utils_8h.html#a64881685b4fe27a0cf599222d5fb1c72">TimePointPath</a> &amp;&#160;</td>
+          <td class="paramname"><em>tp_path</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="utils_8cpp_source.html#l00279">279</a> of file <a class="el" href="utils_8cpp_source.html">utils.cpp</a>.</p>
+
+</div>
+</div>
+<a id="a1b9bfe107938c1da00c1fb0a8a3be930"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a1b9bfe107938c1da00c1fb0a8a3be930">&#9670;&nbsp;</a></span>get_base_path()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">auto get_base_path </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> -&gt;  std::string</td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -187,31 +436,149 @@ Here is the caller graph for this function:</div>
 <p>Get the path to the project directory, assuming the project is run from the build directory. This function is useful for loading files from the project directory. </p>
 <dl class="section return"><dt>Returns</dt><dd>The path to the project directory. </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="utils_8cpp_source.html#l00097">97</a> of file <a class="el" href="utils_8cpp_source.html">utils.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="utils_8cpp_source.html#l00332">332</a> of file <a class="el" href="utils_8cpp_source.html">utils.cpp</a>.</p>
 <div class="dynheader">
 Here is the caller graph for this function:</div>
 <div class="dyncontent">
-<div class="center"><img src="utils_8cpp_a6962d5b6ad4c7ddbdd4ad3f1fcb14352_icgraph.png" border="0" usemap="#utils_8cpp_a6962d5b6ad4c7ddbdd4ad3f1fcb14352_icgraph" alt=""/></div>
-<map name="utils_8cpp_a6962d5b6ad4c7ddbdd4ad3f1fcb14352_icgraph" id="utils_8cpp_a6962d5b6ad4c7ddbdd4ad3f1fcb14352_icgraph">
-<area shape="rect" title="Get the path to the project directory, assuming the project is run from the build directory...." alt="" coords="769,81,887,108"/>
-<area shape="rect" href="classVisualizer.html#a531350c5ec8ec39867647997690fc9fb" title=" " alt="" coords="607,81,721,108"/>
-<area shape="rect" href="classVisualizer.html#a2b6436ec715468955ebb9f53b908773f" title=" " alt="" coords="435,56,559,83"/>
-<area shape="rect" href="classVisualizer.html#a26b09c3766ced9ebb8e7d2b278434d92" title=" " alt="" coords="216,5,387,32"/>
-<area shape="rect" href="main_8cpp.html#a3c04138a5bfe5d72780bb7e82a18e627" title=" " alt="" coords="274,56,329,83"/>
-<area shape="rect" href="classVisualizer.html#a2cb8ddcc81f5c0208f5113cee2d9806d" title=" " alt="" coords="5,56,168,83"/>
+<div class="center"><img src="utils_8cpp_a1b9bfe107938c1da00c1fb0a8a3be930_icgraph.png" border="0" usemap="#utils_8cpp_a1b9bfe107938c1da00c1fb0a8a3be930_icgraph" alt=""/></div>
+<map name="utils_8cpp_a1b9bfe107938c1da00c1fb0a8a3be930_icgraph" id="utils_8cpp_a1b9bfe107938c1da00c1fb0a8a3be930_icgraph">
+<area shape="rect" title="Get the path to the project directory, assuming the project is run from the build directory...." alt="" coords="668,56,785,83"/>
+<area shape="rect" href="classVisualizer.html#ab1083a1f85d0d6c312a71566dfd3156b" title=" " alt="" coords="456,5,619,32"/>
+<area shape="rect" href="experiment__utils_8cpp.html#a068282ef2912ab2a112fbc6f1b5e5e35" title=" " alt="" coords="470,56,605,83"/>
+<area shape="rect" href="experiment__utils_8cpp.html#a4a4290ed3a3fa3c91fb32e2ef58bbd82" title=" " alt="" coords="455,107,620,133"/>
+<area shape="rect" href="classVisualizer.html#a531350c5ec8ec39867647997690fc9fb" title=" " alt="" coords="286,5,401,32"/>
+<area shape="rect" href="classVisualizer.html#a2b6436ec715468955ebb9f53b908773f" title=" " alt="" coords="108,5,232,32"/>
+<area shape="rect" href="main_8cpp.html#a808f40e2e9d6eb5463165c031dfa3eb1" title=" " alt="" coords="5,5,60,32"/>
+<area shape="rect" href="classExperiment.html#ac3467eb067f8623c9cf3cd7c736a8c80" title=" " alt="" coords="280,56,407,83"/>
 </map>
 </div>
 
 </div>
 </div>
-<a id="afede3732fe3bbe3cd4b263ac2c7ea46a"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#afede3732fe3bbe3cd4b263ac2c7ea46a">&#9670;&nbsp;</a></span>operator&lt;&lt;()</h2>
+<a id="a1ea92eadf840712a905d9df25e95ccb1"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a1ea92eadf840712a905d9df25e95ccb1">&#9670;&nbsp;</a></span>is_valid_timepointpath()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">std::ostream&amp; operator&lt;&lt; </td>
+          <td class="memname">auto is_valid_timepointpath </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="utils_8h.html#a64881685b4fe27a0cf599222d5fb1c72">TimePointPath</a> &amp;&#160;</td>
+          <td class="paramname"><em>tp_path</em></td><td>)</td>
+          <td> -&gt; bool
+</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="utils_8cpp_source.html#l00292">292</a> of file <a class="el" href="utils_8cpp_source.html">utils.cpp</a>.</p>
+<div class="dynheader">
+Here is the caller graph for this function:</div>
+<div class="dyncontent">
+<div class="center"><img src="utils_8cpp_a1ea92eadf840712a905d9df25e95ccb1_icgraph.png" border="0" usemap="#utils_8cpp_a1ea92eadf840712a905d9df25e95ccb1_icgraph" alt=""/></div>
+<map name="utils_8cpp_a1ea92eadf840712a905d9df25e95ccb1_icgraph" id="utils_8cpp_a1ea92eadf840712a905d9df25e95ccb1_icgraph">
+<area shape="rect" title=" " alt="" coords="276,13,447,39"/>
+<area shape="rect" href="classInstance.html#a3d893cc9e53bf25e76964aba870b7560" title=" " alt="" coords="5,5,228,47"/>
+</map>
+</div>
+
+</div>
+</div>
+<a id="ad1a183d836f1ef487e4879ca131135ea"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ad1a183d836f1ef487e4879ca131135ea">&#9670;&nbsp;</a></span>location_at_time()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">auto location_at_time </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="utils_8h.html#a64881685b4fe27a0cf599222d5fb1c72">TimePointPath</a> &amp;&#160;</td>
+          <td class="paramname"><em>path</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>time</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td> -&gt; int
+</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="utils_8cpp_source.html#l00429">429</a> of file <a class="el" href="utils_8cpp_source.html">utils.cpp</a>.</p>
+<div class="dynheader">
+Here is the caller graph for this function:</div>
+<div class="dyncontent">
+<div class="center"><img src="utils_8cpp_ad1a183d836f1ef487e4879ca131135ea_icgraph.png" border="0" usemap="#utils_8cpp_ad1a183d836f1ef487e4879ca131135ea_icgraph" alt=""/></div>
+<map name="utils_8cpp_ad1a183d836f1ef487e4879ca131135ea_icgraph" id="utils_8cpp_ad1a183d836f1ef487e4879ca131135ea_icgraph">
+<area shape="rect" title=" " alt="" coords="589,56,720,83"/>
+<area shape="rect" href="classLNS.html#a4888343908bdd86069e09e7a3796a437" title=" " alt="" coords="349,56,541,83"/>
+<area shape="rect" href="classLNS.html#a412b23f4704dc3ce9e01fe0331ca8728" title=" " alt="" coords="133,5,301,32"/>
+<area shape="rect" href="classLNS.html#a566e47ae5b4577e3a70dc6f819f302be" title=" " alt="" coords="5,56,85,83"/>
+<area shape="rect" href="classLNS.html#af68cb150f64a0c8f249057ab57364f48" title=" " alt="" coords="137,107,298,149"/>
+</map>
+</div>
+
+</div>
+</div>
+<a id="a1b8ad33b03039be65c10ba7a9e142dbe"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a1b8ad33b03039be65c10ba7a9e142dbe">&#9670;&nbsp;</a></span>open_file_dialog()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">auto open_file_dialog </td>
+          <td>(</td>
+          <td class="paramtype">const std::string &amp;&#160;</td>
+          <td class="paramname"><em>type</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const std::string &amp;&#160;</td>
+          <td class="paramname"><em>file_extensions</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td> -&gt; std::string
+</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="utils_8cpp_source.html#l00441">441</a> of file <a class="el" href="utils_8cpp_source.html">utils.cpp</a>.</p>
+<div class="dynheader">
+Here is the caller graph for this function:</div>
+<div class="dyncontent">
+<div class="center"><img src="utils_8cpp_a1b8ad33b03039be65c10ba7a9e142dbe_icgraph.png" border="0" usemap="#utils_8cpp_a1b8ad33b03039be65c10ba7a9e142dbe_icgraph" alt=""/></div>
+<map name="utils_8cpp_a1b8ad33b03039be65c10ba7a9e142dbe_icgraph" id="utils_8cpp_a1b8ad33b03039be65c10ba7a9e142dbe_icgraph">
+<area shape="rect" title=" " alt="" coords="625,13,755,39"/>
+<area shape="rect" href="classVisualizer.html#a4c89b9ca89d4217f3abc02252517d555" title=" " alt="" coords="443,5,577,47"/>
+<area shape="rect" href="classVisualizer.html#a531350c5ec8ec39867647997690fc9fb" title=" " alt="" coords="280,13,395,39"/>
+<area shape="rect" href="classVisualizer.html#a2b6436ec715468955ebb9f53b908773f" title=" " alt="" coords="108,13,232,39"/>
+<area shape="rect" href="main_8cpp.html#a808f40e2e9d6eb5463165c031dfa3eb1" title=" " alt="" coords="5,13,60,39"/>
+</map>
+</div>
+
+</div>
+</div>
+<a id="acd8e17bc2bbfc593e1b867e247f50ba2"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#acd8e17bc2bbfc593e1b867e247f50ba2">&#9670;&nbsp;</a></span>operator&lt;&lt;() <span class="overload">[1/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">auto operator&lt;&lt; </td>
           <td>(</td>
           <td class="paramtype">std::ostream &amp;&#160;</td>
           <td class="paramname"><em>os</em>, </td>
@@ -225,7 +592,8 @@ Here is the caller graph for this function:</div>
         <tr>
           <td></td>
           <td>)</td>
-          <td></td><td></td>
+          <td></td><td> -&gt; std::ostream&amp;
+</td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -238,7 +606,154 @@ Here is the caller graph for this function:</div>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>The output stream. </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="utils_8cpp_source.html#l00067">67</a> of file <a class="el" href="utils_8cpp_source.html">utils.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="utils_8cpp_source.html#l00198">198</a> of file <a class="el" href="utils_8cpp_source.html">utils.cpp</a>.</p>
+
+</div>
+</div>
+<a id="a171f9677abb749e47d9ed30d5449f65e"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a171f9677abb749e47d9ed30d5449f65e">&#9670;&nbsp;</a></span>operator&lt;&lt;() <span class="overload">[2/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">auto operator&lt;&lt; </td>
+          <td>(</td>
+          <td class="paramtype">std::ostream &amp;&#160;</td>
+          <td class="paramname"><em>os</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="classTimeInterval.html">TimeInterval</a> const &amp;&#160;</td>
+          <td class="paramname"><em>i</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td> -&gt; std::ostream&amp;
+</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="utils_8cpp_source.html#l00203">203</a> of file <a class="el" href="utils_8cpp_source.html">utils.cpp</a>.</p>
+
+</div>
+</div>
+<a id="ad1153070a4c72871285269278510ea15"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ad1153070a4c72871285269278510ea15">&#9670;&nbsp;</a></span>overlap()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">auto overlap </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="classTimeInterval.html">TimeInterval</a> &amp;&#160;</td>
+          <td class="paramname"><em>i1</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const <a class="el" href="classTimeInterval.html">TimeInterval</a> &amp;&#160;</td>
+          <td class="paramname"><em>i2</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td> -&gt; bool
+</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="utils_8cpp_source.html#l00182">182</a> of file <a class="el" href="utils_8cpp_source.html">utils.cpp</a>.</p>
+<div class="dynheader">
+Here is the caller graph for this function:</div>
+<div class="dyncontent">
+<div class="center"><img src="utils_8cpp_ad1153070a4c72871285269278510ea15_icgraph.png" border="0" usemap="#utils_8cpp_ad1153070a4c72871285269278510ea15_icgraph" alt=""/></div>
+<map name="utils_8cpp_ad1153070a4c72871285269278510ea15_icgraph" id="utils_8cpp_ad1153070a4c72871285269278510ea15_icgraph">
+<area shape="rect" title=" " alt="" coords="1303,137,1373,163"/>
+<area shape="rect" href="classConstraintTable.html#aff82442aa2588d601799d3e192f085db" title=" " alt="" coords="1098,64,1253,105"/>
+<area shape="rect" href="utils_8cpp.html#a1eade41189268b322ac0c4072243786d" title=" " alt="" coords="1096,129,1255,171"/>
+<area shape="rect" href="classSafeIntervalTable.html#a4c7d822c436caf8822ed179e00b6c94e" title=" " alt="" coords="1103,195,1247,236"/>
+<area shape="rect" href="classConstraintTable.html#a26372c16fc3dc1796c362d19489a78de" title=" " alt="" coords="893,64,1048,105"/>
+<area shape="rect" href="classConstraintTable.html#ab2bd3a0825989119ce58b5194e294a1d" title=" " alt="" coords="683,5,845,47"/>
+<area shape="rect" href="classLNS.html#a319d877bb15af0145e03c374929d3ddc" title=" " alt="" coords="463,71,624,98"/>
+<area shape="rect" href="classLNS.html#af3084016c73f066f5e33e0d4847b50c2" title=" " alt="" coords="691,122,837,149"/>
+<area shape="rect" href="classLNS.html#a658e49decd804a9fa1a08d065ae6304d" title=" " alt="" coords="452,5,635,47"/>
+<area shape="rect" href="classLNS.html#ab4a4826221160701ee3cf6ca93feb1f7" title=" " alt="" coords="313,42,404,69"/>
+<area shape="rect" href="destroy_8cpp.html#a1fe60ef45fb8a4e175eb3b737505f3d5" title=" " alt="" coords="108,42,265,69"/>
+<area shape="rect" href="destroy_8cpp.html#a808f40e2e9d6eb5463165c031dfa3eb1" title=" " alt="" coords="5,42,60,69"/>
+<area shape="rect" href="classSafeIntervalTable.html#a468afa97880d6f8daeada75d8cc08cf2" title=" " alt="" coords="895,195,1046,236"/>
+</map>
+</div>
+
+</div>
+</div>
+<a id="aa4d4622416209b56c0372cd6fff6e09d"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aa4d4622416209b56c0372cd6fff6e09d">&#9670;&nbsp;</a></span>path_to_timepointpath()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">auto path_to_timepointpath </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="utils_8h.html#aeafaa6f891ae3667bf528a84285282b3">Path</a> &amp;&#160;</td>
+          <td class="paramname"><em>path</em></td><td>)</td>
+          <td> -&gt; <a class="el" href="utils_8h.html#a64881685b4fe27a0cf599222d5fb1c72">TimePointPath</a>
+</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="utils_8cpp_source.html#l00228">228</a> of file <a class="el" href="utils_8cpp_source.html">utils.cpp</a>.</p>
+<div class="dynheader">
+Here is the caller graph for this function:</div>
+<div class="dyncontent">
+<div class="center"><img src="utils_8cpp_aa4d4622416209b56c0372cd6fff6e09d_icgraph.png" border="0" usemap="#utils_8cpp_aa4d4622416209b56c0372cd6fff6e09d_icgraph" alt=""/></div>
+<map name="utils_8cpp_aa4d4622416209b56c0372cd6fff6e09d_icgraph" id="utils_8cpp_aa4d4622416209b56c0372cd6fff6e09d_icgraph">
+<area shape="rect" title=" " alt="" coords="164,5,335,32"/>
+<area shape="rect" href="classSolution.html#a9df6f3a07aa7d31c13349b1d1d837eb7" title=" " alt="" coords="5,5,116,32"/>
+</map>
+</div>
+
+</div>
+</div>
+<a id="ad0a882ee24f2d4df5c0b0b9983a43f01"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ad0a882ee24f2d4df5c0b0b9983a43f01">&#9670;&nbsp;</a></span>timepointpath_to_path()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">auto timepointpath_to_path </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="utils_8h.html#a64881685b4fe27a0cf599222d5fb1c72">TimePointPath</a> &amp;&#160;</td>
+          <td class="paramname"><em>tp_path</em></td><td>)</td>
+          <td> -&gt; <a class="el" href="utils_8h.html#aeafaa6f891ae3667bf528a84285282b3">Path</a>
+</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="utils_8cpp_source.html#l00208">208</a> of file <a class="el" href="utils_8cpp_source.html">utils.cpp</a>.</p>
+<div class="dynheader">
+Here is the caller graph for this function:</div>
+<div class="dyncontent">
+<div class="center"><img src="utils_8cpp_ad0a882ee24f2d4df5c0b0b9983a43f01_icgraph.png" border="0" usemap="#utils_8cpp_ad0a882ee24f2d4df5c0b0b9983a43f01_icgraph" alt=""/></div>
+<map name="utils_8cpp_ad0a882ee24f2d4df5c0b0b9983a43f01_icgraph" id="utils_8cpp_ad0a882ee24f2d4df5c0b0b9983a43f01_icgraph">
+<area shape="rect" title=" " alt="" coords="824,31,995,57"/>
+<area shape="rect" href="classSolution.html#ae31036e45ea6efd6047225db796af803" title=" " alt="" coords="601,5,776,32"/>
+<area shape="rect" href="classSolution.html#a0088a845fe8eb84b23ce4adbb8820890" title=" " alt="" coords="622,56,755,83"/>
+<area shape="rect" href="classLNSIterationInfo.html#aa5b661137d39dc8a92ec6870a5692f2b" title=" " alt="" coords="313,5,553,32"/>
+<area shape="rect" href="classLNS.html#ab4a4826221160701ee3cf6ca93feb1f7" title=" " alt="" coords="388,56,479,83"/>
+<area shape="rect" href="destroy_8cpp.html#a1fe60ef45fb8a4e175eb3b737505f3d5" title=" " alt="" coords="108,56,265,83"/>
+<area shape="rect" href="destroy_8cpp.html#a808f40e2e9d6eb5463165c031dfa3eb1" title=" " alt="" coords="5,56,60,83"/>
+</map>
+</div>
 
 </div>
 </div>

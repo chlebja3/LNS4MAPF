@@ -64,6 +64,7 @@ $(function() {
 </div><!-- top -->
 <div class="header">
   <div class="summary">
+<a href="#nested-classes">Classes</a> &#124;
 <a href="#typedef-members">Typedefs</a> &#124;
 <a href="#func-members">Functions</a>  </div>
   <div class="headertitle">
@@ -71,58 +72,90 @@ $(function() {
 </div><!--header-->
 <div class="contents">
 <table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="nested-classes"></a>
+Classes</h2></td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classsipp_1_1NodePool.html">NodePool</a></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classsipp_1_1SIPPNode.html">SIPPNode</a></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classsipp_1_1SIPPNodeComparator.html">SIPPNodeComparator</a></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classsipp_1_1SIPPNodeComparatorSuboptimal.html">SIPPNodeComparatorSuboptimal</a></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="typedef-members"></a>
 Typedefs</h2></td></tr>
-<tr class="memitem:a74e4a2ebaf58ab32c62f0210d4ba7266"><td class="memItemLeft" align="right" valign="top">typedef std::priority_queue&lt; std::shared_ptr&lt; <a class="el" href="classSIPPNode.html">SIPPNode</a> &gt;, std::vector&lt; std::shared_ptr&lt; <a class="el" href="classSIPPNode.html">SIPPNode</a> &gt; &gt;, <a class="el" href="structSIPPNode_1_1compare__node__ptrs.html">SIPPNode::compare_node_ptrs</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacesipp.html#a74e4a2ebaf58ab32c62f0210d4ba7266">PriorityQueue</a></td></tr>
-<tr class="separator:a74e4a2ebaf58ab32c62f0210d4ba7266"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a7069d4b04897ef89b5dcfec1da790585"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacesipp.html#a7069d4b04897ef89b5dcfec1da790585">PriorityQueue</a> = boost::heap::priority_queue&lt; const <a class="el" href="classsipp_1_1SIPPNode.html">SIPPNode</a> *, boost::heap::compare&lt; <a class="el" href="classsipp_1_1SIPPNodeComparator.html">SIPPNodeComparator</a> &gt; &gt;</td></tr>
+<tr class="separator:a7069d4b04897ef89b5dcfec1da790585"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab9f900dc9f1d21e25d0a820a593ef26b"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacesipp.html#ab9f900dc9f1d21e25d0a820a593ef26b">PriorityQueueSuboptimal</a> = boost::heap::priority_queue&lt; const <a class="el" href="classsipp_1_1SIPPNode.html">SIPPNode</a> *, boost::heap::compare&lt; <a class="el" href="classsipp_1_1SIPPNodeComparatorSuboptimal.html">SIPPNodeComparatorSuboptimal</a> &gt; &gt;</td></tr>
+<tr class="separator:ab9f900dc9f1d21e25d0a820a593ef26b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="func-members"></a>
 Functions</h2></td></tr>
-<tr class="memitem:abe0ecf2f662c3c6eb2a4c9719332c2a5"><td class="memItemLeft" align="right" valign="top"><a class="el" href="utils_8h.html#a4b0c12fdb9bfd266c909605f8aa6e3d6">Path</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacesipp.html#abe0ecf2f662c3c6eb2a4c9719332c2a5">extract_path</a> (const std::shared_ptr&lt; <a class="el" href="classSIPPNode.html">SIPPNode</a> &gt; &amp;final_node)</td></tr>
-<tr class="separator:abe0ecf2f662c3c6eb2a4c9719332c2a5"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a6e715e7420614c0befe3fca5ad1dd6f0"><td class="memItemLeft" align="right" valign="top">auto&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacesipp.html#a6e715e7420614c0befe3fca5ad1dd6f0">extract_path</a> (<a class="el" href="classsipp_1_1SIPPNode.html">SIPPNode</a> const *final_node) -&gt; <a class="el" href="utils_8h.html#a64881685b4fe27a0cf599222d5fb1c72">TimePointPath</a></td></tr>
+<tr class="separator:a6e715e7420614c0befe3fca5ad1dd6f0"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <h2 class="groupheader">Typedef Documentation</h2>
-<a id="a74e4a2ebaf58ab32c62f0210d4ba7266"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a74e4a2ebaf58ab32c62f0210d4ba7266">&#9670;&nbsp;</a></span>PriorityQueue</h2>
+<a id="a7069d4b04897ef89b5dcfec1da790585"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a7069d4b04897ef89b5dcfec1da790585">&#9670;&nbsp;</a></span>PriorityQueue</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">typedef std::priority_queue&lt;std::shared_ptr&lt;<a class="el" href="classSIPPNode.html">SIPPNode</a>&gt;, std::vector&lt;std::shared_ptr&lt;<a class="el" href="classSIPPNode.html">SIPPNode</a>&gt; &gt;, <a class="el" href="structSIPPNode_1_1compare__node__ptrs.html">SIPPNode::compare_node_ptrs</a>&gt; <a class="el" href="namespacesipp.html#a74e4a2ebaf58ab32c62f0210d4ba7266">sipp::PriorityQueue</a></td>
+          <td class="memname">using <a class="el" href="namespacesipp.html#a7069d4b04897ef89b5dcfec1da790585">sipp::PriorityQueue</a> = typedef boost::heap::priority_queue&lt;const <a class="el" href="classsipp_1_1SIPPNode.html">SIPPNode</a>*, boost::heap::compare&lt;<a class="el" href="classsipp_1_1SIPPNodeComparator.html">SIPPNodeComparator</a>&gt; &gt;</td>
         </tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="SIPP_8cpp_source.html#l00084">84</a> of file <a class="el" href="SIPP_8cpp_source.html">SIPP.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="SIPP_8h_source.html#l00107">107</a> of file <a class="el" href="SIPP_8h_source.html">SIPP.h</a>.</p>
+
+</div>
+</div>
+<a id="ab9f900dc9f1d21e25d0a820a593ef26b"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ab9f900dc9f1d21e25d0a820a593ef26b">&#9670;&nbsp;</a></span>PriorityQueueSuboptimal</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">using <a class="el" href="namespacesipp.html#ab9f900dc9f1d21e25d0a820a593ef26b">sipp::PriorityQueueSuboptimal</a> = typedef boost::heap::priority_queue&lt;const <a class="el" href="classsipp_1_1SIPPNode.html">SIPPNode</a>*, boost::heap::compare&lt;<a class="el" href="classsipp_1_1SIPPNodeComparatorSuboptimal.html">SIPPNodeComparatorSuboptimal</a>&gt; &gt;</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="SIPP_8h_source.html#l00109">109</a> of file <a class="el" href="SIPP_8h_source.html">SIPP.h</a>.</p>
 
 </div>
 </div>
 <h2 class="groupheader">Function Documentation</h2>
-<a id="abe0ecf2f662c3c6eb2a4c9719332c2a5"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#abe0ecf2f662c3c6eb2a4c9719332c2a5">&#9670;&nbsp;</a></span>extract_path()</h2>
+<a id="a6e715e7420614c0befe3fca5ad1dd6f0"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a6e715e7420614c0befe3fca5ad1dd6f0">&#9670;&nbsp;</a></span>extract_path()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="utils_8h.html#a4b0c12fdb9bfd266c909605f8aa6e3d6">Path</a> sipp::extract_path </td>
+          <td class="memname">auto sipp::extract_path </td>
           <td>(</td>
-          <td class="paramtype">const std::shared_ptr&lt; <a class="el" href="classSIPPNode.html">SIPPNode</a> &gt; &amp;&#160;</td>
+          <td class="paramtype"><a class="el" href="classsipp_1_1SIPPNode.html">SIPPNode</a> const *&#160;</td>
           <td class="paramname"><em>final_node</em></td><td>)</td>
-          <td></td>
+          <td> -&gt; <a class="el" href="utils_8h.html#a64881685b4fe27a0cf599222d5fb1c72">TimePointPath</a></td>
         </tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="SIPP_8cpp_source.html#l00129">129</a> of file <a class="el" href="SIPP_8cpp_source.html">SIPP.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="SIPP_8cpp_source.html#l00944">944</a> of file <a class="el" href="SIPP_8cpp_source.html">SIPP.cpp</a>.</p>
 <div class="dynheader">
 Here is the caller graph for this function:</div>
 <div class="dyncontent">
-<div class="center"><img src="namespacesipp_abe0ecf2f662c3c6eb2a4c9719332c2a5_icgraph.png" border="0" usemap="#namespacesipp_abe0ecf2f662c3c6eb2a4c9719332c2a5_icgraph" alt=""/></div>
-<map name="namespacesipp_abe0ecf2f662c3c6eb2a4c9719332c2a5_icgraph" id="namespacesipp_abe0ecf2f662c3c6eb2a4c9719332c2a5_icgraph">
-<area shape="rect" title=" " alt="" coords="140,5,279,32"/>
-<area shape="rect" href="classSIPP.html#a35258e94140f3de07b765cb91ce13c50" title=" " alt="" coords="5,5,92,32"/>
+<div class="center"><img src="namespacesipp_a6e715e7420614c0befe3fca5ad1dd6f0_icgraph.png" border="0" usemap="#namespacesipp_a6e715e7420614c0befe3fca5ad1dd6f0_icgraph" alt=""/></div>
+<map name="namespacesipp_a6e715e7420614c0befe3fca5ad1dd6f0_icgraph" id="namespacesipp_a6e715e7420614c0befe3fca5ad1dd6f0_icgraph">
+<area shape="rect" title=" " alt="" coords="236,97,375,123"/>
+<area shape="rect" href="classSIPP.html#a554425ea66302db84cbbd55252347ddc" title=" " alt="" coords="23,5,170,47"/>
+<area shape="rect" href="classSIPP.html#a99ea39d64a73b10e97046debfcd2d873" title=" " alt="" coords="17,71,177,98"/>
+<area shape="rect" href="classSIPP.html#a9c3c0bb8577a4af7cc66dc11b639cb18" title=" " alt="" coords="5,122,188,149"/>
+<area shape="rect" href="classSIPP.html#a440a585afee1b9ff3ae38ed91960b353" title=" " alt="" coords="13,173,180,199"/>
 </map>
 </div>
 

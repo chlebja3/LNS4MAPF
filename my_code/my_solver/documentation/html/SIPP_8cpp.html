@@ -68,64 +68,93 @@ $(function() {
 </div><!-- top -->
 <div class="header">
   <div class="summary">
-<a href="#nested-classes">Classes</a> &#124;
-<a href="#namespaces">Namespaces</a> &#124;
-<a href="#typedef-members">Typedefs</a> &#124;
-<a href="#func-members">Functions</a>  </div>
+<a href="#define-members">Macros</a>  </div>
   <div class="headertitle">
 <div class="title">SIPP.cpp File Reference</div>  </div>
 </div><!--header-->
 <div class="contents">
 <div class="textblock"><code>#include &quot;<a class="el" href="SIPP_8h_source.html">SIPP.h</a>&quot;</code><br />
-<code>#include &lt;math.h&gt;</code><br />
+<code>#include &lt;climits&gt;</code><br />
+<code>#include &lt;cmath&gt;</code><br />
 <code>#include &lt;memory&gt;</code><br />
-<code>#include &lt;queue&gt;</code><br />
+<code>#include &lt;random&gt;</code><br />
+<code>#include &quot;<a class="el" href="utils_8h_source.html">utils.h</a>&quot;</code><br />
 </div><div class="textblock"><div class="dynheader">
 Include dependency graph for SIPP.cpp:</div>
 <div class="dyncontent">
 <div class="center"><img src="SIPP_8cpp__incl.png" border="0" usemap="#src_2SIPP_8cpp" alt=""/></div>
 <map name="src_2SIPP_8cpp" id="src_2SIPP_8cpp">
-<area shape="rect" title=" " alt="" coords="229,5,328,32"/>
-<area shape="rect" href="SIPP_8h.html" title=" " alt="" coords="113,80,173,107"/>
-<area shape="rect" title=" " alt="" coords="197,80,265,107"/>
-<area shape="rect" title=" " alt="" coords="289,80,367,107"/>
-<area shape="rect" title=" " alt="" coords="391,80,454,107"/>
-<area shape="rect" href="utils_8h.html" title=" " alt="" coords="111,155,174,181"/>
-<area shape="rect" title=" " alt="" coords="5,229,152,256"/>
-<area shape="rect" title=" " alt="" coords="177,229,239,256"/>
+<area shape="rect" title=" " alt="" coords="497,5,596,32"/>
+<area shape="rect" href="SIPP_8h.html" title=" " alt="" coords="319,80,379,107"/>
+<area shape="rect" href="utils_8h.html" title=" " alt="" coords="289,468,351,495"/>
+<area shape="rect" title=" " alt="" coords="1329,543,1396,569"/>
+<area shape="rect" title=" " alt="" coords="229,319,301,345"/>
+<area shape="rect" title=" " alt="" coords="592,319,669,345"/>
+<area shape="rect" title=" " alt="" coords="1451,80,1514,107"/>
+<area shape="rect" title=" " alt="" coords="230,155,375,196"/>
+<area shape="rect" href="IterInfo_8h.html" title=" " alt="" coords="73,162,154,189"/>
+<area shape="rect" href="SafeIntervalTable_8h.html" title=" " alt="" coords="855,244,1001,271"/>
+<area shape="rect" title=" " alt="" coords="366,543,429,569"/>
+<area shape="rect" title=" " alt="" coords="453,543,600,569"/>
+<area shape="rect" title=" " alt="" coords="19,543,66,569"/>
+<area shape="rect" title=" " alt="" coords="91,543,160,569"/>
+<area shape="rect" title=" " alt="" coords="184,543,251,569"/>
+<area shape="rect" title=" " alt="" coords="275,543,341,569"/>
+<area shape="rect" title=" " alt="" coords="625,543,687,569"/>
+<area shape="rect" title=" " alt="" coords="94,244,154,271"/>
+<area shape="rect" href="Solver_8h.html" title=" " alt="" coords="501,244,576,271"/>
+<area shape="rect" title=" " alt="" coords="357,393,416,420"/>
+<area shape="rect" href="Instance_8h.html" title=" " alt="" coords="427,319,517,345"/>
+<area shape="rect" href="Map_8h.html" title=" " alt="" coords="441,393,503,420"/>
+<area shape="rect" title=" " alt="" coords="1040,319,1120,345"/>
+<area shape="rect" title=" " alt="" coords="1144,319,1187,345"/>
+<area shape="rect" title=" " alt="" coords="1211,319,1325,345"/>
+<area shape="rect" title=" " alt="" coords="743,319,966,345"/>
 </map>
 </div>
 </div>
 <p><a href="SIPP_8cpp_source.html">Go to the source code of this file.</a></p>
 <table class="memberdecls">
-<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="nested-classes"></a>
-Classes</h2></td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classTimeInterval.html">TimeInterval</a></td></tr>
-<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSIPPNode.html">SIPPNode</a></td></tr>
-<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structSIPPNode_1_1compare__node__ptrs.html">SIPPNode::compare_node_ptrs</a></td></tr>
-<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structSIPPNode_1_1hash__node__ptrs.html">SIPPNode::hash_node_ptrs</a></td></tr>
-<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structSIPPNode_1_1equal__node__ptrs.html">SIPPNode::equal_node_ptrs</a></td></tr>
-<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-</table><table class="memberdecls">
-<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="namespaces"></a>
-Namespaces</h2></td></tr>
-<tr class="memitem:namespacesipp"><td class="memItemLeft" align="right" valign="top"> &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacesipp.html">sipp</a></td></tr>
-<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-</table><table class="memberdecls">
-<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="typedef-members"></a>
-Typedefs</h2></td></tr>
-<tr class="memitem:a74e4a2ebaf58ab32c62f0210d4ba7266"><td class="memItemLeft" align="right" valign="top">typedef std::priority_queue&lt; std::shared_ptr&lt; <a class="el" href="classSIPPNode.html">SIPPNode</a> &gt;, std::vector&lt; std::shared_ptr&lt; <a class="el" href="classSIPPNode.html">SIPPNode</a> &gt; &gt;, <a class="el" href="structSIPPNode_1_1compare__node__ptrs.html">SIPPNode::compare_node_ptrs</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacesipp.html#a74e4a2ebaf58ab32c62f0210d4ba7266">sipp::PriorityQueue</a></td></tr>
-<tr class="separator:a74e4a2ebaf58ab32c62f0210d4ba7266"><td class="memSeparator" colspan="2">&#160;</td></tr>
-</table><table class="memberdecls">
-<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="func-members"></a>
-Functions</h2></td></tr>
-<tr class="memitem:abe0ecf2f662c3c6eb2a4c9719332c2a5"><td class="memItemLeft" align="right" valign="top"><a class="el" href="utils_8h.html#a4b0c12fdb9bfd266c909605f8aa6e3d6">Path</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacesipp.html#abe0ecf2f662c3c6eb2a4c9719332c2a5">sipp::extract_path</a> (const std::shared_ptr&lt; <a class="el" href="classSIPPNode.html">SIPPNode</a> &gt; &amp;final_node)</td></tr>
-<tr class="separator:abe0ecf2f662c3c6eb2a4c9719332c2a5"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="define-members"></a>
+Macros</h2></td></tr>
+<tr class="memitem:a51cbeb317d6de6b6997bf2dde85093b7"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="SIPP_8cpp.html#a51cbeb317d6de6b6997bf2dde85093b7">NODE_POOL_MERGE_SIZE</a>&#160;&#160;&#160;500</td></tr>
+<tr class="separator:a51cbeb317d6de6b6997bf2dde85093b7"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:afbae1991a83a16217c35217ec627d916"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="SIPP_8cpp.html#afbae1991a83a16217c35217ec627d916">INITIAL_NODE_POOL_SIZE</a>&#160;&#160;&#160;2</td></tr>
+<tr class="separator:afbae1991a83a16217c35217ec627d916"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
+<h2 class="groupheader">Macro Definition Documentation</h2>
+<a id="afbae1991a83a16217c35217ec627d916"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#afbae1991a83a16217c35217ec627d916">&#9670;&nbsp;</a></span>INITIAL_NODE_POOL_SIZE</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define INITIAL_NODE_POOL_SIZE&#160;&#160;&#160;2</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="SIPP_8cpp_source.html#l00019">19</a> of file <a class="el" href="SIPP_8cpp_source.html">SIPP.cpp</a>.</p>
+
+</div>
+</div>
+<a id="a51cbeb317d6de6b6997bf2dde85093b7"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a51cbeb317d6de6b6997bf2dde85093b7">&#9670;&nbsp;</a></span>NODE_POOL_MERGE_SIZE</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define NODE_POOL_MERGE_SIZE&#160;&#160;&#160;500</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="SIPP_8cpp_source.html#l00018">18</a> of file <a class="el" href="SIPP_8cpp_source.html">SIPP.cpp</a>.</p>
+
+</div>
+</div>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>

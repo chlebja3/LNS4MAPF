@@ -138,6 +138,10 @@ public:
   auto plan_sipp_mine_ap(int agent_num, const std::unordered_set<int>& already_planned) -> TimePointPath;
   auto plan_mapflns_heuristic(int agent_num) -> TimePointPath;
   auto plan_suboptimal(int agent_num, const std::unordered_set<int>& already_planned, double w = 1.0, bool ap = false) -> TimePointPath;
+  void reset()
+  {
+    safe_interval_table.reset();
+  }
 
 private:
   void                 initialize_iter_info();

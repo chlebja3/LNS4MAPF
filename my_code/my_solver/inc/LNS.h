@@ -36,14 +36,19 @@ public:
 class LNS_settings
 {
 public:
-  LNS_settings(int max_iter_, double time_limit_, Destroy_settings destroy_settings_, SIPP_settings sipp_settings_)
-      : max_iter(max_iter_), time_limit(time_limit_), destroy_settings(destroy_settings_), sipp_settings(sipp_settings_)
+  LNS_settings(int max_iter_, double time_limit_, Destroy_settings destroy_settings_, SIPP_settings sipp_settings_, bool restarts_ = false)
+      : max_iter(max_iter_),
+        time_limit(time_limit_),
+        destroy_settings(destroy_settings_),
+        sipp_settings(sipp_settings_),
+        restarts(restarts_)
   {
   }
   int              max_iter;
   double           time_limit;
   Destroy_settings destroy_settings;
   SIPP_settings    sipp_settings;
+  bool             restarts;
 };
 
 class Operator
@@ -89,7 +94,7 @@ public:
   std::unique_ptr<SIPP>         planner;
 
   // constructor
-  LNS(const Instance& instance_, std::mt19937& rnd_generator_, SharedData* shared_data_, const LNS_settings& settings_);
+  LNS(const Instance& instance_, std::mt19937& rnd_generator_, SharedData* shared_data_, LNS_settings& settings_);
 
   // Destructor
   ~LNS() override = default;
@@ -115,6 +120,7 @@ public:
   Operator                        destroy_operator;
   mutable std::unordered_set<int> already_planned;
   Logger                          log;
+  LNS_settings&                   settings;
 
 private:
   void destroy_random(Solution& sol) const;
@@ -127,16 +133,16 @@ private:
   void get_intersection_agents(std::unordered_set<int>& neighborhood, int current) const;
   void repair_default(Solution& sol) const;
 
-  SharedData*             shared_data;
-  const LNS_settings&     settings;
-  int                     iteration_num = 0;
-  double                  initial_solution_time;
-  double                  curr_time;
-  Operator                repair_operator;
-  mutable ConstraintTable constraint_table;
-  mutable bool            constraint_table_initialized = false;
-  std::vector<double>     destroy_weights;
-  double                  reaction_factor = 0.01;  // TODO this are hardocded from the MAPF-LNS2 code for now
-  double                  decay_factor    = 0.01;
-  mutable DESTROY_TYPE    last_destroy_strategy;
+  SharedData*                 shared_data;
+  int                         iteration_num = 0;
+  double                      initial_solution_time;
+  double                      curr_time;
+  Operator                    repair_operator;
+  mutable ConstraintTable     constraint_table;
+  mutable bool                constraint_table_initialized = false;
+  mutable std::vector<double> destroy_weights;
+  double                      reaction_factor = 0.01;  // TODO this are hardocded from the MAPF-LNS2 code for now
+  double                      decay_factor    = 0.01;
+  mutable DESTROY_TYPE        last_destroy_strategy;
+  bool                        found_initial_solution = false;
 };

@@ -51,6 +51,15 @@ public:
     return std::find(edge_constraints[dir][loc2_free].begin(), edge_constraints[dir][loc2_free].end(), time) !=
            edge_constraints[dir][loc2_free].end();  // vector implementation
   }
+  void reset()
+  {
+    edge_constraints.clear();
+    edge_constraints.resize(NUM_DIRECTIONS);
+    for (int i = 0; i < NUM_DIRECTIONS; i++)
+    {
+      edge_constraints[i].resize(instance.get_num_free_cells());
+    }
+  }
 
 private:
   // std::unordered_set<EdgeConstraint, EdgeConstraint::hash_edge_collision> edge_constraints;  // constraints for edges
@@ -89,6 +98,26 @@ public:
   {
     assertm(instance.get_map_data().is_in(location), "Invalid location");
     return safe_intervals[instance.location_to_free_location(location)].back();
+  }
+
+  void reset()
+  {
+    // reset safe intervals
+    int num_free_cells = static_cast<int>(safe_intervals.size());
+    safe_intervals     = std::vector<std::list<TimeInterval>>(num_free_cells, std::list<TimeInterval>(1, TimeInterval(0, INT_MAX)));
+
+    // reset latest constraint end
+    latest_constraint_end         = 0;
+    latest_constraint_end_updated = true;
+
+    // reset unlimited safe intervals
+    unlimited_safe_intervals = instance.get_map_data().get_num_free_cells();
+
+    // reset max path len estimate
+    max_path_len_estimate = INT_MAX;
+
+    // reset edge constraint table
+    edge_constraint_table.reset();
   }
 
 private:

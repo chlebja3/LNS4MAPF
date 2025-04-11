@@ -1,5 +1,4 @@
 <map id="Node" name="Node">
-<area shape="rect" id="node1" title=" " alt="" coords="79,5,135,32"/>
-<area shape="rect" id="node2" href="$classAstarNode.html" title=" " alt="" coords="5,80,96,107"/>
-<area shape="rect" id="node3" href="$classSIPPNode.html" title=" " alt="" coords="121,80,205,107"/>
+<area shape="rect" id="node1" title=" " alt="" coords="37,5,93,32"/>
+<area shape="rect" id="node2" href="$classsipp_1_1SIPPNode.html" title=" " alt="" coords="5,80,124,107"/>
 </map>

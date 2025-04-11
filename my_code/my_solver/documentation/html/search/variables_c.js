@@ -1,8 +1,8 @@
 var searchData=
 [
-  ['scale_251',['scale',['../classVisualizer.html#ae88184aca4b5910d14899ff3b0986656',1,'Visualizer']]],
-  ['scene_5ffname_252',['scene_fname',['../classInstance.html#a2cf6973652699b3b35e47b92f1dc37bc',1,'Instance']]],
-  ['solution_253',['solution',['../classSolver.html#aaac1eef7e7e0dbba4cb34e86110c2dc2',1,'Solver']]],
-  ['solver_254',['solver',['../classComputation.html#a2be82e54fb42a78b3d2d330ffce98143',1,'Computation']]],
-  ['start_5fpositions_255',['start_positions',['../classInstance.html#a450b0a5f3c6a653c2d896668f15d3b11',1,'Instance']]]
+  ['name_1905',['name',['../classSolver.html#aa4a44135625afde16684f6e372082851',1,'Solver']]],
+  ['neighbors_1906',['neighbors',['../classInstance.html#a5813fb5aee5086911058681e2281fe99',1,'Instance']]],
+  ['node_5fpool_1907',['node_pool',['../classSIPP.html#a54371977b1a93442604d9fe37f5e3963',1,'SIPP']]],
+  ['num_5fdirections_1908',['NUM_DIRECTIONS',['../SafeIntervalTable_8h.html#a972d7755cf75f84193e560c30639bfa3',1,'NUM_DIRECTIONS():&#160;SafeIntervalTable.h'],['../ConstraintTable_8cpp.html#a972d7755cf75f84193e560c30639bfa3',1,'NUM_DIRECTIONS():&#160;ConstraintTable.cpp']]],
+  ['num_5fof_5fagents_1909',['num_of_agents',['../classInstance.html#a654b42d2c53acb14a71b296d22a88d5c',1,'Instance::num_of_agents()'],['../structSettings.html#a7db18b1e3d5ec6ac78dfa533f9ab08f0',1,'Settings::num_of_agents()']]]
 ];

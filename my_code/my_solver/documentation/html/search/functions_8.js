@@ -1,6 +1,4 @@
 var searchData=
 [
-  ['lns_190',['LNS',['../classLNS.html#a58d602859ed1ebd958f5ae9a115768f0',1,'LNS']]],
-  ['load_5fmap_191',['load_map',['../classInstance.html#a14834be9f7732bcf925649bd0e9ca7cb',1,'Instance']]],
-  ['load_5fscene_192',['load_scene',['../classInstance.html#a98024b413d5f329fe3a938762ea4f215',1,'Instance']]]
+  ['join_5fthread_1690',['join_thread',['../classComputation.html#a13bc9058dbd9b7c6335c64876dab36d0',1,'Computation::join_thread()'],['../classVisualizer.html#a82468c4a2a9c68636c47dbcfb0d12ad0',1,'Visualizer::join_thread()']]]
 ];

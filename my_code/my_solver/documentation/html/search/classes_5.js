@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['lns_136',['LNS',['../classLNS.html',1,'']]]
+  ['instance_1520',['Instance',['../classInstance.html',1,'']]]
 ];

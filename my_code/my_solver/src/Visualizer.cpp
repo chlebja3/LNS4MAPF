@@ -189,9 +189,19 @@ void Visualizer::run()
         // initial solution
         add_to_log("Found initial solution with cost: " + std::to_string(new_lns_info[0].sol.sum_of_costs));
       }
-      else if (new_lns_info.back().improvement > 0)
+      // add all improvements to the log
+      for (const auto& it : new_lns_info)
       {
-        add_to_log("Found better solution with cost: " + std::to_string(new_lns_info.back().sol.sum_of_costs));
+        // skip the first one, because it is the initial solution
+        if (it.iteration_num == 0)
+        {
+          continue;
+        }
+        // add the improvement to the log
+        if (it.accepted)
+        {
+          add_to_log("Found better solution with cost: " + std::to_string(it.sol.sum_of_costs));
+        }
       }
       lns_info.insert(lns_info.end(), std::make_move_iterator(new_lns_info.begin()), std::make_move_iterator(new_lns_info.end()));
       lns_vis.max_time = static_cast<int>(lns_info.size()) - 1;
@@ -213,7 +223,7 @@ void Visualizer::run()
 
     // show the window for debugging imgui
 #ifndef NDEBUG
-    ImGui::ShowDemoWindow();
+    // ImGui::ShowDemoWindow();
 #endif
 
     // create the GUI elements
