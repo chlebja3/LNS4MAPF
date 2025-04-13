@@ -62,6 +62,7 @@ for map_dir in map_dirs:
             data = json.load(f) # loads the json as dictionary
             data["file_name"] = file
 
+
             # check whether the experiment is already in the database
             cursor.execute("SELECT 1 FROM " + experiment_name + """ WHERE 
                 file_name = ?
@@ -71,6 +72,8 @@ for map_dir in map_dirs:
                 # convert the algorithm parameters, solution time evolution etc to json string
                 data["algo_parameters"] = json.dumps(data["algo_parameters"])
                 data["init_sol_sum_of_cost"] = data["sum_of_cost"][0]
+                if (data["feasible"] and data["sum_of_cost"][0] == -1):
+                    data["feasible"] = False
                 data["sum_of_cost"] = json.dumps(data["sum_of_cost"])
                 data["init_sol_makespan"] = data["makespan"][0]
                 data["makespan"] = json.dumps(data["makespan"])

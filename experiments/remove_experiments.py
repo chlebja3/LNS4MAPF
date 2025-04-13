@@ -6,9 +6,9 @@ import sqlite3
 conn = sqlite3.connect("experiment_database.db")
 cursor = conn.cursor()
 
-experiment_name = "sipp_pp"
-algo_names = ["SIPP_lns_orig"]
-# algo_names = [""]
+experiment_name = "repair"
+# algo_names = ["SIPP_lns_orig"]
+algo_names = ["SIPP_mine", "SIPP_suboptimal_w_1,00", "SIPP_suboptimal_w_1,01", "SIPP_suboptimal_w_1,02", "SIPP_suboptimal_w_1,05", "SIPP_suboptimal_w_1,10"]
 
 # Count total rows before deletion
 cursor.execute("SELECT COUNT(*) FROM " + experiment_name)

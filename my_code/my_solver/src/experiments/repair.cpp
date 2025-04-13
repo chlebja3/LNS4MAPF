@@ -86,8 +86,10 @@ void experiment_function(LNS& lns)
                               {SIPP_implementation::SIPP_suboptimal, INFO_type::experiment, 1.0});
 
   lns.solve();
-
-  // switch settings to the original ones and run the LNS
-  lns.settings = lns_settings_orig;
-  lns.solve();
+  if (lns.solution.feasible)
+  {
+    // switch settings to the original ones and run the LNS
+    lns.settings = lns_settings_orig;
+    lns.solve();
+  }
 }
