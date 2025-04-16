@@ -34,6 +34,10 @@ LNS::LNS(const Instance& instance_, std::mt19937& rnd_generator_, SharedData* sh
         {
           destroy_random_choose(sol);
         }
+        else if (settings.destroy_settings.type == DESTROY_TYPE::BLOCKED)
+        {
+          destroy_blocked(sol);
+        }
         else
         {
           destroy_random(sol);
@@ -680,6 +684,85 @@ void LNS::destroy_adaptive(Solution& sol) const
       throw std::runtime_error(std::string("Unknown DESTROY_TYPE ") + std::string(magic_enum::enum_name<DESTROY_TYPE>(chosen_type)) +
                                std::string(" encountered in adaptive destroy."));
   }
+}
+
+void LNS::destroy_blocked(Solution& sol) const
+{
+  // find all agents whose end is blocked
+  std::vector<int> blocked_agents;
+  for (int i = 0; i < instance.get_num_of_agents(); i++)
+  {
+    const int loc        = instance.get_goal_locations()[i];
+    const int reach_time = sol.paths[i].back().interval.t_min;
+    assertm(sol.paths[i].back().location == loc, "The path does not end in the goal location");
+    // skip agents that dont have any delay
+    if (reach_time == instance.get_heuristic_distance(i, instance.get_start_locations()[i]) - 1)
+    {
+      continue;
+    }
+    assertm(reach_time >= instance.get_heuristic_distance(i, instance.get_start_locations()[i]), "Invalid reach time");
+    assertm(constraint_table_initialized, "Constraint table is not initialized.");
+    int from = loc;
+    if (static_cast<int>(sol.paths[i].size()) > 1)
+    {
+      from = std::prev(sol.paths[i].end(), 2)->location;
+    }
+    if (constraint_table.get_blocking_agent(from, loc, reach_time - 1) != -1)
+    {
+      blocked_agents.push_back(i);
+    }
+  }
+
+  // if no agent is blocked, use the adaptive destroy
+  if (blocked_agents.empty())
+  {
+    destroy_adaptive(sol);
+    return;
+  }
+  // std::cout << "Number of blocked_agents: " << blocked_agents.size() << std::endl;
+
+  // choose a random agent from blocked agents
+  std::uniform_int_distribution<int> dist(0, blocked_agents.size() - 1);
+  int                                chosen_agent = -1;
+  {
+    int idx      = dist(rnd_generator);
+    chosen_agent = blocked_agents[idx];
+  }
+  // std::cout << "Chosen agent: " << chosen_agent << std::endl;
+
+  // add the agent to the neighborhood
+  std::unordered_set<int> neighborhood = {chosen_agent};
+  int                     idx          = -1;
+  sol.destroyed_paths                  = {chosen_agent};
+  while (static_cast<int>(sol.destroyed_paths.size()) < settings.destroy_settings.size)
+  {
+    const int        loc                 = instance.get_goal_locations()[chosen_agent];
+    const int        min_reach_time      = instance.get_heuristic_distance(chosen_agent, instance.get_start_locations()[chosen_agent]);
+    std::vector<int> blocking_agents_new = constraint_table.get_blocking_agents(loc, min_reach_time - 1);
+
+    // add all new blocking agents to the neighborhood
+    for (auto it : blocking_agents_new)
+    {
+      if (neighborhood.find(it) == neighborhood.end())
+      {
+        neighborhood.insert(it);
+        sol.destroyed_paths.push_back(it);
+      }
+    }
+
+    // update index
+    idx++;
+    if (idx >= static_cast<int>(sol.destroyed_paths.size()))
+    {
+      break;
+    }
+
+    // update chosen agent
+    chosen_agent = sol.destroyed_paths[idx];
+  }
+  assertm(settings.destroy_settings.size == 1 || static_cast<int>(sol.destroyed_paths.size()) > 1,
+          "At least two paths should be destroyed.");
+  sol.feasible = false;
 }
 
 void LNS::destroy_random_choose(Solution& sol) const

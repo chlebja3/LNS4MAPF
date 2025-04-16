@@ -31,6 +31,7 @@ void ConstraintTable::add_constraint(const TimePoint& timepoint, int agent_num)
 {
   // check the location is valid
   assertm(instance.get_map_data().is_in(timepoint.location), "Invalid location.");
+  assertm(agent_num >= 0 && agent_num < instance.get_num_of_agents(), "Invalid agent number.");
   int                                      free_location = instance.location_to_free_location(timepoint.location);
   std::list<std::pair<TimeInterval, int>>& cur_TI_list   = constraints[free_location];
 
@@ -225,6 +226,53 @@ auto ConstraintTable::get_blocking_agent(int from, int to, int time) const -> in
     return edge_constraint_table.get(to, from, time);
   }
   return -1;
+}
+
+auto ConstraintTable::get_blocking_agents(int location, int time_min) const -> std::vector<int>
+{
+  // check the location is valid
+  assertm(instance.get_map_data().is_in(location), "Invalid location.");
+
+  // check the time is valid
+  assertm(time_min >= 0, "Invalid time.");
+
+  int to_free = instance.location_to_free_location(location);
+
+  const std::list<std::pair<TimeInterval, int>>& cur_TI_list = constraints[to_free];
+
+  // if there are no constraints, return -1 (no agent blocking the square)
+  assertm(!cur_TI_list.empty(), "Trying to get blocking agents from an empty list.");
+
+  std::unordered_set<int> blocking_agents     = {};
+  std::vector<int>        blocking_agents_vec = {};
+  assertm(cur_TI_list.back().first.t_max == INT_MAX, "Last interval should be infinite.");
+
+  // check how many intervals are present
+  if (cur_TI_list.size() < 2)
+  {
+    return {};
+  }
+
+  // iterate over the constraints from end to beginning (skip the last interval, as agent can not block itself)
+  for (auto it = std::next(cur_TI_list.rbegin()); it != cur_TI_list.rend(); it++)
+  {
+    // std::cout << "Interval: " << it->first << ", agent: " << it->second << std::endl;
+    if (it->first.t_max < time_min)
+    {
+      // there can not be any more blocking agents
+      break;
+    }
+
+    // check whether the agent was not already added
+    const int agent_num = it->second;
+    if (blocking_agents.find(agent_num) == blocking_agents.end())
+    {
+      // add the agent to the set
+      blocking_agents.insert(agent_num);
+      blocking_agents_vec.push_back(agent_num);
+    }
+  }
+  return blocking_agents_vec;
 }
 
 

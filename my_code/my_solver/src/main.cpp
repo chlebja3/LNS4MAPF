@@ -40,7 +40,7 @@ auto main(int argc, char** argv) -> int
       "implementation of SIPP (SIPP_mine, SIPP_mapf_lns, SIPP_suboptimal)")("Restarts,r", po::value<bool>()->default_value(true),
                                                                             "restart the search if no feasible initial solution was found")(
       "destroy_operator,do", po::value<std::string>()->default_value("ADAPTIVE"),
-      "Destroy operator to be used in LNS (RANDOM, RANDOMWALK, INTERSECTION, ADAPTIVE)")(
+      "Destroy operator to be used in LNS (RANDOM, RANDOMWALK, INTERSECTION, ADAPTIVE, RANDOM_CHOOSE, BLOCKED)")(
       "neighborhood_size,n", po::value<int>()->default_value(DEFAULT_NEIGHBORHOOD_SIZE),
       "Size of the neighborhood used by the destroy operator (number of paths to be destroyed)")(
       "seed,s", po::value<int>()->default_value(-1),
