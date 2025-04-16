@@ -32,12 +32,13 @@ auto main(int argc, char** argv) -> int
   desc.add_options()("help,h", "Show help message")("map,m", po::value<std::string>()->required(), "file with the map")(
       "agents,a", po::value<std::string>()->required(), "input file for agents")(
       "agentNum,k", po::value<int>()->default_value(0), "number of agents")("GUI,G", po::value<bool>()->default_value(true),
-                                                                            "whether to tun the graphical user interface")(
+                                                                            "whether to turn on the graphical user interface")(
       "sipp_suboptimality,w", po::value<double>()->default_value(1.0), "suboptimality factor for suboptimal sipp")(
       "maxIterations,i", po::value<int>()->default_value(DEFAULT_MAX_ITER), "maximal number of iterations of LNS")(
       "timeLimit,t", po::value<double>()->default_value(DEFAULT_TIME_LIMIT), "time limit to find the solution, in seconds")(
       "sipp_implementation,si", po::value<std::string>()->default_value("SIPP_mine"),
-      "implementation of SIPP (SIPP_mine, SIPP_mapf_lns, SIPP_suboptimal)")(
+      "implementation of SIPP (SIPP_mine, SIPP_mapf_lns, SIPP_suboptimal)")("Restarts,r", po::value<bool>()->default_value(true),
+                                                                            "restart the search if no feasible initial solution was found")(
       "destroy_operator,do", po::value<std::string>()->default_value("ADAPTIVE"),
       "Destroy operator to be used in LNS (RANDOM, RANDOMWALK, INTERSECTION, ADAPTIVE)")(
       "neighborhood_size,n", po::value<int>()->default_value(DEFAULT_NEIGHBORHOOD_SIZE),
@@ -74,6 +75,7 @@ auto main(int argc, char** argv) -> int
   const int         max_iter          = vm["maxIterations"].as<int>();
   const double      time_limit        = vm["timeLimit"].as<double>();
   const bool        GUI               = vm["GUI"].as<bool>();
+  const bool        restarts          = vm["Restarts"].as<bool>();
   const double      w                 = vm["sipp_suboptimality"].as<double>();
   const int         seed              = vm["seed"].as<int>();
 
@@ -133,7 +135,7 @@ auto main(int argc, char** argv) -> int
   Destroy_settings destroy_settings = Destroy_settings(destroy_type, neighborhood_size);
 
   // create LNS settings
-  LNS_settings lns_settings = LNS_settings(max_iter, time_limit, destroy_settings, sipp_settings);
+  LNS_settings lns_settings = LNS_settings(max_iter, time_limit, destroy_settings, sipp_settings, restarts);
 
 
   // create the computation object
