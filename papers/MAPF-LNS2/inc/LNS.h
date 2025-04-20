@@ -67,6 +67,7 @@ private:
   destroy_heuristic destroy_strategy = RANDOMWALK;
   int               num_of_iterations;
   string            init_destory_name;
+  string            destory_name_;  // added by me for output
   PIBTPPS_option    pipp_option;
   int               seed;
   std::mt19937      rnd_generator;

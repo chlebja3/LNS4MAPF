@@ -16,7 +16,8 @@ LNS::LNS(const Instance& instance, double time_limit, const string& init_algo_na
       path_table(instance.map_size),
       pipp_option(pipp_option),
       seed(seed),
-      rnd_generator(std::mt19937(seed))
+      rnd_generator(std::mt19937(seed)),
+      destory_name_(destory_name)
 {
   start_time = Time::now();
   timespec ts_start{};
@@ -852,7 +853,7 @@ void LNS::writeResultToFile(const string& file_name) const
              << "runtime of initial solution,restart times,area under curve,"
              << "LL expanded nodes,LL generated,LL reopened,LL runs,"
              << "preprocessing runtime,solver name,instance name, scen_name,"
-             << "seed, makespan, computation_time_cpu, preprocessing_time_cpu, num_agents" << endl;
+             << "seed, makespan, computation_time_cpu, preprocessing_time_cpu, num_agents, neighborhood_size, destroy_strategy" << endl;
     addHeads.close();
   }
   uint64_t num_LL_expanded = 0, num_LL_generated = 0, num_LL_reopened = 0, num_LL_runs = 0;
@@ -883,7 +884,7 @@ void LNS::writeResultToFile(const string& file_name) const
         << sum_of_distances << "," << iteration_stats.size() << "," << average_group_size << "," << initial_solution_runtime << ","
         << restart_times << "," << auc << "," << num_LL_expanded << "," << num_LL_generated << "," << num_LL_reopened << "," << num_LL_runs
         << "," << preprocessing_time << "," << getSolverName() << "," << instance.getInstanceName() << "," << seed << "," << makespan << ","
-        << runtime_cpu << ", " << preprocessing_time_cpu << ", " << agents.size() << endl;
+        << runtime_cpu << ", " << preprocessing_time_cpu << ", " << agents.size() << ", " << neighbor_size << ", " << destory_name_ << endl;
   stats.close();
 }
 
