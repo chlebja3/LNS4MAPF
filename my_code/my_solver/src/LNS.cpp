@@ -43,8 +43,8 @@ LNS::LNS(const Instance& instance_, std::mt19937& rnd_generator_, SharedData* sh
           destroy_random(sol);
         }
       })),
-      shared_data(shared_data_),
       settings(settings_),
+      shared_data(shared_data_),
       repair_operator(Operator([this](Solution& sol) { repair_default(sol); })),
       constraint_table(instance)
 {
@@ -425,32 +425,17 @@ void LNS::destroy_randomwalk(Solution& sol) const
     }
   }
 
-  // if not enough agents selected, fill with random agents
-  // find all agents that were not selected yet
-  std::vector<int> not_chosen;
-  for (int i = 0; i < instance.get_num_of_agents(); i++)
+  // if not enough agents selected, repeat
+  if (static_cast<int>(chosen.size()) <= 1)
   {
-    if (chosen.find(i) == chosen.end())
-    {
-      not_chosen.push_back(i);
-    }
+    destroy_randomwalk(sol);
+    return;
   }
-  int iterations = settings.destroy_settings.size - static_cast<int>(chosen.size());
-  for (int i = 0; i < iterations; i++)
-  {
-    // choose a random element that was not yet chosen
-    std::uniform_int_distribution<int> dist(0, not_chosen.size() - 1);
-    int                                idx = dist(rnd_generator);
-    auto                               it  = not_chosen.begin();
-    std::advance(it, idx);
-    chosen.insert(*it);    // add to the neighborhood
-    not_chosen.erase(it);  // remove from the not yet chosen elements
-  }
-  assertm(static_cast<int>(chosen.size()) == settings.destroy_settings.size, "Neighborhood is not full.");
-  sol.destroyed_paths = std::vector(std::make_move_iterator(chosen.begin()), std::make_move_iterator(chosen.end()));
+
   // shuffle the paths
+  sol.destroyed_paths = std::vector(std::make_move_iterator(chosen.begin()), std::make_move_iterator(chosen.end()));
   std::shuffle(sol.destroyed_paths.begin(), sol.destroyed_paths.end(), rnd_generator);
-  assertm(sol.destroyed_paths.size() > 0, "No paths were destroyed.");
+  assertm(sol.destroyed_paths.size() > 1, "Not enough paths were destroyed.");
   sol.feasible = false;
 }
 
@@ -561,30 +546,8 @@ void LNS::destroy_intersection(Solution& sol) const
       openlist.push(it);
     }
   }
+  assertm(static_cast<int>(neighborhood.size()) > 1, "Not enough agents selected for destroy.");
 
-  // if not enough agents selected, fill with random agents
-  // find all agents that were not selected yet
-  std::vector<int> not_chosen;
-  for (int i = 0; i < instance.get_num_of_agents(); i++)
-  {
-    if (neighborhood.find(i) == neighborhood.end())
-    {
-      not_chosen.push_back(i);
-    }
-  }
-  int iterations = settings.destroy_settings.size - static_cast<int>(neighborhood.size());
-  for (int i = 0; i < iterations; i++)
-  {
-    // choose a random element that was not yet chosen
-    std::uniform_int_distribution<int> dist(0, not_chosen.size() - 1);
-    int                                idx = dist(rnd_generator);
-    auto                               it  = not_chosen.begin();
-    std::advance(it, idx);
-    neighborhood.insert(*it);  // add to the neighborhood
-    not_chosen.erase(it);      // remove from the not yet chosen elements
-  }
-
-  assertm(settings.destroy_settings.size == static_cast<int>(neighborhood.size()), "Wrong neighborhood size.");
   // convert to vector and shuffle
   sol.destroyed_paths = std::vector(std::make_move_iterator(neighborhood.begin()), std::make_move_iterator(neighborhood.end()));
   // shuffle the paths
@@ -688,6 +651,8 @@ void LNS::destroy_adaptive(Solution& sol) const
 
 void LNS::destroy_blocked(Solution& sol) const
 {
+  last_destroy_strategy = DESTROY_TYPE::BLOCKED;
+
   // find all agents whose end is blocked
   std::vector<int> blocked_agents;
   for (int i = 0; i < instance.get_num_of_agents(); i++)
@@ -713,10 +678,10 @@ void LNS::destroy_blocked(Solution& sol) const
     }
   }
 
-  // if no agent is blocked, use the adaptive destroy
+  // if no agent is blocked, use the randomchoose
   if (blocked_agents.empty())
   {
-    destroy_adaptive(sol);
+    destroy_random_choose(sol);
     return;
   }
   // std::cout << "Number of blocked_agents: " << blocked_agents.size() << std::endl;
@@ -767,8 +732,8 @@ void LNS::destroy_blocked(Solution& sol) const
 
 void LNS::destroy_random_choose(Solution& sol) const
 {
-  static std::uniform_int_distribution<int> dist(0, 2);
-  int                                       rand_value = dist(rnd_generator);
+  std::uniform_int_distribution<int> dist(0, 2);
+  int                                rand_value = dist(rnd_generator);
   // apply the destroy operator
   switch (rand_value)
   {
@@ -790,6 +755,19 @@ void LNS::repair_default(Solution& sol) const
 {
   assertm(!sol.feasible, "Can not repair a feasible solution");
   assertm((int)sol.destroyed_paths.size() > 0, "There are no destroyed paths in the solution to be repaired.");
+
+  // special repair for BLOCKED
+  const int                 old_p              = settings.sipp_settings.p;
+  const SIPP_implementation old_implementation = settings.sipp_settings.implementation;
+  const double              old_w              = settings.sipp_settings.w;
+  if (last_destroy_strategy == DESTROY_TYPE::BLOCKED)
+  {
+    // change replan settings
+    std::uniform_int_distribution<int> dist_blocked(1, 5);
+    settings.sipp_settings.p              = dist_blocked(rnd_generator);
+    settings.sipp_settings.implementation = SIPP_implementation::SIPP_suboptimal_ap;
+    settings.sipp_settings.w              = 1.0;
+  }
 
   if (settings.sipp_settings.info_type == INFO_type::visualisation)
   {
@@ -818,8 +796,14 @@ void LNS::repair_default(Solution& sol) const
     TimePointPath tp_path  = planner->plan(path_idx, already_planned);
     if (tp_path.empty())
     {
-      // TODO reset the safe interval table and constrant table (is done in discard solution)
       sol.feasible = false;
+      // reset the settings
+      if (last_destroy_strategy == DESTROY_TYPE::BLOCKED)
+      {
+        settings.sipp_settings.p              = old_p;
+        settings.sipp_settings.implementation = old_implementation;
+        settings.sipp_settings.w              = old_w;
+      }
       return;
     }
 
@@ -836,6 +820,13 @@ void LNS::repair_default(Solution& sol) const
       constraint_table.add_constraints(tp_path, path_idx);
     }
     sol.paths[path_idx] = tp_path;
+    already_planned.insert(path_idx);
+  }
+  if (last_destroy_strategy == DESTROY_TYPE::BLOCKED)
+  {
+    settings.sipp_settings.p              = old_p;
+    settings.sipp_settings.implementation = old_implementation;
+    settings.sipp_settings.w              = old_w;
   }
 }
 

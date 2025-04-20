@@ -212,7 +212,6 @@ inline auto safe_increase(int num) -> int
   return num + 1;
 }
 
-auto fast_random_bool() -> bool;
 
 auto any_to_str(const std::any& value) -> std::string;
 auto double_to_str(double num, char separating_char = ',', int precision = 2) -> std::string;

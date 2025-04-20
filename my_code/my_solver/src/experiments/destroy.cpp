@@ -54,7 +54,7 @@ auto main(int argc, char** argv) -> int
     for (const auto& neighborhood_size : neighborhood_sizes)
     {
       LNS_settings lns_settings(MAX_ITER, TIME_LIMIT, {destroy, neighborhood_size},
-                                {SIPP_implementation::SIPP_suboptimal, INFO_type::experiment, 1.0});
+                                {SIPP_implementation::SIPP_suboptimal, INFO_type::experiment, 1.0}, false);
       algorithms.emplace_back(SIPP_implementation::SIPP_suboptimal, lns_settings, std::make_pair("w", 1.0),
                               std::make_pair("destroy_type", magic_enum::enum_name<DESTROY_TYPE>(destroy)),
                               std::make_pair("neighborhood_size", neighborhood_size));

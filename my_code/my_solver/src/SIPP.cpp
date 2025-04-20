@@ -666,14 +666,14 @@ auto SIPP::plan_suboptimal(const int agent_num, const std::unordered_set<int>& a
         if (neighbor != goal && instance.is_goal_location(neighbor) &&
             already_planned.find(instance.whose_goal(neighbor)) == already_planned.end())
         {
-          h2 += w;
+          h2 += settings.p;
         }
       }
       else
       {
         if (neighbor != goal && instance.is_goal_location(neighbor))
         {
-          h2 += w;
+          h2 += settings.p;
         }
       }
       // retrieve the safe intervals for the neighbor

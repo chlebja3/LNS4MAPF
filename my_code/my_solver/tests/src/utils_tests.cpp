@@ -700,15 +700,15 @@ TEST(test_utils, DirectionNone)
 }
 
 // test random bool generator
-TEST(test_utils, RandomBool)
-{
-  // generate 100 random bools and check, whether they are valid (just a simple test to test the  unit test environment)
-  for (int i = 0; i < 100; i++)
-  {
-    bool b = fast_random_bool();
-    EXPECT_TRUE(b == true || b == false) << "Invalid value.";
-  }
-}
+// TEST(test_utils, RandomBool)
+// {
+//   // generate 100 random bools and check, whether they are valid (just a simple test to test the  unit test environment)
+//   for (int i = 0; i < 100; i++)
+//   {
+//     bool b = fast_random_bool();
+//     EXPECT_TRUE(b == true || b == false) << "Invalid value.";
+//   }
+// }
 
 // test function that retrieves the last number from string
 TEST(FindLastNumberTest, BasicCases)

@@ -31,6 +31,7 @@ public:
   SIPP_implementation implementation;
   INFO_type           info_type;
   double              w;
+  double              p = 1.0;
   // bool                generate_blocked = false;
 };
 

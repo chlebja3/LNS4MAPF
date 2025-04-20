@@ -150,7 +150,25 @@ void Experiment::run()
         }
 
         // generate a random seed (same for all implementations) TODO - for experiments found in the database use the same seed
-        int seed = dist(rnd_gen);
+        int seed = 0;
+        // look into the database for a seed
+        size_t dot_pos = scene_name.find('.');
+        if (dot_pos == std::string::npos)
+        {
+          throw std::runtime_error("Could not find dot in scene name: '" + scene_name + "'");
+        }
+        const std::string scene_name_stripped = scene_name.substr(map_name.size() + 1, scene_name.find('.') - map_name.size() - 1);
+        int               seed_from_db = get_seed_from_db(agent_num, map_name, scene_name_stripped, k / static_cast<int>(scenes.size()));
+        // std::cout << "Seed from db: " << seed_from_db << std::endl;
+        if (seed_from_db >= 0)
+        {
+          seed = seed_from_db;
+        }
+        else
+        {
+          throw std::runtime_error("Did not find the seed.");
+          seed = dist(rnd_gen);
+        }
 
         // iterate over all implementations
         for (int l = 0; l < static_cast<int>(algorithms.size()); l++)
@@ -162,24 +180,11 @@ void Experiment::run()
             continue;
           }
 
-          // look into the database for a seed
-          size_t dot_pos = scene_name.find('.');
-          if (dot_pos == std::string::npos)
-          {
-            throw std::runtime_error("Could not find dot in scene name: '" + scene_name + "'");
-          }
-          const std::string scene_name_stripped = scene_name.substr(map_name.size() + 1, scene_name.find('.') - map_name.size() - 1);
-          int               seed_from_db = get_seed_from_db(agent_num, map_name, scene_name_stripped, k / static_cast<int>(scenes.size()));
-          // std::cout << "Seed from db: " << seed_from_db << std::endl;
-          if (seed_from_db > 0)
-          {
-            seed = seed_from_db;
-          }
 
           Algorithm& algo = algorithms[l];
 
           // create the seeded random generator (for experiment reproducibility)
-          auto                      rnd_generator       = std::mt19937(seed);
+          std::mt19937              rnd_generator       = std::mt19937(seed);
           double                    w                   = 1.0;
           const SIPP_implementation sipp_implementation = std::get<SIPP_implementation>(algo.type);
           if (sipp_implementation == SIPP_implementation::SIPP_suboptimal)
@@ -256,10 +261,24 @@ void Experiment::run()
 auto Experiment::get_seed_from_db(int agent_num, const std::string& map_name, const std::string& scene_name_stripped, int run) -> int
 {
   // Query the database
-  std::string command = "SELECT seed FROM " + experiment_name + "sipp_pp WHERE file_name = ?";
+  std::string command = "SELECT seed FROM " + experiment_name + " WHERE file_name = ?";
   // std::string       command             = "SELECT seed FROM experiments";
-  const std::string experiment_filename = experiment_name + "_" + std::to_string(agent_num) + "agents_" + map_name + "-" +
-                                          scene_name_stripped + "SIPP_lns_orig_" + std::to_string(run);
+  std::string experiment_filename;
+  if (experiment_name == "sipp_pp")
+  {
+    experiment_filename = experiment_name + "_" + std::to_string(agent_num) + "agents_" + map_name + "-" + scene_name_stripped +
+                          "SIPP_lns_orig_" + std::to_string(run);
+  }
+  else if (experiment_name == "destroy")
+  {
+    experiment_filename = experiment_name + "_" + std::to_string(agent_num) + "agents_" + map_name + "_" + scene_name_stripped +
+                          "_SIPP_suboptimal_w_1,00_destroy_type_ORIGO_neighborhood_size_4_" + std::to_string(run);
+  }
+  else
+  {
+    throw std::runtime_error("Unknown experiment name: " + experiment_name);
+  }
+
   // std::cout << "Filename: '" << experiment_filename << "'" << std::endl;
   sqlite3_stmt* stmt = nullptr;
 
