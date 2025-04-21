@@ -21,19 +21,19 @@ cursor = conn.cursor()
 counts = defaultdict(int)
 added = 0
 skipped = 0
-algo_name = "SIPP_suboptimal_w_1,00"
 
 for experiment in file_res:
 # check whether the experiment is already in the database
-    instance_name = experiment[17]
-    agent_num = int(experiment[22])
-    neighborhood_size = int(experiment[23])
+    instance_name = experiment[16]
+    agent_num = int(experiment[21])
+    neighborhood_size = int(experiment[22])
+    destroy_type = experiment[23].strip()
     idx1 = len("../MAPF-benchmark/mapf-scen-random/scen-random/")
     idx2 = instance_name.find(".scen")
     instance_name_stripped = instance_name[idx1:idx2]
     idx3 = instance_name_stripped.find("-random")
     map_name = instance_name_stripped[:idx3]
-    file_name = "destroy_" + str(agent_num) + "agents_"+ map_name + "_" + instance_name_stripped[idx3+1:] + "_SIPP_suboptimal_w_1,00_destroy_type_ORIGO_neighborhood_size_" + str(neighborhood_size)
+    file_name = "destroy_" + str(agent_num) + "agents_"+ map_name + "_" + instance_name_stripped[idx3+1:] + "_SIPP_suboptimal_w_1,00_destroy_type_ORIGO_" + destroy_type + "_neighborhood_size_" + str(neighborhood_size)
     num = counts[file_name]
     counts[file_name] += 1
     file_name += "_" + str(num)
@@ -49,7 +49,7 @@ for experiment in file_res:
             if (i == 0): 
                 i += 1
                 continue
-            sum_of_costs.append(row[1])
+            sum_of_costs.append(int(row[1]))
             if (i == 1):
                 computation_times.append(float(row[2]))
             else:
@@ -59,17 +59,18 @@ for experiment in file_res:
 
 
     algo_parameters = "[]"
-    computation_time_cpu = float(experiment[20])
+    computation_time_cpu = float(experiment[19])
     computation_time_wall = float(experiment[0])
     expanded = int(experiment[10])
     generated = int(experiment[11]) + int(experiment[12])
-    makespan = int(experiment[19])
-    preprocessing_time_cpu = float(experiment[21])
+    makespan = int(experiment[18])
+    preprocessing_time_cpu = float(experiment[20])
     preprocessing_time_wall = float(experiment[14])
-    seed = int(experiment[18])
+    seed = int(experiment[17])
     sum_of_cost = int(experiment[2])
     sum_of_dist = int(experiment[4])
 
+    algo_name = "SIPP_suboptimal_w_1,00_destroy_type_ORIGO_" + destroy_type + "_neighborhood_size_" + str(neighborhood_size) 
     cursor.execute("""
     SELECT 1 FROM destroy WHERE 
         file_name = ?

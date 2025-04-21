@@ -10,9 +10,9 @@ import pandas as pd
 max_iter = 500
 time_limit = 30
 
-def construct_experiment(solver_path, map_path, scen_path, output_file_name, agent_num, seed, neighborhood_size, experiment_name):
+def construct_experiment(solver_path, map_path, scen_path, output_file_name, agent_num, seed, neighborhood_size, experiment_name, destroy_strategy):
     """ Construct the input of subprocess.check_output to perform the experiment"""
-    return [solver_path, '-m', map_path, '-a', scen_path, "-o", output_file_name + ".csv", "-k", str(agent_num), "--initAlgo", "PP", "--maxIterations",  str(max_iter), "--initLNS", "0", "--seed", str(seed), "-t", str(time_limit), "--stats", "./dest_exp/" + experiment_name, "--neighborSize", str(neighborhood_size)]
+    return [solver_path, '-m', map_path, '-a', scen_path, "-o", output_file_name + ".csv", "-k", str(agent_num), "--initAlgo", "PP", "--maxIterations",  str(max_iter), "--initLNS", "0", "--seed", str(seed), "-t", str(time_limit), "--stats", "./dest_exp/" + experiment_name, "--neighborSize", str(neighborhood_size), "--destoryStrategy", destroy_strategy]
 
 def find_last_number(s: str) -> int:
     """Extracts the last number from a string. Returns -1 if no number is found."""
@@ -36,6 +36,7 @@ results_file = "results_destroy"
 mapf_benchmark_dir = "../MAPF-benchmark/"
 scen_dir = mapf_benchmark_dir + "mapf-scen-random/scen-random/"
 solver_path2 = "../papers/MAPF-LNS2/lns"
+destroy_strategies = ["Adaptive", "Random", "RandomWalk", "Intersection"]
 
 conn = sqlite3.connect("experiment_database.db")
 cursor = conn.cursor()
@@ -66,13 +67,14 @@ for map_name in tqdm.tqdm(map_names, desc="maps", position=0):
                     exit(1)
                 seed = seeds[0]
 
-                experiment_name = "destroy_" + str(agent_num) + "agents_" + map_name + "_" + scen_name_stripped +  "_SIPP_suboptimal_w_1,00_destroy_type_ORIGO_neighborhood_size_" + str(neighborhood_size) + "_" + str(int(i/len(scenes)))
-                exp = construct_experiment(solver_path2, map_path, scen_path, results_file, agent_num, seed, neighborhood_size, experiment_name)
-                try:
-                    res = subprocess.check_output(exp)[:-1].decode('UTF-8')
-                except:
-                    print("Solver returned error for map: ", map_name, ", scene: ", s)
-                    print(" ".join(map(str, exp)))
+                for strategy in destroy_strategies:
+                    experiment_name = "destroy_" + str(agent_num) + "agents_" + map_name + "_" + scen_name_stripped +  "_SIPP_suboptimal_w_1,00_destroy_type_ORIGO_" + strategy + "_neighborhood_size_" + str(neighborhood_size) + "_" + str(int(i/len(scenes)))
+                    exp = construct_experiment(solver_path2, map_path, scen_path, results_file, agent_num, seed, neighborhood_size, experiment_name, strategy)
+                    try:
+                        res = subprocess.check_output(exp)[:-1].decode('UTF-8')
+                    except:
+                        print("Solver returned error for map: ", map_name, ", scene: ", s)
+                        print(" ".join(map(str, exp)))
     map_idx += 1
 
 
