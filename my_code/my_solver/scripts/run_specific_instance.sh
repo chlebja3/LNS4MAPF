@@ -23,9 +23,9 @@ then
 elif [ $1 == "Paris" ]
 then
 ./scripts/run.sh -m ../../MAPF-benchmark/mapf-map/Paris_1_256.map -a ../../MAPF-benchmark/mapf-scen-random/scen-random/Paris_1_256-random-1.scen -k 1000 -i 100 $@
-elif [ $1 == "not_optimal" ]
+elif [ $1 == "ost" ]
 then
-./scripts/run.sh -m ../../MAPF-benchmark/mapf-map/den520d.map -a ../../MAPF-benchmark/mapf-scen-random/scen-random/den520d-random-0.scen -k 100 -s 1046160888 -i 1 $@
+./scripts/run.sh -m ../../MAPF-benchmark/mapf-map/ost003d.map -a ../../MAPF-benchmark/mapf-scen-random/scen-random/ost003d-random-7.scen -k 400 -s 692469116 -i 500 --destroy_operator BLOCKED --sipp_implementation SIPP_suboptimal $@
 else 
   echo "Unknown instance"
 fi

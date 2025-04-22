@@ -10,6 +10,7 @@
 #include <numeric>
 #include <queue>
 #include <random>
+#include <set>
 
 #include "SIPP.h"
 #include "utils.h"
@@ -353,14 +354,8 @@ void LNS::destroy_randomwalk(Solution& sol) const
 
   int max_delay    = 0;
   int most_delayed = -1;
-  int latest_time  = 0;
   for (int i = 0; i < instance.get_num_of_agents(); i++)
   {
-    if (sol.paths[i].back().interval.t_min > latest_time)
-    {
-      latest_time = sol.paths[i].back().interval.t_min;
-    }
-
     // skip agents in tabu list
     if (tabu_list.find(i) != tabu_list.end())
     {
@@ -386,6 +381,7 @@ void LNS::destroy_randomwalk(Solution& sol) const
     }
 
     // select random agents
+    std::cout << "Using random destroy" << std::endl;
     destroy_random(sol);
     return;
   }
@@ -394,34 +390,46 @@ void LNS::destroy_randomwalk(Solution& sol) const
   assertm(most_delayed >= 0 && most_delayed < instance.get_num_of_agents() && sol.delays[most_delayed] == max_delay,
           "Invalid id of most delayed agent");
 
-  std::unordered_set<int> chosen     = {most_delayed};
-  int                     upperbound = sol.paths[most_delayed].back().interval.t_min - 1;
-  assertm(upperbound > 0, "Upperbound is too small.");
-
-  // perform the random walk, maximum 10 iterations
-  for (int i = 0; i < 10; i++)
+  // update the tabu list
+  tabu_list.insert(most_delayed);
+  if (static_cast<int>(tabu_list.size()) == instance.get_num_of_agents())
   {
-    // choose a random agent
-    std::uniform_int_distribution<int> dist(0, chosen.size() - 1);
-    int                                idx = dist(rnd_generator);
-    assertm(idx >= 0 && idx < static_cast<int>(chosen.size()), "Index out of bounds.");
-    // iterator to the first element
-    auto it = chosen.begin();
-    std::advance(it, idx);
-    int chosen_agent = *it;
+    tabu_list.clear();
+  }
 
-    // choose a random time from its path
-    int                                tmax = sol.paths[chosen_agent].back().interval.t_min - 1;
-    std::uniform_int_distribution<int> dist_time(0, tmax);
-    int                                chosen_t = dist_time(rnd_generator);
-
-    // choose location
-    int rw_start_location = location_at_time(sol.paths[chosen_agent], chosen_t);
-
-    // perform randomwalk
-    if (random_walk(chosen_agent, settings.destroy_settings.size, rw_start_location, chosen_t, upperbound, chosen))
+  std::set<int> chosen = {
+      most_delayed};  // TODO in the original code they use set, but I think it makes more sense to use either unordered set or vector
+  int upperbound = sol.paths[most_delayed].back().interval.t_min;
+  assertm(upperbound > 0, "Upperbound is too small.");
+  // perform the first randomwalk from start - not in pseudocode, but in MAPF-LNS2 implementation
+  if (!random_walk(most_delayed, settings.destroy_settings.size, sol.paths[most_delayed][0].location, 0, upperbound, chosen))
+  {
+    // perform the random walk again, maximum 10 iterations
+    for (int i = 0; i < 10; i++)
     {
-      break;
+      // choose a random agent
+      std::uniform_int_distribution<int> dist(0, chosen.size() - 1);
+      int                                idx = dist(rnd_generator);
+      assertm(idx >= 0 && idx < static_cast<int>(chosen.size()), "Index out of bounds.");
+      // iterator to the first element
+      auto it = chosen.begin();
+      std::advance(it, idx);
+      int chosen_agent = *it;
+
+      // choose a random time from its path
+      upperbound = sol.paths[chosen_agent].back().interval.t_min;
+      std::uniform_int_distribution<int> dist_time(0, upperbound - 1);
+      int                                chosen_t = dist_time(rnd_generator);
+
+      // choose location
+      int rw_start_location = location_at_time(sol.paths[chosen_agent], chosen_t);
+
+      // perform randomwalk
+      if (random_walk(chosen_agent, settings.destroy_settings.size, rw_start_location, chosen_t, upperbound, chosen))
+      {
+        break;
+      }
+      assertm(static_cast<int>(chosen.size()) < settings.destroy_settings.size, "Enough agents were selected, but false returned.");
     }
   }
 
@@ -431,18 +439,23 @@ void LNS::destroy_randomwalk(Solution& sol) const
     destroy_randomwalk(sol);
     return;
   }
+  assertm(static_cast<int>(chosen.size()) > 1, "Not enough agents selected.");
 
-  // shuffle the paths
-  sol.destroyed_paths = std::vector(std::make_move_iterator(chosen.begin()), std::make_move_iterator(chosen.end()));
+  // shuffle the paths - TODO either keep the order or only keep first agent and shuffle the rest, using the set order does not make sense,
+  // but it is implemented like this in MAPF-LNS2
+  // sol.destroyed_paths = std::vector(std::make_move_iterator(chosen.begin()), std::make_move_iterator(chosen.end()));
+  sol.destroyed_paths.assign(chosen.begin(), chosen.end());
+
   std::shuffle(sol.destroyed_paths.begin(), sol.destroyed_paths.end(), rnd_generator);
   assertm(sol.destroyed_paths.size() > 1, "Not enough paths were destroyed.");
   sol.feasible = false;
 }
 
 
-auto LNS::random_walk(int agent_num, int neighborhood_size, int start_location, int start_time, int upperbound,
-                      std::unordered_set<int>& chosen) const -> bool
+auto LNS::random_walk(int agent_num, int neighborhood_size, int start_location, int start_time, int upperbound, std::set<int>& chosen) const
+    -> bool
 {
+  assertm(static_cast<int>(chosen.size()) < neighborhood_size, "Randomwalk not needed.");
   int curr = start_location;
   for (int t = start_time; t < upperbound; t++)
   {
@@ -618,9 +631,9 @@ void LNS::destroy_adaptive(Solution& sol) const
   // if sum of weights too small, increase it
   if (sum_of_weights < 0.1)
   {
-    for (int i = 0; i < static_cast<int>(destroy_weights.size()); i++)
+    for (double& destroy_weight : destroy_weights)
     {
-      destroy_weights[i] *= 10;
+      destroy_weight *= 10;
     }
   }
   // std::cout << "Weights are: " << std::endl;
@@ -712,6 +725,11 @@ void LNS::destroy_blocked(Solution& sol) const
       {
         neighborhood.insert(it);
         sol.destroyed_paths.push_back(it);
+        // make sure that the neighborhood size is not exceeded
+        // if (static_cast<int>(sol.destroyed_paths.size()) >= settings.destroy_settings.size)
+        // {
+        //   break;
+        // }
       }
     }
 
@@ -724,6 +742,13 @@ void LNS::destroy_blocked(Solution& sol) const
 
     // update chosen agent
     chosen_agent = sol.destroyed_paths[idx];
+  }
+  // shuffle
+  // std::shuffle(sol.destroyed_paths.begin(), sol.destroyed_paths.end(), rnd_generator);
+  // dont exceed the neighborhood size
+  if (settings.destroy_settings.size < static_cast<int>(sol.destroyed_paths.size()))
+  {
+    sol.destroyed_paths.resize(settings.destroy_settings.size);
   }
   assertm(settings.destroy_settings.size == 1 || static_cast<int>(sol.destroyed_paths.size()) > 1,
           "At least two paths should be destroyed.");

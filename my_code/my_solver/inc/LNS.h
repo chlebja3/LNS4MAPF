@@ -7,6 +7,7 @@
 
 #pragma once
 #include <random>
+#include <set>
 #include <utility>
 
 #include "ConstraintTable.h"
@@ -126,8 +127,8 @@ public:
 private:
   void destroy_random(Solution& sol) const;
   void destroy_randomwalk(Solution& sol) const;
-  auto random_walk(int agent_num, int neighborhood_size, int start_location, int start_time, int upperbound,
-                   std::unordered_set<int>& chosen) const -> bool;
+  auto random_walk(int agent_num, int neighborhood_size, int start_location, int start_time, int upperbound, std::set<int>& chosen) const
+      -> bool;
   void destroy_intersection(Solution& sol) const;
   void destroy_blocked(Solution& sol) const;
   void destroy_adaptive(Solution& sol) const;

@@ -272,7 +272,7 @@ auto Experiment::get_seed_from_db(int agent_num, const std::string& map_name, co
   else if (experiment_name == "destroy")
   {
     experiment_filename = experiment_name + "_" + std::to_string(agent_num) + "agents_" + map_name + "_" + scene_name_stripped +
-                          "_SIPP_suboptimal_w_1,00_destroy_type_ORIGO_neighborhood_size_4_" + std::to_string(run);
+                          "_SIPP_suboptimal_w_1,00_destroy_type_ORIGO_Adaptive_neighborhood_size_4_" + std::to_string(run);
   }
   else
   {
