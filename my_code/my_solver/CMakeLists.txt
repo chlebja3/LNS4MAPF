@@ -109,6 +109,9 @@ target_link_libraries(destroy_experiment MAPF_lib)
 add_executable(repair_experiment src/experiments/repair.cpp)
 target_link_libraries(repair_experiment MAPF_lib)
 
+add_executable(feasible_experiment src/experiments/feasible.cpp)
+target_link_libraries(feasible_experiment MAPF_lib)
+
 # Add subdirectory for tests
 if (${ENABLE_TESTS})
   enable_testing()

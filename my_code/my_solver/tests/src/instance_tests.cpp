@@ -91,6 +91,7 @@ TEST(InstanceTest, LoadScene)
 }
 
 // Check manhattan distance heuristics
+#ifdef CALCULATE_OTHER_HEURISTICS
 TEST(InstanceTest, ManhattanDistance)
 {
   // load instance
@@ -133,6 +134,7 @@ TEST(InstanceTest, EuclideanDistance)
     }
   }
 }
+#endif
 
 // Test position-location conversion
 // Position to location

@@ -12,6 +12,8 @@
 #include "Map.h"
 #include "utils.h"
 
+// #define CALCULATE_OTHER_HEURISTICS
+
 class Instance
 {
 public:
@@ -75,19 +77,13 @@ public:
     return goal_locations;
   }
 
+#ifdef CALCULATE_OTHER_HEURISTICS
   [[nodiscard]] inline auto get_heuristic_manhattan(const int agent_num, const int loc) const -> int
   {
     assertm(initialized, "Instance not initialized.");
     assertm(agent_num >= 0 && agent_num < (int)heuristic_manhattan.size(), "Agent number out of range of the heuristic vector.");
     assertm(map_data.is_in(loc), "Trying to index a point that is not in the map.");
     return heuristic_manhattan[agent_num][loc];
-  };
-
-  [[nodiscard]] inline auto get_heuristic_distance(const int agent_num, const int loc) const -> int
-  {
-    assertm(agent_num >= 0 && agent_num < (int)heuristic_distance.size(), "Agent number out of range of the heuristic vector.");
-    assertm(map_data.is_in(loc), "Trying to index a point that is not in the map.");
-    return heuristic_distance[agent_num][loc];
   };
 
   [[nodiscard]] auto get_heuristic_euclidean(int agent_num, int loc) const -> double
@@ -97,6 +93,14 @@ public:
     assertm(map_data.is_in(loc), "Trying to index a point that is not in the map.");
     return heuristic_euclidean[agent_num][loc];
   }
+#endif
+
+  [[nodiscard]] inline auto get_heuristic_distance(const int agent_num, const int loc) const -> int
+  {
+    assertm(agent_num >= 0 && agent_num < (int)heuristic_distance.size(), "Agent number out of range of the heuristic vector.");
+    assertm(map_data.is_in(loc), "Trying to index a point that is not in the map.");
+    return heuristic_distance[agent_num][loc];
+  };
 
   [[nodiscard]] inline auto get_neighbor_locations(int loc) const -> const std::vector<int>&
   {
@@ -194,9 +198,11 @@ private:
   std::vector<std::vector<int>> neighbors;
 
   // heuristics
+#ifdef CALCULATE_OTHER_HEURISTICS
   std::vector<std::vector<int>>    heuristic_manhattan;
   std::vector<std::vector<double>> heuristic_euclidean;
-  std::vector<std::vector<int>>    heuristic_distance;
+#endif
+  std::vector<std::vector<int>> heuristic_distance;
 
   int sum_of_distances = 0;
   int num_of_agents;

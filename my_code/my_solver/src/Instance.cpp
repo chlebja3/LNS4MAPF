@@ -70,8 +70,10 @@ void Instance::reset()
   location_to_goal_array.clear();
   // optimal_paths.clear();
   neighbors.clear();
+#ifdef CALCULATE_OTHER_HEURISTICS
   heuristic_manhattan.clear();
   heuristic_euclidean.clear();
+#endif
   heuristic_distance.clear();
   sum_of_distances = 0;
 }
@@ -176,7 +178,12 @@ void Instance::calculate_heuristics(bool calculate_manhattan, bool calculate_euc
   assertm(map_data.width * map_data.height > 0, "Invalid map.");
   assertm((int)map_data.data.size() == map_data.width * map_data.height, "Map size invalid");
   assertm(map_data.get_num_free_cells() > 0 && map_data.get_num_free_cells() <= (int)map_data.data.size(), "Invalid free cell count.");
+#ifndef CALCULATE_OTHER_HEURISTICS
+  assertm(calculate_euclidean == false || calculate_manhattan == false, "Heuristics turned off during copimle.");
+#endif
 
+  const std::vector<int> int_initializer(map_data.width * map_data.height, -1);
+#ifdef CALCULATE_OTHER_HEURISTICS
   if (calculate_euclidean)
   {
     // clear the vectors
@@ -186,7 +193,6 @@ void Instance::calculate_heuristics(bool calculate_manhattan, bool calculate_euc
     heuristic_euclidean.resize(num_of_agents, euclidean_initializer);
   }
 
-  const std::vector<int> int_initializer(map_data.width * map_data.height, -1);
   if (calculate_manhattan)
   {
     heuristic_manhattan.clear();
@@ -217,6 +223,7 @@ void Instance::calculate_heuristics(bool calculate_manhattan, bool calculate_euc
       }
     }
   }
+#endif
 
   // precompute the distance heuristic
   heuristic_distance.clear();
