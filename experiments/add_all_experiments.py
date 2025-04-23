@@ -6,7 +6,8 @@ import sqlite3
 conn = sqlite3.connect("experiment_database.db")
 cursor = conn.cursor()
 
-experiment_name = "sipp_pp"
+# experiment_name = "sipp_pp"
+experiment_name = "feasible"
 # experiment_name = "destroy"
 # experiment_name = "repair"
 
