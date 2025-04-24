@@ -166,7 +166,6 @@ void Experiment::run()
         }
         else
         {
-          throw std::runtime_error("Did not find the seed.");
           seed = dist(rnd_gen);
         }
 
@@ -273,6 +272,11 @@ auto Experiment::get_seed_from_db(int agent_num, const std::string& map_name, co
   {
     experiment_filename = experiment_name + "_" + std::to_string(agent_num) + "agents_" + map_name + "_" + scene_name_stripped +
                           "_SIPP_suboptimal_w_1,00_destroy_type_ORIGO_Adaptive_neighborhood_size_4_" + std::to_string(run);
+  }
+  else if (experiment_name == "feasible")
+  {
+    experiment_filename = experiment_name + "_" + std::to_string(agent_num) + "agents_" + map_name + "-" + scene_name_stripped +
+                          "SIPP_lns_orig_" + std::to_string(run);
   }
   else
   {
