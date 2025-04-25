@@ -12,13 +12,15 @@ def read_file(name):
     return lines
 
 # exp_name = "feasible"
-exp_name = "feasible_restarts"
-# exp_name = "sipp_pp"
+# exp_name = "feasible_restarts"
+exp_name = "sipp_pp"
 
 if (exp_name == "feasible"):
     file_res = read_file("results_feasible.csv")
 elif (exp_name == "feasible_restarts"):
     file_res = read_file("results_feasible_restarts.csv")
+elif (exp_name == "sipp_pp"):
+    file_res = read_file("results_sipp_pp.csv")
 else:
     file_res = read_file("results_lns2.csv")
 

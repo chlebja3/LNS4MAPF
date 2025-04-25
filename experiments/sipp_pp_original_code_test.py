@@ -26,10 +26,10 @@ def construct_scen_path(scen_dir, map_name, k):
 
 # parameters
 map_names = [ "empty-8-8", "empty-32-32", "random-32-32-20", "warehouse-10-20-10-2-1", "ost003d", "den520d" ]
-agent_nums = [[16, 24, 32], [300, 350, 400, 450, 500], [50, 100, 150, 200, 250], [150, 200, 250, 300, 350], [100, 200, 300, 400, 500],
+agent_nums = [[8, 16, 24], [100, 150, 200, 250, 300], [20, 40, 60, 80, 100], [50, 100, 150, 200], [100, 200, 300, 400, 500],
     [ 100, 200, 300, 400, 500 ]]
-num_runs = 104 
-results_file = "results"
+num_runs = 100 
+results_file = "results_sipp_pp"
 mapf_benchmark_dir = "../MAPF-benchmark/"
 scen_dir = mapf_benchmark_dir + "mapf-scen-random/scen-random/"
 solver_path2 = "../papers/MAPF-LNS2/lns"
@@ -49,7 +49,7 @@ for map_name in tqdm.tqdm(map_names, desc="maps", position=0):
     # list all scenes
     scenes = sort_strings_by_last_number([f for f in os.listdir(scen_dir) if f.startswith(map_name)])
 
-    for agent_num in tqdm.tqdm(agent_nums[map_idx], desc="agent nums", position=1):
+    for agent_num in tqdm.tqdm(agent_nums[map_idx], desc="agent nums", position=1, leave=False):
         for i in tqdm.tqdm(range(num_runs), desc="runs", position=2, leave=False):
             scen_name = os.path.splitext(scenes[i % len(scenes)])[0]
             scen_name_stripped = scen_name[len(map_name)+1:]
@@ -63,7 +63,7 @@ for map_name in tqdm.tqdm(map_names, desc="maps", position=0):
                 print("ERROR: Wrong seeds", seeds, experiment_name)
                 exit(1)
             seed = seeds[0]
-            exp = construct_experiment(solver_path2, map_path, scen_path, "results_lns2", agent_num, seed)
+            exp = construct_experiment(solver_path2, map_path, scen_path, results_file, agent_num, seed)
             try:
                 res = subprocess.check_output(exp)[:-1].decode('UTF-8')
             except:
