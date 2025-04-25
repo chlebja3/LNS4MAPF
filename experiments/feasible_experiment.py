@@ -7,9 +7,9 @@ import os
 import sqlite3
 import pandas as pd
 
-def construct_experiment(solver_path, map_path, scen_path, output_file_name, agent_num, seed):
+def construct_experiment(solver_path, map_path, scen_path, output_file_name, agent_num, seed, use_restarts, time_limit):
     """ Construct the input of subprocess.check_output to perform the experiment"""
-    return [solver_path, '-m', map_path, '-a', scen_path, "-o", output_file_name + ".csv", "-k", str(agent_num), "--initAlgo", "PP", "--maxIterations",  str(0), "--initLNS", "0", "--seed", str(seed), "-t", str(20)]
+    return [solver_path, '-m', map_path, '-a', scen_path, "-o", output_file_name + ".csv", "-k", str(agent_num), "--initAlgo", "PP", "--maxIterations",  str(0), "--initLNS", "0", "--seed", str(seed), "-t", str(time_limit), "--restarts", str(use_restarts)]
 
 def find_last_number(s: str) -> int:
     """Extracts the last number from a string. Returns -1 if no number is found."""
@@ -29,10 +29,12 @@ map_names = [ "empty-8-8", "empty-32-32", "random-32-32-20", "warehouse-10-20-10
 agent_nums = [[8, 16, 24, 32], [150, 200, 250, 300, 350, 400, 450], [50, 100, 150, 200, 250], [100, 150, 200, 250, 300, 350, 400, 450], [100, 200, 300, 400, 500, 600, 700],
     [ 100, 200, 300, 400, 500 ]]
 num_runs = 100 
+time_limit = 20
 mapf_benchmark_dir = "../MAPF-benchmark/"
 scen_dir = mapf_benchmark_dir + "mapf-scen-random/scen-random/"
 solver_path2 = "../papers/MAPF-LNS2/lns"
-exp_name = "feasible"
+exp_name = "feasible_restarts"
+use_restarts = True
 results_file = exp_name + "_results"
 
 # map_names = ["den520d"]
@@ -50,7 +52,7 @@ for map_name in tqdm.tqdm(map_names, desc="maps", position=0):
     # list all scenes
     scenes = sort_strings_by_last_number([f for f in os.listdir(scen_dir) if f.startswith(map_name)])
 
-    for agent_num in tqdm.tqdm(agent_nums[map_idx], desc="agent nums", position=1):
+    for agent_num in tqdm.tqdm(agent_nums[map_idx], desc="agent nums", position=1, leave=False):
         for i in tqdm.tqdm(range(num_runs), desc="runs", position=2, leave=False):
             scen_name = os.path.splitext(scenes[i % len(scenes)])[0]
             scen_name_stripped = scen_name[len(map_name)+1:]
@@ -64,12 +66,13 @@ for map_name in tqdm.tqdm(map_names, desc="maps", position=0):
                 print("ERROR: Wrong seeds", seeds, experiment_name)
                 exit(1)
             seed = seeds[0]
-            exp = construct_experiment(solver_path2, map_path, scen_path, "results_lns2", agent_num, seed)
+            exp = construct_experiment(solver_path2, map_path, scen_path, results_file, agent_num, seed, use_restarts, time_limit)
             try:
                 res = subprocess.check_output(exp)[:-1].decode('UTF-8')
             except:
                 print("Solver returned error for map: ", map_name, ", scene: ", s)
                 print(" ".join(map(str, exp)))
+                exit()
     map_idx += 1
 
 

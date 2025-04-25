@@ -7,7 +7,7 @@ conn = sqlite3.connect("experiment_database.db")
 cursor = conn.cursor()
 
 # experiment_name = "repair"
-experiment_name = "sipp_pp"
+experiment_name = "feasible_restarts"
 
 # Count total rows before deletion
 cursor.execute("SELECT COUNT(*) FROM " + experiment_name)

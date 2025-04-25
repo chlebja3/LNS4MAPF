@@ -11,11 +11,14 @@ def read_file(name):
           lines.append(line)
     return lines
 
-exp_name = "feasible"
+# exp_name = "feasible"
+exp_name = "feasible_restarts"
 # exp_name = "sipp_pp"
 
 if (exp_name == "feasible"):
     file_res = read_file("results_feasible.csv")
+elif (exp_name == "feasible_restarts"):
+    file_res = read_file("results_feasible_restarts.csv")
 else:
     file_res = read_file("results_lns2.csv")
 
@@ -43,7 +46,10 @@ for experiment in file_res:
     idx3 = instance_name_stripped.find("-random")
     map_name = instance_name_stripped[:idx3]
 
-    feasible = (int(experiment[2]) > 0 and int(experiment[8]) == 0) # feasible when solution cost is not -1 and number of restarts is 0
+    if (exp_name == "feasible_restarts"):
+        feasible = (int(experiment[2]) > 0) # feasible when solution cost is not -1 and number of restarts is 0
+    else:
+        feasible = (int(experiment[2]) > 0 and int(experiment[8]) == 0) # feasible when solution cost is not -1 and number of restarts is 0
 
     algo_parameters = "[]"
     computation_time_cpu = float(experiment[19])
@@ -66,7 +72,7 @@ for experiment in file_res:
     if cursor.fetchone() is None:  # If no record found, insert new entry
         # Dynamically create the SQL query
         cursor.execute("""
-        INSERT INTO sipp_pp (
+        INSERT INTO """ + exp_name + """ (
             file_name, experiment_name, map_name, scene_name, num_agents,
 algo_name, algo_parameters, sum_of_dist, feasible, init_sol_sum_of_cost, init_sol_makespan, experiment_time_cpu, experiment_time_wall, expanded, generated, preprocessing_time_cpu, preprocessing_time_wall, seed, sum_of_cost, makespan, iteration_time_cpu, iteration_time_wall, operators
         ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)

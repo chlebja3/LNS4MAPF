@@ -7,7 +7,8 @@ conn = sqlite3.connect("experiment_database.db")
 cursor = conn.cursor()
 
 # experiment_name = "sipp_pp"
-experiment_name = "feasible"
+# experiment_name = "feasible"
+experiment_name = "feasible_restarts"
 # experiment_name = "destroy"
 # experiment_name = "repair"
 
@@ -73,7 +74,9 @@ for map_dir in map_dirs:
                 # convert the algorithm parameters, solution time evolution etc to json string
                 data["algo_parameters"] = json.dumps(data["algo_parameters"])
                 data["init_sol_sum_of_cost"] = data["sum_of_cost"][0]
-                if (data["feasible"] and data["sum_of_cost"][0] == -1):
+                if (experiment_name == "feasible_restarts"):
+                    data["init_sol_sum_of_cost"] = data["sum_of_cost"][-1]
+                if (experiment_name != "feasible_restarts" and data["feasible"] and data["sum_of_cost"][0] == -1):
                     data["feasible"] = False
                 data["sum_of_cost"] = json.dumps(data["sum_of_cost"])
                 data["init_sol_makespan"] = data["makespan"][0]

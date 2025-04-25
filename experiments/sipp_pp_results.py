@@ -48,7 +48,7 @@ stats_feasible = df_feasible_grouped.agg({
 }).reset_index()
 
 # Define the metrics to plot
-metric_names = ["feasible", "experiment_time_cpu", "experiment_time_wall", "expanded", "init_sol_sum_of_cost", "delay"]
+metric_names = ["experiment_time_cpu", "experiment_time_wall", "expanded", "init_sol_sum_of_cost", "delay"]
 
 # Get unique maps
 unique_maps = stats["map_name"].unique()
@@ -62,39 +62,23 @@ for metric in metric_names:
         axes = [axes]
 
     # Iterate over each map
-    if metric == "feasible":
-        for i, (map_name, map_group) in enumerate(stats.groupby('map_name')):
-            ax = axes[i]
+    for i, (map_name, map_group) in enumerate(stats_feasible.groupby('map_name')):
+        # print("map_name:", map_name)
+        ax = axes[i]
 
-            # Plot each algorithm
-            for algo_name, algo_group in map_group.groupby('algo_name'):
-                ax.plot(algo_group["num_agents"], algo_group[(metric, "mean")], marker='o', label=f"{algo_name}")
+        # Plot each algorithm
+        for algo_name, algo_group in map_group.groupby('algo_name'):
+            ax.plot(algo_group["num_agents"], algo_group[(metric, "mean")], marker='o', label=f"{algo_name}")
+            # print("Algo name:", algo_name)
+            # print(algo_group[(metric, "mean")])
 
-            ax.set_title(map_name)
-            ax.set_xlabel("Number of Agents")
-            if i == 0:
-                ax.set_ylabel(metric)  # Only label Y-axis on first subplot
+        ax.set_title(map_name)
+        ax.set_xlabel("Number of Agents")
+        if i == 0:
+            ax.set_ylabel(metric)  # Only label Y-axis on first subplot
 
-            ax.legend()
-            ax.grid(True)
-    else:
-        for i, (map_name, map_group) in enumerate(stats_feasible.groupby('map_name')):
-            # print("map_name:", map_name)
-            ax = axes[i]
-
-            # Plot each algorithm
-            for algo_name, algo_group in map_group.groupby('algo_name'):
-                ax.plot(algo_group["num_agents"], algo_group[(metric, "mean")], marker='o', label=f"{algo_name}")
-                # print("Algo name:", algo_name)
-                # print(algo_group[(metric, "mean")])
-
-            ax.set_title(map_name)
-            ax.set_xlabel("Number of Agents")
-            if i == 0:
-                ax.set_ylabel(metric)  # Only label Y-axis on first subplot
-
-            ax.legend()
-            ax.grid(True)
+        ax.legend()
+        ax.grid(True)
 
     fig.suptitle(f"{metric} Across Maps", fontsize=16)
     plt.tight_layout()

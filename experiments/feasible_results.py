@@ -7,7 +7,7 @@ conn = sqlite3.connect("experiment_database.db")
 cursor = conn.cursor()
 
 # Load data into Pandas DataFrame
-exp_name = "feasible"
+exp_name = "feasible_restarts"
 df = pd.read_sql_query("SELECT * FROM " + exp_name, conn)
 df["delay"] = df["init_sol_sum_of_cost"] - df["sum_of_dist"]
 
