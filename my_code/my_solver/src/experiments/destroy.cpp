@@ -75,5 +75,9 @@ auto main(int argc, char** argv) -> int
 
 void experiment_function(LNS& lns)
 {
+  // load the initial solution
+  std::string filename;  // TODO
+  lns.solution.load(filename, lns.instance);
+  lns.found_initial_solution = true;
   lns.solve();
 }

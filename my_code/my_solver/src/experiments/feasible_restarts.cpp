@@ -51,23 +51,17 @@ auto main(int argc, char** argv) -> int
 
   for (const auto& algo_type : magic_enum::enum_values<SIPP_implementation>())
   {
-    // skip ap implementations, not needed here
-    if (algo_type == SIPP_implementation::SIPP_mine_ap || algo_type == SIPP_implementation::SIPP_suboptimal_ap)
-    {
-      continue;
-    }
-
     if (algo_type == SIPP_implementation::SIPP_suboptimal)
     {
       for (double w : SUBOPTIMALITIES)
       {
-        LNS_settings lns_settings(1, TIME_LIMIT, {DESTROY_TYPE::RANDOM, 10}, {algo_type, INFO_type::experiment, w}, true);
+        LNS_settings lns_settings(0, TIME_LIMIT, {DESTROY_TYPE::RANDOM, 10}, {algo_type, INFO_type::experiment, w}, true);
         algorithms.emplace_back(algo_type, lns_settings, std::make_pair("w", w));
       }
     }
     else
     {
-      LNS_settings lns_settings(1, TIME_LIMIT, {DESTROY_TYPE::RANDOM, 10}, {algo_type, INFO_type::experiment, 1.0}, true);
+      LNS_settings lns_settings(0, TIME_LIMIT, {DESTROY_TYPE::RANDOM, 10}, {algo_type, INFO_type::experiment, 1.0}, true);
       algorithms.emplace_back(algo_type, lns_settings);
     }
   }
@@ -86,5 +80,5 @@ auto main(int argc, char** argv) -> int
 
 void experiment_function(LNS& lns)
 {
-  lns.find_initial_solution();
+  lns.solve();
 }
