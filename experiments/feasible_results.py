@@ -57,7 +57,8 @@ num_maps = len(unique_maps)
 
 # Iterate over each metric
 for metric in metric_names:
-    fig, axes = plt.subplots(nrows=1, ncols=num_maps, figsize=(5 * num_maps, 5), sharey=False)
+    fig, axes = plt.subplots(nrows=3, ncols=2, figsize=(6, 10), sharey=False)
+    axes = axes.flatten()
 
     if num_maps == 1:  # If only one map, axes is not an array
         axes = [axes]
@@ -73,10 +74,7 @@ for metric in metric_names:
 
             ax.set_title(map_name)
             ax.set_xlabel("Number of Agents")
-            if i == 0:
-                ax.set_ylabel(metric)  # Only label Y-axis on first subplot
-
-            ax.legend()
+            ax.set_ylabel("Percentage of feasible")  # Only label Y-axis on first subplot
             ax.grid(True)
     else:
         for i, (map_name, map_group) in enumerate(stats_feasible.groupby('map_name')):
@@ -91,14 +89,13 @@ for metric in metric_names:
 
             ax.set_title(map_name)
             ax.set_xlabel("Number of Agents")
-            if i == 0:
-                ax.set_ylabel(metric)  # Only label Y-axis on first subplot
-
-            ax.legend()
+            ax.set_ylabel(metric)  # Only label Y-axis on first subplot
             ax.grid(True)
 
-    fig.suptitle(f"{metric} Across Maps", fontsize=16)
+    handles, labels = axes[0].get_legend_handles_labels()
+    fig.legend(handles, labels, loc='lower center', bbox_to_anchor=(0.5, 0.01),ncol=2)
     plt.tight_layout()
+    plt.subplots_adjust(bottom=0.18)
     plt.show()
 
 

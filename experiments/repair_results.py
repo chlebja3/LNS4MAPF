@@ -66,7 +66,8 @@ x_axis_iteration = False
 for metric in metric_names:
 
     # iterate over neighborhood sizes
-    fig, axes = plt.subplots(nrows=1, ncols=num_maps, figsize=(5 * num_maps, 5), sharey=False)
+    fig, axes = plt.subplots(nrows=3, ncols=2, figsize=(6, 10), sharey=False)
+    axes = axes.flatten()
 
     if num_maps == 1:  # If only one map, axes is not an array
         axes = [axes]
@@ -112,12 +113,8 @@ for metric in metric_names:
             # print(algo_group[(metric, "mean")])
 
         ax.set_title(map_name)
-        if (x_axis_iteration):
-            ax.set_xlabel("Iteration")
-        else:
-            ax.set_xlabel("Elapsed time (cpu) [s]")
-        if i == 0:
-            ax.set_ylabel(metric)  # Only label Y-axis on first subplot
+        ax.set_xlabel("Elapsed time (cpu) [s]")
+        ax.set_ylabel(metric)  # Only label Y-axis on first subplot
 
         # ax.legend()
         # ax.legend(loc='center down', bbox_to_anchor=(0.5, 1))
@@ -126,13 +123,13 @@ for metric in metric_names:
 
 # Put a legend below current axis
     handles, labels = axes[0].get_legend_handles_labels()
-    fig.legend(handles, labels, loc='lower center', bbox_to_anchor=(0.5, 0.05),ncol=2)
+    fig.legend(handles, labels, loc='lower center', bbox_to_anchor=(0.5, 0.01),ncol=2)
     plt.tight_layout()
     plt.subplots_adjust(bottom=0.20)
     # plt.tight_layout()
     #plt.subplots_adjust(bottom=0.2)  # Add vertical space for the legend
 
-    fig.suptitle(f"{metric} Across Maps", fontsize=16)
+    #fig.suptitle(f"{metric} Across Maps", fontsize=16)
     #plt.tight_layout()
     plt.show()
 
