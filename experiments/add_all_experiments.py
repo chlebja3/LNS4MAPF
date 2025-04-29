@@ -8,11 +8,11 @@ cursor = conn.cursor()
 
 # experiment_name = "sipp_pp"
 # experiment_name = "influence_of_w"
-experiment_name = "influence_of_p"
+# experiment_name = "influence_of_p"
 # experiment_name = "feasible"
 # experiment_name = "feasible_restarts"
 # experiment_name = "destroy"
-# experiment_name = "repair"
+experiment_name = "repair"
 
 execute_str = "CREATE TABLE IF NOT EXISTS " + experiment_name + """ (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
