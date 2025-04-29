@@ -113,7 +113,14 @@ add_executable(feasible_experiment src/experiments/feasible.cpp)
 target_link_libraries(feasible_experiment MAPF_lib)
 
 add_executable(feasible_restarts_experiment src/experiments/feasible_restarts.cpp)
-target_link_libraries(feasible_restarts__experiment MAPF_lib)
+target_link_libraries(feasible_restarts_experiment MAPF_lib)
+
+add_executable(influence_of_w_experiment src/experiments/influence_of_w.cpp)
+target_link_libraries(influence_of_w_experiment MAPF_lib)
+
+add_executable(influence_of_p_experiment src/experiments/influence_of_p.cpp)
+target_link_libraries(influence_of_p_experiment MAPF_lib)
+
 
 # Add subdirectory for tests
 if (${ENABLE_TESTS})

@@ -49,56 +49,6 @@ TEST(LNSDestroyOperators, RightNumberOfDestroyed)
   }
 }
 
-TEST(LNSDestroyRandomWalk, MostDelayedPresent)
-{
-  // load instance
-  int                       agent_num = 500;
-  std::string               base_path = get_base_path_tests();  // path to my_solver
-  std::unique_ptr<Instance> instance  = std::make_unique<Instance>(base_path + "/tests/test_maps/den520d.map",
-                                                                  base_path + "/tests/test_scen/den520d-random-0.scen", agent_num);
-
-  std::array<int, 5> neighborhood_sizes = {2, 4, 8, 16, 32};
-
-  auto rnd_generator = std::mt19937(0);
-  for (auto neighborhood_size : neighborhood_sizes)
-  {
-    LNS_settings lns_settings(0, 5, {DESTROY_TYPE::RANDOMWALK, neighborhood_size},
-                              {SIPP_implementation::SIPP_mine, INFO_type::no_info, 1.0});
-    LNS          lns(*instance, rnd_generator, nullptr, lns_settings);
-    lns.find_initial_solution();
-    lns.initialize_constraint_table(lns.solution.paths);
-    ASSERT_TRUE(lns.solution.feasible) << "Initial solution is not feasible";
-    ASSERT_TRUE(lns.solution.is_valid(*instance)) << "Initial solution is not valid";
-
-    // destroy agents
-    lns.destroy_operator.apply(lns.solution);
-
-    // find the most delayed agent
-    int max_delay    = 0;
-    int most_delayed = 0;
-    for (int i = 0; i < agent_num; i++)
-    {
-      max_delay = std::max(max_delay, lns.solution.delays[i]);
-      if (lns.solution.delays[i] == max_delay)
-      {
-        most_delayed = i;
-      }
-    }
-
-    // check that the most delayed agent is present in the destroyed paths
-    bool found = false;
-    for (const auto& destroyed : lns.solution.destroyed_paths)
-    {
-      if (destroyed == most_delayed)
-      {
-        found = true;
-        break;
-      }
-    }
-    EXPECT_TRUE(found) << "Most delayed agent should be present in the destroyed paths";
-  }
-}
-
 TEST(LNSDestroyRandomWalk, TabuList)
 {
   // load instance

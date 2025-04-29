@@ -36,12 +36,15 @@ public:
   std::vector<SIPPInfo> sipp_info;
   Solution              sol;
   std::vector<int>      planning_order;
-  LNSIterationInfo(int iteration_num_, bool accepted_, int improvement_, std::vector<SIPPInfo>& sipp_info_, Solution sol_)
+  std::string           destroy_strategy;
+  LNSIterationInfo(int iteration_num_, bool accepted_, int improvement_, std::vector<SIPPInfo>& sipp_info_, Solution sol_,
+                   std::string destroy_strategy_)
       : iteration_num(iteration_num_),
         accepted(accepted_),
         improvement(improvement_),
         sipp_info(std::move(sipp_info_)),
-        sol(std::move(sol_))
+        sol(std::move(sol_)),
+        destroy_strategy(std::move(destroy_strategy_))
   {
     sol.convert_paths();
   }

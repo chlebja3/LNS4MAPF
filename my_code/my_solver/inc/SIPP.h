@@ -23,15 +23,15 @@
 class SIPP_settings
 {
 public:
-  SIPP_settings(SIPP_implementation implementation_, INFO_type info_type_, double w_)
-      : implementation(implementation_), info_type(info_type_), w(w_)
+  SIPP_settings(SIPP_implementation implementation_, INFO_type info_type_, double w_, int p_ = 1.0)
+      : implementation(implementation_), info_type(info_type_), w(w_), p(p_)
   {
   }
 
   SIPP_implementation implementation;
   INFO_type           info_type;
   double              w;
-  double              p = 1.0;
+  double              p;
   // bool                generate_blocked = false;
 };
 

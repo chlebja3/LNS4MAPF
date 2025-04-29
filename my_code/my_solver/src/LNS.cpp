@@ -15,6 +15,9 @@
 #include "SIPP.h"
 #include "utils.h"
 
+#define MIN_BLOCKED_THRESHOLD 0.01
+#define BLOCKED_REACTION_FACTOR 0.1
+
 
 LNS::LNS(const Instance& instance_, std::mt19937& rnd_generator_, SharedData* shared_data_, LNS_settings& settings_)
     : Solver("LNS", instance_, rnd_generator_),
@@ -172,7 +175,11 @@ void LNS::solve()
         // update the weights
         if (settings.destroy_settings.type == DESTROY_TYPE::ADAPTIVE)
         {
-          destroy_weights[destroy_strategy_index] = (1 - decay_factor) * destroy_weights[destroy_strategy_index];
+          destroy_weights[destroy_strategy_index] = (1 - BLOCKED_REACTION_FACTOR) * destroy_weights[destroy_strategy_index];
+        }
+        if (last_destroy_strategy == DESTROY_TYPE::BLOCKED)
+        {
+          threshold_blocked = std::max((1 - BLOCKED_REACTION_FACTOR) * threshold_blocked, MIN_BLOCKED_THRESHOLD);
         }
         discard_solution(perturbed_sol, solution);
         // std::cout << "Discarded worse solution, difference: " << perturbed_sol.sum_of_costs - solution.sum_of_costs << std::endl;
@@ -185,6 +192,10 @@ void LNS::solve()
           destroy_weights[destroy_strategy_index] =
               reaction_factor * static_cast<double>(improvement) / static_cast<double>(settings.destroy_settings.size) +
               (1 - reaction_factor) * destroy_weights[destroy_strategy_index];
+        }
+        else if (last_destroy_strategy == DESTROY_TYPE::BLOCKED)
+        {
+          threshold_blocked = std::min((1 + reaction_factor) * threshold_blocked, 1.0);
         }
         accepted = true;
         // remember the perturbed solution
@@ -203,7 +214,8 @@ void LNS::solve()
       {
         sol = &perturbed_sol;
       }
-      LNSIterationInfo lns_info(iteration_num, accepted, improvement, sipp_info, *sol);
+      LNSIterationInfo lns_info(iteration_num, accepted, improvement, sipp_info, *sol,
+                                (std::string)magic_enum::enum_name<DESTROY_TYPE>(last_destroy_strategy));
       sipp_info.clear();
       shared_data->update_lns_info(lns_info);
     }
@@ -232,7 +244,7 @@ auto LNS::find_initial_solution() -> bool
   // construct LNS iteration info and add to the shared data
   if (settings.sipp_settings.info_type == INFO_type::visualisation)
   {
-    LNSIterationInfo lns_info(0, solution.feasible, 0, sipp_info, solution);
+    LNSIterationInfo lns_info(0, solution.feasible, 0, sipp_info, solution, "None");
     sipp_info.clear();
     shared_data->update_lns_info(lns_info);
   }
@@ -666,6 +678,15 @@ void LNS::destroy_blocked(Solution& sol) const
 {
   last_destroy_strategy = DESTROY_TYPE::BLOCKED;
 
+  // if a random value is higher, than the threshold, perform randomwalk instead
+  std::uniform_real_distribution<float> blocked_dist(0, 1);
+  if (blocked_dist(rnd_generator) >= threshold_blocked)
+  {
+    // std::cout << "Running randomwalk. Threshold: " << threshold_blocked << std::endl;
+    destroy_randomwalk(sol);
+    return;
+  }
+
   // find all agents whose end is blocked
   std::vector<int> blocked_agents;
   for (int i = 0; i < instance.get_num_of_agents(); i++)
@@ -691,10 +712,10 @@ void LNS::destroy_blocked(Solution& sol) const
     }
   }
 
-  // if no agent is blocked, use the randomchoose
+  // if no agent is blocked, use the randomwalk
   if (blocked_agents.empty())
   {
-    destroy_random_choose(sol);
+    destroy_randomwalk(sol);
     return;
   }
   // std::cout << "Number of blocked_agents: " << blocked_agents.size() << std::endl;
@@ -743,8 +764,12 @@ void LNS::destroy_blocked(Solution& sol) const
     // update chosen agent
     chosen_agent = sol.destroyed_paths[idx];
   }
-  // shuffle
-  // std::shuffle(sol.destroyed_paths.begin(), sol.destroyed_paths.end(), rnd_generator);
+  // shuffle randomly,  only when threshold is low (we need more variance)
+  if (blocked_dist(rnd_generator) >= threshold_blocked)
+  {
+    // std::cout << "Shuffle. Threshold: " << threshold_blocked << std::endl;
+    std::shuffle(sol.destroyed_paths.begin(), sol.destroyed_paths.end(), rnd_generator);
+  }
   // dont exceed the neighborhood size
   if (settings.destroy_settings.size < static_cast<int>(sol.destroyed_paths.size()))
   {
@@ -781,19 +806,6 @@ void LNS::repair_default(Solution& sol) const
   assertm(!sol.feasible, "Can not repair a feasible solution");
   assertm((int)sol.destroyed_paths.size() > 0, "There are no destroyed paths in the solution to be repaired.");
 
-  // special repair for BLOCKED
-  const int                 old_p              = settings.sipp_settings.p;
-  const SIPP_implementation old_implementation = settings.sipp_settings.implementation;
-  const double              old_w              = settings.sipp_settings.w;
-  if (last_destroy_strategy == DESTROY_TYPE::BLOCKED)
-  {
-    // change replan settings
-    std::uniform_int_distribution<int> dist_blocked(1, 5);
-    settings.sipp_settings.p              = dist_blocked(rnd_generator);
-    settings.sipp_settings.implementation = SIPP_implementation::SIPP_suboptimal_ap;
-    settings.sipp_settings.w              = 1.0;
-  }
-
   if (settings.sipp_settings.info_type == INFO_type::visualisation)
   {
     sipp_info.clear();
@@ -822,13 +834,6 @@ void LNS::repair_default(Solution& sol) const
     if (tp_path.empty())
     {
       sol.feasible = false;
-      // reset the settings
-      if (last_destroy_strategy == DESTROY_TYPE::BLOCKED)
-      {
-        settings.sipp_settings.p              = old_p;
-        settings.sipp_settings.implementation = old_implementation;
-        settings.sipp_settings.w              = old_w;
-      }
       return;
     }
 
@@ -846,12 +851,6 @@ void LNS::repair_default(Solution& sol) const
     }
     sol.paths[path_idx] = tp_path;
     already_planned.insert(path_idx);
-  }
-  if (last_destroy_strategy == DESTROY_TYPE::BLOCKED)
-  {
-    settings.sipp_settings.p              = old_p;
-    settings.sipp_settings.implementation = old_implementation;
-    settings.sipp_settings.w              = old_w;
   }
 }
 

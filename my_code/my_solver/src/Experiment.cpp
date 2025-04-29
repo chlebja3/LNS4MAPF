@@ -57,7 +57,7 @@ void Experiment::run()
     {
       multi_progress_bar->set_progress<0>(static_cast<size_t>(i));
       multi_progress_bar->set_option<0>(
-          indicators::option::PostfixText{std::to_string(i) + "/" + std::to_string(static_cast<int>(maps.size()))});
+          indicators::option::PostfixText{std::to_string(i) + "/" + std::to_string(static_cast<int>(maps.size())) + "    "});
     }
 
     // skip maps that were already solved
@@ -93,7 +93,8 @@ void Experiment::run()
       // update the progress bar iteration number display
       if (show_progress)
       {
-        multi_progress_bar->set_option<1>(indicators::option::PostfixText{std::to_string(j) + "/" + std::to_string(agent_nums[i].size())});
+        multi_progress_bar->set_option<1>(
+            indicators::option::PostfixText{std::to_string(j) + "/" + std::to_string(agent_nums[i].size()) + "     "});
         multi_progress_bar->set_progress<1>(static_cast<size_t>(j));
       }
 
@@ -123,7 +124,8 @@ void Experiment::run()
         // update the progress bar iteration number display
         if (show_progress)
         {
-          multi_progress_bar->set_option<2>(indicators::option::PostfixText{std::to_string(k) + "/" + std::to_string(runs_per_map)});
+          multi_progress_bar->set_option<2>(
+              indicators::option::PostfixText{std::to_string(k) + "/" + std::to_string(runs_per_map) + "     "});
           multi_progress_bar->set_progress<2>(static_cast<size_t>(k));
         }
 
@@ -183,19 +185,7 @@ void Experiment::run()
           Algorithm& algo = algorithms[l];
 
           // create the seeded random generator (for experiment reproducibility)
-          std::mt19937              rnd_generator       = std::mt19937(seed);
-          double                    w                   = 1.0;
-          const SIPP_implementation sipp_implementation = std::get<SIPP_implementation>(algo.type);
-          if (sipp_implementation == SIPP_implementation::SIPP_suboptimal)
-          {
-            for (const auto& it : algo.parameters)
-            {
-              if (it.first == "w")
-              {
-                w = std::any_cast<double>(it.second);
-              }
-            }
-          }
+          auto rnd_generator = std::mt19937(seed);
 
           // prepare the solver
           LNS solver(instance, rnd_generator, nullptr, algo.lns_settings);
@@ -242,12 +232,13 @@ void Experiment::run()
   if (show_progress)
   {
     multi_progress_bar->set_option<0>(indicators::option::PostfixText{std::to_string(static_cast<int>(maps.size())) + "/" +
-                                                                      std::to_string(static_cast<int>(maps.size()))});
+                                                                      std::to_string(static_cast<int>(maps.size())) + "     "});
     multi_progress_bar->set_progress<0>(maps.size());
     multi_progress_bar->set_progress<1>(agent_nums.back().size());
-    multi_progress_bar->set_option<1>(
-        indicators::option::PostfixText{std::to_string(agent_nums.back().size()) + "/" + std::to_string(agent_nums.back().size())});
-    multi_progress_bar->set_option<2>(indicators::option::PostfixText{std::to_string(runs_per_map) + "/" + std::to_string(runs_per_map)});
+    multi_progress_bar->set_option<1>(indicators::option::PostfixText{std::to_string(agent_nums.back().size()) + "/" +
+                                                                      std::to_string(agent_nums.back().size()) + "     "});
+    multi_progress_bar->set_option<2>(
+        indicators::option::PostfixText{std::to_string(runs_per_map) + "/" + std::to_string(runs_per_map) + "     "});
     multi_progress_bar->set_progress<2>(static_cast<size_t>(runs_per_map));
   }
 
@@ -268,12 +259,16 @@ auto Experiment::get_seed_from_db(int agent_num, const std::string& map_name, co
     experiment_filename = experiment_name + "_" + std::to_string(agent_num) + "agents_" + map_name + "-" + scene_name_stripped +
                           "SIPP_lns_orig_" + std::to_string(run);
   }
+  else if (experiment_name == "influence_of_p" || experiment_name == "influence_of_w" || experiment_name == "repair")
+  {
+    return -1;  // w and p are only in my solver
+  }
   else if (experiment_name == "destroy")
   {
     experiment_filename = experiment_name + "_" + std::to_string(agent_num) + "agents_" + map_name + "_" + scene_name_stripped +
                           "_SIPP_suboptimal_w_1,00_destroy_type_ORIGO_Adaptive_neighborhood_size_4_" + std::to_string(run);
   }
-  else if (experiment_name == "feasible")
+  else if (experiment_name == "feasible" || experiment_name == "feasible_restarts")
   {
     experiment_filename = experiment_name + "_" + std::to_string(agent_num) + "agents_" + map_name + "-" + scene_name_stripped +
                           "SIPP_lns_orig_" + std::to_string(run);

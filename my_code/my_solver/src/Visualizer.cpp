@@ -967,6 +967,7 @@ void Visualizer::create_right_panel()
   ImGui::Text("\tIteration num: %d", cur_info.iteration_num);
   ImGui::Text("\tAccepted: %d", cur_info.accepted);
   ImGui::Text("\tImprovement: %d", cur_info.improvement);
+  ImGui::Text("\tDestroy strategy: %s", cur_info.destroy_strategy.c_str());
   // create a stringstrem from all destroyed agents
   std::stringstream ss;
   for (const auto& it : cur_info.sol.destroyed_paths)

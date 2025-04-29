@@ -123,6 +123,7 @@ public:
   mutable std::unordered_set<int> already_planned;
   Logger                          log;
   LNS_settings&                   settings;
+  bool                            found_initial_solution = false;
 
 private:
   void destroy_random(Solution& sol) const;
@@ -147,5 +148,5 @@ private:
   double                      reaction_factor = 0.01;  // TODO this are hardocded from the MAPF-LNS2 code for now
   double                      decay_factor    = 0.01;
   mutable DESTROY_TYPE        last_destroy_strategy;
-  bool                        found_initial_solution = false;
+  float                       threshold_blocked = 1.0;
 };
