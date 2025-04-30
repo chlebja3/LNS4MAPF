@@ -19,8 +19,8 @@ class Experiment
 {
 public:
   Experiment(std::string experiment_name_, std::function<void(LNS& lns)> experiment_function, std::vector<std::string> maps_,
-             std::vector<std::vector<int>> agent_nums_, std::vector<Algorithm>& algorithms_, int runs_per_map_,
-             bool show_progress_ = false);
+             std::vector<std::vector<int>> agent_nums_, std::vector<Algorithm>& algorithms_, int runs_per_map_, bool show_progress_ = false,
+             bool load_init_sol = false);
 
   ~Experiment()
   {
@@ -34,7 +34,8 @@ public:
 private:
   void create_progress_bars(int agent_nums_init);
   void open_database();
-  auto get_seed_from_db(int agent_num, const std::string& map_name, const std::string& scen_name_stripped, int run) -> int;
+  auto get_seed_from_db(int agent_num, const std::string& map_name, const std::string& scene_name_stripped, int run) -> int;
+  auto get_initsol_path(int agent_num, const std::string& map_name, const std::string& scene_name_stripped, int run) -> std::string;
 
   // experiment settings
   std::string                         experiment_name;
@@ -52,6 +53,7 @@ private:
   int               skipped_runs            = 0;
   int               skipped_implementations = 0;
   int               sum_agent_nums          = 0;
+  bool              load_init_sol           = false;
 
 
   std::mt19937                       rnd_gen;

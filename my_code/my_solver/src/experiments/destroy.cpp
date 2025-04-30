@@ -14,30 +14,31 @@
 #include "magic_enum/magic_enum.hpp"
 #include "utils.h"
 
-#define RUNS_PER_MAP 20
-#define EXPERIMENT_NAME "sipp_pp"
+#define RUNS_PER_MAP 40
+#define EXPERIMENT_NAME "destroy"
 
 #define SHOW_PROGRESS
 
-#define MAPS                                                                         \
-  {                                                                                  \
-    "empty-32-32", "random-32-32-20", "warehouse-10-20-10-2-1", "ost003d", "den520d" \
+#define MAPS                                                                                      \
+  {                                                                                               \
+    "empty-8-8", "empty-32-32", "random-32-32-20", "warehouse-10-20-10-2-1", "ost003d", "den520d" \
   }
 
-#define NUMS_AGENTS             \
-  {                             \
-    {200}, {100}, {150}, {400}, \
-    {                           \
-      500                       \
-    }                           \
+#define NUMS_AGENTS                   \
+  {                                   \
+    {32}, {200}, {100}, {150}, {400}, \
+    {                                 \
+      500                             \
+    }                                 \
   }
 
 #define NEIGHBORHOOD_SIZES \
   {                        \
-    4, 8, 16, 32           \
+    4, 8, 16               \
   }
 
-#define MAX_ITER 500
+// #define MAX_ITER 1000
+#define MAX_ITER 0
 #define TIME_LIMIT 30
 
 static void experiment_function(LNS& lns);
@@ -54,8 +55,8 @@ auto main(int argc, char** argv) -> int
     for (const auto& neighborhood_size : neighborhood_sizes)
     {
       LNS_settings lns_settings(MAX_ITER, TIME_LIMIT, {destroy, neighborhood_size},
-                                {SIPP_implementation::SIPP_suboptimal, INFO_type::experiment, 1.0}, false);
-      algorithms.emplace_back(SIPP_implementation::SIPP_suboptimal, lns_settings, std::make_pair("w", 1.0),
+                                {SIPP_implementation::SIPP_mapf_lns, INFO_type::experiment, 1.0}, false);
+      algorithms.emplace_back(SIPP_implementation::SIPP_mapf_lns, lns_settings,
                               std::make_pair("destroy_type", magic_enum::enum_name<DESTROY_TYPE>(destroy)),
                               std::make_pair("neighborhood_size", neighborhood_size));
     }
@@ -67,7 +68,7 @@ auto main(int argc, char** argv) -> int
 #endif
 
   // create the experiment
-  Experiment experiment("destroy", experiment_function, MAPS, NUMS_AGENTS, algorithms, RUNS_PER_MAP, show_progress);
+  Experiment experiment(EXPERIMENT_NAME, experiment_function, MAPS, NUMS_AGENTS, algorithms, RUNS_PER_MAP, show_progress, true);
 
   // run the experiment
   experiment.run();
@@ -75,9 +76,5 @@ auto main(int argc, char** argv) -> int
 
 void experiment_function(LNS& lns)
 {
-  // load the initial solution
-  std::string filename;  // TODO
-  lns.solution.load(filename, lns.instance);
-  lns.found_initial_solution = true;
   lns.solve();
 }

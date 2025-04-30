@@ -264,6 +264,9 @@ void Solution::load(const std::string& filename, const Instance& instance)
 
   // close the file
   sol_file.close();
+
+  // check whether the solution is feasible
+  feasible = is_valid(instance);
 }
 
 void Solution::calculate_cost(const Instance& instance)

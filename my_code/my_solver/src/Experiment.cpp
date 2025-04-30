@@ -13,7 +13,7 @@
 
 Experiment::Experiment(std::string experiment_name_, std::function<void(LNS& vis)> experiment_function_, std::vector<std::string> maps_,
                        std::vector<std::vector<int>> agent_nums_, std::vector<Algorithm>& algorithms_, int runs_per_map_,
-                       bool show_progress_)
+                       bool show_progress_, bool load_init_sol_)
     : experiment_name(std::move(experiment_name_)),
       experiment_function(std::move(experiment_function_)),
       maps(std::move(maps_)),
@@ -21,6 +21,7 @@ Experiment::Experiment(std::string experiment_name_, std::function<void(LNS& vis
       algorithms(algorithms_),
       runs_per_map(runs_per_map_),
       show_progress(show_progress_),
+      load_init_sol(load_init_sol_),
       rnd_gen(std::mt19937(std::random_device{}())),
       dist(0, std::numeric_limits<int>::max())
 {
@@ -171,6 +172,20 @@ void Experiment::run()
           seed = dist(rnd_gen);
         }
 
+        // load the initial solution
+        Solution init_sol;
+        if (load_init_sol)
+        {
+          // get the file name
+          std::string initsol_path = get_initsol_path(agent_num, map_name, scene_name_stripped, k / static_cast<int>(scenes.size()));
+          // load the solution
+          init_sol.load(initsol_path, instance);
+          if (!init_sol.feasible)
+          {
+            throw std::runtime_error("Loaded infeasile initial solution.");
+          }
+        }
+
         // iterate over all implementations
         for (int l = 0; l < static_cast<int>(algorithms.size()); l++)
         {
@@ -189,6 +204,13 @@ void Experiment::run()
 
           // prepare the solver
           LNS solver(instance, rnd_generator, nullptr, algo.lns_settings);
+
+          // use the loaded initial solution
+          if (load_init_sol)
+          {
+            solver.solution               = init_sol;
+            solver.found_initial_solution = true;
+          }
 
           // run the experiment function and measure its execution time
           Clock clock;
@@ -308,6 +330,13 @@ auto Experiment::get_seed_from_db(int agent_num, const std::string& map_name, co
 
   sqlite3_finalize(stmt);
   return -1;
+}
+
+auto Experiment::get_initsol_path(int agent_num, const std::string& map_name, const std::string& scene_name_stripped, int run)
+    -> std::string
+{
+  return get_base_path() + "/experiments/" + experiment_name + "_" + "initsols/" + experiment_name + "_" + std::to_string(agent_num) +
+         "agents_" + map_name + "_" + scene_name_stripped + "SIPP_lns_orig_" + std::to_string(run);
 }
 
 void Experiment::open_database()
