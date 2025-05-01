@@ -11,7 +11,7 @@ def read_file(name):
           lines.append(line)
     return lines
 
-file_res = read_file("results_destroy_lns2.csv")
+file_res = read_file("results_destroy.csv")
 
 col_names = file_res[0]
 file_res = file_res[1:]
@@ -33,7 +33,7 @@ for experiment in file_res:
     instance_name_stripped = instance_name[idx1:idx2]
     idx3 = instance_name_stripped.find("-random")
     map_name = instance_name_stripped[:idx3]
-    file_name = "destroy_" + str(agent_num) + "agents_"+ map_name + "_" + instance_name_stripped[idx3+1:] + "_SIPP_suboptimal_w_1,00_destroy_type_ORIGO_" + destroy_type + "_neighborhood_size_" + str(neighborhood_size)
+    file_name = "destroy_" + str(agent_num) + "agents_"+ map_name + "_" + instance_name_stripped[idx3+1:] + "_destroy_type_ORIGO_" + destroy_type + "_neighborhood_size_" + str(neighborhood_size)
     num = counts[file_name]
     counts[file_name] += 1
     file_name += "_" + str(num)
@@ -70,7 +70,7 @@ for experiment in file_res:
     sum_of_cost = int(experiment[2])
     sum_of_dist = int(experiment[4])
 
-    algo_name = "SIPP_suboptimal_w_1,00_destroy_type_ORIGO_" + destroy_type + "_neighborhood_size_" + str(neighborhood_size) 
+    algo_name = "SIPP_lns_orig_destroy_type_ORIGO_" + destroy_type + "_neighborhood_size_" + str(neighborhood_size) 
     cursor.execute("""
     SELECT 1 FROM destroy WHERE 
         file_name = ?
