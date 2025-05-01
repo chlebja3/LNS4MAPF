@@ -37,9 +37,9 @@
     4, 8, 16               \
   }
 
-// #define MAX_ITER 1000
+// #define MAX_ITER 2000
 #define MAX_ITER 0
-#define TIME_LIMIT 30
+#define TIME_LIMIT 20
 
 static void experiment_function(LNS& lns);
 
