@@ -68,6 +68,30 @@ TEST(SolutionTest, LoadSolutionByLNS)
   EXPECT_EQ(sol.paths[499].back().location, instance->position_to_location(Point2d(179, 175)));
 }
 
+TEST(SolutionTest, SaveSolution)
+{
+  // load solution
+  std::string               base_path = get_base_path_tests();  // path to my_solver
+  std::unique_ptr<Instance> instance =
+      std::make_unique<Instance>(base_path + "/tests/test_maps/den520d.map", base_path + "/tests/test_scen/den520d-random-0.scen", 500);
+  Solution sol;
+  sol.load(base_path + "/tests/test_solutions/den520d_scen0_500agents.sol", *instance);
+
+  // the solution should be feasible
+  ASSERT_TRUE(sol.is_valid(*instance));
+
+  // save the solution
+  sol.save(base_path + "/tests/test_solutions/generated.sol", *instance);
+
+  // load the saved solution
+  Solution sol2;
+  sol2.load(base_path + "/tests/test_solutions/generated.sol", *instance);
+
+  // check whether the solution is the same
+  EXPECT_EQ(sol.paths, sol2.paths);
+  EXPECT_EQ(sol.feasible, sol2.feasible);
+}
+
 // Test validity check
 
 // Test Case 1: Valid Solution (No Collisions, Correct Paths)

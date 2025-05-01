@@ -36,15 +36,17 @@ auto main(int argc, char** argv) -> int
       "sipp_suboptimality,w", po::value<double>()->default_value(1.0), "suboptimality factor for suboptimal sipp")(
       "maxIterations,i", po::value<int>()->default_value(DEFAULT_MAX_ITER), "maximal number of iterations of LNS")(
       "timeLimit,t", po::value<double>()->default_value(DEFAULT_TIME_LIMIT), "time limit to find the solution, in seconds")(
-      "sipp_implementation,si", po::value<std::string>()->default_value("SIPP_mine"),
+      "sipp_implementation", po::value<std::string>()->default_value("SIPP_mine"),
       "implementation of SIPP (SIPP_mine, SIPP_mapf_lns, SIPP_suboptimal)")("Restarts,r", po::value<bool>()->default_value(true),
                                                                             "restart the search if no feasible initial solution was found")(
-      "destroy_operator,do", po::value<std::string>()->default_value("ADAPTIVE"),
+      "destroy_operator", po::value<std::string>()->default_value("ADAPTIVE"),
       "Destroy operator to be used in LNS (RANDOM, RANDOMWALK, INTERSECTION, ADAPTIVE, RANDOM_CHOOSE, BLOCKED)")(
       "neighborhood_size,n", po::value<int>()->default_value(DEFAULT_NEIGHBORHOOD_SIZE),
       "Size of the neighborhood used by the destroy operator (number of paths to be destroyed)")(
       "seed,s", po::value<int>()->default_value(-1),
-      "seed of the random generators for reproducability, to achieve non reproducible random behavior, use negative value");
+      "seed of the random generators for reproducability, to achieve non reproducible random behavior, use negative value")(
+      "output_paths", po::value<std::string>()->default_value(""),
+      "Output file for the paths of the generated solution. If not used, the solution will not be exported.");
 
   // Parse command-line arguments
   po::variables_map vm;
@@ -70,6 +72,7 @@ auto main(int argc, char** argv) -> int
   const std::string scene_name        = vm["agents"].as<std::string>();
   const std::string sipp_algo         = vm["sipp_implementation"].as<std::string>();
   const std::string destroy_name      = vm["destroy_operator"].as<std::string>();
+  const std::string output_paths_file = vm["output_paths"].as<std::string>();
   const int         neighborhood_size = vm["neighborhood_size"].as<int>();
   const int         agent_num         = vm["agentNum"].as<int>();
   const int         max_iter          = vm["maxIterations"].as<int>();
@@ -155,6 +158,13 @@ auto main(int argc, char** argv) -> int
 
   // wait for the computation thread to finish
   computation.join_thread();
+
+  // export the solution
+  if (!output_paths_file.empty())
+  {
+    const Solution& sol = computation.get_solution();
+    sol.save(output_paths_file, *instance);
+  }
 
   return EXIT_SUCCESS;
 }

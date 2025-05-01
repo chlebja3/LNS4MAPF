@@ -26,6 +26,14 @@ public:
   void start();
   void stop();
   void join_thread();
+  auto get_solution() -> const Solution&
+  {
+    if (running.load(std::memory_order_acquire))
+    {
+      throw std::runtime_error("Trying to access the solution before the solver finished.");
+    }
+    return solver->solution;
+  }
 
   // the function called in the thread
   void              run();

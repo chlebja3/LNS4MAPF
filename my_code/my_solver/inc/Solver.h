@@ -34,6 +34,7 @@ public:
 
   [[nodiscard]] auto is_valid(const Instance& instance) const -> bool;
   void               load(const std::string& filename, const Instance& instance);
+  void               save(const std::string& filename, const Instance& instance) const;
   void               calculate_cost(const Instance& instance);
   void               convert_paths() const;
 };

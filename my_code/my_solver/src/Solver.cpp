@@ -269,6 +269,33 @@ void Solution::load(const std::string& filename, const Instance& instance)
   feasible = is_valid(instance);
 }
 
+void Solution::save(const std::string& filename, const Instance& instance) const
+// save in the same format as MAPF-LNS2
+{
+  std::ofstream output;
+  output.open(filename);
+
+  // convert the trajectories to paths
+  convert_paths();
+
+  // iterate over the converted paths
+  for (int i = 0; i < static_cast<int>(converted_paths.size()); i++)
+  {
+    // write agent number
+    output << "Agent " << i << ":";
+
+    // iterate over the path
+    for (const auto& it : converted_paths[i])
+    {
+      // write the position
+      Point2d pt = instance.location_to_position(it);
+      output << "(" << pt.y << "," << pt.x << ")->";
+    }
+    output << std::endl;
+  }
+  output.close();
+}
+
 void Solution::calculate_cost(const Instance& instance)
 {
   if (!feasible)
@@ -286,7 +313,7 @@ void Solution::calculate_cost(const Instance& instance)
   sum_of_costs  = 0;
   makespan      = paths[0].back().interval.t_min;
 
-  for (int i = 0; i < (int)paths.size(); i++)
+  for (int i = 0; i < static_cast<int>(paths.size()); i++)
   {
     makespan = std::max(makespan, paths[i].back().interval.t_min);
     sum_of_costs += paths[i].back().interval.t_min;
@@ -302,7 +329,7 @@ void Solution::convert_paths() const
 {
   converted_paths.clear();
   converted_paths.resize(paths.size());
-  for (int i = 0; i < (int)paths.size(); i++)
+  for (int i = 0; i < static_cast<int>(paths.size()); i++)
   {
     converted_paths[i] = timepointpath_to_path(paths[i]);
   }
