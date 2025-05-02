@@ -100,9 +100,6 @@ target_link_libraries(simple_MAPF_solver MAPF_lib)
 add_executable(sipp_pp_experiment src/experiments/sipp_pp.cpp)
 target_link_libraries(sipp_pp_experiment MAPF_lib)
 
-add_executable(dummy_experiment src/experiments/dummy.cpp)
-target_link_libraries(dummy_experiment MAPF_lib)
-
 add_executable(destroy_experiment src/experiments/destroy.cpp)
 target_link_libraries(destroy_experiment MAPF_lib)
 
@@ -121,6 +118,11 @@ target_link_libraries(influence_of_w_experiment MAPF_lib)
 add_executable(influence_of_p_experiment src/experiments/influence_of_p.cpp)
 target_link_libraries(influence_of_p_experiment MAPF_lib)
 
+add_executable(influence_of_ap_experiment src/experiments/influence_of_ap.cpp)
+target_link_libraries(influence_of_ap_experiment MAPF_lib)
+
+add_executable(overall_improvement_experiment src/experiments/overall_improvement.cpp)
+target_link_libraries(overall_improvement_experiment MAPF_lib)
 
 # Add subdirectory for tests
 if (${ENABLE_TESTS})

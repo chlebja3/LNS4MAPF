@@ -12,12 +12,13 @@
 #include "Solver.h"
 
 Experiment::Experiment(std::string experiment_name_, std::function<void(LNS& vis)> experiment_function_, std::vector<std::string> maps_,
-                       std::vector<std::vector<int>> agent_nums_, std::vector<Algorithm>& algorithms_, int runs_per_map_,
-                       bool show_progress_, bool load_init_sol_)
+                       std::vector<std::vector<int>> agent_nums_, std::vector<double> time_limits_, std::vector<Algorithm>& algorithms_,
+                       int runs_per_map_, bool show_progress_, bool load_init_sol_)
     : experiment_name(std::move(experiment_name_)),
       experiment_function(std::move(experiment_function_)),
       maps(std::move(maps_)),
       agent_nums(std::move(agent_nums_)),
+      time_limits(std::move(time_limits_)),
       algorithms(algorithms_),
       runs_per_map(runs_per_map_),
       show_progress(show_progress_),
@@ -26,6 +27,8 @@ Experiment::Experiment(std::string experiment_name_, std::function<void(LNS& vis
       dist(0, std::numeric_limits<int>::max())
 {
   // assertm(false, "Experiments should be compiled in Release mode to have reliable results!");
+  assertm(agent_nums.size() == maps.size(), "Agent nums must be specified for each map.");
+  assertm(time_limits.size() == maps.size(), "Time limit must be specified for each map.");
   skips = what_can_be_skipped(experiment_name, maps, agent_nums, runs_per_map, algorithms);
   if (show_progress)
   {
@@ -60,6 +63,8 @@ void Experiment::run()
       multi_progress_bar->set_option<0>(
           indicators::option::PostfixText{std::to_string(i) + "/" + std::to_string(static_cast<int>(maps.size())) + "    "});
     }
+
+    double time_limit = time_limits[i];
 
     // skip maps that were already solved
     const int start_offset_map = sum_agent_nums * runs_per_map * static_cast<int>(algorithms.size());
@@ -207,11 +212,17 @@ void Experiment::run()
           // prepare the solver
           LNS solver(instance, rnd_generator, nullptr, algo.lns_settings);
 
+          // change the time limit to the time limit of this map
+          solver.settings.time_limit = time_limit;
+
           // use the loaded initial solution
           if (load_init_sol)
           {
             solver.solution               = init_sol;
             solver.found_initial_solution = true;
+
+            // build the safe interval table
+            solver.planner->safe_interval_table.build_sequential(init_sol.paths);
 
             // add to the log
             solver.log.bsf_solution_cost.push_back(init_sol.sum_of_costs);
@@ -290,14 +301,15 @@ auto Experiment::get_seed_from_db(int agent_num, const std::string& map_name, co
     experiment_filename = experiment_name + "_" + std::to_string(agent_num) + "agents_" + map_name + "-" + scene_name_stripped +
                           "SIPP_lns_orig_" + std::to_string(run);
   }
-  else if (experiment_name == "influence_of_p" || experiment_name == "influence_of_w" || experiment_name == "repair")
+  else if (experiment_name == "influence_of_p" || experiment_name == "influence_of_w" || experiment_name == "repair" ||
+           experiment_name == "influence_of_ap" || experiment_name == "overall_improvement")
   {
     return -1;  // w and p are only in my solver
   }
   else if (experiment_name == "destroy")
   {
     experiment_filename = experiment_name + "_" + std::to_string(agent_num) + "agents_" + map_name + "_" + scene_name_stripped +
-                          "_SIPP_suboptimal_w_1,00_destroy_type_ORIGO_Adaptive_neighborhood_size_4_" + std::to_string(run);
+                          "_destroy_type_ORIGO_Adaptive_neighborhood_size_4_" + std::to_string(run);
   }
   else if (experiment_name == "feasible" || experiment_name == "feasible_restarts")
   {
@@ -345,7 +357,7 @@ auto Experiment::get_initsol_path(int agent_num, const std::string& map_name, co
     -> std::string
 {
   return get_base_path() + "/experiments/" + experiment_name + "_" + "initsols/" + experiment_name + "_" + std::to_string(agent_num) +
-         "agents_" + map_name + "_" + scene_name_stripped + "SIPP_lns_orig_" + std::to_string(run);
+         "agents_" + map_name + "_" + scene_name_stripped + "_" + std::to_string(run);
 }
 
 void Experiment::open_database()

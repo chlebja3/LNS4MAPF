@@ -19,8 +19,8 @@ class Experiment
 {
 public:
   Experiment(std::string experiment_name_, std::function<void(LNS& lns)> experiment_function, std::vector<std::string> maps_,
-             std::vector<std::vector<int>> agent_nums_, std::vector<Algorithm>& algorithms_, int runs_per_map_, bool show_progress_ = false,
-             bool load_init_sol = false);
+             std::vector<std::vector<int>> agent_nums_, std::vector<double> time_limits_, std::vector<Algorithm>& algorithms_,
+             int runs_per_map_, bool show_progress_ = false, bool load_init_sol = false);
 
   ~Experiment()
   {
@@ -42,6 +42,7 @@ private:
   std::function<void(LNS& lns)>       experiment_function;
   const std::vector<std::string>      maps;
   const std::vector<std::vector<int>> agent_nums;
+  const std::vector<double>           time_limits;
   std::vector<Algorithm>&             algorithms;
   int                                 runs_per_map;
   bool                                show_progress;

@@ -19,17 +19,17 @@
 
 #define SHOW_PROGRESS
 
-#define MAPS                                                                         \
-  {                                                                                  \
-    "empty-32-32", "random-32-32-20", "warehouse-10-20-10-2-1", "ost003d", "den520d" \
+#define MAPS                                                                                      \
+  {                                                                                               \
+    "empty-8-8", "empty-32-32", "random-32-32-20", "warehouse-10-20-10-2-1", "ost003d", "den520d" \
   }
 
-#define NUMS_AGENTS             \
-  {                             \
-    {200}, {100}, {150}, {400}, \
-    {                           \
-      500                       \
-    }                           \
+#define NUMS_AGENTS                   \
+  {                                   \
+    {32}, {200}, {100}, {150}, {400}, \
+    {                                 \
+      500                             \
+    }                                 \
   }
 
 #define SUBOPTIMALITIES  \
@@ -44,8 +44,13 @@
 
 #define NEIGHBORHOOD_SIZE 8
 
-#define MAX_ITER 100000
+#define MAX_ITER 10000
 #define TIME_LIMIT 20
+
+#define TIME_LIMITS    \
+  {                    \
+    2, 5, 5, 5, 20, 20 \
+  }
 
 static void experiment_function(LNS& lns);
 
@@ -84,7 +89,7 @@ auto main(int argc, char** argv) -> int
 #endif
 
   // create the experiment
-  Experiment experiment("repair", experiment_function, MAPS, NUMS_AGENTS, algorithms, RUNS_PER_MAP, show_progress);
+  Experiment experiment(EXPERIMENT_NAME, experiment_function, MAPS, NUMS_AGENTS, TIME_LIMITS, algorithms, RUNS_PER_MAP, show_progress);
 
   // run the experiment
   experiment.run();

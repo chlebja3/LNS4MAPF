@@ -37,9 +37,12 @@
     4, 8, 16               \
   }
 
-// #define MAX_ITER 2000
-#define MAX_ITER 0
-#define TIME_LIMIT 20
+#define MAX_ITER 2000
+
+#define TIME_LIMITS    \
+  {                    \
+    2, 5, 5, 5, 20, 20 \
+  }
 
 static void experiment_function(LNS& lns);
 
@@ -54,7 +57,7 @@ auto main(int argc, char** argv) -> int
   {
     for (const auto& neighborhood_size : neighborhood_sizes)
     {
-      LNS_settings lns_settings(MAX_ITER, TIME_LIMIT, {destroy, neighborhood_size},
+      LNS_settings lns_settings(MAX_ITER, 20, {destroy, neighborhood_size},
                                 {SIPP_implementation::SIPP_mapf_lns, INFO_type::experiment, 1.0}, false);
       algorithms.emplace_back(SIPP_implementation::SIPP_mapf_lns, lns_settings,
                               std::make_pair("destroy_type", magic_enum::enum_name<DESTROY_TYPE>(destroy)),
@@ -68,7 +71,8 @@ auto main(int argc, char** argv) -> int
 #endif
 
   // create the experiment
-  Experiment experiment(EXPERIMENT_NAME, experiment_function, MAPS, NUMS_AGENTS, algorithms, RUNS_PER_MAP, show_progress, true);
+  Experiment experiment(EXPERIMENT_NAME, experiment_function, MAPS, NUMS_AGENTS, TIME_LIMITS, algorithms, RUNS_PER_MAP, show_progress,
+                        true);
 
   // run the experiment
   experiment.run();

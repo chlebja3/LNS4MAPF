@@ -414,23 +414,14 @@ void LNS::destroy_randomwalk(Solution& sol) const
   int upperbound = sol.paths[most_delayed].back().interval.t_min;
   assertm(upperbound > 0, "Upperbound is too small.");
   // perform the first randomwalk from start - not in pseudocode, but in MAPF-LNS2 implementation
-  if (!random_walk(most_delayed, settings.destroy_settings.size, sol.paths[most_delayed][0].location, 0, upperbound, chosen))
+  int chosen_agent = most_delayed;
+  if (!random_walk(chosen_agent, settings.destroy_settings.size, sol.paths[most_delayed][0].location, 0, upperbound, chosen))
   {
     // perform the random walk again, maximum 10 iterations
     for (int i = 0; i < 10; i++)
     {
-      // choose a random agent
-      std::uniform_int_distribution<int> dist(0, chosen.size() - 1);
-      int                                idx = dist(rnd_generator);
-      assertm(idx >= 0 && idx < static_cast<int>(chosen.size()), "Index out of bounds.");
-      // iterator to the first element
-      auto it = chosen.begin();
-      std::advance(it, idx);
-      int chosen_agent = *it;
-
-      // choose a random time from its path
-      upperbound = sol.paths[chosen_agent].back().interval.t_min;
-      std::uniform_int_distribution<int> dist_time(0, upperbound - 1);
+      // choose a random time from the agents path
+      std::uniform_int_distribution<int> dist_time(0, upperbound);
       int                                chosen_t = dist_time(rnd_generator);
 
       // choose location
@@ -442,6 +433,16 @@ void LNS::destroy_randomwalk(Solution& sol) const
         break;
       }
       assertm(static_cast<int>(chosen.size()) < settings.destroy_settings.size, "Enough agents were selected, but false returned.");
+
+      // choose a random agent
+      std::uniform_int_distribution<int> dist(0, chosen.size() - 1);
+      int                                idx = dist(rnd_generator);
+      assertm(idx >= 0 && idx < static_cast<int>(chosen.size()), "Index out of bounds.");
+      // iterator to the first element
+      auto it = chosen.begin();
+      std::advance(it, idx);
+      chosen_agent = *it;
+      upperbound   = sol.paths[chosen_agent].back().interval.t_min;
     }
   }
 
@@ -453,7 +454,6 @@ void LNS::destroy_randomwalk(Solution& sol) const
   }
   assertm(static_cast<int>(chosen.size()) > 1, "Not enough agents selected.");
 
-  // shuffle the paths - TODO either keep the order or only keep first agent and shuffle the rest, using the set order does not make sense,
   // but it is implemented like this in MAPF-LNS2
   // sol.destroyed_paths = std::vector(std::make_move_iterator(chosen.begin()), std::make_move_iterator(chosen.end()));
   sol.destroyed_paths.assign(chosen.begin(), chosen.end());

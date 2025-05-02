@@ -416,3 +416,12 @@ void EdgeConstraintTable::remove(int loc1, int loc2, int time)
   assertm(constraints_before - edge_constraints[dir][loc2_free].size() == 1, "Should erase exactly one edge constraint.");
 }
 
+
+void SafeIntervalTable::build_sequential(const std::vector<TimePointPath>& paths)
+{
+  assertm(static_cast<int>(paths.size()) > 0, "No paths to add.");
+  for (const auto& path : paths)
+  {
+    add_constraints(path);
+  }
+}

@@ -87,6 +87,7 @@ public:
   [[nodiscard]] auto get_first_safe_interval(int location) const -> std::list<TimeInterval>::const_iterator;
   [[nodiscard]] auto get_max_path_len_estimate() -> int;
   void               update_latest_constraint_end_estimate();
+  void               build_sequential(const std::vector<TimePointPath>& paths);
 
   [[nodiscard]] auto get_min_reach_time(int goal) const -> int
   {
