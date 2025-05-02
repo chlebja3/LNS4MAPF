@@ -9,7 +9,9 @@ cursor = conn.cursor()
 # experiment_name = "repair"
 # experiment_name = "destroy"
 # experiment_name = "feasible_restarts"
-experiment_name = "sipp_pp"
+# experiment_name = "sipp_pp"
+experiment_name = "overall_improvement"
+
 
 # Count total rows before deletion
 cursor.execute("SELECT COUNT(*) FROM " + experiment_name)

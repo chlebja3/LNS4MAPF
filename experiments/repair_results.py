@@ -66,7 +66,7 @@ x_axis_iteration = False
 for metric in metric_names:
 
     # iterate over neighborhood sizes
-    fig, axes = plt.subplots(nrows=3, ncols=2, figsize=(6, 10), sharey=False)
+    fig, axes = plt.subplots(nrows=3, ncols=2, figsize=(12, 10), sharey=False)
     axes = axes.flatten()
 
     if num_maps == 1:  # If only one map, axes is not an array
@@ -130,60 +130,5 @@ for metric in metric_names:
     #plt.subplots_adjust(bottom=0.2)  # Add vertical space for the legend
 
     #fig.suptitle(f"{metric} Across Maps", fontsize=16)
-    #plt.tight_layout()
-    plt.show()
-
-exit()
-
-metric_names_averaged = ["iteration_time_cpu"]
-#show metrics that are averaged over the time interval
-for metric in metric_names_averaged:
-    fig = plt.figure()
-    ax = fig.add_subplot(111)
-
-    vals = []
-    map_names = []
-    # Iterate over each map
-    for i, (map_name, map_group) in enumerate(df_filtered.groupby('map_name')):
-        map_names.append(map_name)
-        # Plot each algorithm
-        for j, (algo_name, algo_group) in enumerate(map_group.groupby('algo_name')):
-            if (i == 0):
-                vals.append([])
-            metric_list = algo_group[metric].to_list()
-            # discard the first iteration
-            metric_list = metric_list[1:]
-            min_len = np.min(np.asarray([len(x) for x in metric_list]))
-            metric_list = [x[:min_len] for x in metric_list]
-            metric_np = np.asarray(metric_list)
-            mean_vec = np.mean(metric_np)
-            vals[j].append(mean_vec)
-            # print("Algo name:", algo_name)
-            # print(algo_group[(metric, "mean")])
-
-
-        # ax.legend()
-        # ax.legend(loc='center down', bbox_to_anchor=(0.5, 1))
-
-        ax.grid(True)
-    i = 0
-    for algo_name, algo_group in map_group.groupby('algo_name'):
-        ax.plot(list(range(len(vals[i]))), vals[i], marker="x", label=f"{algo_name}")
-        i += 1
-    ax.set_title("Average replan time comparison")
-    ax.set_xlabel("Maps")
-    ax.set_ylabel("Average replan time [s]")  # Only label Y-axis on first subplot
-    # ax.set_xticks(list(range(len(map_names))), labels=map_names)
-    ax.set_xticklabels(map_names)
-
-# Put a legend below current axis
-    handles, labels = axes[0].get_legend_handles_labels()
-    fig.legend(handles, labels, loc='lower center', bbox_to_anchor=(0.5, 0.05),ncol=2)
-    plt.tight_layout()
-    plt.subplots_adjust(bottom=0.20)
-    # plt.tight_layout()
-    #plt.subplots_adjust(bottom=0.2)  # Add vertical space for the legend
-
-    fig.suptitle(f"{metric} Across Maps", fontsize=16)
     #plt.tight_layout()
     plt.show()

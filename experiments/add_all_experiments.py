@@ -12,8 +12,9 @@ cursor = conn.cursor()
 # experiment_name = "influence_of_ap"
 # experiment_name = "feasible"
 # experiment_name = "feasible_restarts"
-experiment_name = "destroy"
+# experiment_name = "destroy"
 # experiment_name = "repair"
+experiment_name = "overall_improvement"
 
 execute_str = "CREATE TABLE IF NOT EXISTS " + experiment_name + """ (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -79,7 +80,7 @@ for map_dir in map_dirs:
                 data["init_sol_sum_of_cost"] = data["sum_of_cost"][0]
                 if (experiment_name == "feasible_restarts"):
                     data["init_sol_sum_of_cost"] = data["sum_of_cost"][-1]
-                if (experiment_name != "feasible_restarts" and data["feasible"] and data["sum_of_cost"][0] == -1):
+                if (experiment_name != "feasible_restarts" and experiment_name != "overall_improvement" and data["feasible"] and data["sum_of_cost"][0] == -1):
                     data["feasible"] = False
                 data["sum_of_cost"] = json.dumps(data["sum_of_cost"])
                 data["init_sol_makespan"] = data["makespan"][0]
