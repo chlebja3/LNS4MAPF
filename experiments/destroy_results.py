@@ -39,14 +39,15 @@ metric_names = ["sum_of_cost"]
 unique_maps = df["map_name"].unique()
 num_maps = len(unique_maps)
 
-neighborhood_sizes = [4, 8, 16, 32]
+neighborhood_sizes = [4, 8, 16]
 
 # Iterate over each metric
 for metric in metric_names:
 
     # iterate over neighborhood sizes
     for neighborhood_size in neighborhood_sizes:
-        fig, axes = plt.subplots(nrows=1, ncols=num_maps, figsize=(5 * num_maps, 5), sharey=False)
+        fig, axes = plt.subplots(nrows=3, ncols=2, figsize=(12, 10), sharey=False)
+        axes = axes.flatten()
 
         if num_maps == 1:  # If only one map, axes is not an array
             axes = [axes]
@@ -72,8 +73,7 @@ for metric in metric_names:
 
             ax.set_title(map_name)
             ax.set_xlabel("Iteration")
-            if i == 0:
-                ax.set_ylabel(metric)  # Only label Y-axis on first subplot
+            ax.set_ylabel(metric)  # Only label Y-axis on first subplot
 
             # ax.legend()
             # ax.legend(loc='center down', bbox_to_anchor=(0.5, 1))
@@ -82,13 +82,13 @@ for metric in metric_names:
 
 # Put a legend below current axis
         handles, labels = axes[0].get_legend_handles_labels()
-        fig.legend(handles, labels, loc='lower center', bbox_to_anchor=(0.5, 0.05),ncol=2)
+        fig.legend(handles, labels, loc='lower center', bbox_to_anchor=(0.5, 0.01),ncol=2)
         plt.tight_layout()
         plt.subplots_adjust(bottom=0.20)
         # plt.tight_layout()
         #plt.subplots_adjust(bottom=0.2)  # Add vertical space for the legend
 
-        fig.suptitle(f"{metric} Across Maps", fontsize=16)
+        # fig.suptitle(f"{metric} Across Maps", fontsize=16)
         #plt.tight_layout()
         plt.show()
 

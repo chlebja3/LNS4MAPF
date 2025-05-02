@@ -23,7 +23,8 @@ cursor = conn.cursor()
 
 # Load data into Pandas DataFrame
 # exp_name = "influence_of_p"
-exp_name = "influence_of_ap"
+# exp_name = "influence_of_ap"
+exp_name = "influence_of_w"
 df = pd.read_sql_query("SELECT * FROM " + exp_name, conn)
 df["delay"] = df["init_sol_sum_of_cost"] - df["sum_of_dist"]
 

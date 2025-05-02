@@ -7,7 +7,7 @@ conn = sqlite3.connect("experiment_database.db")
 cursor = conn.cursor()
 
 # Load data into Pandas DataFrame
-df = pd.read_sql_query("SELECT * FROM sipp_pp", conn)
+df = pd.read_sql_query("SELECT * FROM feasible_restarts", conn)
 df["delay"] = df["init_sol_sum_of_cost"] - df["sum_of_dist"]
 
 # close the database
@@ -25,9 +25,10 @@ num_maps = len(unique_maps)
 
 # plot the wall time
 # create a single figure where the maps are on the x-axis and the preprocessing time on the y-axis
-fig, axes = plt.subplots(nrows=1, ncols=num_maps, figsize=(3 * num_maps, 7), sharey=False)
-metric = "preprocessing_time_wall"
-# metric = "preprocessing_time_cpu"
+fig, axes = plt.subplots(nrows=3, ncols=2, figsize=(6, 10), sharey=False)
+axes = axes.flatten()
+# metric = "preprocessing_time_wall"
+metric = "preprocessing_time_cpu"
 
 if num_maps == 1:  # If only one map, axes is not an array
     axes = [axes]
@@ -44,22 +45,20 @@ for i, (map_name, map_group) in enumerate(stats.groupby('map_name')):
     values_mine = np.asarray(values_mine)
     values_mine = np.mean(values_mine, axis=0)
     # plot the values
-    ax.plot(agent_nums, values_orig, label=f"original", marker='x')
-    ax.plot(agent_nums, values_mine, label=f"mine", marker='x')
+    ax.plot(agent_nums, values_orig, label=f"original", marker='o')
+    ax.plot(agent_nums, values_mine, label=f"parallelized", marker='o')
     ax.set_title(map_name)
     ax.set_xlabel("Number of agents")
-    if i == 0:
-        ax.set_ylabel(metric + " [s]")  # Only label Y-axis on first subplot
+    ax.set_ylabel(metric + " [s]")  # Only label Y-axis on first subplot
     ax.grid(True)
 
 handles, labels = axes[0].get_legend_handles_labels()
-fig.legend(handles, labels, loc='lower center', bbox_to_anchor=(0.5, 0.05),ncol=2)
+fig.legend(handles, labels, loc='lower center', bbox_to_anchor=(0.5, 0.01),ncol=2)
 plt.tight_layout()
-plt.subplots_adjust(bottom=0.20, top=0.9)
+plt.subplots_adjust(bottom=0.1)
 # plt.tight_layout()
 #plt.subplots_adjust(bottom=0.2)  # Add vertical space for the legend
 
-fig.suptitle(f"{metric} across maps", fontsize=16)
 #plt.tight_layout()
 plt.show()
 
