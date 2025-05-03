@@ -51,28 +51,34 @@ auto main(int argc, char** argv) -> int
   // prepare the algorithms
   std::vector<Algorithm> algorithms;
 
-  for (const auto& algo_type : magic_enum::enum_values<SIPP_implementation>())
+  // original mapf
   {
-    // skip ap implementations
-    if (algo_type == SIPP_implementation::SIPP_mine_ap || algo_type == SIPP_implementation::SIPP_suboptimal_ap)
-    {
-      continue;
-    }
-
-    if (algo_type == SIPP_implementation::SIPP_suboptimal)
-    {
-      for (double w : SUBOPTIMALITIES)
-      {
-        LNS_settings lns_settings(0, 1, {DESTROY_TYPE::RANDOM, 10}, {algo_type, INFO_type::experiment, w}, false);
-        algorithms.emplace_back(algo_type, lns_settings, std::make_pair("w", w));
-      }
-    }
-    else
-    {
-      LNS_settings lns_settings(0, 1, {DESTROY_TYPE::RANDOM, 10}, {algo_type, INFO_type::experiment, 1.0}, false);
-      algorithms.emplace_back(algo_type, lns_settings);
-    }
+    SIPP_implementation algo_type = SIPP_implementation::SIPP_mapf_lns;
+    LNS_settings        lns_settings(0, 1, {DESTROY_TYPE::RANDOM, 10}, {algo_type, INFO_type::experiment, 1.0});
+    algorithms.emplace_back(algo_type, lns_settings);
   }
+
+  // SIPP mine ap
+  {
+    SIPP_implementation algo_type = SIPP_implementation::SIPP_mine_ap;
+    LNS_settings        lns_settings(0, 1, {DESTROY_TYPE::RANDOM, 10}, {algo_type, INFO_type::experiment, 1.0});
+    algorithms.emplace_back(algo_type, lns_settings);
+  }
+
+  // Suboptimal SIPP w = 1.0
+  {
+    SIPP_implementation algo_type = SIPP_implementation::SIPP_suboptimal_ap;
+    LNS_settings        lns_settings(0, 1, {DESTROY_TYPE::RANDOM, 10}, {algo_type, INFO_type::experiment, 1.0, 5});
+    algorithms.emplace_back(algo_type, lns_settings, std::make_pair("w", 1.0), std::make_pair("p", 5));
+  }
+
+  // Suboptimal SIPP w = 1.1
+  {
+    SIPP_implementation algo_type = SIPP_implementation::SIPP_suboptimal_ap;
+    LNS_settings        lns_settings(0, 20, {DESTROY_TYPE::RANDOM, 10}, {algo_type, INFO_type::experiment, 1.1, 5});
+    algorithms.emplace_back(algo_type, lns_settings, std::make_pair("w", 1.1), std::make_pair("p", 5));
+  }
+
 #ifdef SHOW_PROGRESS
   const bool show_progress = true;
 #else

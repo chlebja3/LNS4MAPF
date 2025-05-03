@@ -14,7 +14,7 @@
 #include "magic_enum/magic_enum.hpp"
 #include "utils.h"
 
-#define RUNS_PER_MAP 40
+#define RUNS_PER_MAP 50
 #define EXPERIMENT_NAME "repair"
 
 #define SHOW_PROGRESS
@@ -37,10 +37,7 @@
     1.0, 1.02, 1.05, 1.1 \
   }
 
-#define P_VALUES \
-  {              \
-    1, 5         \
-  }
+#define P 5
 
 #define NEIGHBORHOOD_SIZE 8
 
@@ -49,7 +46,7 @@
 
 #define TIME_LIMITS    \
   {                    \
-    2, 5, 5, 5, 20, 20 \
+    1, 5, 5, 5, 30, 30 \
   }
 
 static void experiment_function(LNS& lns);
@@ -65,23 +62,24 @@ auto main(int argc, char** argv) -> int
   // optimal version
   {
     LNS_settings lns_settings(MAX_ITER, TIME_LIMIT, {DESTROY_TYPE::RANDOMWALK, NEIGHBORHOOD_SIZE},
-                              {SIPP_implementation::SIPP_mine, INFO_type::experiment, 1.0});
-    algorithms.emplace_back(SIPP_implementation::SIPP_mine, lns_settings);
-  }
-  {
-    LNS_settings lns_settings(MAX_ITER, TIME_LIMIT, {DESTROY_TYPE::RANDOMWALK, NEIGHBORHOOD_SIZE},
                               {SIPP_implementation::SIPP_mine_ap, INFO_type::experiment, 1.0});
     algorithms.emplace_back(SIPP_implementation::SIPP_mine_ap, lns_settings);
   }
-  for (int p : P_VALUES)
+
+  // SIPP suboptimal with w = 1.0, p = 1
   {
-    for (auto w : suboptimalities)
-    {
-      LNS_settings lns_settings(MAX_ITER, TIME_LIMIT, {DESTROY_TYPE::RANDOMWALK, NEIGHBORHOOD_SIZE},
-                                {SIPP_implementation::SIPP_suboptimal_ap, INFO_type::experiment, w, p});
-      algorithms.emplace_back(SIPP_implementation::SIPP_suboptimal_ap, lns_settings, std::make_pair("w", w), std::make_pair("p", p));
-    }
+    LNS_settings lns_settings(MAX_ITER, TIME_LIMIT, {DESTROY_TYPE::RANDOMWALK, NEIGHBORHOOD_SIZE},
+                              {SIPP_implementation::SIPP_suboptimal_ap, INFO_type::experiment, 1.0, 1});
+    algorithms.emplace_back(SIPP_implementation::SIPP_suboptimal_ap, lns_settings, std::make_pair("w", 1.0), std::make_pair("p", 1));
   }
+  // SIPP suboptimal with various w and p = 5
+  for (auto w : suboptimalities)
+  {
+    LNS_settings lns_settings(MAX_ITER, TIME_LIMIT, {DESTROY_TYPE::RANDOMWALK, NEIGHBORHOOD_SIZE},
+                              {SIPP_implementation::SIPP_suboptimal_ap, INFO_type::experiment, w, P});
+    algorithms.emplace_back(SIPP_implementation::SIPP_suboptimal_ap, lns_settings, std::make_pair("w", w), std::make_pair("p", P));
+  }
+
 #ifdef SHOW_PROGRESS
   const bool show_progress = true;
 #else
@@ -89,7 +87,8 @@ auto main(int argc, char** argv) -> int
 #endif
 
   // create the experiment
-  Experiment experiment(EXPERIMENT_NAME, experiment_function, MAPS, NUMS_AGENTS, TIME_LIMITS, algorithms, RUNS_PER_MAP, show_progress);
+  Experiment experiment(EXPERIMENT_NAME, experiment_function, MAPS, NUMS_AGENTS, TIME_LIMITS, algorithms, RUNS_PER_MAP, show_progress,
+                        true);
 
   // run the experiment
   experiment.run();
@@ -100,7 +99,7 @@ void experiment_function(LNS& lns)
   LNS_settings lns_settings_orig = lns.settings;
   // find initial solution by the same algorithm for all experiments
   lns.settings = LNS_settings(0, TIME_LIMIT, {DESTROY_TYPE::RANDOM_CHOOSE, NEIGHBORHOOD_SIZE},
-                              {SIPP_implementation::SIPP_suboptimal, INFO_type::experiment, 1.0}, true);
+                              {SIPP_implementation::SIPP_suboptimal_ap, INFO_type::experiment, 1.0}, true);
 
   lns.solve();
   if (lns.solution.feasible)

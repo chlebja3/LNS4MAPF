@@ -14,7 +14,7 @@
 #include "magic_enum/magic_enum.hpp"
 #include "utils.h"
 
-#define RUNS_PER_MAP 40
+#define RUNS_PER_MAP 50
 #define EXPERIMENT_NAME "destroy"
 
 #define SHOW_PROGRESS
@@ -41,7 +41,7 @@
 
 #define TIME_LIMITS    \
   {                    \
-    2, 5, 5, 5, 20, 20 \
+    1, 5, 5, 5, 60, 60 \
   }
 
 static void experiment_function(LNS& lns);

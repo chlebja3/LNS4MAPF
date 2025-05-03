@@ -56,14 +56,14 @@ auto main(int argc, char** argv) -> int
   {
     // normal version
     {
-      LNS_settings lns_settings(0, 1, {DESTROY_TYPE::RANDOM, 10}, {SIPP_implementation::SIPP_suboptimal, INFO_type::experiment, w});
-      algorithms.emplace_back(SIPP_implementation::SIPP_suboptimal, lns_settings, std::make_pair("w", w));
+      LNS_settings lns_settings(0, 1, {DESTROY_TYPE::RANDOM, 10}, {SIPP_implementation::SIPP_suboptimal, INFO_type::experiment, w, 5});
+      algorithms.emplace_back(SIPP_implementation::SIPP_suboptimal, lns_settings, std::make_pair("w", w), std::make_pair("p", 5));
     }
 
     // ap version
     {
-      LNS_settings lns_settings(0, 1, {DESTROY_TYPE::RANDOM, 10}, {SIPP_implementation::SIPP_suboptimal_ap, INFO_type::experiment, w});
-      algorithms.emplace_back(SIPP_implementation::SIPP_suboptimal_ap, lns_settings, std::make_pair("w", w));
+      LNS_settings lns_settings(0, 1, {DESTROY_TYPE::RANDOM, 10}, {SIPP_implementation::SIPP_suboptimal_ap, INFO_type::experiment, w, 5});
+      algorithms.emplace_back(SIPP_implementation::SIPP_suboptimal_ap, lns_settings, std::make_pair("w", w), std::make_pair("p", 5));
     }
   }
 

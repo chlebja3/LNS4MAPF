@@ -37,7 +37,7 @@
     1.0, 1.01, 1.02, 1.05, 1.1, 1.5 \
   }
 
-#define P 1
+#define P 5
 
 #define TIME_LIMITS  \
   {                  \
@@ -55,8 +55,9 @@ auto main(int argc, char** argv) -> int
 
   for (double w : W_VALS)
   {
-    LNS_settings lns_settings(0, 1, {DESTROY_TYPE::RANDOM, 10}, {SIPP_implementation::SIPP_suboptimal, INFO_type::experiment, w, P}, false);
-    algorithms.emplace_back(SIPP_implementation::SIPP_suboptimal, lns_settings, std::make_pair("w", w));
+    LNS_settings lns_settings(0, 1, {DESTROY_TYPE::RANDOM, 10}, {SIPP_implementation::SIPP_suboptimal_ap, INFO_type::experiment, w, P},
+                              false);
+    algorithms.emplace_back(SIPP_implementation::SIPP_suboptimal_ap, lns_settings, std::make_pair("w", w), std::make_pair("p", P));
   }
 #ifdef SHOW_PROGRESS
   const bool show_progress = true;

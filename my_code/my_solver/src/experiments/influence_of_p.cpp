@@ -55,8 +55,9 @@ auto main(int argc, char** argv) -> int
 
   for (int p : P_VALS)
   {
-    LNS_settings lns_settings(0, 1, {DESTROY_TYPE::RANDOM, 10}, {SIPP_implementation::SIPP_suboptimal, INFO_type::experiment, W, p}, false);
-    algorithms.emplace_back(SIPP_implementation::SIPP_suboptimal, lns_settings, std::make_pair("p", p));
+    LNS_settings lns_settings(0, 1, {DESTROY_TYPE::RANDOM, 10}, {SIPP_implementation::SIPP_suboptimal_ap, INFO_type::experiment, W, p},
+                              false);
+    algorithms.emplace_back(SIPP_implementation::SIPP_suboptimal_ap, lns_settings, std::make_pair("p", p));
   }
 #ifdef SHOW_PROGRESS
   const bool show_progress = true;
