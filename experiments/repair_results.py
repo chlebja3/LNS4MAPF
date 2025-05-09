@@ -66,7 +66,7 @@ x_axis_iteration = False
 for metric in metric_names:
 
     # iterate over neighborhood sizes
-    fig, axes = plt.subplots(nrows=3, ncols=2, figsize=(12, 10), sharey=False)
+    fig, axes = plt.subplots(nrows=3, ncols=2, figsize=(10, 10), sharey=False)
     axes = axes.flatten()
 
     if num_maps == 1:  # If only one map, axes is not an array
@@ -82,7 +82,7 @@ for metric in metric_names:
             metric_list = algo_group[metric].to_list()
             time_list = algo_group["time_cumsum"].to_list()
             mean_time, mean_run = average_runs(metric_list, time_list)
-            ax.plot(mean_time, mean_run, label=f"{algo_name}")
+            ax.plot(mean_time, mean_run, label=f"{algo_name}", linewidth=2)
             # ydata = list(itertools.chain(*algo_group[metric].to_list()))
             # xdata = list(itertools.chain(*algo_group["time_cumsum"].to_list()))
             # popt, pcov = curve_fit(func, xdata, ydata)

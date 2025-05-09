@@ -26,13 +26,15 @@ def construct_scen_path(scen_dir, map_name, k):
 
 # parameters
 map_names = [ "empty-8-8", "empty-32-32", "random-32-32-20", "warehouse-10-20-10-2-1", "ost003d", "den520d" ]
-agent_nums = [[8, 16, 24, 32], [150, 200, 250, 300, 350, 400, 450], [50, 100, 150, 200, 250], [100, 150, 200, 250, 300, 350, 400, 450], [100, 200, 300, 400, 500, 600, 700],
+agent_nums = [[8, 16, 24, 32], [150, 200, 250, 300, 350, 400, 450], [50, 100, 150, 200, 250], [100, 150, 200, 250, 300, 350, 400, 450, 500], [100, 200, 300, 400, 500, 600, 700, 800, 900],
     [ 100, 200, 300, 400, 500 ]]
 num_runs = 100 
-time_limit = 20
+time_limit = 20 
 mapf_benchmark_dir = "../MAPF-benchmark/"
 scen_dir = mapf_benchmark_dir + "mapf-scen-random/scen-random/"
 solver_path2 = "../papers/MAPF-LNS2/lns"
+# exp_name = "feasible"
+# use_restarts = False
 exp_name = "feasible_restarts"
 use_restarts = True
 results_file = exp_name + "_results"

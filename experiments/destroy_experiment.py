@@ -8,9 +8,8 @@ import sqlite3
 import pandas as pd
 
 max_iter = 2000
-time_limit = 20
 
-def construct_experiment(solver_path, map_path, scen_path, output_file_name, agent_num, seed, neighborhood_size, experiment_name, destroy_strategy):
+def construct_experiment(solver_path, map_path, scen_path, output_file_name, agent_num, seed, neighborhood_size, experiment_name, destroy_strategy, time_limit):
     """ Construct the input of subprocess.check_output to perform the experiment"""
     return [solver_path, '-m', map_path, '-a', scen_path, "-o", output_file_name + ".csv", "-k", str(agent_num), "--initAlgo", "PP", "--maxIterations",  str(max_iter), "--initLNS", "0", "--seed", str(seed), "-t", str(time_limit), "--stats", "./dest_exp/" + experiment_name, "--neighborSize", str(neighborhood_size), "--destoryStrategy", destroy_strategy, "--restarts", "1"]
 
@@ -31,7 +30,8 @@ def construct_scen_path(scen_dir, map_name, k):
 map_names = [ "empty-8-8", "empty-32-32", "random-32-32-20", "warehouse-10-20-10-2-1", "ost003d", "den520d" ]
 agent_nums = [[32], [200], [100], [150], [400], [500]]
 neighborhood_sizes = [4, 8, 16]
-num_runs = 40
+time_limits = [1, 5, 5, 5, 60, 60] 
+num_runs = 50
 results_file = "results_destroy"
 mapf_benchmark_dir = "../MAPF-benchmark/"
 scen_dir = mapf_benchmark_dir + "mapf-scen-random/scen-random/"
@@ -46,13 +46,14 @@ map_idx = 0
 for map_name in tqdm.tqdm(map_names, desc="maps", position=0):
     # print("Map:", map_name)
     map_path = mapf_benchmark_dir + "mapf-map/" + map_name + ".map"
+    time_limit = time_limits[map_idx]
 
     # list all scenes
     scenes = sort_strings_by_last_number([f for f in os.listdir(scen_dir) if f.startswith(map_name)])
 
     for neighborhood_size in neighborhood_sizes:
 
-        for agent_num in tqdm.tqdm(agent_nums[map_idx], desc="agent nums", position=1):
+        for agent_num in tqdm.tqdm(agent_nums[map_idx], desc="agent nums", position=1, leave=False):
             for i in tqdm.tqdm(range(num_runs), desc="runs", position=2, leave=False):
                 scen_name = os.path.splitext(scenes[i % len(scenes)])[0]
                 scen_name_stripped = scen_name[len(map_name)+1:]
@@ -69,7 +70,7 @@ for map_name in tqdm.tqdm(map_names, desc="maps", position=0):
 
                 for strategy in destroy_strategies:
                     experiment_name = "destroy_" + str(agent_num) + "agents_" + map_name + "_" + scen_name_stripped +  "_destroy_type_ORIGO_" + strategy + "_neighborhood_size_" + str(neighborhood_size) + "_" + str(int(i/len(scenes)))
-                    exp = construct_experiment(solver_path2, map_path, scen_path, results_file, agent_num, seed, neighborhood_size, experiment_name, strategy)
+                    exp = construct_experiment(solver_path2, map_path, scen_path, results_file, agent_num, seed, neighborhood_size, experiment_name, strategy, time_limit)
                     try:
                         res = subprocess.check_output(exp)[:-1].decode('UTF-8')
                     except:

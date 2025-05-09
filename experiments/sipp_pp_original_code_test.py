@@ -9,7 +9,7 @@ import pandas as pd
 
 def construct_experiment(solver_path, map_path, scen_path, output_file_name, agent_num, seed):
     """ Construct the input of subprocess.check_output to perform the experiment"""
-    return [solver_path, '-m', map_path, '-a', scen_path, "-o", output_file_name + ".csv", "-k", str(agent_num), "--initAlgo", "PP", "--maxIterations",  str(0), "--initLNS", "0", "--seed", str(seed), "-t", str(20)]
+    return [solver_path, '-m', map_path, '-a', scen_path, "-o", output_file_name + ".csv", "-k", str(agent_num), "--initAlgo", "PP", "--maxIterations",  str(0), "--initLNS", "0", "--seed", str(seed), "-t", str(1)]
 
 def find_last_number(s: str) -> int:
     """Extracts the last number from a string. Returns -1 if no number is found."""

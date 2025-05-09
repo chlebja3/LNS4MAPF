@@ -12,8 +12,8 @@ def read_file(name):
     return lines
 
 # exp_name = "feasible"
-# exp_name = "feasible_restarts"
-exp_name = "sipp_pp"
+exp_name = "feasible_restarts"
+# exp_name = "sipp_pp"
 
 if (exp_name == "feasible"):
     file_res = read_file("results_feasible.csv")
@@ -41,7 +41,7 @@ for experiment in file_res:
     idx1 = len("../MAPF-benchmark/mapf-scen-random/scen-random/")
     idx2 = instance_name.find(".scen")
     instance_name_stripped = instance_name[idx1:idx2]
-    file_name = exp_name + "_" + str(agent_num) + "agents_"+ instance_name_stripped + algo_name
+    file_name = exp_name + "_" + str(agent_num) + "agents_"+ instance_name_stripped + "_" + algo_name
     num = counts[file_name]
     counts[file_name] += 1
     file_name += "_" + str(num)
@@ -79,7 +79,7 @@ for experiment in file_res:
 algo_name, algo_parameters, sum_of_dist, feasible, init_sol_sum_of_cost, init_sol_makespan, experiment_time_cpu, experiment_time_wall, expanded, generated, preprocessing_time_cpu, preprocessing_time_wall, seed, sum_of_cost, makespan, iteration_time_cpu, iteration_time_wall, operators
         ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
         """, (
-            file_name, exp_name, map_name, instance_name_stripped, agent_num, algo_name, algo_parameters, sum_of_dist, feasible, sum_of_cost, makespan, computation_time_cpu, computation_time_wall, expanded, generated, preprocessing_time_cpu, preprocessing_time_wall, seed, json.dumps([sum_of_cost]), json.dumps([makespan]), json.dumps([computation_time_cpu]), json.dumps([computation_time_wall]), json.dumps(["ADAPTIVE"])
+            file_name, exp_name, map_name, instance_name_stripped + ".scen", agent_num, algo_name, algo_parameters, sum_of_dist, feasible, sum_of_cost, makespan, computation_time_cpu, computation_time_wall, expanded, generated, preprocessing_time_cpu, preprocessing_time_wall, seed, json.dumps([sum_of_cost]), json.dumps([makespan]), json.dumps([computation_time_cpu]), json.dumps([computation_time_wall]), json.dumps(["ADAPTIVE"])
         ))
         added += 1
     else:

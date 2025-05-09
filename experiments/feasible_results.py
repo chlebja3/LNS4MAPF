@@ -7,8 +7,8 @@ conn = sqlite3.connect("experiment_database.db")
 cursor = conn.cursor()
 
 # Load data into Pandas DataFrame
-exp_name = "feasible_restarts"
 # exp_name = "feasible"
+exp_name = "feasible_restarts"
 df = pd.read_sql_query("SELECT * FROM " + exp_name, conn)
 df["delay"] = df["init_sol_sum_of_cost"] - df["sum_of_dist"]
 
@@ -50,7 +50,7 @@ stats_feasible = df_feasible_grouped.agg({
 }).reset_index()
 
 # Define the metrics to plot
-metric_names = ["feasible", "experiment_time_cpu", "experiment_time_wall", "expanded", "init_sol_sum_of_cost", "delay"]
+metric_names = ["feasible", "experiment_time_cpu", "experiment_time_wall", "expanded"]
 
 # Get unique maps
 unique_maps = stats["map_name"].unique()
@@ -96,7 +96,43 @@ for metric in metric_names:
     handles, labels = axes[0].get_legend_handles_labels()
     fig.legend(handles, labels, loc='lower center', bbox_to_anchor=(0.5, 0.01),ncol=2)
     plt.tight_layout()
-    plt.subplots_adjust(bottom=0.18)
+    plt.subplots_adjust(bottom=0.13)
     plt.show()
 
+
+# GAP
+df_filtered["BKS"] = df_filtered.groupby(["map_name", "num_agents", "scene_name"])["init_sol_sum_of_cost"].transform('min')
+df_filtered["GAP"] = (df_filtered["init_sol_sum_of_cost"] - df_filtered["BKS"]) / df_filtered["BKS"]
+df_gap = df_filtered.groupby(["map_name", "num_agents", "algo_name"])
+stats_gap = df_gap.agg({
+    "GAP" : ["mean"] 
+}).reset_index()
+
+fig, axes = plt.subplots(nrows=3, ncols=2, figsize=(6, 10), sharey=False)
+axes = axes.flatten()
+
+if num_maps == 1:  # If only one map, axes is not an array
+    axes = [axes]
+
+# Iterate over each map
+for i, (map_name, map_group) in enumerate(stats_gap.groupby('map_name')):
+    # print("map_name:", map_name)
+    ax = axes[i]
+
+    # Plot each algorithm
+    for algo_name, algo_group in map_group.groupby('algo_name'):
+        ax.plot(algo_group["num_agents"], algo_group[("GAP", "mean")], marker='o', label=f"{algo_name}")
+        # print("Algo name:", algo_name)
+        # print(algo_group[(metric, "mean")])
+
+    ax.set_title(map_name)
+    ax.set_xlabel("Number of Agents")
+    ax.set_ylabel("GAP [%]")  # Only label Y-axis on first subplot
+    ax.grid(True)
+
+handles, labels = axes[0].get_legend_handles_labels()
+fig.legend(handles, labels, loc='lower center', bbox_to_anchor=(0.5, 0.01),ncol=2)
+plt.tight_layout()
+plt.subplots_adjust(bottom=0.13)
+plt.show()
 

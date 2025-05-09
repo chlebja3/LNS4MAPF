@@ -30,7 +30,7 @@ def construct_scen_path(scen_dir, map_name, k):
 # parameters
 map_names = [ "empty-8-8", "empty-32-32", "random-32-32-20", "warehouse-10-20-10-2-1", "ost003d", "den520d" ]
 agent_nums = [[32], [200], [100], [150], [400], [500]]
-num_runs = 40
+num_runs = 50
 results_file = "results_destroy_initsol"
 mapf_benchmark_dir = "../MAPF-benchmark/"
 scen_dir = mapf_benchmark_dir + "mapf-scen-random/scen-random/"

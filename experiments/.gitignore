@@ -1,3 +1,5 @@
+/dest_sols/
+/repair_sols/
 experiment_database.db
 *.swp
 *.csv
