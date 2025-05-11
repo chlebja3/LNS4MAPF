@@ -54,15 +54,15 @@ TEST_F(ConstraintTableTest, SingleConstraint)
   EXPECT_EQ(table->get_agents_counts(7).begin()->second, 1);
 
   // test that there is no constraint before
-  EXPECT_EQ(table->get_blocking_agent(6, 7, 2), -1);
+  EXPECT_EQ(table->get_blocking_agent(6, 7, 2), std::make_pair(-1, -1));
 
   // test that the constraint is stored correctly
-  EXPECT_EQ(table->get_blocking_agent(6, 7, 3), 0);
-  EXPECT_EQ(table->get_blocking_agent(6, 7, 4), 0);
-  EXPECT_EQ(table->get_blocking_agent(6, 7, 5), 0);
+  EXPECT_EQ(table->get_blocking_agent(6, 7, 3), std::make_pair(0, -1));
+  EXPECT_EQ(table->get_blocking_agent(6, 7, 4), std::make_pair(0, -1));
+  EXPECT_EQ(table->get_blocking_agent(6, 7, 5), std::make_pair(0, -1));
 
   // test that there is no constraint after
-  EXPECT_EQ(table->get_blocking_agent(6, 7, 6), -1);
+  EXPECT_EQ(table->get_blocking_agent(6, 7, 6), std::make_pair(-1, -1));
 }
 
 // Adding multiple constraints and ensuring safe intervals are computed correctly
@@ -83,17 +83,17 @@ TEST_F(ConstraintTableTest, MultipleSingleConstraints)
   }
 
   // test that there is no constraint before
-  EXPECT_EQ(table->get_blocking_agent(6, 7, 1), -1);
+  EXPECT_EQ(table->get_blocking_agent(6, 7, 1), std::make_pair(-1, -1));
 
   // test that the constraints are stored correctly
-  EXPECT_EQ(table->get_blocking_agent(6, 7, 2), 0);
-  EXPECT_EQ(table->get_blocking_agent(8, 7, 5), 1);
-  EXPECT_EQ(table->get_blocking_agent(6, 7, 6), 2);
-  EXPECT_EQ(table->get_blocking_agent(6, 7, 10), 3);
-  EXPECT_EQ(table->get_blocking_agent(8, 7, 15), 3);
+  EXPECT_EQ(table->get_blocking_agent(6, 7, 2), std::make_pair(0, -1));
+  EXPECT_EQ(table->get_blocking_agent(8, 7, 5), std::make_pair(1, -1));
+  EXPECT_EQ(table->get_blocking_agent(6, 7, 6), std::make_pair(2, -1));
+  EXPECT_EQ(table->get_blocking_agent(6, 7, 10), std::make_pair(3, -1));
+  EXPECT_EQ(table->get_blocking_agent(8, 7, 15), std::make_pair(3, -1));
 
   // test that there is no constraint after
-  EXPECT_EQ(table->get_blocking_agent(6, 7, 16), -1);
+  EXPECT_EQ(table->get_blocking_agent(6, 7, 16), std::make_pair(-1, -1));
 }
 
 // Removing a constraint and ensuring safe intervals update
@@ -101,14 +101,14 @@ TEST_F(ConstraintTableTest, RemoveConstraint)
 {
   TimePoint tp(0, {1, 2});
   table->add_constraint(tp, 0);
-  EXPECT_EQ(table->get_blocking_agent(1, 0, 1), 0);
-  EXPECT_EQ(table->get_blocking_agent(3, 0, 2), 0);
+  EXPECT_EQ(table->get_blocking_agent(1, 0, 1), std::make_pair(0, -1));
+  EXPECT_EQ(table->get_blocking_agent(3, 0, 2), std::make_pair(0, -1));
   EXPECT_EQ(table->get_agents_counts(0).size(), 1);
   table->remove_constraint(tp, 0);
 
   // test that the constrained is removed
-  EXPECT_EQ(table->get_blocking_agent(1, 0, 1), -1);
-  EXPECT_EQ(table->get_blocking_agent(3, 0, 2), -1);
+  EXPECT_EQ(table->get_blocking_agent(1, 0, 1), std::make_pair(-1, -1));
+  EXPECT_EQ(table->get_blocking_agent(3, 0, 2), std::make_pair(-1, -1));
   EXPECT_EQ(table->get_agents_counts(0).size(), 0);
 }
 
@@ -128,10 +128,10 @@ TEST_F(ConstraintTableTest, DynamicAddRemove)
   EXPECT_EQ(table->get_agents_counts(4).begin()->second, 1);
 
   // test that the first constraint is removed
-  EXPECT_EQ(table->get_blocking_agent(3, 4, 3), -1);
+  EXPECT_EQ(table->get_blocking_agent(3, 4, 3), std::make_pair(-1, -1));
 
   // test that the second constraint stays
-  EXPECT_EQ(table->get_blocking_agent(3, 4, 6), 1);
+  EXPECT_EQ(table->get_blocking_agent(3, 4, 6), std::make_pair(1, -1));
 }
 
 // Constraint removal from empty table if in debug mode
@@ -167,17 +167,17 @@ TEST_F(ConstraintTableTest, AddPathConstraints)
   table->add_constraints(path2, 2);
 
   // test first edge conflict
-  EXPECT_EQ(table->get_blocking_agent(7, 4, 2), 1);                                      // regular conflict
-  EXPECT_EQ(table->get_blocking_agent(7, 4, 3), 1) << "There should be edge conflict.";  // edge conflict
+  EXPECT_EQ(table->get_blocking_agent(7, 4, 2), std::make_pair(1, -1));                                      // regular conflict
+  EXPECT_EQ(table->get_blocking_agent(7, 4, 3), std::make_pair(-1, 1)) << "There should be edge conflict.";  // edge conflict
 
   // test going to 4, from a non constrained position
-  EXPECT_EQ(table->get_blocking_agent(1, 4, 3), -1) << "There should be no conflict.";
-  EXPECT_EQ(table->get_blocking_agent(1, 4, 9), -1) << "There should be no conflict.";
+  EXPECT_EQ(table->get_blocking_agent(1, 4, 3), std::make_pair(-1, -1)) << "There should be no conflict.";
+  EXPECT_EQ(table->get_blocking_agent(1, 4, 9), std::make_pair(-1, -1)) << "There should be no conflict.";
 
   // test second edge conflict
-  EXPECT_EQ(table->get_blocking_agent(7, 4, 5), -1);
-  EXPECT_EQ(table->get_blocking_agent(7, 4, 6), 2);  // regular conflict
-  EXPECT_EQ(table->get_blocking_agent(7, 4, 9), 2);  // edge  conflict
+  EXPECT_EQ(table->get_blocking_agent(7, 4, 5), std::make_pair(-1, -1));
+  EXPECT_EQ(table->get_blocking_agent(7, 4, 6), std::make_pair(2, -1));  // regular conflict
+  EXPECT_EQ(table->get_blocking_agent(7, 4, 9), std::make_pair(-1, 2));  // edge  conflict
 }
 
 // check that the edge conflict is resolved correctly when there are more constraints in the list
@@ -187,8 +187,8 @@ TEST_F(ConstraintTableTest, EdgeConflictMoreConstraints)
                                   TimePoint(4, {9, 10})};
   table->add_constraints(path1, 1);
 
-  EXPECT_EQ(table->get_blocking_agent(7, 4, 2), 1) << "There should be edge conflict.";
-  EXPECT_EQ(table->get_blocking_agent(7, 4, 7), 1) << "There should be edge conflict.";
+  EXPECT_EQ(table->get_blocking_agent(7, 4, 2), std::make_pair(-1, 1)) << "There should be edge conflict.";
+  EXPECT_EQ(table->get_blocking_agent(7, 4, 7), std::make_pair(-1, 1)) << "There should be edge conflict.";
 
   // test agent counts
   ASSERT_EQ(table->get_agents_counts(4).size(), 1) << "There should be one agent.";
@@ -227,7 +227,11 @@ TEST_F(ConstraintTableTest, EdgeConstraintTableRemove)
 }
 
 // add an existing edge constraint
+#ifdef NDEBUG
+TEST_F(ConstraintTableTest, DISABLED_EdgeConstraintTableAddExisting)
+#else
 TEST_F(ConstraintTableTest, EdgeConstraintTableAddExisting)
+#endif
 {
   // add a constraint to the table
   table->edge_constraint_table.add(1, 2, 3, 0);
@@ -237,7 +241,11 @@ TEST_F(ConstraintTableTest, EdgeConstraintTableAddExisting)
 }
 
 // add an invalid edge constraint
+#ifdef NDEBUG
+TEST_F(ConstraintTableTest, DISABLED_EdgeConstraintTableAddInvalid)
+#else
 TEST_F(ConstraintTableTest, EdgeConstraintTableAddInvalid)
+#endif
 {
   // expect assert death
   EXPECT_DEATH(table->edge_constraint_table.add(1, 1, 2, 0), "Invalid edge constraint.");

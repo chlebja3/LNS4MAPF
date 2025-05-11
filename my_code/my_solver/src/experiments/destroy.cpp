@@ -38,6 +38,7 @@
   }
 
 #define MAX_ITER 2000
+// #define MAX_ITER 0
 
 #define TIME_LIMITS    \
   {                    \

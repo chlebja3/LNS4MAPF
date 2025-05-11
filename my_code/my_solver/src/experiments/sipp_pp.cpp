@@ -32,11 +32,6 @@
     }                                                                                                              \
   }
 
-#define SUBOPTIMALITIES        \
-  {                            \
-    1.0, 1.01, 1.02, 1.05, 1.1 \
-  }
-
 #define TIME_LIMITS  \
   {                  \
     1, 1, 1, 1, 1, 1 \

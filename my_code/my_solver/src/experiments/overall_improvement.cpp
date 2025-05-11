@@ -35,10 +35,10 @@
 #define P_VALUE 5
 #define NEIGHBORHOOD_SIZE 8
 
-#define MAX_ITER 3000
+#define MAX_ITER 10000
 #define TIME_LIMITS    \
   {                    \
-    2, 5, 5, 5, 30, 30 \
+    1, 5, 5, 5, 30, 30 \
   }
 
 static void experiment_function(LNS& lns);

@@ -150,7 +150,11 @@ TEST_F(SafeIntervalTableTest, RemoveFromEmptyTable)
 }
 
 // Constraint removal when no constraint exists
+#ifdef NDEBUG
+TEST_F(SafeIntervalTableTest, DISABLED_RemoveNonExistentConstraint)
+#else
 TEST_F(SafeIntervalTableTest, RemoveNonExistentConstraint)
+#endif
 {
   TimePoint tp(3, {3, 6});
   // test the second method
@@ -240,7 +244,11 @@ TEST_F(SafeIntervalTableTest, EdgeConstraintTableRemove)
 }
 
 // add an existing edge constraint
+#ifdef NDEBUG
+TEST_F(SafeIntervalTableTest, DISABLED_EdgeConstraintTableAddExisting)
+#else
 TEST_F(SafeIntervalTableTest, EdgeConstraintTableAddExisting)
+#endif
 {
   // add a constraint to the table
   table->edge_constraint_table.add(1, 2, 3);
@@ -250,7 +258,11 @@ TEST_F(SafeIntervalTableTest, EdgeConstraintTableAddExisting)
 }
 
 // add an invalid edge constraint
+#ifdef NDEBUG
+TEST_F(SafeIntervalTableTest, DISABLED_EdgeConstraintTableAddInvalid)
+#else
 TEST_F(SafeIntervalTableTest, EdgeConstraintTableAddInvalid)
+#endif
 {
   // expect assert death
   EXPECT_DEATH(table->edge_constraint_table.add(1, 1, 2), "Invalid edge constraint.");

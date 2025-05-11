@@ -42,6 +42,7 @@
 #define NEIGHBORHOOD_SIZE 8
 
 #define MAX_ITER 10000
+// #define MAX_ITER 0
 #define TIME_LIMIT 20
 
 #define TIME_LIMITS    \
@@ -58,6 +59,13 @@ auto main(int argc, char** argv) -> int
   // prepare the algorithms
   std::vector<Algorithm> algorithms;
   std::vector<double>    suboptimalities(SUBOPTIMALITIES);
+
+  // original version
+  {
+    LNS_settings lns_settings(MAX_ITER, TIME_LIMIT, {DESTROY_TYPE::RANDOMWALK, NEIGHBORHOOD_SIZE},
+                              {SIPP_implementation::SIPP_mapf_lns, INFO_type::experiment, 1.0});
+    algorithms.emplace_back(SIPP_implementation::SIPP_mapf_lns, lns_settings);
+  }
 
   // optimal version
   {
@@ -96,16 +104,5 @@ auto main(int argc, char** argv) -> int
 
 void experiment_function(LNS& lns)
 {
-  LNS_settings lns_settings_orig = lns.settings;
-  // find initial solution by the same algorithm for all experiments
-  lns.settings = LNS_settings(0, TIME_LIMIT, {DESTROY_TYPE::RANDOM_CHOOSE, NEIGHBORHOOD_SIZE},
-                              {SIPP_implementation::SIPP_suboptimal_ap, INFO_type::experiment, 1.0}, true);
-
   lns.solve();
-  if (lns.solution.feasible)
-  {
-    // switch settings to the original ones and run the LNS
-    lns.settings = lns_settings_orig;
-    lns.solve();
-  }
 }

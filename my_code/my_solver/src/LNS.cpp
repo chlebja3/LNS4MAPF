@@ -415,7 +415,7 @@ void LNS::destroy_randomwalk(Solution& sol) const
   assertm(upperbound > 0, "Upperbound is too small.");
   // perform the first randomwalk from start - not in pseudocode, but in MAPF-LNS2 implementation
   int chosen_agent = most_delayed;
-  if (!random_walk(chosen_agent, settings.destroy_settings.size, sol.paths[most_delayed][0].location, 0, upperbound, chosen))
+  if (!random_walk(chosen_agent, settings.destroy_settings.size, sol.paths[chosen_agent][0].location, 0, upperbound, chosen))
   {
     // perform the random walk again, maximum 10 iterations
     for (int i = 0; i < 10; i++)
@@ -426,6 +426,7 @@ void LNS::destroy_randomwalk(Solution& sol) const
 
       // choose location
       int rw_start_location = location_at_time(sol.paths[chosen_agent], chosen_t);
+      assertm(rw_start_location >= 0, "Invalid start location of randomwalk");
 
       // perform randomwalk
       if (random_walk(chosen_agent, settings.destroy_settings.size, rw_start_location, chosen_t, upperbound, chosen))
@@ -475,6 +476,7 @@ auto LNS::random_walk(int agent_num, int neighborhood_size, int start_location, 
     next_locations.push_back(curr);  // agent can also stay
     std::shuffle(next_locations.begin(), next_locations.end(), rnd_generator);
     // try all possible neighbors in random order
+    bool moved = false;
     for (auto loc : next_locations)
     {
       int next_h_val = instance.get_heuristic_distance(agent_num, loc);
@@ -482,22 +484,34 @@ auto LNS::random_walk(int agent_num, int neighborhood_size, int start_location, 
       if (t + 1 + next_h_val < upperbound)
       {
         // get the agent that is in conflict and add it to the neighborhood
-        int conflicting_agent = constraint_table.get_blocking_agent(curr, loc, t + 1);
+        auto [conflicting_agent_vertex, conflicting_agent_edge] = constraint_table.get_blocking_agent(curr, loc, t + 1);
 
         // if there is an agent in collision, add it to the neighborhood
-        if (conflicting_agent != -1)
+        if (conflicting_agent_vertex != -1)
         {
-          chosen.insert(conflicting_agent);
+          chosen.insert(conflicting_agent_vertex);
         }
 
-        curr = loc;
+        if (conflicting_agent_edge != -1)
+        {
+          chosen.insert(conflicting_agent_edge);
+        }
+
+        curr  = loc;
+        moved = true;
         break;
       }
     }
     // test whether enough agents selected
-    if (static_cast<int>(chosen.size()) == neighborhood_size)
+    if (static_cast<int>(chosen.size()) >= neighborhood_size)
     {
       return true;
+    }
+
+    // if none of the next locations was valid, return
+    if (!moved)
+    {
+      break;
     }
   }
   assertm(static_cast<int>(chosen.size()) <= neighborhood_size, "Enough agents selected, but false returned.");
@@ -593,16 +607,18 @@ void LNS::get_intersection_agents(std::unordered_set<int>& neighborhood, int cur
   while (static_cast<int>(neighborhood.size()) < settings.destroy_settings.size && t + delta <= t_max && t - delta >= 0)
   {
     // find the agent, that blocks the cell at time t + delta
-    int blocking_agent_1 = constraint_table.get_blocking_agent(current, current, t + delta);
-    if (blocking_agent_1 >= 0)
-    {
-      neighborhood.insert(blocking_agent_1);
-    }
+    auto [blocking_agent_1, blocking_agent_2] = constraint_table.get_blocking_agent(current, current, t + delta);
     // find the agent, that blocks the cell at time t - delta
-    int blocking_agent_2 = constraint_table.get_blocking_agent(current, current, t - delta);
-    if (static_cast<int>(neighborhood.size()) < settings.destroy_settings.size && blocking_agent_2 >= 0)
+    auto [blocking_agent_3, blocking_agent_4] = constraint_table.get_blocking_agent(current, current, t - delta);
+
+    // add the agents to the neighborhood
+    std::array<int, 4> blocking_agents = {blocking_agent_1, blocking_agent_2, blocking_agent_3, blocking_agent_4};
+    for (auto blocking_agent : blocking_agents)
     {
-      neighborhood.insert(blocking_agent_2);
+      if (blocking_agent >= 0 && static_cast<int>(neighborhood.size()) < settings.destroy_settings.size)
+      {
+        neighborhood.insert(blocking_agent);
+      }
     }
     delta++;
   }
@@ -706,7 +722,8 @@ void LNS::destroy_blocked(Solution& sol) const
     {
       from = std::prev(sol.paths[i].end(), 2)->location;
     }
-    if (constraint_table.get_blocking_agent(from, loc, reach_time - 1) != -1)
+    auto [blocking_agent_1, blocking_agent_2] = constraint_table.get_blocking_agent(from, loc, reach_time - 1);
+    if (blocking_agent_1 != -1 || blocking_agent_2 != -1)
     {
       blocked_agents.push_back(i);
     }

@@ -190,7 +190,7 @@ void ConstraintTable::remove_constraints_parallel(const TimePointPath& path, int
 }
 #endif
 
-auto ConstraintTable::get_blocking_agent(int from, int to, int time) const -> int
+auto ConstraintTable::get_blocking_agent(int from, int to, int time) const -> std::pair<int, int>
 {
   // check the location is valid
   assertm(instance.get_map_data().is_in(from) && instance.get_map_data().is_in(to), "Invalid location.");
@@ -205,27 +205,35 @@ auto ConstraintTable::get_blocking_agent(int from, int to, int time) const -> in
   // if there are no constraints, return -1 (no agent blocking the square)
   if (cur_TI_list.empty())
   {
-    return -1;
+    return std::make_pair(-1, -1);
   };
 
   // find the constraint
+  int vertex_constraint = -1;
   for (const auto& it : cur_TI_list)
   {
     const TimeInterval& constraint_tp = it.first;
     if (constraint_tp.t_min <= time && constraint_tp.t_max >= time)
     {
       // return the agent that created the constraint
-      return it.second;
+      vertex_constraint = it.second;
+      break;
+    }
+    // skip constraints that are too late
+    if (constraint_tp.t_min > time)
+    {
+      break;
     }
   }
 
   // find edge constraint
+  int edge_constraint = -1;
   if (from != to)
   {
     // we want to look for opposite edge, because there can not be any edge ending in to location without location constraint
-    return edge_constraint_table.get(to, from, time);
+    edge_constraint = edge_constraint_table.get(to, from, time);
   }
-  return -1;
+  return std::make_pair(vertex_constraint, edge_constraint);
 }
 
 auto ConstraintTable::get_blocking_agents(int location, int time_min) const -> std::vector<int>

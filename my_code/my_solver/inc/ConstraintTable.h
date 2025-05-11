@@ -69,7 +69,7 @@ public:
   void               add_constraints(const TimePointPath& path, int agent_num);
   void               remove_constraint(const TimePoint& timepoint, int agent_num);
   void               remove_constraints(const TimePointPath& path, int agent_num);
-  [[nodiscard]] auto get_blocking_agent(int from, int to, int time) const -> int;
+  [[nodiscard]] auto get_blocking_agent(int from, int to, int time) const -> std::pair<int, int>;
   [[nodiscard]] auto get_blocking_agents(int location, int time_min) const -> std::vector<int>;
   [[nodiscard]] auto get_agents_counts(int location) const -> const std::unordered_map<int, int>&
   {
