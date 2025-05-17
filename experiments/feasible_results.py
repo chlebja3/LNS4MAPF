@@ -50,15 +50,17 @@ stats_feasible = df_feasible_grouped.agg({
 }).reset_index()
 
 # Define the metrics to plot
-metric_names = ["feasible", "experiment_time_cpu", "experiment_time_wall", "expanded"]
+metric_names = ["feasible", "experiment_time_wall", "expanded", "init_sol_sum_of_cost"]
 
 # Get unique maps
 unique_maps = stats["map_name"].unique()
 num_maps = len(unique_maps)
 
+yaxis_names = {"feasible" : "Success rate [-]","experiment_time_wall" : "Time [s]", "expanded" : "Expanded nodes [-]", "init_sol_sum_of_cost" : "Sum of costs [-]" }
+
 # Iterate over each metric
 for metric in metric_names:
-    fig, axes = plt.subplots(nrows=3, ncols=2, figsize=(6, 10), sharey=False)
+    fig, axes = plt.subplots(nrows=3, ncols=2, figsize=(6, 7), sharey=False)
     axes = axes.flatten()
 
     if num_maps == 1:  # If only one map, axes is not an array
@@ -71,11 +73,24 @@ for metric in metric_names:
 
             # Plot each algorithm
             for algo_name, algo_group in map_group.groupby('algo_name'):
-                ax.plot(algo_group["num_agents"], algo_group[(metric, "mean")], marker='o', label=f"{algo_name}")
+                display_name = "MAPF-LNS2"
+                if "mapf_lns" in algo_name:
+                    display_name = "original_heuristic"
+                elif "mine" in algo_name:
+                    display_name = "multiple_heuristics"
+                elif "suboptimal" in algo_name:
+                    display_name = "suboptimal"
+                    if exp_name != "feasible":
+                        if "w_1,10" in algo_name:
+                            display_name += " w = 1.1"
+                        else:
+                            display_name += " w = 1.0"
+
+                ax.plot(algo_group["num_agents"], algo_group[(metric, "mean")], marker='o', label=f"{display_name}")
 
             ax.set_title(map_name)
             ax.set_xlabel("Number of Agents")
-            ax.set_ylabel("Percentage of feasible")  # Only label Y-axis on first subplot
+            ax.set_ylabel(yaxis_names["feasible"])
             ax.grid(True)
     else:
         for i, (map_name, map_group) in enumerate(stats_feasible.groupby('map_name')):
@@ -84,19 +99,32 @@ for metric in metric_names:
 
             # Plot each algorithm
             for algo_name, algo_group in map_group.groupby('algo_name'):
-                ax.plot(algo_group["num_agents"], algo_group[(metric, "mean")], marker='o', label=f"{algo_name}")
+                display_name = "MAPF-LNS2"
+                if "mapf_lns" in algo_name:
+                    display_name = "original_heuristic"
+                elif "mine" in algo_name:
+                    display_name = "multiple_heuristics"
+                elif "suboptimal" in algo_name:
+                    display_name = "suboptimal"
+                    if exp_name != "feasible":
+                        if "w_1,10" in algo_name:
+                            display_name += " w = 1.1"
+                        else:
+                            display_name += " w = 1.0"
+                ax.plot(algo_group["num_agents"], algo_group[(metric, "mean")], marker='o', label=f"{display_name}")
                 # print("Algo name:", algo_name)
                 # print(algo_group[(metric, "mean")])
 
             ax.set_title(map_name)
             ax.set_xlabel("Number of Agents")
-            ax.set_ylabel(metric)  # Only label Y-axis on first subplot
+            
+            ax.set_ylabel(yaxis_names[metric])
             ax.grid(True)
 
     handles, labels = axes[0].get_legend_handles_labels()
-    fig.legend(handles, labels, loc='lower center', bbox_to_anchor=(0.5, 0.01),ncol=2)
+    fig.legend(handles, labels, loc='lower center', bbox_to_anchor=(0.5, 0.01),ncol=3)
     plt.tight_layout()
-    plt.subplots_adjust(bottom=0.13)
+    plt.subplots_adjust(bottom=0.15)
     plt.show()
 
 
@@ -108,7 +136,7 @@ stats_gap = df_gap.agg({
     "GAP" : ["mean"] 
 }).reset_index()
 
-fig, axes = plt.subplots(nrows=3, ncols=2, figsize=(6, 10), sharey=False)
+fig, axes = plt.subplots(nrows=3, ncols=2, figsize=(6, 7), sharey=False)
 axes = axes.flatten()
 
 if num_maps == 1:  # If only one map, axes is not an array
@@ -121,18 +149,30 @@ for i, (map_name, map_group) in enumerate(stats_gap.groupby('map_name')):
 
     # Plot each algorithm
     for algo_name, algo_group in map_group.groupby('algo_name'):
-        ax.plot(algo_group["num_agents"], algo_group[("GAP", "mean")], marker='o', label=f"{algo_name}")
+        display_name = "MAPF-LNS2"
+        if "mapf_lns" in algo_name:
+            display_name = "original_heuristic"
+        elif "mine" in algo_name:
+            display_name = "multiple_heuristics"
+        elif "suboptimal" in algo_name:
+            display_name = "suboptimal"
+            if exp_name != "feasible":
+                if "w_1,10" in algo_name:
+                    display_name += " w = 1.1"
+                else:
+                    display_name += " w = 1.0"
+        ax.plot(algo_group["num_agents"], algo_group[("GAP", "mean")], marker='o', label=f"{display_name}")
         # print("Algo name:", algo_name)
         # print(algo_group[(metric, "mean")])
 
     ax.set_title(map_name)
     ax.set_xlabel("Number of Agents")
-    ax.set_ylabel("GAP [%]")  # Only label Y-axis on first subplot
+    ax.set_ylabel("GAP [-]")  # Only label Y-axis on first subplot
     ax.grid(True)
 
 handles, labels = axes[0].get_legend_handles_labels()
-fig.legend(handles, labels, loc='lower center', bbox_to_anchor=(0.5, 0.01),ncol=2)
+fig.legend(handles, labels, loc='lower center', bbox_to_anchor=(0.5, 0.01),ncol=3)
 plt.tight_layout()
-plt.subplots_adjust(bottom=0.13)
+plt.subplots_adjust(bottom=0.15)
 plt.show()
 

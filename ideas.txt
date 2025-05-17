@@ -1,5 +1,6 @@
 ## ideas for improvement
 
+
 zmerit eecbs pro replan, casem vyzkouset eecbs kdyz pp nenajde reseni -> snaha zmensit pocet failed iterations, co znamena failed iteration? V komentari lns.h pisou, ze to je kdyz failne replanning, podle kodu take
 zkusit vymyslet rychlejsi replan -> vic iteraci
 done: prevest v experimentu solution cost na sum of delays
@@ -96,3 +97,23 @@ prohlednout implementaci sippu
 # promyslet co vse jsem udelal, jake experimenty na to testovani
 
 # spojit constraint table a safe interval table do jedne struktury, pak pujde zjistit cisla agentu co blokuji dane casy, v sippu pocitat kolikrat ktery agent blokuje ktereho a z toho pak udelat matici provazanosti agentu, chytry destroy, ktery vybere ty provanaze (a zaroven zpozdene)
+
+
+# porovnat separatne ap a ne ap verze
+# porovnani velikosti okoli v zavislosti na case
+# pridat do porovnani repairu mapl lns implementaci a idealne take puvodni implementaci
+
+# blocked destroy - preplanovat optimalnim algoritmem
+# neprumerovat begy v replanu, ale prolozit krivkou, zkusit pres seaborn
+
+# porovnat v textu GAP - spocist BKS - nejlepsi napric experimenty i naric behy pokud zname optimum, tak optimum, potom S - BKS/ BSK. Grafy taky GAP
+# neopakovat se v legende, jen parametry co se meni do popisku a pak popsat v popoisu obrazku
+# do overall improvement pridat mapf-lns
+# vic map ve finalnim experimentu
+# pridat do prace vysledky z paperu dalsich algoritmu, eecbs, banidt atd ve finalnim experimentu
+# filtrovani algoritmu do prilohy
+# par reprezentativnich instanci v halvnim textu, zbytek odkaz do prilohy
+# paralelizaci do priloh
+Figure 4.3 obrazky vedle sebe
+Z popisu obrazku odendat vysledky
+# diskuze do experimentu, samostatna kapitola neni treba
