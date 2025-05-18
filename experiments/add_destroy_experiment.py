@@ -42,22 +42,21 @@ for experiment in file_res:
     computation_times = []
     i = 0
     last = -1
-    feasible = (int(experiment[2]) > 0 and int(experiment[8]) == 0) # feasible when solution cost is not -1 and number of restarts is 0
-    if (feasible):
-        file_res2 = read_file("./dest_exp/" + file_name + "-LNS.csv")
-        for row in file_res2:
-            if (i == 0): 
-                i += 1
-                continue
-            sum_of_costs.append(int(row[1]))
-            if (i == 1):
-                computation_times.append(float(row[2]))
-            else:
-                computation_times.append(float(row[2]) - last)
+    file_res2 = read_file("./dest_exp/" + file_name + "-LNS.csv")
+    for row in file_res2:
+        if (i == 0): 
             i += 1
-            last = float(row[2])
-
-
+            continue
+        sum_of_costs.append(int(row[1]))
+        if (i == 1):
+            computation_times.append(float(row[2]))
+        else:
+            computation_times.append(float(row[2]) - last)
+        i += 1
+        last = float(row[2])
+    if (len(sum_of_costs) < 2):
+        print("Invalid instance")
+        exit()
     algo_parameters = "[]"
     computation_time_cpu = float(experiment[19])
     computation_time_wall = float(experiment[0])
@@ -84,7 +83,7 @@ for experiment in file_res:
 algo_name, algo_parameters, sum_of_dist, feasible, init_sol_sum_of_cost, init_sol_makespan, experiment_time_cpu, experiment_time_wall, expanded, generated, preprocessing_time_cpu, preprocessing_time_wall, seed, sum_of_cost, makespan, iteration_time_cpu, iteration_time_wall, operators
         ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
         """, (
-            file_name, "destroy", map_name, instance_name_stripped, agent_num, algo_name, algo_parameters, sum_of_dist, feasible, sum_of_cost, makespan, computation_time_cpu, computation_time_wall, expanded, generated, preprocessing_time_cpu, preprocessing_time_wall, seed, json.dumps(sum_of_costs), json.dumps([makespan]), json.dumps(computation_times), json.dumps(computation_times), json.dumps(["ADAPTIVE"])
+            file_name, "destroy", map_name, instance_name_stripped + ".scen", agent_num, algo_name, algo_parameters, sum_of_dist, True, sum_of_cost, makespan, computation_time_cpu, computation_time_wall, expanded, generated, preprocessing_time_cpu, preprocessing_time_wall, seed, json.dumps(sum_of_costs), json.dumps([makespan]), json.dumps(computation_times), json.dumps(computation_times), json.dumps(["ADAPTIVE"])
         ))
         added += 1
     else:
