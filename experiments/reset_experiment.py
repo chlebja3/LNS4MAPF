@@ -7,8 +7,8 @@ conn = sqlite3.connect("experiment_database.db")
 cursor = conn.cursor()
 
 # experiment_name = "influence_of_ap"
-# experiment_name = "repair"
-experiment_name = "destroy"
+experiment_name = "repair"
+# experiment_name = "destroy"
 # experiment_name = "feasible_restarts"
 # experiment_name = "sipp_pp"
 # experiment_name = "overall_improvement"

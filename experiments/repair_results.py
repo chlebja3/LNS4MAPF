@@ -34,7 +34,7 @@ def plot_algos(algorithms):
     for metric in metric_names:
 
         # iterate over neighborhood sizes
-        fig, axes = plt.subplots(nrows=3, ncols=2, figsize=(10, 10), sharey=False)
+        fig, axes = plt.subplots(nrows=3, ncols=2, figsize=(7, 8), sharey=False)
         axes = axes.flatten()
 
         if num_maps == 1:  # If only one map, axes is not an array
@@ -85,8 +85,12 @@ conn.close()
 df['iteration_time_cpu'] = df['iteration_time_cpu'].apply(json.loads)
 df['iteration_time_wall'] = df['iteration_time_wall'].apply(json.loads)
 df['time_cumsum'] = df['iteration_time_wall'].apply(np.cumsum)
-df['makespan'] = df['makespan'].apply(json.loads)
+# df['makespan'] = df['makespan'].apply(json.loads)
 df['sum_of_cost'] = df['sum_of_cost'].apply(json.loads)
+
+df['last_sum_of_cost'] = df['sum_of_cost'].apply(lambda x: x[-1] if x else None)
+df["BKS"] = df.groupby(["map_name", "num_agents", "scene_name"])["last_sum_of_cost"].transform('min')
+df["GAP"] = df.apply(lambda row: [(val - row["BKS"]) / row["BKS"] for val in row["sum_of_cost"]], axis=1)
 
 df_feasible = df[df["feasible"] == 1]
 
@@ -104,4 +108,5 @@ metric_names = ["sum_of_cost"]
 unique_maps = df["map_name"].unique()
 num_maps = len(unique_maps)
 x_axis_iteration = False
+plot_algos([""])
 

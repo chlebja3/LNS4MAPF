@@ -15,6 +15,22 @@ def find_last_number(s: str) -> int:
         return int(numbers[-1])
     return -1
 
+def find_last_number2(s: str) -> int:
+    """Extracts the last number from a string. Returns -1 if no number is found."""
+    numbers = re.findall(r'\d+', s)  # Find all numbers in the string
+    if numbers:
+        return (int(numbers[-1]), s)
+    return (-1, s) 
+
+def sort_strings_by_last_number(strings: list) -> list:
+    """Sorts a list of strings based on the last number found in each string."""
+    return sorted(strings, key=find_last_number2)
+
+def argsort_strings_by_last_number(strings: list) -> list:
+    """Sorts a list of strings based on the last number found in each string."""
+    rng  = list(range(len(strings)))
+    return sorted(rng, key=lambda a, strings=strings : find_last_number2(strings[a]))
+
 def average_runs(x, times, max_t):
     t = np.linspace(0, max_t, 1000)
     costs = np.array([np.interp(t, time, run) for time, run in zip(times, x)])
@@ -65,9 +81,13 @@ def plot_algos(algorithms, algo_aliases, neighborhood_sizes, metric, df_filtered
 
 # Put a legend below current axis
         handles, labels = axes[0].get_legend_handles_labels()
-        fig.legend(handles, labels, loc='lower center', bbox_to_anchor=(0.5, 0.01),ncol=3)
+        order = np.argsort(labels)
+        handles, labels = [handles[idx] for idx in order], [labels[idx] for idx in order]
+        ncols = 3
+        if (len(handles) == 4): ncols = 2
+        fig.legend(handles, labels, loc='lower center', bbox_to_anchor=(0.5, 0.01),ncol=ncols)
         plt.tight_layout()
-        if (len(handles) > 5):
+        if (len(handles) >= 4):
             plt.subplots_adjust(bottom=0.14)
         else:
             plt.subplots_adjust(bottom=0.12)
@@ -111,6 +131,8 @@ def plot_algos_time(algorithms, algo_aliases, max_times, metric, df_filtered):
 
 # Put a legend below current axis
     handles, labels = axes[0].get_legend_handles_labels()
+    order = argsort_strings_by_last_number(labels)
+    handles, labels = [handles[idx] for idx in order], [labels[idx] for idx in order]
     fig.legend(handles, labels, loc='lower center', bbox_to_anchor=(0.5, 0.01),ncol=3)
     plt.tight_layout()
     if (len(handles) > 5):
@@ -152,11 +174,14 @@ num_maps = len(unique_maps)
 # the influence of adaptivness
 algos1 = ["Random", "RANDOM_n", "RandomWalk", "RANDOMWALK", "Intersection", "INTERSECTION"]
 algo_aliases = {"Adaptive_" : "adaptive_original", "Random_" : "random_original", "RandomWalk_" : "randomwalk_original", "Intersection_" : "intersection_original", "ADAPTIVE_" : "adaptive_mine", "RANDOM_n" : "random_mine", "RANDOMWALK_" : "randomwalk_mine", "RANDOM_CHOOSE_" : "randomchoose_mine", "INTERSECTION_" : "intersection_mine", "BLOCKED_":"blocked"}
-# plot_algos(algos1, algo_aliases, [4], "GAP", df)
-algos2 = ["Adaptive", "ADAPTIVE", "RANDOM_CHOOSE"]
-# plot_algos(algos2, algo_aliases, [8], "GAP", df)
+plot_algos(algos1, algo_aliases, [4], "GAP", df)
+algos2 = ["Adaptive", "ADAPTIVE", "RANDOM_CHOOSE", "RandomWalk"]
+plot_algos(algos2, algo_aliases, [8], "GAP", df)
 algos3 = ["RandomWalk", "RANDOMWALK", "BLOCKED"]
-# plot_algos(algos3, algo_aliases, [4, 8, 16], "GAP", df)
-algos4 = ["BLOCKED_neighborhood_size_4", "BLOCKED_neighborhood_size_8", "BLOCKED_neighborhood_size_16", "RandomWalk_neighborhood_size_4", "RandomWalk_neighborhood_size_8", "RandomWalk_neighborhood_size_16"]
-algo_aliases = {"BLOCKED_neighborhood_size_4" : "blocked N = 4", "BLOCKED_neighborhood_size_8" : "blocked N = 8", "BLOCKED_neighborhood_size_16" : "blocked N = 16", "RandomWalk_neighborhood_size_4" : "randomwalk N = 4", "RandomWalk_neighborhood_size_8" : "randomwalk N = 8", "RandomWalk_neighborhood_size_16" : "randomwalk N = 16"}
+plot_algos(algos3, algo_aliases, [4, 8, 16], "GAP", df)
+algo_aliases = {"RandomWalk_neighborhood_size_4" : "MAPF-LNS2 N = 4", "RandomWalk_neighborhood_size_8" : "MAPF-LNS2 N = 8", "RandomWalk_neighborhood_size_16" : "MAPF-LNS2 N = 16", "RANDOMWALK_neighborhood_size_4" : "my solver N = 4", "RANDOMWALK_neighborhood_size_8" : "my solver N = 8", "RANDOMWALK_neighborhood_size_16" : "my solver N = 16"}
+algos4 = ["RANDOMWALK_neighborhood_size_4", "RANDOMWALK_neighborhood_size_8", "RANDOMWALK_neighborhood_size_16", "RandomWalk_neighborhood_size_4", "RandomWalk_neighborhood_size_8", "RandomWalk_neighborhood_size_16"]
 plot_algos_time(algos4, algo_aliases, [45, 1, 0.2, 55, 1, 2], "GAP", df)
+algo_aliases = {"BLOCKED_neighborhood_size_4" : "blocked N = 4", "BLOCKED_neighborhood_size_8" : "blocked N = 8", "BLOCKED_neighborhood_size_16" : "blocked N = 16", "RandomWalk_neighborhood_size_4" : "randomwalk N = 4", "RandomWalk_neighborhood_size_8" : "randomwalk N = 8", "RandomWalk_neighborhood_size_16" : "randomwalk N = 16", "RANDOMWALK_neighborhood_size_16" : "randomwalk N = 16"}
+algos5 = ["BLOCKED_neighborhood_size_4", "BLOCKED_neighborhood_size_8", "BLOCKED_neighborhood_size_16", "RandomWalk_neighborhood_size_4", "RandomWalk_neighborhood_size_8", "RANDOMWALK_neighborhood_size_16"]
+plot_algos_time(algos5, algo_aliases, [45, 1, 0.2, 55, 1, 2], "GAP", df)
