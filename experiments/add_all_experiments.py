@@ -13,8 +13,8 @@ cursor = conn.cursor()
 # experiment_name = "feasible_restarts"
 # experiment_name = "sipp_pp"
 # experiment_name = "destroy"
-experiment_name = "repair"
-# experiment_name = "overall_improvement"
+# experiment_name = "repair"
+experiment_name = "overall_improvement"
 
 execute_str = "CREATE TABLE IF NOT EXISTS " + experiment_name + """ (
     id INTEGER PRIMARY KEY AUTOINCREMENT,

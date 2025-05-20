@@ -25,17 +25,17 @@ def argsort_strings_by_last_number(strings: list) -> list:
 def get_display_name(algo_name):
     display_name = "MAPF-LNS2"
     if "mapf_lns" in algo_name:
-        display_name = "original_heuristic"
+        display_name = "original heuristic"
     elif "mine" in algo_name:
         if "ap" in algo_name:
-            display_name = "optimal_ap"
+            display_name = "optimal ap"
         else:
             display_name = "optimal"
     elif "suboptimal" in algo_name:
         if exp_name == "influence_of_ap":
             display_name = "suboptimal"
             if "ap" in algo_name:
-                display_name += "_ap"
+                display_name += " ap"
             if "w_1,05" in algo_name:
                 display_name += " w = 1.05"
             else:
@@ -58,8 +58,8 @@ cursor = conn.cursor()
 
 # Load data into Pandas DataFrame
 # exp_name = "influence_of_ap"
-# exp_name = "influence_of_p"
-exp_name = "influence_of_w"
+exp_name = "influence_of_p"
+# exp_name = "influence_of_w"
 df = pd.read_sql_query("SELECT * FROM " + exp_name, conn)
 df["delay"] = df["init_sol_sum_of_cost"] - df["sum_of_dist"]
 

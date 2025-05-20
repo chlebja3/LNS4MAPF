@@ -173,7 +173,7 @@ num_maps = len(unique_maps)
 
 # the influence of adaptivness
 algos1 = ["Random", "RANDOM_n", "RandomWalk", "RANDOMWALK", "Intersection", "INTERSECTION"]
-algo_aliases = {"Adaptive_" : "adaptive_original", "Random_" : "random_original", "RandomWalk_" : "randomwalk_original", "Intersection_" : "intersection_original", "ADAPTIVE_" : "adaptive_mine", "RANDOM_n" : "random_mine", "RANDOMWALK_" : "randomwalk_mine", "RANDOM_CHOOSE_" : "randomchoose_mine", "INTERSECTION_" : "intersection_mine", "BLOCKED_":"blocked"}
+algo_aliases = {"Adaptive_" : "adaptive original", "Random_" : "random original", "RandomWalk_" : "randomwalk original", "Intersection_" : "intersection original", "ADAPTIVE_" : "adaptive mine", "RANDOM_n" : "random mine", "RANDOMWALK_" : "randomwalk mine", "RANDOM_CHOOSE_" : "randomchoose", "INTERSECTION_" : "intersection mine", "BLOCKED_":"blocked"}
 plot_algos(algos1, algo_aliases, [4], "GAP", df)
 algos2 = ["Adaptive", "ADAPTIVE", "RANDOM_CHOOSE", "RandomWalk"]
 plot_algos(algos2, algo_aliases, [8], "GAP", df)

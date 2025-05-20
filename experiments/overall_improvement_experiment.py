@@ -7,11 +7,27 @@ import os
 import sqlite3
 import pandas as pd
 
-max_iter = 3000
+max_iter = 10000
 
-def construct_experiment(solver_path, map_path, scen_path, output_file_name, agent_num, seed, neighborhood_size, experiment_name, destroy_strategy, time_limit):
+def construct_experiment(solver_path, map_path, scen_path, output_file_name, agent_num, seed, experiment_name, time_limit):
     """ Construct the input of subprocess.check_output to perform the experiment"""
-    return [solver_path, '-m', map_path, '-a', scen_path, "-o", output_file_name + ".csv", "-k", str(agent_num), "--initAlgo", "PP", "--maxIterations",  str(max_iter), "--initLNS", "0", "--seed", str(seed), "-t", str(time_limit), "--stats", "./overall_improvement_exp/" + experiment_name, "--neighborSize", str(neighborhood_size), "--destoryStrategy", destroy_strategy, "--restarts", "1"]
+    return [solver_path, '-m', map_path, '-a', scen_path, "-o", output_file_name + ".csv", "-k", str(agent_num), "--initAlgo", "PP", "--maxIterations",  str(max_iter), "--initLNS", "0", "--seed", str(seed), "-t", str(time_limit), "--stats", "./overall_improvement_exp/" + experiment_name, "--destoryStrategy", "RandomWalk", "--restarts", "1"]
+
+def construct_experiment_2(solver_path, map_path, scen_path, output_file_name, agent_num, seed, experiment_name, time_limit):
+    """ Construct the input of subprocess.check_output to perform the experiment"""
+    return [solver_path, '-m', map_path, '-a', scen_path, "-o", output_file_name + ".csv", "-k", str(agent_num), "--initAlgo", "PP", "--maxIterations",  str(max_iter), "--neighborSize", "8", "-t", str(time_limit), "--stats", "./overall_improvement_exp_lns/" + experiment_name + ".csv"]
+
+def construct_experiment_address(solver_path, map_path, scen_path, output_file_name, agent_num, seed, experiment_name,  time_limit):
+    """ Construct the input of subprocess.check_output to perform the experiment"""
+    return [solver_path, '-m', map_path, '-a', scen_path, "-o", output_file_name + ".csv", "-k", str(agent_num), "--maxIterations",  str(max_iter), "--initLNS", "0", "--seed", str(seed), "-t", str(time_limit), "--stats", "./overall_improvement_exp_address/" + experiment_name + ".csv", "--banditAlgo", "Thompson"]
+
+def construct_experiment_eecbs(solver_path, map_path, scen_path, output_file_name, agent_num, seed, experiment_name,  time_limit):
+    """ Construct the input of subprocess.check_output to perform the experiment"""
+    return [solver_path, '-m', map_path, '-a', scen_path, "-o", output_file_name + ".csv", "-k", str(agent_num), "--solver", "A-EECBS", "--initAlgo", "EECBS", "--replanAlgo", "EECBS", "--maxIterations",  str(max_iter), "--initLNS", "0", "--seed", str(seed), "-t", str(time_limit), "--stats", "./overall_improvement_exp_eecbs/" + experiment_name + ".csv", "--restarts", "1"]
+
+def construct_experiment_bcbs(solver_path, map_path, scen_path, output_file_name, agent_num, seed, experiment_name, time_limit):
+    """ Construct the input of subprocess.check_output to perform the experiment"""
+    return [solver_path, '-m', map_path, '-a', scen_path, "-o", output_file_name + ".csv", "-k", str(agent_num), "--solver", "A-BCBS", "--initAlgo", "EECBS", "--replanAlgo", "EECBS", "--maxIterations",  str(max_iter), "--initLNS", "0", "--seed", str(seed), "-t", str(time_limit), "--stats", "./overall_improvement_exp_bcbs/" + experiment_name + ".csv", "--restarts", "1"]
 
 def find_last_number(s: str) -> int:
     """Extracts the last number from a string. Returns -1 if no number is found."""
@@ -29,14 +45,13 @@ def construct_scen_path(scen_dir, map_name, k):
 # parameters
 map_names = [ "empty-8-8", "empty-32-32", "random-32-32-20", "warehouse-10-20-10-2-1", "ost003d", "den520d" ]
 agent_nums = [[32], [300], [150], [300], [600], [500]]
-time_limits = [2, 5, 5, 5, 30, 30] 
-neighborhood_sizes = [8]
+time_limits = [1, 5, 5, 5, 30, 30] 
 num_runs = 50
-results_file = "results_overall_improvement"
 mapf_benchmark_dir = "../MAPF-benchmark/"
 scen_dir = mapf_benchmark_dir + "mapf-scen-random/scen-random/"
 solver_path2 = "../papers/MAPF-LNS2/lns"
-destroy_strategies = ["RandomWalk"]
+solver_path3 = "../papers/MAPF-LNS/lns"
+solver_path = "../papers/ADDRESS/address"
 
 conn = sqlite3.connect("experiment_database.db")
 cursor = conn.cursor()
@@ -51,31 +66,65 @@ for map_name in tqdm.tqdm(map_names, desc="maps", position=0):
     # list all scenes
     scenes = sort_strings_by_last_number([f for f in os.listdir(scen_dir) if f.startswith(map_name)])
 
-    for neighborhood_size in neighborhood_sizes:
+    for agent_num in tqdm.tqdm(agent_nums[map_idx], desc="agent nums", position=1, leave=False):
+        for i in tqdm.tqdm(range(num_runs), desc="runs", position=2, leave=False):
+            scen_name = os.path.splitext(scenes[i % len(scenes)])[0]
+            scen_name_stripped = scen_name[len(map_name)+1:]
+            scen_path = scen_dir + scenes[i % len(scenes)]
 
-        for agent_num in tqdm.tqdm(agent_nums[map_idx], desc="agent nums", position=1, leave=False):
-            for i in tqdm.tqdm(range(num_runs), desc="runs", position=2, leave=False):
-                scen_name = os.path.splitext(scenes[i % len(scenes)])[0]
-                scen_name_stripped = scen_name[len(map_name)+1:]
-                scen_path = scen_dir + scenes[i % len(scenes)]
+            # find the seed
+            experiment_name = "overall_improvement_" + str(agent_num) + "agents_" + map_name + "_" + scen_name_stripped +  "_SIPP_suboptimal_ap_w_1,00_p_5_" + str(int(i/len(scenes))) + ".json"
+            df = pd.read_sql_query(f"SELECT * FROM overall_improvement WHERE file_name = '{experiment_name}'", conn)
+            seeds = df["seed"]
+            if (len(seeds) != 1):
+                print("ERROR: Wrong seeds", seeds, experiment_name)
+                exit(1)
+            seed = seeds[0]
 
-                # find the seed
-                experiment_name = "overall_improvement_" + str(agent_num) + "agents_" + map_name + "_" + scen_name_stripped +  "_SIPP_suboptimal_ap_w_1,00_p_5_" + str(int(i/len(scenes))) + ".json"
-                df = pd.read_sql_query(f"SELECT * FROM overall_improvement WHERE file_name = '{experiment_name}'", conn)
-                seeds = df["seed"]
-                if (len(seeds) != 1):
-                    print("ERROR: Wrong seeds", seeds, experiment_name)
-                    exit(1)
-                seed = seeds[0]
+            # MAPF LNS2
+            experiment_name = "overall_improvement_" + str(agent_num) + "agents_" + map_name + "_" + scen_name_stripped +  "_MAPF-LNS2_"+ str(int(i/len(scenes)))
+            exp = construct_experiment(solver_path2, map_path, scen_path, "results_overall_improvement", agent_num, seed, experiment_name, time_limit)
+            try:
+                res = subprocess.check_output(exp)[:-1].decode('UTF-8')
+            except:
+                print("Solver returned error for map: ", map_name, ", scene: ", scen_name)
+                print(" ".join(map(str, exp)))
 
-                for strategy in destroy_strategies:
-                    experiment_name = "overall_improvement_" + str(agent_num) + "agents_" + map_name + "_" + scen_name_stripped +  "_SIPP_mapf_lns_"+ str(int(i/len(scenes)))
-                    exp = construct_experiment(solver_path2, map_path, scen_path, results_file, agent_num, seed, neighborhood_size, experiment_name, strategy, time_limit)
-                    try:
-                        res = subprocess.check_output(exp)[:-1].decode('UTF-8')
-                    except:
-                        print("Solver returned error for map: ", map_name, ", scene: ", s)
-                        print(" ".join(map(str, exp)))
+            # MAPF LNS
+            experiment_name = "overall_improvement_" + str(agent_num) + "agents_" + map_name + "_" + scen_name_stripped +  "_MAPF-LNS_"+ str(int(i/len(scenes)))
+            exp = construct_experiment_2(solver_path3, map_path, scen_path, "results_overall_improvement_LNS", agent_num, seed, experiment_name, time_limit)
+            try:
+                res = subprocess.check_output(exp)[:-1].decode('UTF-8')
+            except:
+                print("Solver returned error for map: ", map_name, ", scene: ", scen_name)
+                print(" ".join(map(str, exp)))
+
+            # ADDRESS 
+            experiment_name = "overall_improvement_" + str(agent_num) + "agents_" + map_name + "_" + scen_name_stripped +  "_ADDRESS_"+ str(int(i/len(scenes)))
+            exp = construct_experiment_address(solver_path, map_path, scen_path, "results_overall_improvement_ADDRESS", agent_num, seed, experiment_name, time_limit)
+            try:
+                res = subprocess.check_output(exp)[:-1].decode('UTF-8')
+            except:
+                print("Solver returned error for map: ", map_name, ", scene: ", scen_name)
+                print(" ".join(map(str, exp)))
+
+            # EECBS 
+            experiment_name = "overall_improvement_" + str(agent_num) + "agents_" + map_name + "_" + scen_name_stripped +  "_EECBS_"+ str(int(i/len(scenes)))
+            exp = construct_experiment_eecbs(solver_path2, map_path, scen_path, "results_overall_improvement_EECBS", agent_num, seed, experiment_name, 30)
+            try:
+                res = subprocess.check_output(exp)[:-1].decode('UTF-8')
+            except:
+                print("Solver returned error for map: ", map_name, ", scene: ", scen_name)
+                print(" ".join(map(str, exp)))
+
+            # A-BCBS 
+            experiment_name = "overall_improvement_" + str(agent_num) + "agents_" + map_name + "_" + scen_name_stripped +  "_BCBS_"+ str(int(i/len(scenes)))
+            exp = construct_experiment_bcbs(solver_path2, map_path, scen_path, "results_overall_improvement_BCBS", agent_num, seed, experiment_name, time_limit)
+            try:
+                res = subprocess.check_output(exp)[:-1].decode('UTF-8')
+            except:
+                print("Solver returned error for map: ", map_name, ", scene: ", scen_name)
+                print(" ".join(map(str, exp)))
     map_idx += 1
 
 

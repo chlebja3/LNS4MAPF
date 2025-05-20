@@ -75,9 +75,9 @@ for metric in metric_names:
             for algo_name, algo_group in map_group.groupby('algo_name'):
                 display_name = "MAPF-LNS2"
                 if "mapf_lns" in algo_name:
-                    display_name = "original_heuristic"
+                    display_name = "original heuristic"
                 elif "mine" in algo_name:
-                    display_name = "multiple_heuristics"
+                    display_name = "multiple heuristics"
                 elif "suboptimal" in algo_name:
                     display_name = "suboptimal"
                     if exp_name != "feasible":
@@ -101,9 +101,9 @@ for metric in metric_names:
             for algo_name, algo_group in map_group.groupby('algo_name'):
                 display_name = "MAPF-LNS2"
                 if "mapf_lns" in algo_name:
-                    display_name = "original_heuristic"
+                    display_name = "original heuristic"
                 elif "mine" in algo_name:
-                    display_name = "multiple_heuristics"
+                    display_name = "multiple heuristics"
                 elif "suboptimal" in algo_name:
                     display_name = "suboptimal"
                     if exp_name != "feasible":
@@ -122,7 +122,9 @@ for metric in metric_names:
             ax.grid(True)
 
     handles, labels = axes[0].get_legend_handles_labels()
-    fig.legend(handles, labels, loc='lower center', bbox_to_anchor=(0.5, 0.01),ncol=3)
+    ncols = 3
+    if (len(handles) == 4): ncols = 2
+    fig.legend(handles, labels, loc='lower center', bbox_to_anchor=(0.5, 0.01),ncol=ncols)
     plt.tight_layout()
     plt.subplots_adjust(bottom=0.15)
     plt.show()
@@ -151,9 +153,9 @@ for i, (map_name, map_group) in enumerate(stats_gap.groupby('map_name')):
     for algo_name, algo_group in map_group.groupby('algo_name'):
         display_name = "MAPF-LNS2"
         if "mapf_lns" in algo_name:
-            display_name = "original_heuristic"
+            display_name = "original heuristic"
         elif "mine" in algo_name:
-            display_name = "multiple_heuristics"
+            display_name = "multiple heuristics"
         elif "suboptimal" in algo_name:
             display_name = "suboptimal"
             if exp_name != "feasible":
