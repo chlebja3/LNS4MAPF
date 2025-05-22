@@ -1,4 +1,5 @@
 <map id="path_to_timepointpath" name="path_to_timepointpath">
-<area shape="rect" id="node1" title=" " alt="" coords="164,5,335,32"/>
-<area shape="rect" id="node2" href="$classSolution.html#a9df6f3a07aa7d31c13349b1d1d837eb7" title=" " alt="" coords="5,5,116,32"/>
+<area shape="rect" id="node1" title=" " alt="" coords="339,5,509,32"/>
+<area shape="rect" id="node2" href="$classSolution.html#a9df6f3a07aa7d31c13349b1d1d837eb7" title=" " alt="" coords="180,5,291,32"/>
+<area shape="rect" id="node3" href="$classExperiment.html#ac3467eb067f8623c9cf3cd7c736a8c80" title="Runs the experiment." alt="" coords="5,5,132,32"/>
 </map>

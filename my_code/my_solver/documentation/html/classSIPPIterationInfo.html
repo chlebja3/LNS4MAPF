@@ -72,13 +72,16 @@ $(function() {
 </div><!--header-->
 <div class="contents">
 
+<p>Stores information about iterations of the <a class="el" href="classSIPP.html">SIPP</a> algorithm.  
+ <a href="classSIPPIterationInfo.html#details">More...</a></p>
+
 <p><code>#include &lt;<a class="el" href="IterInfo_8h_source.html">IterInfo.h</a>&gt;</code></p>
 <div class="dynheader">
 Collaboration diagram for SIPPIterationInfo:</div>
 <div class="dyncontent">
 <div class="center"><img src="classSIPPIterationInfo__coll__graph.png" border="0" usemap="#SIPPIterationInfo_coll__map" alt="Collaboration graph"/></div>
 <map name="SIPPIterationInfo_coll__map" id="SIPPIterationInfo_coll__map">
-<area shape="rect" title=" " alt="" coords="5,184,136,211"/>
+<area shape="rect" title="Stores information about iterations of the SIPP algorithm." alt="" coords="5,184,136,211"/>
 <area shape="rect" href="classTimePoint.html" title=" " alt="" coords="27,95,114,121"/>
 <area shape="rect" href="classTimeInterval.html" title=" " alt="" coords="19,5,123,32"/>
 </map>
@@ -87,6 +90,7 @@ Collaboration diagram for SIPPIterationInfo:</div>
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
 <tr class="memitem:a9b195a4e6e3836710d2334784d4736f5"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSIPPIterationInfo.html#a9b195a4e6e3836710d2334784d4736f5">SIPPIterationInfo</a> (const <a class="el" href="classTimePoint.html">TimePoint</a> &amp;cur_expanded_, double g_, double h_, double h2_, double h3_, int generated_, int expanded_, int iteration_num_)</td></tr>
+<tr class="memdesc:a9b195a4e6e3836710d2334784d4736f5"><td class="mdescLeft">&#160;</td><td class="mdescRight">Constructor for <a class="el" href="classSIPPIterationInfo.html" title="Stores information about iterations of the SIPP algorithm.">SIPPIterationInfo</a>.  <a href="classSIPPIterationInfo.html#a9b195a4e6e3836710d2334784d4736f5">More...</a><br /></td></tr>
 <tr class="separator:a9b195a4e6e3836710d2334784d4736f5"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-attribs"></a>
@@ -109,8 +113,9 @@ Public Attributes</h2></td></tr>
 <tr class="separator:a895636ccfe76ec0382c8e06b8508c513"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
-<div class="textblock">
-<p class="definition">Definition at line <a class="el" href="IterInfo_8h_source.html#l00013">13</a> of file <a class="el" href="IterInfo_8h_source.html">IterInfo.h</a>.</p>
+<div class="textblock"><p>Stores information about iterations of the <a class="el" href="classSIPP.html">SIPP</a> algorithm. </p>
+
+<p class="definition">Definition at line <a class="el" href="IterInfo_8h_source.html#l00017">17</a> of file <a class="el" href="IterInfo_8h_source.html">IterInfo.h</a>.</p>
 </div><h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
 <a id="a9b195a4e6e3836710d2334784d4736f5"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a9b195a4e6e3836710d2334784d4736f5">&#9670;&nbsp;</a></span>SIPPIterationInfo()</h2>
@@ -174,6 +179,21 @@ Public Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
+<p>Constructor for <a class="el" href="classSIPPIterationInfo.html" title="Stores information about iterations of the SIPP algorithm.">SIPPIterationInfo</a>. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">cur_expanded_</td><td>Current expanded time point </td></tr>
+    <tr><td class="paramname">g_</td><td>Travel cost (g value) of the currently expanded node </td></tr>
+    <tr><td class="paramname">h_</td><td>Primary heuristic cost (h value) of the currently expanded node </td></tr>
+    <tr><td class="paramname">h2_</td><td>Secondary heuristic cost (h2 value) of the currently expanded node </td></tr>
+    <tr><td class="paramname">h3_</td><td>Terciary heuristic cost (h3 value) of the currently expanded node </td></tr>
+    <tr><td class="paramname">generated_</td><td>Number of generated nodes </td></tr>
+    <tr><td class="paramname">expanded_</td><td>Number of expanded nodes </td></tr>
+    <tr><td class="paramname">iteration_num_</td><td>Current iteration number </td></tr>
+  </table>
+  </dd>
+</dl>
+
 <p class="definition">Definition at line <a class="el" href="IterInfo_8cpp_source.html#l00009">9</a> of file <a class="el" href="IterInfo_8cpp_source.html">IterInfo.cpp</a>.</p>
 
 </div>
@@ -190,8 +210,9 @@ Public Attributes</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+<p><a class="el" href="classTimePoint.html">TimePoint</a> expanded at this iteration </p>
 
-<p class="definition">Definition at line <a class="el" href="IterInfo_8h_source.html#l00016">16</a> of file <a class="el" href="IterInfo_8h_source.html">IterInfo.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="IterInfo_8h_source.html#l00020">20</a> of file <a class="el" href="IterInfo_8h_source.html">IterInfo.h</a>.</p>
 
 </div>
 </div>
@@ -206,8 +227,9 @@ Public Attributes</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+<p>Number of expanded nodes </p>
 
-<p class="definition">Definition at line <a class="el" href="IterInfo_8h_source.html#l00022">22</a> of file <a class="el" href="IterInfo_8h_source.html">IterInfo.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="IterInfo_8h_source.html#l00026">26</a> of file <a class="el" href="IterInfo_8h_source.html">IterInfo.h</a>.</p>
 
 </div>
 </div>
@@ -222,8 +244,9 @@ Public Attributes</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+<p>Travel cost (g value) of the represented node </p>
 
-<p class="definition">Definition at line <a class="el" href="IterInfo_8h_source.html#l00017">17</a> of file <a class="el" href="IterInfo_8h_source.html">IterInfo.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="IterInfo_8h_source.html#l00021">21</a> of file <a class="el" href="IterInfo_8h_source.html">IterInfo.h</a>.</p>
 
 </div>
 </div>
@@ -238,8 +261,9 @@ Public Attributes</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+<p>Number of generated nodes </p>
 
-<p class="definition">Definition at line <a class="el" href="IterInfo_8h_source.html#l00021">21</a> of file <a class="el" href="IterInfo_8h_source.html">IterInfo.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="IterInfo_8h_source.html#l00025">25</a> of file <a class="el" href="IterInfo_8h_source.html">IterInfo.h</a>.</p>
 
 </div>
 </div>
@@ -254,8 +278,9 @@ Public Attributes</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+<p>Primary heuristic cost (h value) of the currently represented node </p>
 
-<p class="definition">Definition at line <a class="el" href="IterInfo_8h_source.html#l00018">18</a> of file <a class="el" href="IterInfo_8h_source.html">IterInfo.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="IterInfo_8h_source.html#l00022">22</a> of file <a class="el" href="IterInfo_8h_source.html">IterInfo.h</a>.</p>
 
 </div>
 </div>
@@ -270,8 +295,9 @@ Public Attributes</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+<p>Secondary heuristic cost (h2 value) of the currently represented node </p>
 
-<p class="definition">Definition at line <a class="el" href="IterInfo_8h_source.html#l00019">19</a> of file <a class="el" href="IterInfo_8h_source.html">IterInfo.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="IterInfo_8h_source.html#l00023">23</a> of file <a class="el" href="IterInfo_8h_source.html">IterInfo.h</a>.</p>
 
 </div>
 </div>
@@ -286,8 +312,9 @@ Public Attributes</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+<p>Terciary heuristic cost (h3 value) of the currently represented node </p>
 
-<p class="definition">Definition at line <a class="el" href="IterInfo_8h_source.html#l00020">20</a> of file <a class="el" href="IterInfo_8h_source.html">IterInfo.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="IterInfo_8h_source.html#l00024">24</a> of file <a class="el" href="IterInfo_8h_source.html">IterInfo.h</a>.</p>
 
 </div>
 </div>
@@ -302,8 +329,9 @@ Public Attributes</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+<p>Iteration number of the represented node </p>
 
-<p class="definition">Definition at line <a class="el" href="IterInfo_8h_source.html#l00023">23</a> of file <a class="el" href="IterInfo_8h_source.html">IterInfo.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="IterInfo_8h_source.html#l00027">27</a> of file <a class="el" href="IterInfo_8h_source.html">IterInfo.h</a>.</p>
 
 </div>
 </div>

@@ -111,10 +111,14 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:abbefd4b8a1a8dc2763e9ca33652077a9"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a0bbe8409886f29fc2a4588413540a734"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSafeIntervalTable.html#a0bbe8409886f29fc2a4588413540a734">update_latest_constraint_end_estimate</a> ()</td></tr>
 <tr class="separator:a0bbe8409886f29fc2a4588413540a734"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aab5207a25c528d600ca267d4ba8ef188"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSafeIntervalTable.html#aab5207a25c528d600ca267d4ba8ef188">build_sequential</a> (const std::vector&lt; <a class="el" href="utils_8h.html#a64881685b4fe27a0cf599222d5fb1c72">TimePointPath</a> &gt; &amp;paths)</td></tr>
+<tr class="separator:aab5207a25c528d600ca267d4ba8ef188"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a2c2c1dce378dd039c872a55b1d8dab8c"><td class="memItemLeft" align="right" valign="top">auto&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSafeIntervalTable.html#a2c2c1dce378dd039c872a55b1d8dab8c">get_min_reach_time</a> (int goal) const -&gt; int</td></tr>
 <tr class="separator:a2c2c1dce378dd039c872a55b1d8dab8c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a3c935b379679efb82451596f8c1a1f2b"><td class="memItemLeft" align="right" valign="top">auto&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSafeIntervalTable.html#a3c935b379679efb82451596f8c1a1f2b">get_last_safe_interval</a> (int location) const -&gt; const <a class="el" href="classTimeInterval.html">TimeInterval</a> &amp;</td></tr>
 <tr class="separator:a3c935b379679efb82451596f8c1a1f2b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa9d1c371c39f3458f1f8492778a7f72e"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSafeIntervalTable.html#aa9d1c371c39f3458f1f8492778a7f72e">reset</a> ()</td></tr>
+<tr class="separator:aa9d1c371c39f3458f1f8492778a7f72e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-attribs"></a>
 Public Attributes</h2></td></tr>
@@ -140,7 +144,7 @@ Private Attributes</h2></td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock">
-<p class="definition">Definition at line <a class="el" href="SafeIntervalTable_8h_source.html#l00062">62</a> of file <a class="el" href="SafeIntervalTable_8h_source.html">SafeIntervalTable.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="SafeIntervalTable_8h_source.html#l00071">71</a> of file <a class="el" href="SafeIntervalTable_8h_source.html">SafeIntervalTable.h</a>.</p>
 </div><h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
 <a id="a6e918fffce85020e3be33bbca96d7695"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a6e918fffce85020e3be33bbca96d7695">&#9670;&nbsp;</a></span>SafeIntervalTable()</h2>
@@ -193,8 +197,9 @@ Here is the caller graph for this function:</div>
 <div class="dyncontent">
 <div class="center"><img src="classSafeIntervalTable_a7323895f0831d0be6a4e6689f65cfee4_icgraph.png" border="0" usemap="#classSafeIntervalTable_a7323895f0831d0be6a4e6689f65cfee4_icgraph" alt=""/></div>
 <map name="classSafeIntervalTable_a7323895f0831d0be6a4e6689f65cfee4_icgraph" id="classSafeIntervalTable_a7323895f0831d0be6a4e6689f65cfee4_icgraph">
-<area shape="rect" title=" " alt="" coords="196,5,339,47"/>
-<area shape="rect" href="classSafeIntervalTable.html#a787f99329e3378787106076ecaf026a9" title=" " alt="" coords="5,5,148,47"/>
+<area shape="rect" title=" " alt="" coords="387,5,529,47"/>
+<area shape="rect" href="classSafeIntervalTable.html#a787f99329e3378787106076ecaf026a9" title=" " alt="" coords="196,5,339,47"/>
+<area shape="rect" href="classSafeIntervalTable.html#aab5207a25c528d600ca267d4ba8ef188" title=" " alt="" coords="5,5,148,47"/>
 </map>
 </div>
 
@@ -217,6 +222,15 @@ Here is the caller graph for this function:</div>
 </div><div class="memdoc">
 
 <p class="definition">Definition at line <a class="el" href="SafeIntervalTable_8cpp_source.html#l00203">203</a> of file <a class="el" href="SafeIntervalTable_8cpp_source.html">SafeIntervalTable.cpp</a>.</p>
+<div class="dynheader">
+Here is the caller graph for this function:</div>
+<div class="dyncontent">
+<div class="center"><img src="classSafeIntervalTable_a787f99329e3378787106076ecaf026a9_icgraph.png" border="0" usemap="#classSafeIntervalTable_a787f99329e3378787106076ecaf026a9_icgraph" alt=""/></div>
+<map name="classSafeIntervalTable_a787f99329e3378787106076ecaf026a9_icgraph" id="classSafeIntervalTable_a787f99329e3378787106076ecaf026a9_icgraph">
+<area shape="rect" title=" " alt="" coords="196,5,339,47"/>
+<area shape="rect" href="classSafeIntervalTable.html#aab5207a25c528d600ca267d4ba8ef188" title=" " alt="" coords="5,5,148,47"/>
+</map>
+</div>
 
 </div>
 </div>
@@ -235,6 +249,26 @@ Here is the caller graph for this function:</div>
         </tr>
       </table>
 </div><div class="memdoc">
+
+</div>
+</div>
+<a id="aab5207a25c528d600ca267d4ba8ef188"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aab5207a25c528d600ca267d4ba8ef188">&#9670;&nbsp;</a></span>build_sequential()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void SafeIntervalTable::build_sequential </td>
+          <td>(</td>
+          <td class="paramtype">const std::vector&lt; <a class="el" href="utils_8h.html#a64881685b4fe27a0cf599222d5fb1c72">TimePointPath</a> &gt; &amp;&#160;</td>
+          <td class="paramname"><em>paths</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="SafeIntervalTable_8cpp_source.html#l00420">420</a> of file <a class="el" href="SafeIntervalTable_8cpp_source.html">SafeIntervalTable.cpp</a>.</p>
 
 </div>
 </div>
@@ -283,7 +317,7 @@ Here is the caller graph for this function:</div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="SafeIntervalTable_8h_source.html#l00088">88</a> of file <a class="el" href="SafeIntervalTable_8h_source.html">SafeIntervalTable.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="SafeIntervalTable_8h_source.html#l00098">98</a> of file <a class="el" href="SafeIntervalTable_8h_source.html">SafeIntervalTable.h</a>.</p>
 
 </div>
 </div>
@@ -331,7 +365,7 @@ Here is the caller graph for this function:</div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="SafeIntervalTable_8h_source.html#l00082">82</a> of file <a class="el" href="SafeIntervalTable_8h_source.html">SafeIntervalTable.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="SafeIntervalTable_8h_source.html#l00092">92</a> of file <a class="el" href="SafeIntervalTable_8h_source.html">SafeIntervalTable.h</a>.</p>
 
 </div>
 </div>
@@ -432,6 +466,42 @@ Here is the caller graph for this function:</div>
 
 </div>
 </div>
+<a id="aa9d1c371c39f3458f1f8492778a7f72e"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aa9d1c371c39f3458f1f8492778a7f72e">&#9670;&nbsp;</a></span>reset()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void SafeIntervalTable::reset </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="SafeIntervalTable_8h_source.html#l00104">104</a> of file <a class="el" href="SafeIntervalTable_8h_source.html">SafeIntervalTable.h</a>.</p>
+<div class="dynheader">
+Here is the caller graph for this function:</div>
+<div class="dyncontent">
+<div class="center"><img src="classSafeIntervalTable_aa9d1c371c39f3458f1f8492778a7f72e_icgraph.png" border="0" usemap="#classSafeIntervalTable_aa9d1c371c39f3458f1f8492778a7f72e_icgraph" alt=""/></div>
+<map name="classSafeIntervalTable_aa9d1c371c39f3458f1f8492778a7f72e_icgraph" id="classSafeIntervalTable_aa9d1c371c39f3458f1f8492778a7f72e_icgraph">
+<area shape="rect" title=" " alt="" coords="144,5,287,47"/>
+<area shape="rect" href="classSIPP.html#aecbadddd1d20b7ced6e12aef5ba47d28" title=" " alt="" coords="5,13,96,39"/>
+</map>
+</div>
+
+</div>
+</div>
 <a id="a0bbe8409886f29fc2a4588413540a734"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a0bbe8409886f29fc2a4588413540a734">&#9670;&nbsp;</a></span>update_latest_constraint_end_estimate()</h2>
 
@@ -464,7 +534,7 @@ Here is the caller graph for this function:</div>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="SafeIntervalTable_8h_source.html#l00066">66</a> of file <a class="el" href="SafeIntervalTable_8h_source.html">SafeIntervalTable.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="SafeIntervalTable_8h_source.html#l00075">75</a> of file <a class="el" href="SafeIntervalTable_8h_source.html">SafeIntervalTable.h</a>.</p>
 
 </div>
 </div>
@@ -488,7 +558,7 @@ Here is the caller graph for this function:</div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="SafeIntervalTable_8h_source.html#l00096">96</a> of file <a class="el" href="SafeIntervalTable_8h_source.html">SafeIntervalTable.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="SafeIntervalTable_8h_source.html#l00126">126</a> of file <a class="el" href="SafeIntervalTable_8h_source.html">SafeIntervalTable.h</a>.</p>
 
 </div>
 </div>
@@ -512,7 +582,7 @@ Here is the caller graph for this function:</div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="SafeIntervalTable_8h_source.html#l00099">99</a> of file <a class="el" href="SafeIntervalTable_8h_source.html">SafeIntervalTable.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="SafeIntervalTable_8h_source.html#l00129">129</a> of file <a class="el" href="SafeIntervalTable_8h_source.html">SafeIntervalTable.h</a>.</p>
 
 </div>
 </div>
@@ -536,7 +606,7 @@ Here is the caller graph for this function:</div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="SafeIntervalTable_8h_source.html#l00100">100</a> of file <a class="el" href="SafeIntervalTable_8h_source.html">SafeIntervalTable.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="SafeIntervalTable_8h_source.html#l00130">130</a> of file <a class="el" href="SafeIntervalTable_8h_source.html">SafeIntervalTable.h</a>.</p>
 
 </div>
 </div>
@@ -560,7 +630,7 @@ Here is the caller graph for this function:</div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="SafeIntervalTable_8h_source.html#l00102">102</a> of file <a class="el" href="SafeIntervalTable_8h_source.html">SafeIntervalTable.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="SafeIntervalTable_8h_source.html#l00132">132</a> of file <a class="el" href="SafeIntervalTable_8h_source.html">SafeIntervalTable.h</a>.</p>
 
 </div>
 </div>
@@ -584,7 +654,7 @@ Here is the caller graph for this function:</div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="SafeIntervalTable_8h_source.html#l00097">97</a> of file <a class="el" href="SafeIntervalTable_8h_source.html">SafeIntervalTable.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="SafeIntervalTable_8h_source.html#l00127">127</a> of file <a class="el" href="SafeIntervalTable_8h_source.html">SafeIntervalTable.h</a>.</p>
 
 </div>
 </div>
@@ -608,7 +678,7 @@ Here is the caller graph for this function:</div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="SafeIntervalTable_8h_source.html#l00095">95</a> of file <a class="el" href="SafeIntervalTable_8h_source.html">SafeIntervalTable.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="SafeIntervalTable_8h_source.html#l00125">125</a> of file <a class="el" href="SafeIntervalTable_8h_source.html">SafeIntervalTable.h</a>.</p>
 
 </div>
 </div>
@@ -632,7 +702,7 @@ Here is the caller graph for this function:</div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="SafeIntervalTable_8h_source.html#l00098">98</a> of file <a class="el" href="SafeIntervalTable_8h_source.html">SafeIntervalTable.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="SafeIntervalTable_8h_source.html#l00128">128</a> of file <a class="el" href="SafeIntervalTable_8h_source.html">SafeIntervalTable.h</a>.</p>
 
 </div>
 </div>

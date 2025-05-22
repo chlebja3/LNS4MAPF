@@ -120,12 +120,8 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:abf05335aac244e3923fdc6de1c274e98"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ae13fe949c6f2df0f9a13bc4339053b00"><td class="memItemLeft" align="right" valign="top">auto&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classInstance.html#ae13fe949c6f2df0f9a13bc4339053b00">get_goal_locations</a> () const -&gt; const std::vector&lt; int &gt; &amp;</td></tr>
 <tr class="separator:ae13fe949c6f2df0f9a13bc4339053b00"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aa7ca448dfeff607fbdd8d5d32e334ea3"><td class="memItemLeft" align="right" valign="top">auto&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classInstance.html#aa7ca448dfeff607fbdd8d5d32e334ea3">get_heuristic_manhattan</a> (const int agent_num, const int loc) const -&gt; int</td></tr>
-<tr class="separator:aa7ca448dfeff607fbdd8d5d32e334ea3"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aea24592eae44de7ddbd4c456e7730240"><td class="memItemLeft" align="right" valign="top">auto&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classInstance.html#aea24592eae44de7ddbd4c456e7730240">get_heuristic_distance</a> (const int agent_num, const int loc) const -&gt; int</td></tr>
 <tr class="separator:aea24592eae44de7ddbd4c456e7730240"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:afc521666dcc3735db259dfda6666522a"><td class="memItemLeft" align="right" valign="top">auto&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classInstance.html#afc521666dcc3735db259dfda6666522a">get_heuristic_euclidean</a> (int agent_num, int loc) const -&gt; double</td></tr>
-<tr class="separator:afc521666dcc3735db259dfda6666522a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a598a85457c8d381be2377fd245f736a0"><td class="memItemLeft" align="right" valign="top">auto&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classInstance.html#a598a85457c8d381be2377fd245f736a0">get_neighbor_locations</a> (int loc) const -&gt; const std::vector&lt; int &gt; &amp;</td></tr>
 <tr class="separator:a598a85457c8d381be2377fd245f736a0"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ab7890e1c06c7481de53d75ea8a1e04ff"><td class="memItemLeft" align="right" valign="top">auto&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classInstance.html#ab7890e1c06c7481de53d75ea8a1e04ff">get_sum_of_distances</a> () const -&gt; int</td></tr>
@@ -181,10 +177,6 @@ Private Attributes</h2></td></tr>
 <tr class="separator:a432b5eb59a98a1cee94ee99c6d375d55"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a5813fb5aee5086911058681e2281fe99"><td class="memItemLeft" align="right" valign="top">std::vector&lt; std::vector&lt; int &gt; &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classInstance.html#a5813fb5aee5086911058681e2281fe99">neighbors</a></td></tr>
 <tr class="separator:a5813fb5aee5086911058681e2281fe99"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a5c94ac0ba742d74c304c2368ac37e90b"><td class="memItemLeft" align="right" valign="top">std::vector&lt; std::vector&lt; int &gt; &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classInstance.html#a5c94ac0ba742d74c304c2368ac37e90b">heuristic_manhattan</a></td></tr>
-<tr class="separator:a5c94ac0ba742d74c304c2368ac37e90b"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ab355b89298fb5269f6e54530eee76f56"><td class="memItemLeft" align="right" valign="top">std::vector&lt; std::vector&lt; double &gt; &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classInstance.html#ab355b89298fb5269f6e54530eee76f56">heuristic_euclidean</a></td></tr>
-<tr class="separator:ab355b89298fb5269f6e54530eee76f56"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a0db84d9a6ae3e761a41bc50c7776b370"><td class="memItemLeft" align="right" valign="top">std::vector&lt; std::vector&lt; int &gt; &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classInstance.html#a0db84d9a6ae3e761a41bc50c7776b370">heuristic_distance</a></td></tr>
 <tr class="separator:a0db84d9a6ae3e761a41bc50c7776b370"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a67badff97d0bb5f0356312a4a3d1aece"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classInstance.html#a67badff97d0bb5f0356312a4a3d1aece">sum_of_distances</a> = 0</td></tr>
@@ -194,7 +186,7 @@ Private Attributes</h2></td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock">
-<p class="definition">Definition at line <a class="el" href="Instance_8h_source.html#l00015">15</a> of file <a class="el" href="Instance_8h_source.html">Instance.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="Instance_8h_source.html#l00017">17</a> of file <a class="el" href="Instance_8h_source.html">Instance.h</a>.</p>
 </div><h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
 <a id="ae16c158a63c058c17aa6ee5053b9f934"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#ae16c158a63c058c17aa6ee5053b9f934">&#9670;&nbsp;</a></span>Instance() <span class="overload">[1/2]</span></h2>
@@ -293,7 +285,7 @@ Private Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="Instance_8cpp_source.html#l00248">248</a> of file <a class="el" href="Instance_8cpp_source.html">Instance.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="Instance_8cpp_source.html#l00255">255</a> of file <a class="el" href="Instance_8cpp_source.html">Instance.cpp</a>.</p>
 <div class="dynheader">
 Here is the caller graph for this function:</div>
 <div class="dyncontent">
@@ -333,7 +325,7 @@ Here is the caller graph for this function:</div>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="Instance_8cpp_source.html#l00172">172</a> of file <a class="el" href="Instance_8cpp_source.html">Instance.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="Instance_8cpp_source.html#l00174">174</a> of file <a class="el" href="Instance_8cpp_source.html">Instance.cpp</a>.</p>
 <div class="dynheader">
 Here is the caller graph for this function:</div>
 <div class="dyncontent">
@@ -362,7 +354,7 @@ Here is the caller graph for this function:</div>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="Instance_8cpp_source.html#l00299">299</a> of file <a class="el" href="Instance_8cpp_source.html">Instance.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="Instance_8cpp_source.html#l00306">306</a> of file <a class="el" href="Instance_8cpp_source.html">Instance.cpp</a>.</p>
 
 </div>
 </div>
@@ -391,7 +383,7 @@ Here is the caller graph for this function:</div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="Instance_8h_source.html#l00165">165</a> of file <a class="el" href="Instance_8h_source.html">Instance.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="Instance_8h_source.html#l00169">169</a> of file <a class="el" href="Instance_8h_source.html">Instance.h</a>.</p>
 <div class="dynheader">
 Here is the caller graph for this function:</div>
 <div class="dyncontent">
@@ -401,7 +393,7 @@ Here is the caller graph for this function:</div>
 <area shape="rect" href="classLNS.html#a5ccad09a04930841c3615ecf8ec0972d" title=" " alt="" coords="349,56,537,83"/>
 <area shape="rect" href="classConstraintTable.html#a3944425bf22c03daf70bf254f7a226ed" title=" " alt="" coords="585,78,741,119"/>
 <area shape="rect" href="classLNS.html#a412b23f4704dc3ce9e01fe0331ca8728" title=" " alt="" coords="133,5,301,32"/>
-<area shape="rect" href="classLNS.html#a566e47ae5b4577e3a70dc6f819f302be" title=" " alt="" coords="5,56,85,83"/>
+<area shape="rect" href="classLNS.html#a6d3648748e40c87140940d9912aac986" title=" " alt="" coords="5,56,85,83"/>
 <area shape="rect" href="classLNS.html#af68cb150f64a0c8f249057ab57364f48" title=" " alt="" coords="137,107,298,149"/>
 </map>
 </div>
@@ -432,7 +424,17 @@ Here is the caller graph for this function:</div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="Instance_8h_source.html#l00072">72</a> of file <a class="el" href="Instance_8h_source.html">Instance.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="Instance_8h_source.html#l00074">74</a> of file <a class="el" href="Instance_8h_source.html">Instance.h</a>.</p>
+<div class="dynheader">
+Here is the caller graph for this function:</div>
+<div class="dyncontent">
+<div class="center"><img src="classInstance_ae13fe949c6f2df0f9a13bc4339053b00_icgraph.png" border="0" usemap="#classInstance_ae13fe949c6f2df0f9a13bc4339053b00_icgraph" alt=""/></div>
+<map name="classInstance_ae13fe949c6f2df0f9a13bc4339053b00_icgraph" id="classInstance_ae13fe949c6f2df0f9a13bc4339053b00_icgraph">
+<area shape="rect" title=" " alt="" coords="343,5,484,47"/>
+<area shape="rect" href="classLNS.html#a4ea599007b8b88f4bff0cf1f12a8e8c6" title=" " alt="" coords="133,13,295,39"/>
+<area shape="rect" href="classLNS.html#a6d3648748e40c87140940d9912aac986" title=" " alt="" coords="5,13,85,39"/>
+</map>
+</div>
 
 </div>
 </div>
@@ -460,7 +462,7 @@ Here is the caller graph for this function:</div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="Instance_8h_source.html#l00067">67</a> of file <a class="el" href="Instance_8h_source.html">Instance.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="Instance_8h_source.html#l00069">69</a> of file <a class="el" href="Instance_8h_source.html">Instance.h</a>.</p>
 <div class="dynheader">
 Here is the caller graph for this function:</div>
 <div class="dyncontent">
@@ -511,99 +513,23 @@ Here is the caller graph for this function:</div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="Instance_8h_source.html#l00086">86</a> of file <a class="el" href="Instance_8h_source.html">Instance.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="Instance_8h_source.html#l00098">98</a> of file <a class="el" href="Instance_8h_source.html">Instance.h</a>.</p>
 <div class="dynheader">
 Here is the caller graph for this function:</div>
 <div class="dyncontent">
 <div class="center"><img src="classInstance_aea24592eae44de7ddbd4c456e7730240_icgraph.png" border="0" usemap="#classInstance_aea24592eae44de7ddbd4c456e7730240_icgraph" alt=""/></div>
 <map name="classInstance_aea24592eae44de7ddbd4c456e7730240_icgraph" id="classInstance_aea24592eae44de7ddbd4c456e7730240_icgraph">
-<area shape="rect" title=" " alt="" coords="712,49,881,90"/>
-<area shape="rect" href="classSolution.html#a1802864ca1ab7bffdb1710644daf3877" title=" " alt="" coords="488,31,664,57"/>
-<area shape="rect" href="classInstance.html#aad5fc735ca29a154449c86c1690c743b" title=" " alt="" coords="505,81,647,108"/>
-<area shape="rect" href="classExperiment.html#ac3467eb067f8623c9cf3cd7c736a8c80" title=" " alt="" coords="313,5,440,32"/>
+<area shape="rect" title=" " alt="" coords="712,99,881,141"/>
+<area shape="rect" href="classSolution.html#a1802864ca1ab7bffdb1710644daf3877" title=" " alt="" coords="488,56,664,83"/>
+<area shape="rect" href="classLNS.html#a4ea599007b8b88f4bff0cf1f12a8e8c6" title=" " alt="" coords="495,107,657,133"/>
+<area shape="rect" href="classInstance.html#aad5fc735ca29a154449c86c1690c743b" title=" " alt="" coords="505,157,647,184"/>
+<area shape="rect" href="classExperiment.html#ac3467eb067f8623c9cf3cd7c736a8c80" title="Runs the experiment." alt="" coords="313,5,440,32"/>
 <area shape="rect" href="classLNS.html#ab4a4826221160701ee3cf6ca93feb1f7" title=" " alt="" coords="331,56,422,83"/>
 <area shape="rect" href="destroy_8cpp.html#a1fe60ef45fb8a4e175eb3b737505f3d5" title=" " alt="" coords="108,56,265,83"/>
 <area shape="rect" href="destroy_8cpp.html#a808f40e2e9d6eb5463165c031dfa3eb1" title=" " alt="" coords="5,56,60,83"/>
+<area shape="rect" href="classLNS.html#a6d3648748e40c87140940d9912aac986" title=" " alt="" coords="337,107,417,133"/>
 </map>
 </div>
-
-</div>
-</div>
-<a id="afc521666dcc3735db259dfda6666522a"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#afc521666dcc3735db259dfda6666522a">&#9670;&nbsp;</a></span>get_heuristic_euclidean()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">auto Instance::get_heuristic_euclidean </td>
-          <td>(</td>
-          <td class="paramtype">int&#160;</td>
-          <td class="paramname"><em>agent_num</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">int&#160;</td>
-          <td class="paramname"><em>loc</em>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td> const -&gt; double
-  </td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p class="definition">Definition at line <a class="el" href="Instance_8h_source.html#l00093">93</a> of file <a class="el" href="Instance_8h_source.html">Instance.h</a>.</p>
-
-</div>
-</div>
-<a id="aa7ca448dfeff607fbdd8d5d32e334ea3"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aa7ca448dfeff607fbdd8d5d32e334ea3">&#9670;&nbsp;</a></span>get_heuristic_manhattan()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">auto Instance::get_heuristic_manhattan </td>
-          <td>(</td>
-          <td class="paramtype">const int&#160;</td>
-          <td class="paramname"><em>agent_num</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">const int&#160;</td>
-          <td class="paramname"><em>loc</em>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td> const -&gt; int
-  </td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p class="definition">Definition at line <a class="el" href="Instance_8h_source.html#l00078">78</a> of file <a class="el" href="Instance_8h_source.html">Instance.h</a>.</p>
 
 </div>
 </div>
@@ -631,41 +557,44 @@ Here is the caller graph for this function:</div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="Instance_8h_source.html#l00048">48</a> of file <a class="el" href="Instance_8h_source.html">Instance.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="Instance_8h_source.html#l00050">50</a> of file <a class="el" href="Instance_8h_source.html">Instance.h</a>.</p>
 <div class="dynheader">
 Here is the caller graph for this function:</div>
 <div class="dyncontent">
 <div class="center"><img src="classInstance_ac43507dcb7e7a25793b72db50b731079_icgraph.png" border="0" usemap="#classInstance_ac43507dcb7e7a25793b72db50b731079_icgraph" alt=""/></div>
 <map name="classInstance_ac43507dcb7e7a25793b72db50b731079_icgraph" id="classInstance_ac43507dcb7e7a25793b72db50b731079_icgraph">
-<area shape="rect" title=" " alt="" coords="1364,370,1543,397"/>
+<area shape="rect" title=" " alt="" coords="1364,403,1543,430"/>
 <area shape="rect" href="classConstraintTable.html#aff82442aa2588d601799d3e192f085db" title=" " alt="" coords="1148,49,1303,91"/>
 <area shape="rect" href="classSafeIntervalTable.html#a7323895f0831d0be6a4e6689f65cfee4" title=" " alt="" coords="1154,180,1297,221"/>
-<area shape="rect" href="classVisualizer.html#a4eb35bccef2b8df5f26e0f512b114c33" title=" " alt="" coords="1148,245,1303,287"/>
-<area shape="rect" href="classVisualizer.html#a531350c5ec8ec39867647997690fc9fb" title=" " alt="" coords="935,282,1050,309"/>
+<area shape="rect" href="classVisualizer.html#a4eb35bccef2b8df5f26e0f512b114c33" title=" " alt="" coords="1148,297,1303,339"/>
+<area shape="rect" href="classVisualizer.html#a531350c5ec8ec39867647997690fc9fb" title=" " alt="" coords="935,275,1050,302"/>
 <area shape="rect" href="classVisualizer.html#a5b9e61af0811391b1e32524439d77432" title=" " alt="" coords="1158,363,1293,404"/>
-<area shape="rect" href="classConstraintTable.html#add338b302f24339c2c648cd1eb1018a5" title=" " alt="" coords="1149,493,1301,535"/>
-<area shape="rect" href="classConstraintTable.html#a3944425bf22c03daf70bf254f7a226ed" title=" " alt="" coords="1147,428,1303,469"/>
+<area shape="rect" href="classConstraintTable.html#add338b302f24339c2c648cd1eb1018a5" title=" " alt="" coords="1149,428,1301,469"/>
+<area shape="rect" href="classConstraintTable.html#a3944425bf22c03daf70bf254f7a226ed" title=" " alt="" coords="1147,493,1303,535"/>
 <area shape="rect" href="classSafeIntervalTable.html#a3c935b379679efb82451596f8c1a1f2b" title=" " alt="" coords="1142,559,1309,600"/>
 <area shape="rect" href="classSafeIntervalTable.html#a2c2c1dce378dd039c872a55b1d8dab8c" title=" " alt="" coords="1148,624,1303,665"/>
 <area shape="rect" href="classConstraintTable.html#a337ab1a6d473a1e46934c312cba144c6" title=" " alt="" coords="1135,115,1316,156"/>
 <area shape="rect" href="classSafeIntervalTable.html#a4c7d822c436caf8822ed179e00b6c94e" title=" " alt="" coords="1153,689,1297,731"/>
+<area shape="rect" href="classSafeIntervalTable.html#aa9d1c371c39f3458f1f8492778a7f72e" title=" " alt="" coords="1154,755,1297,796"/>
 <area shape="rect" href="classConstraintTable.html#a26372c16fc3dc1796c362d19489a78de" title=" " alt="" coords="915,49,1070,91"/>
 <area shape="rect" href="classConstraintTable.html#ab2bd3a0825989119ce58b5194e294a1d" title=" " alt="" coords="685,5,848,47"/>
-<area shape="rect" href="classLNS.html#a319d877bb15af0145e03c374929d3ddc" title=" " alt="" coords="686,122,847,149"/>
-<area shape="rect" href="classLNS.html#af3084016c73f066f5e33e0d4847b50c2" title=" " alt="" coords="693,71,840,98"/>
-<area shape="rect" href="classLNS.html#a658e49decd804a9fa1a08d065ae6304d" title=" " alt="" coords="452,19,635,60"/>
-<area shape="rect" href="classLNS.html#ab4a4826221160701ee3cf6ca93feb1f7" title=" " alt="" coords="313,69,404,95"/>
-<area shape="rect" href="destroy_8cpp.html#a1fe60ef45fb8a4e175eb3b737505f3d5" title=" " alt="" coords="108,69,265,95"/>
-<area shape="rect" href="destroy_8cpp.html#a808f40e2e9d6eb5463165c031dfa3eb1" title=" " alt="" coords="5,69,60,95"/>
+<area shape="rect" href="classLNS.html#a319d877bb15af0145e03c374929d3ddc" title=" " alt="" coords="686,71,847,98"/>
+<area shape="rect" href="classLNS.html#af3084016c73f066f5e33e0d4847b50c2" title=" " alt="" coords="693,122,840,149"/>
+<area shape="rect" href="classLNS.html#a658e49decd804a9fa1a08d065ae6304d" title=" " alt="" coords="452,5,635,47"/>
+<area shape="rect" href="classLNS.html#ab4a4826221160701ee3cf6ca93feb1f7" title=" " alt="" coords="313,42,404,69"/>
+<area shape="rect" href="destroy_8cpp.html#a1fe60ef45fb8a4e175eb3b737505f3d5" title=" " alt="" coords="108,42,265,69"/>
+<area shape="rect" href="destroy_8cpp.html#a808f40e2e9d6eb5463165c031dfa3eb1" title=" " alt="" coords="5,42,60,69"/>
 <area shape="rect" href="classSafeIntervalTable.html#a787f99329e3378787106076ecaf026a9" title=" " alt="" coords="921,180,1064,221"/>
-<area shape="rect" href="classVisualizer.html#a2b6436ec715468955ebb9f53b908773f" title=" " alt="" coords="705,282,829,309"/>
-<area shape="rect" href="main_8cpp.html#a808f40e2e9d6eb5463165c031dfa3eb1" title=" " alt="" coords="516,282,571,309"/>
+<area shape="rect" href="classSafeIntervalTable.html#aab5207a25c528d600ca267d4ba8ef188" title=" " alt="" coords="695,180,838,221"/>
+<area shape="rect" href="classVisualizer.html#a2b6436ec715468955ebb9f53b908773f" title=" " alt="" coords="705,275,829,302"/>
+<area shape="rect" href="main_8cpp.html#a808f40e2e9d6eb5463165c031dfa3eb1" title=" " alt="" coords="516,275,571,302"/>
 <area shape="rect" href="classLNS.html#a5ccad09a04930841c3615ecf8ec0972d" title=" " alt="" coords="899,467,1087,494"/>
 <area shape="rect" href="classLNS.html#a412b23f4704dc3ce9e01fe0331ca8728" title=" " alt="" coords="683,467,851,494"/>
-<area shape="rect" href="classLNS.html#a566e47ae5b4577e3a70dc6f819f302be" title=" " alt="" coords="503,467,583,494"/>
+<area shape="rect" href="classLNS.html#a6d3648748e40c87140940d9912aac986" title=" " alt="" coords="503,467,583,494"/>
 <area shape="rect" href="classLNS.html#af68cb150f64a0c8f249057ab57364f48" title=" " alt="" coords="686,519,847,560"/>
 <area shape="rect" href="classConstraintTable.html#af360477b2e043a058cbb2b82d24fd37f" title=" " alt="" coords="902,115,1083,156"/>
 <area shape="rect" href="classSafeIntervalTable.html#a468afa97880d6f8daeada75d8cc08cf2" title=" " alt="" coords="917,689,1068,731"/>
+<area shape="rect" href="classSIPP.html#aecbadddd1d20b7ced6e12aef5ba47d28" title=" " alt="" coords="947,762,1038,789"/>
 </map>
 </div>
 
@@ -696,7 +625,7 @@ Here is the caller graph for this function:</div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="Instance_8h_source.html#l00101">101</a> of file <a class="el" href="Instance_8h_source.html">Instance.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="Instance_8h_source.html#l00105">105</a> of file <a class="el" href="Instance_8h_source.html">Instance.h</a>.</p>
 <div class="dynheader">
 Here is the caller graph for this function:</div>
 <div class="dyncontent">
@@ -708,7 +637,7 @@ Here is the caller graph for this function:</div>
 <area shape="rect" href="classInstance.html#ab0a13882331419777eaa2870fbbf3c0a" title=" " alt="" coords="207,5,351,47"/>
 <area shape="rect" href="classInstance.html#aad5fc735ca29a154449c86c1690c743b" title=" " alt="" coords="5,13,147,39"/>
 <area shape="rect" href="classLNS.html#a412b23f4704dc3ce9e01fe0331ca8728" title=" " alt="" coords="195,71,363,98"/>
-<area shape="rect" href="classLNS.html#a566e47ae5b4577e3a70dc6f819f302be" title=" " alt="" coords="36,122,116,149"/>
+<area shape="rect" href="classLNS.html#a6d3648748e40c87140940d9912aac986" title=" " alt="" coords="36,122,116,149"/>
 <area shape="rect" href="classLNS.html#af68cb150f64a0c8f249057ab57364f48" title=" " alt="" coords="198,173,359,215"/>
 </map>
 </div>
@@ -739,7 +668,7 @@ Here is the caller graph for this function:</div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="Instance_8h_source.html#l00127">127</a> of file <a class="el" href="Instance_8h_source.html">Instance.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="Instance_8h_source.html#l00131">131</a> of file <a class="el" href="Instance_8h_source.html">Instance.h</a>.</p>
 <div class="dynheader">
 Here is the caller graph for this function:</div>
 <div class="dyncontent">
@@ -750,7 +679,7 @@ Here is the caller graph for this function:</div>
 <area shape="rect" href="classInstance.html#aad5fc735ca29a154449c86c1690c743b" title=" " alt="" coords="373,107,514,133"/>
 <area shape="rect" href="classSIPP.html#a87c760657e7e2503a4e82c5be14f285f" title=" " alt="" coords="400,157,487,184"/>
 <area shape="rect" href="classLNS.html#a412b23f4704dc3ce9e01fe0331ca8728" title=" " alt="" coords="133,5,301,32"/>
-<area shape="rect" href="classLNS.html#a566e47ae5b4577e3a70dc6f819f302be" title=" " alt="" coords="5,56,85,83"/>
+<area shape="rect" href="classLNS.html#a6d3648748e40c87140940d9912aac986" title=" " alt="" coords="5,56,85,83"/>
 <area shape="rect" href="classLNS.html#af68cb150f64a0c8f249057ab57364f48" title=" " alt="" coords="137,107,298,149"/>
 </map>
 </div>
@@ -781,21 +710,24 @@ Here is the caller graph for this function:</div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="Instance_8h_source.html#l00132">132</a> of file <a class="el" href="Instance_8h_source.html">Instance.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="Instance_8h_source.html#l00136">136</a> of file <a class="el" href="Instance_8h_source.html">Instance.h</a>.</p>
 <div class="dynheader">
 Here is the caller graph for this function:</div>
 <div class="dyncontent">
 <div class="center"><img src="classInstance_a0575e9709197df95038612049a6bbc09_icgraph.png" border="0" usemap="#classInstance_a0575e9709197df95038612049a6bbc09_icgraph" alt=""/></div>
 <map name="classInstance_a0575e9709197df95038612049a6bbc09_icgraph" id="classInstance_a0575e9709197df95038612049a6bbc09_icgraph">
-<area shape="rect" title=" " alt="" coords="704,123,879,164"/>
-<area shape="rect" href="classConstraintTable.html#a5c386191610acb6c7f06ece5c799dc76" title=" " alt="" coords="403,5,602,47"/>
-<area shape="rect" href="classLNS.html#a5ccad09a04930841c3615ecf8ec0972d" title=" " alt="" coords="409,71,597,98"/>
-<area shape="rect" href="classEdgeConstraintTable.html#a9d043f53a556d662f54999671de2e552" title=" " alt="" coords="421,123,584,164"/>
-<area shape="rect" href="classEdgeConstraintTableWithAgentNums.html#a5458ba7fc89e5e277415e996b2ed4cc0" title=" " alt="" coords="349,188,656,229"/>
-<area shape="rect" href="classSafeIntervalTable.html#a6e918fffce85020e3be33bbca96d7695" title=" " alt="" coords="431,253,574,295"/>
-<area shape="rect" href="classLNS.html#a412b23f4704dc3ce9e01fe0331ca8728" title=" " alt="" coords="133,21,301,47"/>
-<area shape="rect" href="classLNS.html#a566e47ae5b4577e3a70dc6f819f302be" title=" " alt="" coords="5,71,85,98"/>
-<area shape="rect" href="classLNS.html#af68cb150f64a0c8f249057ab57364f48" title=" " alt="" coords="137,123,298,164"/>
+<area shape="rect" title=" " alt="" coords="715,156,889,197"/>
+<area shape="rect" href="classConstraintTable.html#a5c386191610acb6c7f06ece5c799dc76" title=" " alt="" coords="414,5,613,47"/>
+<area shape="rect" href="classLNS.html#a5ccad09a04930841c3615ecf8ec0972d" title=" " alt="" coords="419,71,607,98"/>
+<area shape="rect" href="classEdgeConstraintTable.html#a9d043f53a556d662f54999671de2e552" title=" " alt="" coords="432,123,595,164"/>
+<area shape="rect" href="classEdgeConstraintTableWithAgentNums.html#a5458ba7fc89e5e277415e996b2ed4cc0" title=" " alt="" coords="360,188,667,229"/>
+<area shape="rect" href="classEdgeConstraintTable.html#a7fba59271920690ec7eef73b2569559c" title=" " alt="" coords="436,253,591,295"/>
+<area shape="rect" href="classSafeIntervalTable.html#a6e918fffce85020e3be33bbca96d7695" title=" " alt="" coords="442,319,585,360"/>
+<area shape="rect" href="classLNS.html#a412b23f4704dc3ce9e01fe0331ca8728" title=" " alt="" coords="144,21,312,47"/>
+<area shape="rect" href="classLNS.html#a6d3648748e40c87140940d9912aac986" title=" " alt="" coords="11,71,91,98"/>
+<area shape="rect" href="classLNS.html#af68cb150f64a0c8f249057ab57364f48" title=" " alt="" coords="147,123,309,164"/>
+<area shape="rect" href="classSafeIntervalTable.html#aa9d1c371c39f3458f1f8492778a7f72e" title=" " alt="" coords="157,253,299,295"/>
+<area shape="rect" href="classSIPP.html#aecbadddd1d20b7ced6e12aef5ba47d28" title=" " alt="" coords="5,261,96,287"/>
 </map>
 </div>
 
@@ -825,28 +757,37 @@ Here is the caller graph for this function:</div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="Instance_8h_source.html#l00153">153</a> of file <a class="el" href="Instance_8h_source.html">Instance.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="Instance_8h_source.html#l00157">157</a> of file <a class="el" href="Instance_8h_source.html">Instance.h</a>.</p>
 <div class="dynheader">
 Here is the caller graph for this function:</div>
 <div class="dyncontent">
 <div class="center"><img src="classInstance_a4db483952b7f06e3c0b5e84a908510e4_icgraph.png" border="0" usemap="#classInstance_a4db483952b7f06e3c0b5e84a908510e4_icgraph" alt=""/></div>
 <map name="classInstance_a4db483952b7f06e3c0b5e84a908510e4_icgraph" id="classInstance_a4db483952b7f06e3c0b5e84a908510e4_icgraph">
-<area shape="rect" title=" " alt="" coords="912,235,1075,276"/>
-<area shape="rect" href="classLNS.html#a5ccad09a04930841c3615ecf8ec0972d" title=" " alt="" coords="465,6,653,33"/>
-<area shape="rect" href="classLNS.html#a27bbdb3f70a081c26dd031c6756b1e95" title=" " alt="" coords="703,158,864,185"/>
-<area shape="rect" href="classLNS.html#a4888343908bdd86069e09e7a3796a437" title=" " alt="" coords="463,107,655,134"/>
-<area shape="rect" href="classExperiment.html#ac3467eb067f8623c9cf3cd7c736a8c80" title=" " alt="" coords="720,217,847,243"/>
-<area shape="rect" href="classVisualizer.html#ac916e423f190d069e76c7324c686b2d8" title=" " alt="" coords="489,260,628,301"/>
-<area shape="rect" href="classVisualizer.html#a03e8dce489dd159edb7670dc0726978f" title=" " alt="" coords="489,391,628,432"/>
-<area shape="rect" href="classVisualizer.html#ae15c81eb55577d61e18a0fe07c95a477" title=" " alt="" coords="714,440,853,481"/>
-<area shape="rect" href="classVisualizer.html#a9bcf1d67b84c80b368b51ad5b1d7ea0d" title=" " alt="" coords="714,323,853,364"/>
-<area shape="rect" href="classLNS.html#a412b23f4704dc3ce9e01fe0331ca8728" title=" " alt="" coords="229,41,397,67"/>
-<area shape="rect" href="classLNS.html#a566e47ae5b4577e3a70dc6f819f302be" title=" " alt="" coords="45,99,125,126"/>
-<area shape="rect" href="classLNS.html#af68cb150f64a0c8f249057ab57364f48" title=" " alt="" coords="233,92,394,133"/>
-<area shape="rect" href="classVisualizer.html#aeef8596fea2b78a0754537da7813b14e" title=" " alt="" coords="231,292,395,333"/>
-<area shape="rect" href="classVisualizer.html#a2e676a4ed17244fa3ab7eaf9ad342982" title=" " alt="" coords="5,299,164,326"/>
-<area shape="rect" href="classVisualizer.html#acce90236fdc5b00a22d087a34a9e3787" title=" " alt="" coords="212,391,415,432"/>
-<area shape="rect" href="classVisualizer.html#aaab67ee59ad133348e5adbf351bb6c8f" title=" " alt="" coords="489,325,628,367"/>
+<area shape="rect" title=" " alt="" coords="1383,387,1545,428"/>
+<area shape="rect" href="classConstraintTable.html#aff82442aa2588d601799d3e192f085db" title=" " alt="" coords="1177,93,1331,135"/>
+<area shape="rect" href="classLNS.html#a4ea599007b8b88f4bff0cf1f12a8e8c6" title=" " alt="" coords="703,173,865,199"/>
+<area shape="rect" href="classLNS.html#a27bbdb3f70a081c26dd031c6756b1e95" title=" " alt="" coords="1173,341,1335,367"/>
+<area shape="rect" href="classLNS.html#a4888343908bdd86069e09e7a3796a437" title=" " alt="" coords="933,239,1125,266"/>
+<area shape="rect" href="classExperiment.html#ac3467eb067f8623c9cf3cd7c736a8c80" title="Runs the experiment." alt="" coords="1191,394,1317,421"/>
+<area shape="rect" href="classVisualizer.html#ac916e423f190d069e76c7324c686b2d8" title=" " alt="" coords="960,443,1099,484"/>
+<area shape="rect" href="classVisualizer.html#a03e8dce489dd159edb7670dc0726978f" title=" " alt="" coords="960,573,1099,615"/>
+<area shape="rect" href="classVisualizer.html#ae15c81eb55577d61e18a0fe07c95a477" title=" " alt="" coords="1185,620,1323,661"/>
+<area shape="rect" href="classVisualizer.html#a9bcf1d67b84c80b368b51ad5b1d7ea0d" title=" " alt="" coords="1185,503,1323,544"/>
+<area shape="rect" href="classConstraintTable.html#a26372c16fc3dc1796c362d19489a78de" title=" " alt="" coords="952,79,1107,120"/>
+<area shape="rect" href="classConstraintTable.html#ab2bd3a0825989119ce58b5194e294a1d" title=" " alt="" coords="703,5,865,47"/>
+<area shape="rect" href="classLNS.html#a319d877bb15af0145e03c374929d3ddc" title=" " alt="" coords="463,71,624,98"/>
+<area shape="rect" href="classLNS.html#af3084016c73f066f5e33e0d4847b50c2" title=" " alt="" coords="711,122,857,149"/>
+<area shape="rect" href="classLNS.html#a658e49decd804a9fa1a08d065ae6304d" title=" " alt="" coords="452,5,635,47"/>
+<area shape="rect" href="classLNS.html#ab4a4826221160701ee3cf6ca93feb1f7" title=" " alt="" coords="313,42,404,69"/>
+<area shape="rect" href="destroy_8cpp.html#a1fe60ef45fb8a4e175eb3b737505f3d5" title=" " alt="" coords="108,42,265,69"/>
+<area shape="rect" href="destroy_8cpp.html#a808f40e2e9d6eb5463165c031dfa3eb1" title=" " alt="" coords="5,42,60,69"/>
+<area shape="rect" href="classLNS.html#a6d3648748e40c87140940d9912aac986" title=" " alt="" coords="503,282,583,309"/>
+<area shape="rect" href="classLNS.html#a412b23f4704dc3ce9e01fe0331ca8728" title=" " alt="" coords="700,341,868,367"/>
+<area shape="rect" href="classLNS.html#af68cb150f64a0c8f249057ab57364f48" title=" " alt="" coords="703,275,865,316"/>
+<area shape="rect" href="classVisualizer.html#aeef8596fea2b78a0754537da7813b14e" title=" " alt="" coords="702,475,866,516"/>
+<area shape="rect" href="classVisualizer.html#a2e676a4ed17244fa3ab7eaf9ad342982" title=" " alt="" coords="464,482,623,509"/>
+<area shape="rect" href="classVisualizer.html#acce90236fdc5b00a22d087a34a9e3787" title=" " alt="" coords="683,573,885,615"/>
+<area shape="rect" href="classVisualizer.html#aaab67ee59ad133348e5adbf351bb6c8f" title=" " alt="" coords="960,508,1099,549"/>
 </map>
 </div>
 
@@ -876,18 +817,20 @@ Here is the caller graph for this function:</div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="Instance_8h_source.html#l00061">61</a> of file <a class="el" href="Instance_8h_source.html">Instance.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="Instance_8h_source.html#l00063">63</a> of file <a class="el" href="Instance_8h_source.html">Instance.h</a>.</p>
 <div class="dynheader">
 Here is the caller graph for this function:</div>
 <div class="dyncontent">
 <div class="center"><img src="classInstance_a1615e3a9d3b72fab02c0e449f7cba59b_icgraph.png" border="0" usemap="#classInstance_a1615e3a9d3b72fab02c0e449f7cba59b_icgraph" alt=""/></div>
 <map name="classInstance_a1615e3a9d3b72fab02c0e449f7cba59b_icgraph" id="classInstance_a1615e3a9d3b72fab02c0e449f7cba59b_icgraph">
-<area shape="rect" title=" " alt="" coords="712,23,855,65"/>
-<area shape="rect" href="classSolution.html#a1802864ca1ab7bffdb1710644daf3877" title=" " alt="" coords="488,31,664,57"/>
-<area shape="rect" href="classExperiment.html#ac3467eb067f8623c9cf3cd7c736a8c80" title=" " alt="" coords="313,5,440,32"/>
+<area shape="rect" title=" " alt="" coords="712,74,855,115"/>
+<area shape="rect" href="classSolution.html#a1802864ca1ab7bffdb1710644daf3877" title=" " alt="" coords="488,56,664,83"/>
+<area shape="rect" href="classLNS.html#a4ea599007b8b88f4bff0cf1f12a8e8c6" title=" " alt="" coords="495,107,657,133"/>
+<area shape="rect" href="classExperiment.html#ac3467eb067f8623c9cf3cd7c736a8c80" title="Runs the experiment." alt="" coords="313,5,440,32"/>
 <area shape="rect" href="classLNS.html#ab4a4826221160701ee3cf6ca93feb1f7" title=" " alt="" coords="331,56,422,83"/>
 <area shape="rect" href="destroy_8cpp.html#a1fe60ef45fb8a4e175eb3b737505f3d5" title=" " alt="" coords="108,56,265,83"/>
 <area shape="rect" href="destroy_8cpp.html#a808f40e2e9d6eb5463165c031dfa3eb1" title=" " alt="" coords="5,56,60,83"/>
+<area shape="rect" href="classLNS.html#a6d3648748e40c87140940d9912aac986" title=" " alt="" coords="337,107,417,133"/>
 </map>
 </div>
 
@@ -917,7 +860,7 @@ Here is the caller graph for this function:</div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="Instance_8h_source.html#l00055">55</a> of file <a class="el" href="Instance_8h_source.html">Instance.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="Instance_8h_source.html#l00057">57</a> of file <a class="el" href="Instance_8h_source.html">Instance.h</a>.</p>
 <div class="dynheader">
 Here is the caller graph for this function:</div>
 <div class="dyncontent">
@@ -957,14 +900,14 @@ Here is the caller graph for this function:</div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="Instance_8h_source.html#l00108">108</a> of file <a class="el" href="Instance_8h_source.html">Instance.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="Instance_8h_source.html#l00112">112</a> of file <a class="el" href="Instance_8h_source.html">Instance.h</a>.</p>
 <div class="dynheader">
 Here is the caller graph for this function:</div>
 <div class="dyncontent">
 <div class="center"><img src="classInstance_ab7890e1c06c7481de53d75ea8a1e04ff_icgraph.png" border="0" usemap="#classInstance_ab7890e1c06c7481de53d75ea8a1e04ff_icgraph" alt=""/></div>
 <map name="classInstance_ab7890e1c06c7481de53d75ea8a1e04ff_icgraph" id="classInstance_ab7890e1c06c7481de53d75ea8a1e04ff_icgraph">
 <area shape="rect" title=" " alt="" coords="180,5,341,47"/>
-<area shape="rect" href="classExperiment.html#ac3467eb067f8623c9cf3cd7c736a8c80" title=" " alt="" coords="5,13,132,39"/>
+<area shape="rect" href="classExperiment.html#ac3467eb067f8623c9cf3cd7c736a8c80" title="Runs the experiment." alt="" coords="5,13,132,39"/>
 </map>
 </div>
 
@@ -1082,7 +1025,7 @@ Here is the caller graph for this function:</div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="Instance_8h_source.html#l00138">138</a> of file <a class="el" href="Instance_8h_source.html">Instance.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="Instance_8h_source.html#l00142">142</a> of file <a class="el" href="Instance_8h_source.html">Instance.h</a>.</p>
 
 </div>
 </div>
@@ -1110,7 +1053,7 @@ Here is the caller graph for this function:</div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="Instance_8h_source.html#l00034">34</a> of file <a class="el" href="Instance_8h_source.html">Instance.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="Instance_8h_source.html#l00036">36</a> of file <a class="el" href="Instance_8h_source.html">Instance.h</a>.</p>
 
 </div>
 </div>
@@ -1140,7 +1083,7 @@ Here is the caller graph for this function:</div>
 <p>Load the map from a file specified during <a class="el" href="classInstance.html">Instance</a> initialization. </p>
 <dl class="section return"><dt>Returns</dt><dd>Success of the operation </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="Instance_8cpp_source.html#l00079">79</a> of file <a class="el" href="Instance_8cpp_source.html">Instance.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="Instance_8cpp_source.html#l00081">81</a> of file <a class="el" href="Instance_8cpp_source.html">Instance.cpp</a>.</p>
 <div class="dynheader">
 Here is the caller graph for this function:</div>
 <div class="dyncontent">
@@ -1176,7 +1119,7 @@ Here is the caller graph for this function:</div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="Instance_8cpp_source.html#l00094">94</a> of file <a class="el" href="Instance_8cpp_source.html">Instance.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="Instance_8cpp_source.html#l00096">96</a> of file <a class="el" href="Instance_8cpp_source.html">Instance.cpp</a>.</p>
 <div class="dynheader">
 Here is the caller graph for this function:</div>
 <div class="dyncontent">
@@ -1214,7 +1157,7 @@ Here is the caller graph for this function:</div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="Instance_8h_source.html#l00159">159</a> of file <a class="el" href="Instance_8h_source.html">Instance.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="Instance_8h_source.html#l00163">163</a> of file <a class="el" href="Instance_8h_source.html">Instance.h</a>.</p>
 <div class="dynheader">
 Here is the caller graph for this function:</div>
 <div class="dyncontent">
@@ -1235,17 +1178,18 @@ Here is the caller graph for this function:</div>
 <area shape="rect" href="classConstraintTable.html#a337ab1a6d473a1e46934c312cba144c6" title=" " alt="" coords="1169,253,1350,295"/>
 <area shape="rect" href="classSafeIntervalTable.html#a4c7d822c436caf8822ed179e00b6c94e" title=" " alt="" coords="1187,683,1331,724"/>
 <area shape="rect" href="classSafeIntervalTable.html#a787f99329e3378787106076ecaf026a9" title=" " alt="" coords="938,35,1081,76"/>
+<area shape="rect" href="classSafeIntervalTable.html#aab5207a25c528d600ca267d4ba8ef188" title=" " alt="" coords="705,35,848,76"/>
 <area shape="rect" href="classConstraintTable.html#a26372c16fc3dc1796c362d19489a78de" title=" " alt="" coords="932,188,1087,229"/>
 <area shape="rect" href="classConstraintTable.html#ab2bd3a0825989119ce58b5194e294a1d" title=" " alt="" coords="695,144,858,185"/>
-<area shape="rect" href="classLNS.html#a319d877bb15af0145e03c374929d3ddc" title=" " alt="" coords="696,210,857,237"/>
-<area shape="rect" href="classLNS.html#af3084016c73f066f5e33e0d4847b50c2" title=" " alt="" coords="703,261,850,287"/>
-<area shape="rect" href="classLNS.html#a658e49decd804a9fa1a08d065ae6304d" title=" " alt="" coords="452,144,635,185"/>
-<area shape="rect" href="classLNS.html#ab4a4826221160701ee3cf6ca93feb1f7" title=" " alt="" coords="313,181,404,207"/>
-<area shape="rect" href="destroy_8cpp.html#a1fe60ef45fb8a4e175eb3b737505f3d5" title=" " alt="" coords="108,181,265,207"/>
-<area shape="rect" href="destroy_8cpp.html#a808f40e2e9d6eb5463165c031dfa3eb1" title=" " alt="" coords="5,181,60,207"/>
+<area shape="rect" href="classLNS.html#a319d877bb15af0145e03c374929d3ddc" title=" " alt="" coords="696,261,857,287"/>
+<area shape="rect" href="classLNS.html#af3084016c73f066f5e33e0d4847b50c2" title=" " alt="" coords="703,210,850,237"/>
+<area shape="rect" href="classLNS.html#a658e49decd804a9fa1a08d065ae6304d" title=" " alt="" coords="452,156,635,197"/>
+<area shape="rect" href="classLNS.html#ab4a4826221160701ee3cf6ca93feb1f7" title=" " alt="" coords="313,199,404,226"/>
+<area shape="rect" href="destroy_8cpp.html#a1fe60ef45fb8a4e175eb3b737505f3d5" title=" " alt="" coords="108,199,265,226"/>
+<area shape="rect" href="destroy_8cpp.html#a808f40e2e9d6eb5463165c031dfa3eb1" title=" " alt="" coords="5,199,60,226"/>
 <area shape="rect" href="classLNS.html#a5ccad09a04930841c3615ecf8ec0972d" title=" " alt="" coords="683,463,871,490"/>
 <area shape="rect" href="classLNS.html#a412b23f4704dc3ce9e01fe0331ca8728" title=" " alt="" coords="459,463,627,490"/>
-<area shape="rect" href="classLNS.html#a566e47ae5b4577e3a70dc6f819f302be" title=" " alt="" coords="319,463,399,490"/>
+<area shape="rect" href="classLNS.html#a6d3648748e40c87140940d9912aac986" title=" " alt="" coords="319,463,399,490"/>
 <area shape="rect" href="classLNS.html#af68cb150f64a0c8f249057ab57364f48" title=" " alt="" coords="463,515,624,556"/>
 <area shape="rect" href="classLNS.html#a852ca0c6ca9152bef516c29f3c210f66" title=" " alt="" coords="929,489,1089,531"/>
 <area shape="rect" href="classSafeIntervalTable.html#a468afa97880d6f8daeada75d8cc08cf2" title=" " alt="" coords="934,715,1085,756"/>
@@ -1280,7 +1224,7 @@ Here is the caller graph for this function:</div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="Instance_8h_source.html#l00114">114</a> of file <a class="el" href="Instance_8h_source.html">Instance.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="Instance_8h_source.html#l00118">118</a> of file <a class="el" href="Instance_8h_source.html">Instance.h</a>.</p>
 <div class="dynheader">
 Here is the caller graph for this function:</div>
 <div class="dyncontent">
@@ -1322,7 +1266,7 @@ Here is the caller graph for this function:</div>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="Instance_8cpp_source.html#l00288">288</a> of file <a class="el" href="Instance_8cpp_source.html">Instance.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="Instance_8cpp_source.html#l00295">295</a> of file <a class="el" href="Instance_8cpp_source.html">Instance.cpp</a>.</p>
 
 </div>
 </div>
@@ -1351,14 +1295,15 @@ Here is the caller graph for this function:</div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="Instance_8h_source.html#l00120">120</a> of file <a class="el" href="Instance_8h_source.html">Instance.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="Instance_8h_source.html#l00124">124</a> of file <a class="el" href="Instance_8h_source.html">Instance.h</a>.</p>
 <div class="dynheader">
 Here is the caller graph for this function:</div>
 <div class="dyncontent">
 <div class="center"><img src="classInstance_ab8d652e1ef097d60af71e038b693b227_icgraph.png" border="0" usemap="#classInstance_ab8d652e1ef097d60af71e038b693b227_icgraph" alt=""/></div>
 <map name="classInstance_ab8d652e1ef097d60af71e038b693b227_icgraph" id="classInstance_ab8d652e1ef097d60af71e038b693b227_icgraph">
-<area shape="rect" title=" " alt="" coords="164,5,301,47"/>
-<area shape="rect" href="classSolution.html#a9df6f3a07aa7d31c13349b1d1d837eb7" title=" " alt="" coords="5,13,116,39"/>
+<area shape="rect" title=" " alt="" coords="339,5,476,47"/>
+<area shape="rect" href="classSolution.html#a9df6f3a07aa7d31c13349b1d1d837eb7" title=" " alt="" coords="180,13,291,39"/>
+<area shape="rect" href="classExperiment.html#ac3467eb067f8623c9cf3cd7c736a8c80" title="Runs the experiment." alt="" coords="5,13,132,39"/>
 </map>
 </div>
 
@@ -1379,7 +1324,7 @@ Here is the caller graph for this function:</div>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="Instance_8cpp_source.html#l00227">227</a> of file <a class="el" href="Instance_8cpp_source.html">Instance.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="Instance_8cpp_source.html#l00234">234</a> of file <a class="el" href="Instance_8cpp_source.html">Instance.cpp</a>.</p>
 <div class="dynheader">
 Here is the caller graph for this function:</div>
 <div class="dyncontent">
@@ -1407,7 +1352,7 @@ Here is the caller graph for this function:</div>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="Instance_8cpp_source.html#l00163">163</a> of file <a class="el" href="Instance_8cpp_source.html">Instance.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="Instance_8cpp_source.html#l00165">165</a> of file <a class="el" href="Instance_8cpp_source.html">Instance.cpp</a>.</p>
 
 </div>
 </div>
@@ -1434,7 +1379,7 @@ Here is the caller graph for this function:</div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="Instance_8h_source.html#l00040">40</a> of file <a class="el" href="Instance_8h_source.html">Instance.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="Instance_8h_source.html#l00042">42</a> of file <a class="el" href="Instance_8h_source.html">Instance.h</a>.</p>
 
 </div>
 </div>
@@ -1482,7 +1427,7 @@ Here is the caller graph for this function:</div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="Instance_8h_source.html#l00145">145</a> of file <a class="el" href="Instance_8h_source.html">Instance.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="Instance_8h_source.html#l00149">149</a> of file <a class="el" href="Instance_8h_source.html">Instance.h</a>.</p>
 <div class="dynheader">
 Here is the caller graph for this function:</div>
 <div class="dyncontent">
@@ -1519,7 +1464,7 @@ Here is the caller graph for this function:</div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="Instance_8h_source.html#l00191">191</a> of file <a class="el" href="Instance_8h_source.html">Instance.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="Instance_8h_source.html#l00195">195</a> of file <a class="el" href="Instance_8h_source.html">Instance.h</a>.</p>
 
 </div>
 </div>
@@ -1543,7 +1488,7 @@ Here is the caller graph for this function:</div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="Instance_8h_source.html#l00190">190</a> of file <a class="el" href="Instance_8h_source.html">Instance.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="Instance_8h_source.html#l00194">194</a> of file <a class="el" href="Instance_8h_source.html">Instance.h</a>.</p>
 
 </div>
 </div>
@@ -1567,55 +1512,7 @@ Here is the caller graph for this function:</div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="Instance_8h_source.html#l00199">199</a> of file <a class="el" href="Instance_8h_source.html">Instance.h</a>.</p>
-
-</div>
-</div>
-<a id="ab355b89298fb5269f6e54530eee76f56"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ab355b89298fb5269f6e54530eee76f56">&#9670;&nbsp;</a></span>heuristic_euclidean</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">std::vector&lt;std::vector&lt;double&gt; &gt; Instance::heuristic_euclidean</td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">private</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p class="definition">Definition at line <a class="el" href="Instance_8h_source.html#l00198">198</a> of file <a class="el" href="Instance_8h_source.html">Instance.h</a>.</p>
-
-</div>
-</div>
-<a id="a5c94ac0ba742d74c304c2368ac37e90b"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a5c94ac0ba742d74c304c2368ac37e90b">&#9670;&nbsp;</a></span>heuristic_manhattan</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">std::vector&lt;std::vector&lt;int&gt; &gt; Instance::heuristic_manhattan</td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">private</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p class="definition">Definition at line <a class="el" href="Instance_8h_source.html#l00197">197</a> of file <a class="el" href="Instance_8h_source.html">Instance.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="Instance_8h_source.html#l00205">205</a> of file <a class="el" href="Instance_8h_source.html">Instance.h</a>.</p>
 
 </div>
 </div>
@@ -1639,7 +1536,7 @@ Here is the caller graph for this function:</div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="Instance_8h_source.html#l00184">184</a> of file <a class="el" href="Instance_8h_source.html">Instance.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="Instance_8h_source.html#l00188">188</a> of file <a class="el" href="Instance_8h_source.html">Instance.h</a>.</p>
 
 </div>
 </div>
@@ -1663,7 +1560,7 @@ Here is the caller graph for this function:</div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="Instance_8h_source.html#l00192">192</a> of file <a class="el" href="Instance_8h_source.html">Instance.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="Instance_8h_source.html#l00196">196</a> of file <a class="el" href="Instance_8h_source.html">Instance.h</a>.</p>
 
 </div>
 </div>
@@ -1687,7 +1584,7 @@ Here is the caller graph for this function:</div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="Instance_8h_source.html#l00187">187</a> of file <a class="el" href="Instance_8h_source.html">Instance.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="Instance_8h_source.html#l00191">191</a> of file <a class="el" href="Instance_8h_source.html">Instance.h</a>.</p>
 
 </div>
 </div>
@@ -1711,7 +1608,7 @@ Here is the caller graph for this function:</div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="Instance_8h_source.html#l00185">185</a> of file <a class="el" href="Instance_8h_source.html">Instance.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="Instance_8h_source.html#l00189">189</a> of file <a class="el" href="Instance_8h_source.html">Instance.h</a>.</p>
 
 </div>
 </div>
@@ -1735,7 +1632,7 @@ Here is the caller graph for this function:</div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="Instance_8h_source.html#l00194">194</a> of file <a class="el" href="Instance_8h_source.html">Instance.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="Instance_8h_source.html#l00198">198</a> of file <a class="el" href="Instance_8h_source.html">Instance.h</a>.</p>
 
 </div>
 </div>
@@ -1759,7 +1656,7 @@ Here is the caller graph for this function:</div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="Instance_8h_source.html#l00202">202</a> of file <a class="el" href="Instance_8h_source.html">Instance.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="Instance_8h_source.html#l00208">208</a> of file <a class="el" href="Instance_8h_source.html">Instance.h</a>.</p>
 
 </div>
 </div>
@@ -1783,7 +1680,7 @@ Here is the caller graph for this function:</div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="Instance_8h_source.html#l00186">186</a> of file <a class="el" href="Instance_8h_source.html">Instance.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="Instance_8h_source.html#l00190">190</a> of file <a class="el" href="Instance_8h_source.html">Instance.h</a>.</p>
 
 </div>
 </div>
@@ -1807,7 +1704,7 @@ Here is the caller graph for this function:</div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="Instance_8h_source.html#l00189">189</a> of file <a class="el" href="Instance_8h_source.html">Instance.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="Instance_8h_source.html#l00193">193</a> of file <a class="el" href="Instance_8h_source.html">Instance.h</a>.</p>
 
 </div>
 </div>
@@ -1831,7 +1728,7 @@ Here is the caller graph for this function:</div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="Instance_8h_source.html#l00188">188</a> of file <a class="el" href="Instance_8h_source.html">Instance.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="Instance_8h_source.html#l00192">192</a> of file <a class="el" href="Instance_8h_source.html">Instance.h</a>.</p>
 
 </div>
 </div>
@@ -1855,7 +1752,7 @@ Here is the caller graph for this function:</div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="Instance_8h_source.html#l00201">201</a> of file <a class="el" href="Instance_8h_source.html">Instance.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="Instance_8h_source.html#l00207">207</a> of file <a class="el" href="Instance_8h_source.html">Instance.h</a>.</p>
 
 </div>
 </div>

@@ -1,5 +1,5 @@
 var searchData=
 [
-  ['known_5fmax_1878',['known_max',['../classSIPP.html#aa14d05aba04119008162df90fb0c8f5c',1,'SIPP']]],
-  ['known_5fmin_1879',['known_min',['../classSIPP.html#a94bb0a195bba1d55156a94664f7318bb',1,'SIPP']]]
+  ['known_5fmax_1884',['known_max',['../classSIPP.html#aa14d05aba04119008162df90fb0c8f5c',1,'SIPP']]],
+  ['known_5fmin_1885',['known_min',['../classSIPP.html#a94bb0a195bba1d55156a94664f7318bb',1,'SIPP']]]
 ];

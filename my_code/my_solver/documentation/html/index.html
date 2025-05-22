@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=9"/>
 <meta name="generator" content="Doxygen 1.8.17"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>Simple MAPF Solver: Main Page</title>
+<title>Simple MAPF Solver: MAPF solver with interactive visualizations</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -62,11 +62,96 @@ $(function() {
 </iframe>
 </div>
 
-<div class="header">
+<div class="PageDoc"><div class="header">
   <div class="headertitle">
-<div class="title">Simple MAPF Solver Documentation</div>  </div>
+<div class="title">MAPF solver with interactive visualizations </div>  </div>
 </div><!--header-->
 <div class="contents">
+<div class="textblock"><p>This project is a multi-agent pathfinding (MAPF) solver with interactive visualizations. The solver is based on the MAPF-LNS and MAPF-LNS2 solvers. The visualizations use the SFML library and the whole project uses the C++17 standard. <br  />
+</p>
+<h1><a class="anchor" id="autotoc_md1"></a>
+Dependencies</h1>
+<p>SFML 2.5.1</p>
+<p>Boost 1.71.0</p>
+<p>nlohmann-json3-dev 3.7.3-1</p>
+<p>For tests and benchmarks (should be fetched automatically by CMake if not installed):</p>
+<p>google-test 1.10.0</p>
+<p>google benchmark 1.5.0-4build1</p>
+<p>nativefiledialog-extended (added as submodule, might be needed to run <code>git submodule update --init --recursive</code>)</p>
+<p>sqlite3 - for experiments only</p>
+<h1><a class="anchor" id="autotoc_md2"></a>
+Build</h1>
+<div class="fragment"><div class="line">./scripts/compile.sh &quot;build type&quot; &quot;tests&quot;</div>
+</div><!-- fragment --><p>There are three build types:</p><ul>
+<li>debug - no optimizations, all debug information, asserts on</li>
+<li>relwithdebinfo - optimizations, debug information, asserts on (default)</li>
+<li>release - optimizations, no debug information, asserts off</li>
+</ul>
+<p>The second argument specifies whether to build unit and benchmark tests. The default is ON</p><ul>
+<li>tests - build all tests (default)</li>
+<li>notest - do not build tests</li>
+</ul>
+<p>Another option is to build manually</p>
+<div class="fragment"><div class="line">cd build</div>
+<div class="line">cmake ..</div>
+<div class="line">cmake --build .</div>
+</div><!-- fragment --><p>To build with a specific build type, specify the CMAKE_BUILD_TYPE flag (options are Debug, Release, RelWithDebInfo): </p><div class="fragment"><div class="line">cmake -DCMAKE_BUILD_TYPE=Release ..</div>
+</div><!-- fragment --><p>To build without unit and benchmark tests, specify the ENABLE_TESTS flag (default is ON): </p><div class="fragment"><div class="line">cmake -ENABLE_TESTS=OFF ..</div>
+</div><!-- fragment --><h1><a class="anchor" id="autotoc_md3"></a>
+Run</h1>
+<div class="fragment"><div class="line">./scripts/run.sh &quot;arguments&quot; </div>
+</div><!-- fragment --><p>To see all possible arguments run: </p><div class="fragment"><div class="line">./scripts/run.sh -h</div>
+</div><!-- fragment --><p>Another script is provided for convenience to run a specific instance: </p><div class="fragment"><div class="line">./scripts/run_specific_instance.sh &quot;instance name&quot; &quot;optional arguments&quot;</div>
+</div><!-- fragment --><p>There are three prepared instances that can be run:</p><ul>
+<li>dummy - simple 3x3 map with 1 agent</li>
+<li>empty-16-16 - empty 16x16 map with 20 agents</li>
+<li>den520d - den520d map from the MAPF benchmark with 500 agents</li>
+</ul>
+<h2><a class="anchor" id="autotoc_md4"></a>
+Demo 1: Simple 3x3 map, 1 agent</h2>
+<div class="fragment"><div class="line">./scripts/run_specific_instance.sh dummy</div>
+</div><!-- fragment --><h2><a class="anchor" id="autotoc_md5"></a>
+Demo 2: den520d map from the MAPF benchmark with 500 agents</h2>
+<div class="fragment"><div class="line">./scripts/run_specific_instance.sh den520d</div>
+</div><!-- fragment --><h2><a class="anchor" id="autotoc_md6"></a>
+Run with custom settings:</h2>
+<div class="fragment"><div class="line">./build/mapf_solver -m &#39;path to map&#39; -a &#39;path to scen file&#39; -k &#39;number of agents&#39; </div>
+</div><!-- fragment --><p>or</p>
+<div class="fragment"><div class="line">./scripts/run.sh -m &#39;path to map&#39; -a &#39;path to scen file&#39; -k &#39;number of agents&#39; </div>
+</div><!-- fragment --><h1><a class="anchor" id="autotoc_md7"></a>
+Tests</h1>
+<h2><a class="anchor" id="autotoc_md8"></a>
+Memory tests</h2>
+<p>To test memory leaks on a specific instance of the map den520d with 500 agents, run </p><div class="fragment"><div class="line">./scripts/run_valgrind.sh den520d</div>
+</div><!-- fragment --><h2><a class="anchor" id="autotoc_md9"></a>
+Unit tests</h2>
+<p>To run all unit tests, run </p><div class="fragment"><div class="line">./scripts/run_tests.sh</div>
+</div><!-- fragment --><p>To run specific tests, run </p><div class="fragment"><div class="line">./scripts/run_specific_test.sh &quot;test name&quot;</div>
+</div><!-- fragment --><p>For example to run all <a class="el" href="classSIPP.html">SIPP</a> related tests: </p><div class="fragment"><div class="line">./scripts/run_specific_test.sh SIPP*</div>
+</div><!-- fragment --><h2><a class="anchor" id="autotoc_md10"></a>
+Benchmarks</h2>
+<div class="fragment"><div class="line">./scripts/run_benchmark.sh &quot;benchmark name&quot;</div>
+</div><!-- fragment --><p>Available benchmarks:</p><ul>
+<li>sipp_bm - benchmark of the sipp algorithm on the den520d map with 500 agents</li>
+<li>vector_operations_bm - benchmark of some vector operations</li>
+</ul>
+<h2><a class="anchor" id="autotoc_md11"></a>
+Profiling</h2>
+<p>To profile the program, run </p><div class="fragment"><div class="line">./scripts/profile.sh</div>
+</div><!-- fragment --><p>It is advised to compile the program in the RelWithDebInfo build type but with asserts turned off. I had some trouble with displaying the debug info in kcachegrind when compiled with clang, so it might be needed to switch to gcc</p>
+<div class="fragment"><div class="line">export CC=/usr/bin/gcc</div>
+<div class="line">export CXX=/usr/bin/g++</div>
+</div><!-- fragment --><h1><a class="anchor" id="autotoc_md12"></a>
+Documentation</h1>
+<p>To generate the documentation, run </p><div class="fragment"><div class="line">./scripts/generate_documentations.sh</div>
+</div><!-- fragment --><p>To view the documentation, run </p><div class="fragment"><div class="line">./scripts/show_documentation.sh</div>
+</div><!-- fragment --><h1><a class="anchor" id="autotoc_md13"></a>
+License</h1>
+<p>MIT</p>
+<h1><a class="anchor" id="autotoc_md14"></a>
+Author</h1>
+<p>Jan Chleboun (2025) email: <a href="#" onclick="location.href='mai'+'lto:'+'chl'+'eb'+'ja3'+'@f'+'el.'+'cv'+'ut.'+'cz'; return false;">chleb<span style="display: none;">.nosp@m.</span>ja3@<span style="display: none;">.nosp@m.</span>fel.c<span style="display: none;">.nosp@m.</span>vut.<span style="display: none;">.nosp@m.</span>cz</a> </p>
+</div></div><!-- PageDoc -->
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>

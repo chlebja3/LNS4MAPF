@@ -1,6 +1,7 @@
 var searchData=
 [
-  ['name_1300',['name',['../classSolver.html#aa4a44135625afde16684f6e372082851',1,'Solver']]],
+  ['name_1299',['name',['../classSolver.html#aa4a44135625afde16684f6e372082851',1,'Solver']]],
+  ['neighborhood_5fsize_1300',['NEIGHBORHOOD_SIZE',['../overall__improvement_8cpp.html#afe93d60ff9a6bfeb07b25431c418dc4b',1,'NEIGHBORHOOD_SIZE():&#160;overall_improvement.cpp'],['../repair_8cpp.html#afe93d60ff9a6bfeb07b25431c418dc4b',1,'NEIGHBORHOOD_SIZE():&#160;repair.cpp']]],
   ['neighborhood_5fsizes_1301',['NEIGHBORHOOD_SIZES',['../destroy_8cpp.html#a203188f4b367bc45561ca79fd4e0742e',1,'destroy.cpp']]],
   ['neighbors_1302',['neighbors',['../classInstance.html#a5813fb5aee5086911058681e2281fe99',1,'Instance']]],
   ['new_5fdata_1303',['new_data',['../classVisualization.html#a23a4b064968ac011c299b13baa78d48c',1,'Visualization']]],
@@ -14,5 +15,5 @@ var searchData=
   ['num_5fdirections_1311',['NUM_DIRECTIONS',['../SafeIntervalTable_8h.html#a972d7755cf75f84193e560c30639bfa3',1,'NUM_DIRECTIONS():&#160;SafeIntervalTable.h'],['../ConstraintTable_8cpp.html#a972d7755cf75f84193e560c30639bfa3',1,'NUM_DIRECTIONS():&#160;ConstraintTable.cpp']]],
   ['num_5fof_5fagents_1312',['num_of_agents',['../classInstance.html#a654b42d2c53acb14a71b296d22a88d5c',1,'Instance::num_of_agents()'],['../structSettings.html#a7db18b1e3d5ec6ac78dfa533f9ab08f0',1,'Settings::num_of_agents()']]],
   ['number_5fof_5fagents_5fdialog_1313',['number_of_agents_dialog',['../classVisualizer.html#ab826718bf82d1ffafdcf991d1015d8a7',1,'Visualizer']]],
-  ['nums_5fagents_1314',['NUMS_AGENTS',['../destroy_8cpp.html#a0d1a973029915393c548c08ee777a20e',1,'NUMS_AGENTS():&#160;destroy.cpp'],['../dummy_8cpp.html#a0d1a973029915393c548c08ee777a20e',1,'NUMS_AGENTS():&#160;dummy.cpp'],['../sipp__pp_8cpp.html#a0d1a973029915393c548c08ee777a20e',1,'NUMS_AGENTS():&#160;sipp_pp.cpp']]]
+  ['nums_5fagents_1314',['NUMS_AGENTS',['../destroy_8cpp.html#a0d1a973029915393c548c08ee777a20e',1,'NUMS_AGENTS():&#160;destroy.cpp'],['../feasible_8cpp.html#a0d1a973029915393c548c08ee777a20e',1,'NUMS_AGENTS():&#160;feasible.cpp'],['../feasible__restarts_8cpp.html#a0d1a973029915393c548c08ee777a20e',1,'NUMS_AGENTS():&#160;feasible_restarts.cpp'],['../influence__of__ap_8cpp.html#a0d1a973029915393c548c08ee777a20e',1,'NUMS_AGENTS():&#160;influence_of_ap.cpp'],['../influence__of__p_8cpp.html#a0d1a973029915393c548c08ee777a20e',1,'NUMS_AGENTS():&#160;influence_of_p.cpp'],['../influence__of__w_8cpp.html#a0d1a973029915393c548c08ee777a20e',1,'NUMS_AGENTS():&#160;influence_of_w.cpp'],['../overall__improvement_8cpp.html#a0d1a973029915393c548c08ee777a20e',1,'NUMS_AGENTS():&#160;overall_improvement.cpp'],['../repair_8cpp.html#a0d1a973029915393c548c08ee777a20e',1,'NUMS_AGENTS():&#160;repair.cpp'],['../sipp__pp_8cpp.html#a0d1a973029915393c548c08ee777a20e',1,'NUMS_AGENTS():&#160;sipp_pp.cpp']]]
 ];

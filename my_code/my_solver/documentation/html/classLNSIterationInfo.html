@@ -72,21 +72,25 @@ $(function() {
 </div><!--header-->
 <div class="contents">
 
+<p>Stores information about the iterations of the <a class="el" href="classLNS.html">LNS</a> algorithm.  
+ <a href="classLNSIterationInfo.html#details">More...</a></p>
+
 <p><code>#include &lt;<a class="el" href="IterInfo_8h_source.html">IterInfo.h</a>&gt;</code></p>
 <div class="dynheader">
 Collaboration diagram for LNSIterationInfo:</div>
 <div class="dyncontent">
 <div class="center"><img src="classLNSIterationInfo__coll__graph.png" border="0" usemap="#LNSIterationInfo_coll__map" alt="Collaboration graph"/></div>
 <map name="LNSIterationInfo_coll__map" id="LNSIterationInfo_coll__map">
-<area shape="rect" title=" " alt="" coords="5,95,132,121"/>
+<area shape="rect" title="Stores information about the iterations of the LNS algorithm." alt="" coords="5,95,132,121"/>
 <area shape="rect" href="classSolution.html" title=" " alt="" coords="31,5,106,32"/>
 </map>
 <center><span class="legend">[<a href="graph_legend.html">legend</a>]</span></center></div>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:aa5b661137d39dc8a92ec6870a5692f2b"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classLNSIterationInfo.html#aa5b661137d39dc8a92ec6870a5692f2b">LNSIterationInfo</a> (int iteration_num_, bool accepted_, int improvement_, std::vector&lt; <a class="el" href="IterInfo_8h.html#a59a5f038962657d012f917f2729557f4">SIPPInfo</a> &gt; &amp;sipp_info_, <a class="el" href="classSolution.html">Solution</a> sol_)</td></tr>
-<tr class="separator:aa5b661137d39dc8a92ec6870a5692f2b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae0731d29cd35d049bae3acfedd435ed9"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classLNSIterationInfo.html#ae0731d29cd35d049bae3acfedd435ed9">LNSIterationInfo</a> (int iteration_num_, bool accepted_, int improvement_, std::vector&lt; <a class="el" href="IterInfo_8h.html#a59a5f038962657d012f917f2729557f4">SIPPInfo</a> &gt; &amp;sipp_info_, <a class="el" href="classSolution.html">Solution</a> sol_, std::string destroy_strategy_)</td></tr>
+<tr class="memdesc:ae0731d29cd35d049bae3acfedd435ed9"><td class="mdescLeft">&#160;</td><td class="mdescRight">Constructor for <a class="el" href="classLNSIterationInfo.html" title="Stores information about the iterations of the LNS algorithm.">LNSIterationInfo</a>.  <a href="classLNSIterationInfo.html#ae0731d29cd35d049bae3acfedd435ed9">More...</a><br /></td></tr>
+<tr class="separator:ae0731d29cd35d049bae3acfedd435ed9"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-attribs"></a>
 Public Attributes</h2></td></tr>
@@ -102,13 +106,16 @@ Public Attributes</h2></td></tr>
 <tr class="separator:a846d2b90e6b7e424412a6e6de50f2ec2"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a655cd88a4c0fe16e70a13f6969efaaaa"><td class="memItemLeft" align="right" valign="top">std::vector&lt; int &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classLNSIterationInfo.html#a655cd88a4c0fe16e70a13f6969efaaaa">planning_order</a></td></tr>
 <tr class="separator:a655cd88a4c0fe16e70a13f6969efaaaa"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a18a0ac115a43f66a3b79d6bb6f58e000"><td class="memItemLeft" align="right" valign="top">std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classLNSIterationInfo.html#a18a0ac115a43f66a3b79d6bb6f58e000">destroy_strategy</a></td></tr>
+<tr class="separator:a18a0ac115a43f66a3b79d6bb6f58e000"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
-<div class="textblock">
-<p class="definition">Definition at line <a class="el" href="IterInfo_8h_source.html#l00030">30</a> of file <a class="el" href="IterInfo_8h_source.html">IterInfo.h</a>.</p>
+<div class="textblock"><p>Stores information about the iterations of the <a class="el" href="classLNS.html">LNS</a> algorithm. </p>
+
+<p class="definition">Definition at line <a class="el" href="IterInfo_8h_source.html#l00053">53</a> of file <a class="el" href="IterInfo_8h_source.html">IterInfo.h</a>.</p>
 </div><h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
-<a id="aa5b661137d39dc8a92ec6870a5692f2b"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aa5b661137d39dc8a92ec6870a5692f2b">&#9670;&nbsp;</a></span>LNSIterationInfo()</h2>
+<a id="ae0731d29cd35d049bae3acfedd435ed9"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ae0731d29cd35d049bae3acfedd435ed9">&#9670;&nbsp;</a></span>LNSIterationInfo()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -144,7 +151,13 @@ Public Attributes</h2></td></tr>
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype"><a class="el" href="classSolution.html">Solution</a>&#160;</td>
-          <td class="paramname"><em>sol_</em>&#160;</td>
+          <td class="paramname"><em>sol_</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">std::string&#160;</td>
+          <td class="paramname"><em>destroy_strategy_</em>&#160;</td>
         </tr>
         <tr>
           <td></td>
@@ -159,7 +172,20 @@ Public Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="IterInfo_8h_source.html#l00039">39</a> of file <a class="el" href="IterInfo_8h_source.html">IterInfo.h</a>.</p>
+<p>Constructor for <a class="el" href="classLNSIterationInfo.html" title="Stores information about the iterations of the LNS algorithm.">LNSIterationInfo</a>. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">iteration_num_</td><td>Iteration number </td></tr>
+    <tr><td class="paramname">accepted_</td><td>Whether the solution was accepted </td></tr>
+    <tr><td class="paramname">improvement_</td><td>Improvement of the solution </td></tr>
+    <tr><td class="paramname">sipp_info_</td><td>Information about all underlying <a class="el" href="classSIPP.html">SIPP</a> searches </td></tr>
+    <tr><td class="paramname">sol_</td><td><a class="el" href="classSolution.html">Solution</a> object representing the current solution </td></tr>
+    <tr><td class="paramname">destroy_strategy_</td><td>The destroy strategy used in this <a class="el" href="classLNS.html">LNS</a> iteration </td></tr>
+  </table>
+  </dd>
+</dl>
+
+<p class="definition">Definition at line <a class="el" href="IterInfo_8h_source.html#l00074">74</a> of file <a class="el" href="IterInfo_8h_source.html">IterInfo.h</a>.</p>
 
 </div>
 </div>
@@ -175,8 +201,26 @@ Public Attributes</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+<p>Whether the solution was accepted </p>
 
-<p class="definition">Definition at line <a class="el" href="IterInfo_8h_source.html#l00034">34</a> of file <a class="el" href="IterInfo_8h_source.html">IterInfo.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="IterInfo_8h_source.html#l00057">57</a> of file <a class="el" href="IterInfo_8h_source.html">IterInfo.h</a>.</p>
+
+</div>
+</div>
+<a id="a18a0ac115a43f66a3b79d6bb6f58e000"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a18a0ac115a43f66a3b79d6bb6f58e000">&#9670;&nbsp;</a></span>destroy_strategy</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::string LNSIterationInfo::destroy_strategy</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>The destroy strategy used in this <a class="el" href="classLNS.html">LNS</a> iteration </p>
+
+<p class="definition">Definition at line <a class="el" href="IterInfo_8h_source.html#l00062">62</a> of file <a class="el" href="IterInfo_8h_source.html">IterInfo.h</a>.</p>
 
 </div>
 </div>
@@ -191,8 +235,9 @@ Public Attributes</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+<p>Improvement of the solution </p>
 
-<p class="definition">Definition at line <a class="el" href="IterInfo_8h_source.html#l00035">35</a> of file <a class="el" href="IterInfo_8h_source.html">IterInfo.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="IterInfo_8h_source.html#l00058">58</a> of file <a class="el" href="IterInfo_8h_source.html">IterInfo.h</a>.</p>
 
 </div>
 </div>
@@ -207,8 +252,9 @@ Public Attributes</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+<p>Iteration number </p>
 
-<p class="definition">Definition at line <a class="el" href="IterInfo_8h_source.html#l00033">33</a> of file <a class="el" href="IterInfo_8h_source.html">IterInfo.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="IterInfo_8h_source.html#l00056">56</a> of file <a class="el" href="IterInfo_8h_source.html">IterInfo.h</a>.</p>
 
 </div>
 </div>
@@ -223,8 +269,9 @@ Public Attributes</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+<p>The priorities used in this <a class="el" href="classLNS.html">LNS</a> iteration </p>
 
-<p class="definition">Definition at line <a class="el" href="IterInfo_8h_source.html#l00038">38</a> of file <a class="el" href="IterInfo_8h_source.html">IterInfo.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="IterInfo_8h_source.html#l00061">61</a> of file <a class="el" href="IterInfo_8h_source.html">IterInfo.h</a>.</p>
 
 </div>
 </div>
@@ -239,8 +286,9 @@ Public Attributes</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+<p>Information about all underlying <a class="el" href="classSIPP.html">SIPP</a> searches </p>
 
-<p class="definition">Definition at line <a class="el" href="IterInfo_8h_source.html#l00036">36</a> of file <a class="el" href="IterInfo_8h_source.html">IterInfo.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="IterInfo_8h_source.html#l00059">59</a> of file <a class="el" href="IterInfo_8h_source.html">IterInfo.h</a>.</p>
 
 </div>
 </div>
@@ -255,8 +303,9 @@ Public Attributes</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+<p><a class="el" href="classSolution.html">Solution</a> object representing the current solution </p>
 
-<p class="definition">Definition at line <a class="el" href="IterInfo_8h_source.html#l00037">37</a> of file <a class="el" href="IterInfo_8h_source.html">IterInfo.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="IterInfo_8h_source.html#l00060">60</a> of file <a class="el" href="IterInfo_8h_source.html">IterInfo.h</a>.</p>
 
 </div>
 </div>

@@ -1,5 +1,5 @@
 var searchData=
 [
-  ['no_5finfo_2004',['no_info',['../utils_8h.html#a5a0e03fe74e9467826fd3d7154b2d536a58de2767f94e6ed59f54bb33747faf92',1,'utils.h']]],
-  ['none_2005',['NONE',['../utils_8h.html#a224b9163917ac32fc95a60d8c1eec3aaab50339a10e1de285ac99d4c3990b8693',1,'NONE():&#160;utils.h'],['../Visualizer_8h.html#acac3a08036931bfdfec21f740ba63270ab50339a10e1de285ac99d4c3990b8693',1,'NONE():&#160;Visualizer.h']]]
+  ['left_2003',['LEFT',['../utils_8h.html#a224b9163917ac32fc95a60d8c1eec3aaa684d325a7303f52e64011467ff5c5758',1,'utils.h']]],
+  ['lns_5fdestroyed_2004',['LNS_DESTROYED',['../Visualizer_8h.html#acac3a08036931bfdfec21f740ba63270a72056af075d6697c018db202cb620edc',1,'Visualizer.h']]]
 ];

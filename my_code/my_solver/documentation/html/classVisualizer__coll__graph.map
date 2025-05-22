@@ -4,7 +4,7 @@
 <area shape="rect" id="node3" href="$structSettings.html" title=" " alt="" coords="136,184,211,211"/>
 <area shape="rect" id="node4" href="$classClock.html" title=" " alt="" coords="235,184,293,211"/>
 <area shape="rect" id="node5" href="$classInstance.html" title=" " alt="" coords="639,95,716,121"/>
-<area shape="rect" id="node8" href="$classComputation.html" title=" " alt="" coords="451,184,557,211"/>
+<area shape="rect" id="node8" href="$classComputation.html" title="Handles all computation, invokes the solver, and manages the thread." alt="" coords="451,184,557,211"/>
 <area shape="rect" id="node6" href="$classMap.html" title=" " alt="" coords="652,5,703,32"/>
 <area shape="rect" id="node7" href="$classSharedData.html" title=" " alt="" coords="309,95,408,121"/>
 <area shape="rect" id="node9" href="$classLNS__settings.html" title=" " alt="" coords="448,95,555,121"/>

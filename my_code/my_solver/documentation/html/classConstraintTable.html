@@ -109,8 +109,10 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:a337ab1a6d473a1e46934c312cba144c6"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:af360477b2e043a058cbb2b82d24fd37f"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classConstraintTable.html#af360477b2e043a058cbb2b82d24fd37f">remove_constraints</a> (const <a class="el" href="utils_8h.html#a64881685b4fe27a0cf599222d5fb1c72">TimePointPath</a> &amp;path, int agent_num)</td></tr>
 <tr class="separator:af360477b2e043a058cbb2b82d24fd37f"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a8d02ac238fe1e95e6e3525299242950c"><td class="memItemLeft" align="right" valign="top">auto&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classConstraintTable.html#a8d02ac238fe1e95e6e3525299242950c">get_blocking_agent</a> (int from, int to, int time) const -&gt; int</td></tr>
-<tr class="separator:a8d02ac238fe1e95e6e3525299242950c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a345029fded47f68a7d5110a034600d83"><td class="memItemLeft" align="right" valign="top">auto&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classConstraintTable.html#a345029fded47f68a7d5110a034600d83">get_blocking_agent</a> (int from, int to, int time) const -&gt; std::pair&lt; int, int &gt;</td></tr>
+<tr class="separator:a345029fded47f68a7d5110a034600d83"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a3d41277bc7295c954f8597d78bd06d27"><td class="memItemLeft" align="right" valign="top">auto&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classConstraintTable.html#a3d41277bc7295c954f8597d78bd06d27">get_blocking_agents</a> (int location, int time_min) const -&gt; std::vector&lt; int &gt;</td></tr>
+<tr class="separator:a3d41277bc7295c954f8597d78bd06d27"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:add338b302f24339c2c648cd1eb1018a5"><td class="memItemLeft" align="right" valign="top">auto&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classConstraintTable.html#add338b302f24339c2c648cd1eb1018a5">get_agents_counts</a> (int location) const -&gt; const std::unordered_map&lt; int, int &gt; &amp;</td></tr>
 <tr class="separator:add338b302f24339c2c648cd1eb1018a5"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a3944425bf22c03daf70bf254f7a226ed"><td class="memItemLeft" align="right" valign="top">auto&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classConstraintTable.html#a3944425bf22c03daf70bf254f7a226ed">get_agents_counts_free</a> (int free_location) const -&gt; const std::unordered_map&lt; int, int &gt; &amp;</td></tr>
@@ -239,7 +241,7 @@ Here is the caller graph for this function:</div>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="ConstraintTable_8cpp_source.html#l00110">110</a> of file <a class="el" href="ConstraintTable_8cpp_source.html">ConstraintTable.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="ConstraintTable_8cpp_source.html#l00111">111</a> of file <a class="el" href="ConstraintTable_8cpp_source.html">ConstraintTable.cpp</a>.</p>
 <div class="dynheader">
 Here is the caller graph for this function:</div>
 <div class="dyncontent">
@@ -338,7 +340,7 @@ Here is the caller graph for this function:</div>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="ConstraintTable_8cpp_source.html#l00231">231</a> of file <a class="el" href="ConstraintTable_8cpp_source.html">ConstraintTable.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="ConstraintTable_8cpp_source.html#l00287">287</a> of file <a class="el" href="ConstraintTable_8cpp_source.html">ConstraintTable.cpp</a>.</p>
 <div class="dynheader">
 Here is the caller graph for this function:</div>
 <div class="dyncontent">
@@ -379,7 +381,7 @@ Here is the caller graph for this function:</div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="ConstraintTable_8h_source.html#l00073">73</a> of file <a class="el" href="ConstraintTable_8h_source.html">ConstraintTable.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="ConstraintTable_8h_source.html#l00074">74</a> of file <a class="el" href="ConstraintTable_8h_source.html">ConstraintTable.h</a>.</p>
 <div class="dynheader">
 Here is the caller graph for this function:</div>
 <div class="dyncontent">
@@ -388,7 +390,7 @@ Here is the caller graph for this function:</div>
 <area shape="rect" title=" " alt="" coords="585,49,737,90"/>
 <area shape="rect" href="classLNS.html#a5ccad09a04930841c3615ecf8ec0972d" title=" " alt="" coords="349,56,537,83"/>
 <area shape="rect" href="classLNS.html#a412b23f4704dc3ce9e01fe0331ca8728" title=" " alt="" coords="133,5,301,32"/>
-<area shape="rect" href="classLNS.html#a566e47ae5b4577e3a70dc6f819f302be" title=" " alt="" coords="5,56,85,83"/>
+<area shape="rect" href="classLNS.html#a6d3648748e40c87140940d9912aac986" title=" " alt="" coords="5,56,85,83"/>
 <area shape="rect" href="classLNS.html#af68cb150f64a0c8f249057ab57364f48" title=" " alt="" coords="137,107,298,149"/>
 </map>
 </div>
@@ -420,7 +422,7 @@ Here is the caller graph for this function:</div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="ConstraintTable_8h_source.html#l00079">79</a> of file <a class="el" href="ConstraintTable_8h_source.html">ConstraintTable.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="ConstraintTable_8h_source.html#l00080">80</a> of file <a class="el" href="ConstraintTable_8h_source.html">ConstraintTable.h</a>.</p>
 <div class="dynheader">
 Here is the caller graph for this function:</div>
 <div class="dyncontent">
@@ -429,15 +431,15 @@ Here is the caller graph for this function:</div>
 <area shape="rect" title=" " alt="" coords="585,49,741,90"/>
 <area shape="rect" href="classLNS.html#a5ccad09a04930841c3615ecf8ec0972d" title=" " alt="" coords="349,56,537,83"/>
 <area shape="rect" href="classLNS.html#a412b23f4704dc3ce9e01fe0331ca8728" title=" " alt="" coords="133,5,301,32"/>
-<area shape="rect" href="classLNS.html#a566e47ae5b4577e3a70dc6f819f302be" title=" " alt="" coords="5,56,85,83"/>
+<area shape="rect" href="classLNS.html#a6d3648748e40c87140940d9912aac986" title=" " alt="" coords="5,56,85,83"/>
 <area shape="rect" href="classLNS.html#af68cb150f64a0c8f249057ab57364f48" title=" " alt="" coords="137,107,298,149"/>
 </map>
 </div>
 
 </div>
 </div>
-<a id="a8d02ac238fe1e95e6e3525299242950c"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a8d02ac238fe1e95e6e3525299242950c">&#9670;&nbsp;</a></span>get_blocking_agent()</h2>
+<a id="a345029fded47f68a7d5110a034600d83"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a345029fded47f68a7d5110a034600d83">&#9670;&nbsp;</a></span>get_blocking_agent()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -463,23 +465,64 @@ Here is the caller graph for this function:</div>
         <tr>
           <td></td>
           <td>)</td>
-          <td></td><td> const -&gt; int</td>
+          <td></td><td> const -&gt; std::pair&lt;int, int&gt;</td>
         </tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="ConstraintTable_8cpp_source.html#l00192">192</a> of file <a class="el" href="ConstraintTable_8cpp_source.html">ConstraintTable.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="ConstraintTable_8cpp_source.html#l00193">193</a> of file <a class="el" href="ConstraintTable_8cpp_source.html">ConstraintTable.cpp</a>.</p>
 <div class="dynheader">
 Here is the caller graph for this function:</div>
 <div class="dyncontent">
-<div class="center"><img src="classConstraintTable_a8d02ac238fe1e95e6e3525299242950c_icgraph.png" border="0" usemap="#classConstraintTable_a8d02ac238fe1e95e6e3525299242950c_icgraph" alt=""/></div>
-<map name="classConstraintTable_a8d02ac238fe1e95e6e3525299242950c_icgraph" id="classConstraintTable_a8d02ac238fe1e95e6e3525299242950c_icgraph">
-<area shape="rect" title=" " alt="" coords="793,49,945,90"/>
-<area shape="rect" href="classLNS.html#a852ca0c6ca9152bef516c29f3c210f66" title=" " alt="" coords="585,49,745,90"/>
-<area shape="rect" href="classLNS.html#a5ccad09a04930841c3615ecf8ec0972d" title=" " alt="" coords="349,56,537,83"/>
-<area shape="rect" href="classLNS.html#a412b23f4704dc3ce9e01fe0331ca8728" title=" " alt="" coords="133,5,301,32"/>
-<area shape="rect" href="classLNS.html#a566e47ae5b4577e3a70dc6f819f302be" title=" " alt="" coords="5,56,85,83"/>
-<area shape="rect" href="classLNS.html#af68cb150f64a0c8f249057ab57364f48" title=" " alt="" coords="137,107,298,149"/>
+<div class="center"><img src="classConstraintTable_a345029fded47f68a7d5110a034600d83_icgraph.png" border="0" usemap="#classConstraintTable_a345029fded47f68a7d5110a034600d83_icgraph" alt=""/></div>
+<map name="classConstraintTable_a345029fded47f68a7d5110a034600d83_icgraph" id="classConstraintTable_a345029fded47f68a7d5110a034600d83_icgraph">
+<area shape="rect" title=" " alt="" coords="793,41,945,82"/>
+<area shape="rect" href="classLNS.html#a4ea599007b8b88f4bff0cf1f12a8e8c6" title=" " alt="" coords="363,5,524,32"/>
+<area shape="rect" href="classLNS.html#a852ca0c6ca9152bef516c29f3c210f66" title=" " alt="" coords="585,70,745,111"/>
+<area shape="rect" href="classLNS.html#a6d3648748e40c87140940d9912aac986" title=" " alt="" coords="5,79,85,105"/>
+<area shape="rect" href="classLNS.html#a5ccad09a04930841c3615ecf8ec0972d" title=" " alt="" coords="349,99,537,125"/>
+<area shape="rect" href="classLNS.html#a412b23f4704dc3ce9e01fe0331ca8728" title=" " alt="" coords="133,104,301,131"/>
+<area shape="rect" href="classLNS.html#af68cb150f64a0c8f249057ab57364f48" title=" " alt="" coords="137,155,298,197"/>
+</map>
+</div>
+
+</div>
+</div>
+<a id="a3d41277bc7295c954f8597d78bd06d27"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a3d41277bc7295c954f8597d78bd06d27">&#9670;&nbsp;</a></span>get_blocking_agents()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">auto ConstraintTable::get_blocking_agents </td>
+          <td>(</td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>location</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>time_min</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td> const -&gt; std::vector&lt;int&gt;</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="ConstraintTable_8cpp_source.html#l00239">239</a> of file <a class="el" href="ConstraintTable_8cpp_source.html">ConstraintTable.cpp</a>.</p>
+<div class="dynheader">
+Here is the caller graph for this function:</div>
+<div class="dyncontent">
+<div class="center"><img src="classConstraintTable_a3d41277bc7295c954f8597d78bd06d27_icgraph.png" border="0" usemap="#classConstraintTable_a3d41277bc7295c954f8597d78bd06d27_icgraph" alt=""/></div>
+<map name="classConstraintTable_a3d41277bc7295c954f8597d78bd06d27_icgraph" id="classConstraintTable_a3d41277bc7295c954f8597d78bd06d27_icgraph">
+<area shape="rect" title=" " alt="" coords="343,5,495,47"/>
+<area shape="rect" href="classLNS.html#a4ea599007b8b88f4bff0cf1f12a8e8c6" title=" " alt="" coords="133,13,295,39"/>
+<area shape="rect" href="classLNS.html#a6d3648748e40c87140940d9912aac986" title=" " alt="" coords="5,13,85,39"/>
 </map>
 </div>
 
@@ -510,7 +553,7 @@ Here is the caller graph for this function:</div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="ConstraintTable_8h_source.html#l00085">85</a> of file <a class="el" href="ConstraintTable_8h_source.html">ConstraintTable.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="ConstraintTable_8h_source.html#l00086">86</a> of file <a class="el" href="ConstraintTable_8h_source.html">ConstraintTable.h</a>.</p>
 <div class="dynheader">
 Here is the caller graph for this function:</div>
 <div class="dyncontent">
@@ -520,7 +563,7 @@ Here is the caller graph for this function:</div>
 <area shape="rect" href="classLNS.html#a852ca0c6ca9152bef516c29f3c210f66" title=" " alt="" coords="585,49,745,90"/>
 <area shape="rect" href="classLNS.html#a5ccad09a04930841c3615ecf8ec0972d" title=" " alt="" coords="349,56,537,83"/>
 <area shape="rect" href="classLNS.html#a412b23f4704dc3ce9e01fe0331ca8728" title=" " alt="" coords="133,5,301,32"/>
-<area shape="rect" href="classLNS.html#a566e47ae5b4577e3a70dc6f819f302be" title=" " alt="" coords="5,56,85,83"/>
+<area shape="rect" href="classLNS.html#a6d3648748e40c87140940d9912aac986" title=" " alt="" coords="5,56,85,83"/>
 <area shape="rect" href="classLNS.html#af68cb150f64a0c8f249057ab57364f48" title=" " alt="" coords="137,107,298,149"/>
 </map>
 </div>
@@ -553,7 +596,7 @@ Here is the caller graph for this function:</div>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="ConstraintTable_8cpp_source.html#l00075">75</a> of file <a class="el" href="ConstraintTable_8cpp_source.html">ConstraintTable.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="ConstraintTable_8cpp_source.html#l00076">76</a> of file <a class="el" href="ConstraintTable_8cpp_source.html">ConstraintTable.cpp</a>.</p>
 <div class="dynheader">
 Here is the caller graph for this function:</div>
 <div class="dyncontent">
@@ -597,7 +640,7 @@ Here is the caller graph for this function:</div>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="ConstraintTable_8cpp_source.html#l00152">152</a> of file <a class="el" href="ConstraintTable_8cpp_source.html">ConstraintTable.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="ConstraintTable_8cpp_source.html#l00153">153</a> of file <a class="el" href="ConstraintTable_8cpp_source.html">ConstraintTable.cpp</a>.</p>
 <div class="dynheader">
 Here is the caller graph for this function:</div>
 <div class="dyncontent">
@@ -663,7 +706,7 @@ Here is the caller graph for this function:</div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="ConstraintTable_8h_source.html#l00093">93</a> of file <a class="el" href="ConstraintTable_8h_source.html">ConstraintTable.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="ConstraintTable_8h_source.html#l00094">94</a> of file <a class="el" href="ConstraintTable_8h_source.html">ConstraintTable.h</a>.</p>
 
 </div>
 </div>
@@ -687,7 +730,7 @@ Here is the caller graph for this function:</div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="ConstraintTable_8h_source.html#l00091">91</a> of file <a class="el" href="ConstraintTable_8h_source.html">ConstraintTable.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="ConstraintTable_8h_source.html#l00092">92</a> of file <a class="el" href="ConstraintTable_8h_source.html">ConstraintTable.h</a>.</p>
 
 </div>
 </div>
@@ -727,7 +770,7 @@ Here is the caller graph for this function:</div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="ConstraintTable_8h_source.html#l00092">92</a> of file <a class="el" href="ConstraintTable_8h_source.html">ConstraintTable.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="ConstraintTable_8h_source.html#l00093">93</a> of file <a class="el" href="ConstraintTable_8h_source.html">ConstraintTable.h</a>.</p>
 
 </div>
 </div>
@@ -751,7 +794,7 @@ Here is the caller graph for this function:</div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="ConstraintTable_8h_source.html#l00095">95</a> of file <a class="el" href="ConstraintTable_8h_source.html">ConstraintTable.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="ConstraintTable_8h_source.html#l00096">96</a> of file <a class="el" href="ConstraintTable_8h_source.html">ConstraintTable.h</a>.</p>
 
 </div>
 </div>

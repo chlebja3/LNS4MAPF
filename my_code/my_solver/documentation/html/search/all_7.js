@@ -6,8 +6,6 @@ var searchData=
   ['hash_5fpoint_192',['hash_point',['../structPoint2d_1_1hash__point.html',1,'Point2d']]],
   ['height_193',['height',['../classMap.html#a0546fef98caebe38385bb2e0c7a15da1',1,'Map']]],
   ['heuristic_5fdistance_194',['heuristic_distance',['../classInstance.html#a0db84d9a6ae3e761a41bc50c7776b370',1,'Instance']]],
-  ['heuristic_5feuclidean_195',['heuristic_euclidean',['../classInstance.html#ab355b89298fb5269f6e54530eee76f56',1,'Instance']]],
-  ['heuristic_5fmanhattan_196',['heuristic_manhattan',['../classInstance.html#a5c94ac0ba742d74c304c2368ac37e90b',1,'Instance']]],
-  ['highlight_197',['Highlight',['../Visualizer_8h.html#acac3a08036931bfdfec21f740ba63270',1,'Visualizer.h']]],
-  ['highlight_5fdestroyed_198',['highlight_destroyed',['../classVisualizer.html#ab503fd803d9ab9a9128bf0ff6c6faa91',1,'Visualizer']]]
+  ['highlight_195',['Highlight',['../Visualizer_8h.html#acac3a08036931bfdfec21f740ba63270',1,'Visualizer.h']]],
+  ['highlight_5fdestroyed_196',['highlight_destroyed',['../classVisualizer.html#ab503fd803d9ab9a9128bf0ff6c6faa91',1,'Visualizer']]]
 ];

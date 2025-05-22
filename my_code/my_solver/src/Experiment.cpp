@@ -311,6 +311,11 @@ auto Experiment::get_seed_from_db(int agent_num, const std::string& map_name, co
     experiment_filename = experiment_name + "_" + std::to_string(agent_num) + "agents_" + map_name + "_" + scene_name_stripped +
                           "_destroy_type_ORIGO_Adaptive_neighborhood_size_4_" + std::to_string(run);
   }
+  else if (experiment_name == "repair")
+  {
+    experiment_filename =
+        experiment_name + "_" + std::to_string(agent_num) + "agents_" + map_name + "_" + scene_name_stripped + "_" + std::to_string(run);
+  }
   else if (experiment_name == "feasible" || experiment_name == "feasible_restarts")
   {
     experiment_filename = experiment_name + "_" + std::to_string(agent_num) + "agents_" + map_name + "-" + scene_name_stripped +

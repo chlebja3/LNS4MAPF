@@ -108,8 +108,8 @@ Collaboration diagram for LNS:</div>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:a566e47ae5b4577e3a70dc6f819f302be"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classLNS.html#a566e47ae5b4577e3a70dc6f819f302be">LNS</a> (const <a class="el" href="classInstance.html">Instance</a> &amp;instance_, std::mt19937 &amp;rnd_generator_, <a class="el" href="classSharedData.html">SharedData</a> *shared_data_, const <a class="el" href="classLNS__settings.html">LNS_settings</a> &amp;settings_)</td></tr>
-<tr class="separator:a566e47ae5b4577e3a70dc6f819f302be"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a6d3648748e40c87140940d9912aac986"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classLNS.html#a6d3648748e40c87140940d9912aac986">LNS</a> (const <a class="el" href="classInstance.html">Instance</a> &amp;instance_, std::mt19937 &amp;rnd_generator_, <a class="el" href="classSharedData.html">SharedData</a> *shared_data_, <a class="el" href="classLNS__settings.html">LNS_settings</a> &amp;settings_)</td></tr>
+<tr class="separator:a6d3648748e40c87140940d9912aac986"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a0940ae0dc7588b19b32f5a13c0cc66aa"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classLNS.html#a0940ae0dc7588b19b32f5a13c0cc66aa">~LNS</a> () override=default</td></tr>
 <tr class="separator:a0940ae0dc7588b19b32f5a13c0cc66aa"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ab4a4826221160701ee3cf6ca93feb1f7"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classLNS.html#ab4a4826221160701ee3cf6ca93feb1f7">solve</a> () override</td></tr>
@@ -144,6 +144,10 @@ Public Attributes</h2></td></tr>
 <tr class="separator:a06e41e84eb4a32488fc76c32b611fdb4"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a77618e63b8ce77b718ff2c184a4d5f16"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structLogger.html">Logger</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classLNS.html#a77618e63b8ce77b718ff2c184a4d5f16">log</a></td></tr>
 <tr class="separator:a77618e63b8ce77b718ff2c184a4d5f16"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a12990abf926b81ce31294fa792d9cf19"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classLNS__settings.html">LNS_settings</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classLNS.html#a12990abf926b81ce31294fa792d9cf19">settings</a></td></tr>
+<tr class="separator:a12990abf926b81ce31294fa792d9cf19"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a7b1e84253d317381bda167c8938893ef"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classLNS.html#a7b1e84253d317381bda167c8938893ef">found_initial_solution</a> = false</td></tr>
+<tr class="separator:a7b1e84253d317381bda167c8938893ef"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="inherit_header pub_attribs_classSolver"><td colspan="2" onclick="javascript:toggleInherit('pub_attribs_classSolver')"><img src="closed.png" alt="-"/>&#160;Public Attributes inherited from <a class="el" href="classSolver.html">Solver</a></td></tr>
 <tr class="memitem:aa4a44135625afde16684f6e372082851 inherit pub_attribs_classSolver"><td class="memItemLeft" align="right" valign="top">const std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSolver.html#aa4a44135625afde16684f6e372082851">name</a></td></tr>
 <tr class="separator:aa4a44135625afde16684f6e372082851 inherit pub_attribs_classSolver"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -160,10 +164,12 @@ Private Member Functions</h2></td></tr>
 <tr class="separator:a27bbdb3f70a081c26dd031c6756b1e95"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a4888343908bdd86069e09e7a3796a437"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classLNS.html#a4888343908bdd86069e09e7a3796a437">destroy_randomwalk</a> (<a class="el" href="classSolution.html">Solution</a> &amp;sol) const</td></tr>
 <tr class="separator:a4888343908bdd86069e09e7a3796a437"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ab1f4c7e8bab95f7208ea9f937070fc9e"><td class="memItemLeft" align="right" valign="top">auto&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classLNS.html#ab1f4c7e8bab95f7208ea9f937070fc9e">random_walk</a> (int agent_num, int neighborhood_size, int start_location, int start_time, int upperbound, std::unordered_set&lt; int &gt; &amp;chosen) const -&gt; bool</td></tr>
-<tr class="separator:ab1f4c7e8bab95f7208ea9f937070fc9e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a3e95681dbb28740deef085110991f3b0"><td class="memItemLeft" align="right" valign="top">auto&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classLNS.html#a3e95681dbb28740deef085110991f3b0">random_walk</a> (int agent_num, int neighborhood_size, int start_location, int start_time, int upperbound, std::set&lt; int &gt; &amp;chosen) const -&gt; bool</td></tr>
+<tr class="separator:a3e95681dbb28740deef085110991f3b0"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a5ccad09a04930841c3615ecf8ec0972d"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classLNS.html#a5ccad09a04930841c3615ecf8ec0972d">destroy_intersection</a> (<a class="el" href="classSolution.html">Solution</a> &amp;sol) const</td></tr>
 <tr class="separator:a5ccad09a04930841c3615ecf8ec0972d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a4ea599007b8b88f4bff0cf1f12a8e8c6"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classLNS.html#a4ea599007b8b88f4bff0cf1f12a8e8c6">destroy_blocked</a> (<a class="el" href="classSolution.html">Solution</a> &amp;sol) const</td></tr>
+<tr class="separator:a4ea599007b8b88f4bff0cf1f12a8e8c6"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a412b23f4704dc3ce9e01fe0331ca8728"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classLNS.html#a412b23f4704dc3ce9e01fe0331ca8728">destroy_adaptive</a> (<a class="el" href="classSolution.html">Solution</a> &amp;sol) const</td></tr>
 <tr class="separator:a412b23f4704dc3ce9e01fe0331ca8728"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:af68cb150f64a0c8f249057ab57364f48"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classLNS.html#af68cb150f64a0c8f249057ab57364f48">destroy_random_choose</a> (<a class="el" href="classSolution.html">Solution</a> &amp;sol) const</td></tr>
@@ -177,8 +183,6 @@ Private Member Functions</h2></td></tr>
 Private Attributes</h2></td></tr>
 <tr class="memitem:afb4bb32a788697e266793ef0bcf3b0f0"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classSharedData.html">SharedData</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classLNS.html#afb4bb32a788697e266793ef0bcf3b0f0">shared_data</a></td></tr>
 <tr class="separator:afb4bb32a788697e266793ef0bcf3b0f0"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a97b14223f5dd82ff88993020c5ff1033"><td class="memItemLeft" align="right" valign="top">const <a class="el" href="classLNS__settings.html">LNS_settings</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classLNS.html#a97b14223f5dd82ff88993020c5ff1033">settings</a></td></tr>
-<tr class="separator:a97b14223f5dd82ff88993020c5ff1033"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ae17baaf28f9e3ad95783e8d42c8a5ad4"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classLNS.html#ae17baaf28f9e3ad95783e8d42c8a5ad4">iteration_num</a> = 0</td></tr>
 <tr class="separator:ae17baaf28f9e3ad95783e8d42c8a5ad4"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a74f5c3ff08ec039b54e2b0d2e13d7902"><td class="memItemLeft" align="right" valign="top">double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classLNS.html#a74f5c3ff08ec039b54e2b0d2e13d7902">initial_solution_time</a></td></tr>
@@ -199,13 +203,15 @@ Private Attributes</h2></td></tr>
 <tr class="separator:ac9220182d3a84c5a247253967adaf2a5"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a53a18b76bacdfa7786da654785bd7ad7"><td class="memItemLeft" align="right" valign="top"><a class="el" href="LNS_8h.html#ad0e71dfd813044bba0ee48403ddcf2d0">DESTROY_TYPE</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classLNS.html#a53a18b76bacdfa7786da654785bd7ad7">last_destroy_strategy</a></td></tr>
 <tr class="separator:a53a18b76bacdfa7786da654785bd7ad7"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1cf8a164ac392a9c2052a7d2b9a4db74"><td class="memItemLeft" align="right" valign="top">float&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classLNS.html#a1cf8a164ac392a9c2052a7d2b9a4db74">threshold_blocked</a> = 1.0</td></tr>
+<tr class="separator:a1cf8a164ac392a9c2052a7d2b9a4db74"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock">
-<p class="definition">Definition at line <a class="el" href="LNS_8h_source.html#l00085">85</a> of file <a class="el" href="LNS_8h_source.html">LNS.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="LNS_8h_source.html#l00092">92</a> of file <a class="el" href="LNS_8h_source.html">LNS.h</a>.</p>
 </div><h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
-<a id="a566e47ae5b4577e3a70dc6f819f302be"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a566e47ae5b4577e3a70dc6f819f302be">&#9670;&nbsp;</a></span>LNS()</h2>
+<a id="a6d3648748e40c87140940d9912aac986"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a6d3648748e40c87140940d9912aac986">&#9670;&nbsp;</a></span>LNS()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -231,7 +237,7 @@ Private Attributes</h2></td></tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">const <a class="el" href="classLNS__settings.html">LNS_settings</a> &amp;&#160;</td>
+          <td class="paramtype"><a class="el" href="classLNS__settings.html">LNS_settings</a> &amp;&#160;</td>
           <td class="paramname"><em>settings_</em>&#160;</td>
         </tr>
         <tr>
@@ -242,7 +248,7 @@ Private Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="LNS_8cpp_source.html#l00018">18</a> of file <a class="el" href="LNS_8cpp_source.html">LNS.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="LNS_8cpp_source.html#l00022">22</a> of file <a class="el" href="LNS_8cpp_source.html">LNS.cpp</a>.</p>
 
 </div>
 </div>
@@ -296,14 +302,51 @@ Private Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="LNS_8cpp_source.html#l00603">603</a> of file <a class="el" href="LNS_8cpp_source.html">LNS.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="LNS_8cpp_source.html#l00627">627</a> of file <a class="el" href="LNS_8cpp_source.html">LNS.cpp</a>.</p>
 <div class="dynheader">
 Here is the caller graph for this function:</div>
 <div class="dyncontent">
 <div class="center"><img src="classLNS_a412b23f4704dc3ce9e01fe0331ca8728_icgraph.png" border="0" usemap="#classLNS_a412b23f4704dc3ce9e01fe0331ca8728_icgraph" alt=""/></div>
 <map name="classLNS_a412b23f4704dc3ce9e01fe0331ca8728_icgraph" id="classLNS_a412b23f4704dc3ce9e01fe0331ca8728_icgraph">
 <area shape="rect" title=" " alt="" coords="133,5,301,32"/>
-<area shape="rect" href="classLNS.html#a566e47ae5b4577e3a70dc6f819f302be" title=" " alt="" coords="5,5,85,32"/>
+<area shape="rect" href="classLNS.html#a6d3648748e40c87140940d9912aac986" title=" " alt="" coords="5,5,85,32"/>
+</map>
+</div>
+
+</div>
+</div>
+<a id="a4ea599007b8b88f4bff0cf1f12a8e8c6"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a4ea599007b8b88f4bff0cf1f12a8e8c6">&#9670;&nbsp;</a></span>destroy_blocked()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void LNS::destroy_blocked </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="classSolution.html">Solution</a> &amp;&#160;</td>
+          <td class="paramname"><em>sol</em></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">private</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="LNS_8cpp_source.html#l00693">693</a> of file <a class="el" href="LNS_8cpp_source.html">LNS.cpp</a>.</p>
+<div class="dynheader">
+Here is the caller graph for this function:</div>
+<div class="dyncontent">
+<div class="center"><img src="classLNS_a4ea599007b8b88f4bff0cf1f12a8e8c6_icgraph.png" border="0" usemap="#classLNS_a4ea599007b8b88f4bff0cf1f12a8e8c6_icgraph" alt=""/></div>
+<map name="classLNS_a4ea599007b8b88f4bff0cf1f12a8e8c6_icgraph" id="classLNS_a4ea599007b8b88f4bff0cf1f12a8e8c6_icgraph">
+<area shape="rect" title=" " alt="" coords="133,5,295,32"/>
+<area shape="rect" href="classLNS.html#a6d3648748e40c87140940d9912aac986" title=" " alt="" coords="5,5,85,32"/>
 </map>
 </div>
 
@@ -333,7 +376,7 @@ Here is the caller graph for this function:</div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="LNS_8cpp_source.html#l00477">477</a> of file <a class="el" href="LNS_8cpp_source.html">LNS.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="LNS_8cpp_source.html#l00521">521</a> of file <a class="el" href="LNS_8cpp_source.html">LNS.cpp</a>.</p>
 <div class="dynheader">
 Here is the caller graph for this function:</div>
 <div class="dyncontent">
@@ -341,7 +384,7 @@ Here is the caller graph for this function:</div>
 <map name="classLNS_a5ccad09a04930841c3615ecf8ec0972d_icgraph" id="classLNS_a5ccad09a04930841c3615ecf8ec0972d_icgraph">
 <area shape="rect" title=" " alt="" coords="349,56,537,83"/>
 <area shape="rect" href="classLNS.html#a412b23f4704dc3ce9e01fe0331ca8728" title=" " alt="" coords="133,5,301,32"/>
-<area shape="rect" href="classLNS.html#a566e47ae5b4577e3a70dc6f819f302be" title=" " alt="" coords="5,56,85,83"/>
+<area shape="rect" href="classLNS.html#a6d3648748e40c87140940d9912aac986" title=" " alt="" coords="5,56,85,83"/>
 <area shape="rect" href="classLNS.html#af68cb150f64a0c8f249057ab57364f48" title=" " alt="" coords="137,107,298,149"/>
 </map>
 </div>
@@ -372,17 +415,18 @@ Here is the caller graph for this function:</div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="LNS_8cpp_source.html#l00297">297</a> of file <a class="el" href="LNS_8cpp_source.html">LNS.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="LNS_8cpp_source.html#l00330">330</a> of file <a class="el" href="LNS_8cpp_source.html">LNS.cpp</a>.</p>
 <div class="dynheader">
 Here is the caller graph for this function:</div>
 <div class="dyncontent">
 <div class="center"><img src="classLNS_a27bbdb3f70a081c26dd031c6756b1e95_icgraph.png" border="0" usemap="#classLNS_a27bbdb3f70a081c26dd031c6756b1e95_icgraph" alt=""/></div>
 <map name="classLNS_a27bbdb3f70a081c26dd031c6756b1e95_icgraph" id="classLNS_a27bbdb3f70a081c26dd031c6756b1e95_icgraph">
-<area shape="rect" title=" " alt="" coords="589,62,751,88"/>
-<area shape="rect" href="classLNS.html#a412b23f4704dc3ce9e01fe0331ca8728" title=" " alt="" coords="133,36,301,63"/>
-<area shape="rect" href="classLNS.html#a566e47ae5b4577e3a70dc6f819f302be" title=" " alt="" coords="5,62,85,88"/>
-<area shape="rect" href="classLNS.html#af68cb150f64a0c8f249057ab57364f48" title=" " alt="" coords="137,138,298,180"/>
-<area shape="rect" href="classLNS.html#a4888343908bdd86069e09e7a3796a437" title=" " alt="" coords="349,87,541,114"/>
+<area shape="rect" title=" " alt="" coords="589,73,751,100"/>
+<area shape="rect" href="classLNS.html#a412b23f4704dc3ce9e01fe0331ca8728" title=" " alt="" coords="133,48,301,74"/>
+<area shape="rect" href="classLNS.html#a6d3648748e40c87140940d9912aac986" title=" " alt="" coords="5,106,85,133"/>
+<area shape="rect" href="classLNS.html#af68cb150f64a0c8f249057ab57364f48" title=" " alt="" coords="137,99,298,140"/>
+<area shape="rect" href="classLNS.html#a4888343908bdd86069e09e7a3796a437" title=" " alt="" coords="349,149,541,176"/>
+<area shape="rect" href="classLNS.html#a4ea599007b8b88f4bff0cf1f12a8e8c6" title=" " alt="" coords="137,165,298,192"/>
 </map>
 </div>
 
@@ -412,14 +456,14 @@ Here is the caller graph for this function:</div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="LNS_8cpp_source.html#l00658">658</a> of file <a class="el" href="LNS_8cpp_source.html">LNS.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="LNS_8cpp_source.html#l00800">800</a> of file <a class="el" href="LNS_8cpp_source.html">LNS.cpp</a>.</p>
 <div class="dynheader">
 Here is the caller graph for this function:</div>
 <div class="dyncontent">
 <div class="center"><img src="classLNS_af68cb150f64a0c8f249057ab57364f48_icgraph.png" border="0" usemap="#classLNS_af68cb150f64a0c8f249057ab57364f48_icgraph" alt=""/></div>
 <map name="classLNS_af68cb150f64a0c8f249057ab57364f48_icgraph" id="classLNS_af68cb150f64a0c8f249057ab57364f48_icgraph">
 <area shape="rect" title=" " alt="" coords="133,5,295,47"/>
-<area shape="rect" href="classLNS.html#a566e47ae5b4577e3a70dc6f819f302be" title=" " alt="" coords="5,13,85,39"/>
+<area shape="rect" href="classLNS.html#a6d3648748e40c87140940d9912aac986" title=" " alt="" coords="5,13,85,39"/>
 </map>
 </div>
 
@@ -449,16 +493,17 @@ Here is the caller graph for this function:</div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="LNS_8cpp_source.html#l00313">313</a> of file <a class="el" href="LNS_8cpp_source.html">LNS.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="LNS_8cpp_source.html#l00346">346</a> of file <a class="el" href="LNS_8cpp_source.html">LNS.cpp</a>.</p>
 <div class="dynheader">
 Here is the caller graph for this function:</div>
 <div class="dyncontent">
 <div class="center"><img src="classLNS_a4888343908bdd86069e09e7a3796a437_icgraph.png" border="0" usemap="#classLNS_a4888343908bdd86069e09e7a3796a437_icgraph" alt=""/></div>
 <map name="classLNS_a4888343908bdd86069e09e7a3796a437_icgraph" id="classLNS_a4888343908bdd86069e09e7a3796a437_icgraph">
-<area shape="rect" title=" " alt="" coords="349,56,541,83"/>
+<area shape="rect" title=" " alt="" coords="349,81,541,108"/>
 <area shape="rect" href="classLNS.html#a412b23f4704dc3ce9e01fe0331ca8728" title=" " alt="" coords="133,5,301,32"/>
-<area shape="rect" href="classLNS.html#a566e47ae5b4577e3a70dc6f819f302be" title=" " alt="" coords="5,56,85,83"/>
-<area shape="rect" href="classLNS.html#af68cb150f64a0c8f249057ab57364f48" title=" " alt="" coords="137,107,298,149"/>
+<area shape="rect" href="classLNS.html#a6d3648748e40c87140940d9912aac986" title=" " alt="" coords="5,81,85,108"/>
+<area shape="rect" href="classLNS.html#a4ea599007b8b88f4bff0cf1f12a8e8c6" title=" " alt="" coords="137,107,298,133"/>
+<area shape="rect" href="classLNS.html#af68cb150f64a0c8f249057ab57364f48" title=" " alt="" coords="137,158,298,199"/>
 </map>
 </div>
 
@@ -490,7 +535,7 @@ Here is the caller graph for this function:</div>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="LNS_8cpp_source.html#l00732">732</a> of file <a class="el" href="LNS_8cpp_source.html">LNS.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="LNS_8cpp_source.html#l00874">874</a> of file <a class="el" href="LNS_8cpp_source.html">LNS.cpp</a>.</p>
 <div class="dynheader">
 Here is the caller graph for this function:</div>
 <div class="dyncontent">
@@ -520,16 +565,16 @@ Here is the caller graph for this function:</div>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="LNS_8cpp_source.html#l00201">201</a> of file <a class="el" href="LNS_8cpp_source.html">LNS.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="LNS_8cpp_source.html#l00234">234</a> of file <a class="el" href="LNS_8cpp_source.html">LNS.cpp</a>.</p>
 <div class="dynheader">
 Here is the caller graph for this function:</div>
 <div class="dyncontent">
 <div class="center"><img src="classLNS_ab3adf7c10423f40dbbf163c99250bf02_icgraph.png" border="0" usemap="#classLNS_ab3adf7c10423f40dbbf163c99250bf02_icgraph" alt=""/></div>
 <map name="classLNS_ab3adf7c10423f40dbbf163c99250bf02_icgraph" id="classLNS_ab3adf7c10423f40dbbf163c99250bf02_icgraph">
 <area shape="rect" title=" " alt="" coords="519,31,701,57"/>
-<area shape="rect" href="dummy_8cpp.html#a1fe60ef45fb8a4e175eb3b737505f3d5" title=" " alt="" coords="313,5,471,32"/>
+<area shape="rect" href="feasible_8cpp.html#a1fe60ef45fb8a4e175eb3b737505f3d5" title=" " alt="" coords="313,5,471,32"/>
 <area shape="rect" href="classLNS.html#ab4a4826221160701ee3cf6ca93feb1f7" title=" " alt="" coords="347,56,437,83"/>
-<area shape="rect" href="dummy_8cpp.html#a8216c1645620cdb2f629cde3ac02ffef" title=" " alt="" coords="159,5,214,32"/>
+<area shape="rect" href="feasible_8cpp.html#a808f40e2e9d6eb5463165c031dfa3eb1" title=" " alt="" coords="159,5,214,32"/>
 <area shape="rect" href="destroy_8cpp.html#a1fe60ef45fb8a4e175eb3b737505f3d5" title=" " alt="" coords="108,56,265,83"/>
 <area shape="rect" href="destroy_8cpp.html#a808f40e2e9d6eb5463165c031dfa3eb1" title=" " alt="" coords="5,56,60,83"/>
 </map>
@@ -571,7 +616,7 @@ Here is the caller graph for this function:</div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="LNS_8cpp_source.html#l00576">576</a> of file <a class="el" href="LNS_8cpp_source.html">LNS.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="LNS_8cpp_source.html#l00598">598</a> of file <a class="el" href="LNS_8cpp_source.html">LNS.cpp</a>.</p>
 <div class="dynheader">
 Here is the caller graph for this function:</div>
 <div class="dyncontent">
@@ -580,7 +625,7 @@ Here is the caller graph for this function:</div>
 <area shape="rect" title=" " alt="" coords="585,49,745,90"/>
 <area shape="rect" href="classLNS.html#a5ccad09a04930841c3615ecf8ec0972d" title=" " alt="" coords="349,56,537,83"/>
 <area shape="rect" href="classLNS.html#a412b23f4704dc3ce9e01fe0331ca8728" title=" " alt="" coords="133,5,301,32"/>
-<area shape="rect" href="classLNS.html#a566e47ae5b4577e3a70dc6f819f302be" title=" " alt="" coords="5,56,85,83"/>
+<area shape="rect" href="classLNS.html#a6d3648748e40c87140940d9912aac986" title=" " alt="" coords="5,56,85,83"/>
 <area shape="rect" href="classLNS.html#af68cb150f64a0c8f249057ab57364f48" title=" " alt="" coords="137,107,298,149"/>
 </map>
 </div>
@@ -611,14 +656,14 @@ Here is the caller graph for this function:</div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="LNS_8h_source.html#l00107">107</a> of file <a class="el" href="LNS_8h_source.html">LNS.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="LNS_8h_source.html#l00114">114</a> of file <a class="el" href="LNS_8h_source.html">LNS.h</a>.</p>
 <div class="dynheader">
 Here is the caller graph for this function:</div>
 <div class="dyncontent">
 <div class="center"><img src="classLNS_a084bdc7fe557b0d491d07c4ec1b9f059_icgraph.png" border="0" usemap="#classLNS_a084bdc7fe557b0d491d07c4ec1b9f059_icgraph" alt=""/></div>
 <map name="classLNS_a084bdc7fe557b0d491d07c4ec1b9f059_icgraph" id="classLNS_a084bdc7fe557b0d491d07c4ec1b9f059_icgraph">
 <area shape="rect" title=" " alt="" coords="180,5,383,47"/>
-<area shape="rect" href="classExperiment.html#ac3467eb067f8623c9cf3cd7c736a8c80" title=" " alt="" coords="5,13,132,39"/>
+<area shape="rect" href="classExperiment.html#ac3467eb067f8623c9cf3cd7c736a8c80" title="Runs the experiment." alt="" coords="5,13,132,39"/>
 </map>
 </div>
 
@@ -648,14 +693,14 @@ Here is the caller graph for this function:</div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="LNS_8h_source.html#l00103">103</a> of file <a class="el" href="LNS_8h_source.html">LNS.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="LNS_8h_source.html#l00110">110</a> of file <a class="el" href="LNS_8h_source.html">LNS.h</a>.</p>
 <div class="dynheader">
 Here is the caller graph for this function:</div>
 <div class="dyncontent">
 <div class="center"><img src="classLNS_acbd3a90edf83dc926ce444873cabc269_icgraph.png" border="0" usemap="#classLNS_acbd3a90edf83dc926ce444873cabc269_icgraph" alt=""/></div>
 <map name="classLNS_acbd3a90edf83dc926ce444873cabc269_icgraph" id="classLNS_acbd3a90edf83dc926ce444873cabc269_icgraph">
 <area shape="rect" title=" " alt="" coords="180,5,385,47"/>
-<area shape="rect" href="classExperiment.html#ac3467eb067f8623c9cf3cd7c736a8c80" title=" " alt="" coords="5,13,132,39"/>
+<area shape="rect" href="classExperiment.html#ac3467eb067f8623c9cf3cd7c736a8c80" title="Runs the experiment." alt="" coords="5,13,132,39"/>
 </map>
 </div>
 
@@ -677,7 +722,7 @@ Here is the caller graph for this function:</div>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="LNS_8cpp_source.html#l00060">60</a> of file <a class="el" href="LNS_8cpp_source.html">LNS.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="LNS_8cpp_source.html#l00068">68</a> of file <a class="el" href="LNS_8cpp_source.html">LNS.cpp</a>.</p>
 <div class="dynheader">
 Here is the caller graph for this function:</div>
 <div class="dyncontent">
@@ -707,12 +752,12 @@ Here is the caller graph for this function:</div>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="LNS_8cpp_source.html#l00232">232</a> of file <a class="el" href="LNS_8cpp_source.html">LNS.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="LNS_8cpp_source.html#l00265">265</a> of file <a class="el" href="LNS_8cpp_source.html">LNS.cpp</a>.</p>
 
 </div>
 </div>
-<a id="ab1f4c7e8bab95f7208ea9f937070fc9e"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ab1f4c7e8bab95f7208ea9f937070fc9e">&#9670;&nbsp;</a></span>random_walk()</h2>
+<a id="a3e95681dbb28740deef085110991f3b0"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a3e95681dbb28740deef085110991f3b0">&#9670;&nbsp;</a></span>random_walk()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -753,7 +798,7 @@ Here is the caller graph for this function:</div>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">std::unordered_set&lt; int &gt; &amp;&#160;</td>
+          <td class="paramtype">std::set&lt; int &gt; &amp;&#160;</td>
           <td class="paramname"><em>chosen</em>&#160;</td>
         </tr>
         <tr>
@@ -769,17 +814,18 @@ Here is the caller graph for this function:</div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="LNS_8cpp_source.html#l00438">438</a> of file <a class="el" href="LNS_8cpp_source.html">LNS.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="LNS_8cpp_source.html#l00468">468</a> of file <a class="el" href="LNS_8cpp_source.html">LNS.cpp</a>.</p>
 <div class="dynheader">
 Here is the caller graph for this function:</div>
 <div class="dyncontent">
-<div class="center"><img src="classLNS_ab1f4c7e8bab95f7208ea9f937070fc9e_icgraph.png" border="0" usemap="#classLNS_ab1f4c7e8bab95f7208ea9f937070fc9e_icgraph" alt=""/></div>
-<map name="classLNS_ab1f4c7e8bab95f7208ea9f937070fc9e_icgraph" id="classLNS_ab1f4c7e8bab95f7208ea9f937070fc9e_icgraph">
-<area shape="rect" title=" " alt="" coords="589,56,732,83"/>
-<area shape="rect" href="classLNS.html#a4888343908bdd86069e09e7a3796a437" title=" " alt="" coords="349,56,541,83"/>
+<div class="center"><img src="classLNS_a3e95681dbb28740deef085110991f3b0_icgraph.png" border="0" usemap="#classLNS_a3e95681dbb28740deef085110991f3b0_icgraph" alt=""/></div>
+<map name="classLNS_a3e95681dbb28740deef085110991f3b0_icgraph" id="classLNS_a3e95681dbb28740deef085110991f3b0_icgraph">
+<area shape="rect" title=" " alt="" coords="589,81,732,108"/>
+<area shape="rect" href="classLNS.html#a4888343908bdd86069e09e7a3796a437" title=" " alt="" coords="349,81,541,108"/>
 <area shape="rect" href="classLNS.html#a412b23f4704dc3ce9e01fe0331ca8728" title=" " alt="" coords="133,5,301,32"/>
-<area shape="rect" href="classLNS.html#a566e47ae5b4577e3a70dc6f819f302be" title=" " alt="" coords="5,56,85,83"/>
-<area shape="rect" href="classLNS.html#af68cb150f64a0c8f249057ab57364f48" title=" " alt="" coords="137,107,298,149"/>
+<area shape="rect" href="classLNS.html#a6d3648748e40c87140940d9912aac986" title=" " alt="" coords="5,81,85,108"/>
+<area shape="rect" href="classLNS.html#a4ea599007b8b88f4bff0cf1f12a8e8c6" title=" " alt="" coords="137,107,298,133"/>
+<area shape="rect" href="classLNS.html#af68cb150f64a0c8f249057ab57364f48" title=" " alt="" coords="137,158,298,199"/>
 </map>
 </div>
 
@@ -809,7 +855,7 @@ Here is the caller graph for this function:</div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="LNS_8cpp_source.html#l00679">679</a> of file <a class="el" href="LNS_8cpp_source.html">LNS.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="LNS_8cpp_source.html#l00821">821</a> of file <a class="el" href="LNS_8cpp_source.html">LNS.cpp</a>.</p>
 
 </div>
 </div>
@@ -838,7 +884,7 @@ Here is the caller graph for this function:</div>
 
 <p>Implements <a class="el" href="classSolver.html#ad073be705a5da281c18b5f8423fda216">Solver</a>.</p>
 
-<p class="definition">Definition at line <a class="el" href="LNS_8cpp_source.html#l00074">74</a> of file <a class="el" href="LNS_8cpp_source.html">LNS.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="LNS_8cpp_source.html#l00082">82</a> of file <a class="el" href="LNS_8cpp_source.html">LNS.cpp</a>.</p>
 <div class="dynheader">
 Here is the caller graph for this function:</div>
 <div class="dyncontent">
@@ -873,7 +919,7 @@ Here is the caller graph for this function:</div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="LNS_8h_source.html#l00116">116</a> of file <a class="el" href="LNS_8h_source.html">LNS.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="LNS_8h_source.html#l00123">123</a> of file <a class="el" href="LNS_8h_source.html">LNS.h</a>.</p>
 
 </div>
 </div>
@@ -897,7 +943,7 @@ Here is the caller graph for this function:</div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="LNS_8h_source.html#l00136">136</a> of file <a class="el" href="LNS_8h_source.html">LNS.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="LNS_8h_source.html#l00145">145</a> of file <a class="el" href="LNS_8h_source.html">LNS.h</a>.</p>
 
 </div>
 </div>
@@ -921,7 +967,7 @@ Here is the caller graph for this function:</div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="LNS_8h_source.html#l00137">137</a> of file <a class="el" href="LNS_8h_source.html">LNS.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="LNS_8h_source.html#l00146">146</a> of file <a class="el" href="LNS_8h_source.html">LNS.h</a>.</p>
 
 </div>
 </div>
@@ -945,7 +991,7 @@ Here is the caller graph for this function:</div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="LNS_8h_source.html#l00134">134</a> of file <a class="el" href="LNS_8h_source.html">LNS.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="LNS_8h_source.html#l00143">143</a> of file <a class="el" href="LNS_8h_source.html">LNS.h</a>.</p>
 
 </div>
 </div>
@@ -969,7 +1015,7 @@ Here is the caller graph for this function:</div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="LNS_8h_source.html#l00140">140</a> of file <a class="el" href="LNS_8h_source.html">LNS.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="LNS_8h_source.html#l00149">149</a> of file <a class="el" href="LNS_8h_source.html">LNS.h</a>.</p>
 
 </div>
 </div>
@@ -985,7 +1031,7 @@ Here is the caller graph for this function:</div>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="LNS_8h_source.html#l00115">115</a> of file <a class="el" href="LNS_8h_source.html">LNS.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="LNS_8h_source.html#l00122">122</a> of file <a class="el" href="LNS_8h_source.html">LNS.h</a>.</p>
 
 </div>
 </div>
@@ -1004,12 +1050,28 @@ Here is the caller graph for this function:</div>
       </table>
   </td>
   <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">private</span></span>  </td>
+<span class="mlabels"><span class="mlabel">mutable</span><span class="mlabel">private</span></span>  </td>
   </tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="LNS_8h_source.html#l00138">138</a> of file <a class="el" href="LNS_8h_source.html">LNS.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="LNS_8h_source.html#l00147">147</a> of file <a class="el" href="LNS_8h_source.html">LNS.h</a>.</p>
+
+</div>
+</div>
+<a id="a7b1e84253d317381bda167c8938893ef"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a7b1e84253d317381bda167c8938893ef">&#9670;&nbsp;</a></span>found_initial_solution</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool LNS::found_initial_solution = false</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="LNS_8h_source.html#l00126">126</a> of file <a class="el" href="LNS_8h_source.html">LNS.h</a>.</p>
 
 </div>
 </div>
@@ -1033,7 +1095,7 @@ Here is the caller graph for this function:</div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="LNS_8h_source.html#l00133">133</a> of file <a class="el" href="LNS_8h_source.html">LNS.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="LNS_8h_source.html#l00142">142</a> of file <a class="el" href="LNS_8h_source.html">LNS.h</a>.</p>
 
 </div>
 </div>
@@ -1057,7 +1119,7 @@ Here is the caller graph for this function:</div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="LNS_8h_source.html#l00132">132</a> of file <a class="el" href="LNS_8h_source.html">LNS.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="LNS_8h_source.html#l00141">141</a> of file <a class="el" href="LNS_8h_source.html">LNS.h</a>.</p>
 
 </div>
 </div>
@@ -1081,7 +1143,7 @@ Here is the caller graph for this function:</div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="LNS_8h_source.html#l00141">141</a> of file <a class="el" href="LNS_8h_source.html">LNS.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="LNS_8h_source.html#l00150">150</a> of file <a class="el" href="LNS_8h_source.html">LNS.h</a>.</p>
 
 </div>
 </div>
@@ -1097,7 +1159,7 @@ Here is the caller graph for this function:</div>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="LNS_8h_source.html#l00117">117</a> of file <a class="el" href="LNS_8h_source.html">LNS.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="LNS_8h_source.html#l00124">124</a> of file <a class="el" href="LNS_8h_source.html">LNS.h</a>.</p>
 
 </div>
 </div>
@@ -1113,7 +1175,7 @@ Here is the caller graph for this function:</div>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="LNS_8h_source.html#l00089">89</a> of file <a class="el" href="LNS_8h_source.html">LNS.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="LNS_8h_source.html#l00096">96</a> of file <a class="el" href="LNS_8h_source.html">LNS.h</a>.</p>
 
 </div>
 </div>
@@ -1137,7 +1199,7 @@ Here is the caller graph for this function:</div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="LNS_8h_source.html#l00139">139</a> of file <a class="el" href="LNS_8h_source.html">LNS.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="LNS_8h_source.html#l00148">148</a> of file <a class="el" href="LNS_8h_source.html">LNS.h</a>.</p>
 
 </div>
 </div>
@@ -1161,31 +1223,23 @@ Here is the caller graph for this function:</div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="LNS_8h_source.html#l00135">135</a> of file <a class="el" href="LNS_8h_source.html">LNS.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="LNS_8h_source.html#l00144">144</a> of file <a class="el" href="LNS_8h_source.html">LNS.h</a>.</p>
 
 </div>
 </div>
-<a id="a97b14223f5dd82ff88993020c5ff1033"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a97b14223f5dd82ff88993020c5ff1033">&#9670;&nbsp;</a></span>settings</h2>
+<a id="a12990abf926b81ce31294fa792d9cf19"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a12990abf926b81ce31294fa792d9cf19">&#9670;&nbsp;</a></span>settings</h2>
 
 <div class="memitem">
 <div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">const <a class="el" href="classLNS__settings.html">LNS_settings</a>&amp; LNS::settings</td>
+          <td class="memname"><a class="el" href="classLNS__settings.html">LNS_settings</a>&amp; LNS::settings</td>
         </tr>
       </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">private</span></span>  </td>
-  </tr>
-</table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="LNS_8h_source.html#l00131">131</a> of file <a class="el" href="LNS_8h_source.html">LNS.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="LNS_8h_source.html#l00125">125</a> of file <a class="el" href="LNS_8h_source.html">LNS.h</a>.</p>
 
 </div>
 </div>
@@ -1209,7 +1263,7 @@ Here is the caller graph for this function:</div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="LNS_8h_source.html#l00130">130</a> of file <a class="el" href="LNS_8h_source.html">LNS.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="LNS_8h_source.html#l00140">140</a> of file <a class="el" href="LNS_8h_source.html">LNS.h</a>.</p>
 
 </div>
 </div>
@@ -1233,7 +1287,31 @@ Here is the caller graph for this function:</div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="LNS_8h_source.html#l00088">88</a> of file <a class="el" href="LNS_8h_source.html">LNS.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="LNS_8h_source.html#l00095">95</a> of file <a class="el" href="LNS_8h_source.html">LNS.h</a>.</p>
+
+</div>
+</div>
+<a id="a1cf8a164ac392a9c2052a7d2b9a4db74"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a1cf8a164ac392a9c2052a7d2b9a4db74">&#9670;&nbsp;</a></span>threshold_blocked</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">float LNS::threshold_blocked = 1.0</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">private</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="LNS_8h_source.html#l00151">151</a> of file <a class="el" href="LNS_8h_source.html">LNS.h</a>.</p>
 
 </div>
 </div>

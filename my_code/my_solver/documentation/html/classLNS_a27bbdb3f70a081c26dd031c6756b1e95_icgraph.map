@@ -1,7 +1,8 @@
 <map id="LNS::destroy_random" name="LNS::destroy_random">
-<area shape="rect" id="node1" title=" " alt="" coords="589,62,751,88"/>
-<area shape="rect" id="node2" href="$classLNS.html#a412b23f4704dc3ce9e01fe0331ca8728" title=" " alt="" coords="133,36,301,63"/>
-<area shape="rect" id="node3" href="$classLNS.html#a566e47ae5b4577e3a70dc6f819f302be" title=" " alt="" coords="5,62,85,88"/>
-<area shape="rect" id="node4" href="$classLNS.html#af68cb150f64a0c8f249057ab57364f48" title=" " alt="" coords="137,138,298,180"/>
-<area shape="rect" id="node5" href="$classLNS.html#a4888343908bdd86069e09e7a3796a437" title=" " alt="" coords="349,87,541,114"/>
+<area shape="rect" id="node1" title=" " alt="" coords="589,73,751,100"/>
+<area shape="rect" id="node2" href="$classLNS.html#a412b23f4704dc3ce9e01fe0331ca8728" title=" " alt="" coords="133,48,301,74"/>
+<area shape="rect" id="node3" href="$classLNS.html#a6d3648748e40c87140940d9912aac986" title=" " alt="" coords="5,106,85,133"/>
+<area shape="rect" id="node4" href="$classLNS.html#af68cb150f64a0c8f249057ab57364f48" title=" " alt="" coords="137,99,298,140"/>
+<area shape="rect" id="node5" href="$classLNS.html#a4888343908bdd86069e09e7a3796a437" title=" " alt="" coords="349,149,541,176"/>
+<area shape="rect" id="node6" href="$classLNS.html#a4ea599007b8b88f4bff0cf1f12a8e8c6" title=" " alt="" coords="137,165,298,192"/>
 </map>

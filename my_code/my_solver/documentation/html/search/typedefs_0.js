@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['algorithmtype_1972',['AlgorithmType',['../experiment__utils_8h.html#a20f9b55b4dedbc85601d35fc04517134',1,'experiment_utils.h']]]
+  ['algorithmtype_1983',['AlgorithmType',['../experiment__utils_8h.html#a20f9b55b4dedbc85601d35fc04517134',1,'experiment_utils.h']]]
 ];
