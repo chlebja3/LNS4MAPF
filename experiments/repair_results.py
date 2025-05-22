@@ -61,7 +61,7 @@ def plot_algos(algorithms, algo_aliases, times, metric, df_filtered):
 
         ax.set_title(map_name)
         ax.set_xlabel("Time [s]")
-        ax.set_ylabel("GAP [s]")
+        ax.set_ylabel("GAP [-]")
 
         ax.grid(True)
 

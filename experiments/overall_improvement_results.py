@@ -27,9 +27,6 @@ def average_runs(x, times, time_limit):
 def func(x, a, b, c):
     return a * np.exp(-b * x) + c
 
-# def func(x, a, b, c):
-#     return a * np.power(x, 2) + b * x + c 
-
 def str_vec_to_float_vec(vec):
     return [float(x) for x in vec]
 
@@ -105,8 +102,8 @@ for j, (map_name, map_group) in enumerate(df.groupby('map_name')):
         ax.plot(mean_time, mean_run, label=f"{display_name}", linewidth=2.5, color=color)
 
     ax.set_title(map_name)
-    ax.set_xlabel("Elapsed time (cpu) [s]")
-    ax.set_ylabel(metric)  # Only label Y-axis on first subplot
+    ax.set_xlabel("Time [s]")
+    ax.set_ylabel("GAP [-]")  # Only label Y-axis on first subplot
 
     # ax.legend()
     # ax.legend(loc='center down', bbox_to_anchor=(0.5, 1))

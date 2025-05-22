@@ -27,8 +27,8 @@ num_maps = len(unique_maps)
 # create a single figure where the maps are on the x-axis and the preprocessing time on the y-axis
 fig, axes = plt.subplots(nrows=3, ncols=2, figsize=(6, 7), sharey=False)
 axes = axes.flatten()
-metric = "preprocessing_time_wall"
-# metric = "preprocessing_time_cpu"
+# metric = "preprocessing_time_wall"
+metric = "preprocessing_time_cpu"
 
 
 if num_maps == 1:  # If only one map, axes is not an array
@@ -49,7 +49,7 @@ for i, (map_name, map_group) in enumerate(stats.groupby('map_name')):
     ax.plot(agent_nums, values_orig, label=f"MAPF-LNS2", marker='o')
     ax.plot(agent_nums, values_mine, label=f"my solver", marker='o')
     ax.set_title(map_name)
-    ax.set_xlabel("Number of agents")
+    ax.set_xlabel("Number of agents [-]")
     if "cpu" in metric:
         ax.set_ylabel("Cpu time [s]")  # Only label Y-axis on first subplot
     else:

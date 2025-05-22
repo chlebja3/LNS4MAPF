@@ -58,8 +58,8 @@ cursor = conn.cursor()
 
 # Load data into Pandas DataFrame
 # exp_name = "influence_of_ap"
-exp_name = "influence_of_p"
-# exp_name = "influence_of_w"
+# exp_name = "influence_of_p"
+exp_name = "influence_of_w"
 df = pd.read_sql_query("SELECT * FROM " + exp_name, conn)
 df["delay"] = df["init_sol_sum_of_cost"] - df["sum_of_dist"]
 
@@ -128,7 +128,7 @@ for metric in metric_names:
                 ax.plot(algo_group["num_agents"], algo_group[(metric, "mean")], marker='o', label=f"{display_name}")
 
             ax.set_title(map_name)
-            ax.set_xlabel("Number of Agents")
+            ax.set_xlabel("Number of Agents [-]")
             ax.set_ylabel(yaxis_names["feasible"])
             ax.grid(True)
     else:
@@ -144,7 +144,7 @@ for metric in metric_names:
                 # print(algo_group[(metric, "mean")])
 
             ax.set_title(map_name)
-            ax.set_xlabel("Number of Agents")
+            ax.set_xlabel("Number of Agents [-]")
             ax.set_ylabel(yaxis_names[metric])  # Only label Y-axis on first subplot
 
             ax.grid(True)
@@ -184,7 +184,7 @@ for i, (map_name, map_group) in enumerate(stats_gap.groupby('map_name')):
         # print(algo_group[(metric, "mean")])
 
     ax.set_title(map_name)
-    ax.set_xlabel("Number of Agents")
+    ax.set_xlabel("Number of Agents [-]")
     ax.set_ylabel("GAP [-]")  # Only label Y-axis on first subplot
     ax.grid(True)
 

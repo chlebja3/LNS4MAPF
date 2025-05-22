@@ -75,8 +75,8 @@ def plot_algos(algorithms, algo_aliases, neighborhood_sizes, metric, df_filtered
                 ax.plot(np.asarray(range(mean_vec.shape[0])), mean_vec, label=f"{display_name}", linewidth=2.5)
 
             ax.set_title(map_name)
-            ax.set_xlabel("Iteration")
-            ax.set_ylabel(metric)  # Only label Y-axis on first subplot
+            ax.set_xlabel("Iteration [-]")
+            ax.set_ylabel("GAP [-]")
             ax.grid(True)
 
 # Put a legend below current axis
@@ -126,7 +126,7 @@ def plot_algos_time(algorithms, algo_aliases, max_times, metric, df_filtered):
 
         ax.set_title(map_name)
         ax.set_xlabel("Time [s]")
-        ax.set_ylabel(metric)  # Only label Y-axis on first subplot
+        ax.set_ylabel("GAP [-]")
         ax.grid(True)
 
 # Put a legend below current axis

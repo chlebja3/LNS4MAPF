@@ -89,7 +89,7 @@ for metric in metric_names:
                 ax.plot(algo_group["num_agents"], algo_group[(metric, "mean")], marker='o', label=f"{display_name}")
 
             ax.set_title(map_name)
-            ax.set_xlabel("Number of Agents")
+            ax.set_xlabel("Number of Agents [-]")
             ax.set_ylabel(yaxis_names["feasible"])
             ax.grid(True)
     else:
@@ -116,7 +116,7 @@ for metric in metric_names:
                 # print(algo_group[(metric, "mean")])
 
             ax.set_title(map_name)
-            ax.set_xlabel("Number of Agents")
+            ax.set_xlabel("Number of Agents [-]")
             
             ax.set_ylabel(yaxis_names[metric])
             ax.grid(True)
@@ -126,7 +126,7 @@ for metric in metric_names:
     if (len(handles) == 4): ncols = 2
     fig.legend(handles, labels, loc='lower center', bbox_to_anchor=(0.5, 0.01),ncol=ncols)
     plt.tight_layout()
-    plt.subplots_adjust(bottom=0.15)
+    plt.subplots_adjust(bottom=0.16)
     plt.show()
 
 
@@ -168,7 +168,7 @@ for i, (map_name, map_group) in enumerate(stats_gap.groupby('map_name')):
         # print(algo_group[(metric, "mean")])
 
     ax.set_title(map_name)
-    ax.set_xlabel("Number of Agents")
+    ax.set_xlabel("Number of Agents [-]")
     ax.set_ylabel("GAP [-]")  # Only label Y-axis on first subplot
     ax.grid(True)
 
