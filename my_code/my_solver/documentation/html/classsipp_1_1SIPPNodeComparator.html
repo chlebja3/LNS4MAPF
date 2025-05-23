@@ -76,13 +76,18 @@ $(function() {
 </div><!--header-->
 <div class="contents">
 
+<p>Comparator class for SIPPNodes.  
+ <a href="classsipp_1_1SIPPNodeComparator.html#details">More...</a></p>
+
 <p><code>#include &lt;<a class="el" href="SIPP_8h_source.html">SIPP.h</a>&gt;</code></p>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
 <tr class="memitem:a2970818b4c47bd6681ed9f314d7a49ff"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classsipp_1_1SIPPNodeComparator.html#a2970818b4c47bd6681ed9f314d7a49ff">SIPPNodeComparator</a> (std::mt19937 *rnd_generator_)</td></tr>
+<tr class="memdesc:a2970818b4c47bd6681ed9f314d7a49ff"><td class="mdescLeft">&#160;</td><td class="mdescRight">Constructor for <a class="el" href="classsipp_1_1SIPPNodeComparator.html" title="Comparator class for SIPPNodes.">SIPPNodeComparator</a>.  <a href="classsipp_1_1SIPPNodeComparator.html#a2970818b4c47bd6681ed9f314d7a49ff">More...</a><br /></td></tr>
 <tr class="separator:a2970818b4c47bd6681ed9f314d7a49ff"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a7b334d58b5522ec6cbe45c5ee00e8cb0"><td class="memItemLeft" align="right" valign="top">auto&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classsipp_1_1SIPPNodeComparator.html#a7b334d58b5522ec6cbe45c5ee00e8cb0">operator()</a> (<a class="el" href="classsipp_1_1SIPPNode.html">SIPPNode</a> const *n1, <a class="el" href="classsipp_1_1SIPPNode.html">SIPPNode</a> const *n2) const -&gt; bool</td></tr>
+<tr class="memdesc:a7b334d58b5522ec6cbe45c5ee00e8cb0"><td class="mdescLeft">&#160;</td><td class="mdescRight">Comparison operator for <a class="el" href="classsipp_1_1SIPPNode.html" title="Represents a node in the SIPP algorithm.">SIPPNode</a>.  <a href="classsipp_1_1SIPPNodeComparator.html#a7b334d58b5522ec6cbe45c5ee00e8cb0">More...</a><br /></td></tr>
 <tr class="separator:a7b334d58b5522ec6cbe45c5ee00e8cb0"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-attribs"></a>
@@ -93,8 +98,9 @@ Public Attributes</h2></td></tr>
 <tr class="separator:ab4c43921ec339eae1dca71139d2cbb6c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
-<div class="textblock">
-<p class="definition">Definition at line <a class="el" href="SIPP_8h_source.html#l00064">64</a> of file <a class="el" href="SIPP_8h_source.html">SIPP.h</a>.</p>
+<div class="textblock"><p>Comparator class for SIPPNodes. </p>
+
+<p class="definition">Definition at line <a class="el" href="SIPP_8h_source.html#l00112">112</a> of file <a class="el" href="SIPP_8h_source.html">SIPP.h</a>.</p>
 </div><h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
 <a id="a2970818b4c47bd6681ed9f314d7a49ff"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a2970818b4c47bd6681ed9f314d7a49ff">&#9670;&nbsp;</a></span>SIPPNodeComparator()</h2>
@@ -120,7 +126,15 @@ Public Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="SIPP_8h_source.html#l00070">70</a> of file <a class="el" href="SIPP_8h_source.html">SIPP.h</a>.</p>
+<p>Constructor for <a class="el" href="classsipp_1_1SIPPNodeComparator.html" title="Comparator class for SIPPNodes.">SIPPNodeComparator</a>. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">rnd_generator_</td><td>Pointer to a random number generator. </td></tr>
+  </table>
+  </dd>
+</dl>
+
+<p class="definition">Definition at line <a class="el" href="SIPP_8h_source.html#l00123">123</a> of file <a class="el" href="SIPP_8h_source.html">SIPP.h</a>.</p>
 
 </div>
 </div>
@@ -151,6 +165,16 @@ Public Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
+<p>Comparison operator for <a class="el" href="classsipp_1_1SIPPNode.html" title="Represents a node in the SIPP algorithm.">SIPPNode</a>. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">n1</td><td>The first <a class="el" href="classsipp_1_1SIPPNode.html" title="Represents a node in the SIPP algorithm.">SIPPNode</a> to compare. </td></tr>
+    <tr><td class="paramname">n2</td><td>The second <a class="el" href="classsipp_1_1SIPPNode.html" title="Represents a node in the SIPP algorithm.">SIPPNode</a> to compare.</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>True if n1 is less than n2, false otherwise. </dd></dl>
+
 <p class="definition">Definition at line <a class="el" href="SIPP_8cpp_source.html#l00041">41</a> of file <a class="el" href="SIPP_8cpp_source.html">SIPP.cpp</a>.</p>
 
 </div>
@@ -175,8 +199,9 @@ Public Attributes</h2></td></tr>
   </tr>
 </table>
 </div><div class="memdoc">
+<p>Bernoulli distribution for generating random true/false values. </p>
 
-<p class="definition">Definition at line <a class="el" href="SIPP_8h_source.html#l00068">68</a> of file <a class="el" href="SIPP_8h_source.html">SIPP.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="SIPP_8h_source.html#l00116">116</a> of file <a class="el" href="SIPP_8h_source.html">SIPP.h</a>.</p>
 
 </div>
 </div>
@@ -191,8 +216,9 @@ Public Attributes</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+<p>Random number generator. </p>
 
-<p class="definition">Definition at line <a class="el" href="SIPP_8h_source.html#l00067">67</a> of file <a class="el" href="SIPP_8h_source.html">SIPP.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="SIPP_8h_source.html#l00115">115</a> of file <a class="el" href="SIPP_8h_source.html">SIPP.h</a>.</p>
 
 </div>
 </div>

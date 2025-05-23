@@ -12,11 +12,20 @@ For tests and benchmarks (should be fetched automatically by CMake if not instal
 
 google-test 1.10.0
 
+google-mock
+
 google benchmark 1.5.0-4build1
 
 nativefiledialog-extended (added as submodule, might be needed to run `git submodule update --init --recursive`)
 
 sqlite3 - for experiments only
+
+## Install dependencies
+To install dependencies, run the following command
+```
+sudo apt install libsfml-dev nlohmann-json3-dev
+sudo apt-get install libboost-all-dev
+```
 
 # Build
 ```
@@ -28,7 +37,7 @@ There are three build types:
 - relwithdebinfo - optimizations, debug information, asserts on (default)
 - release - optimizations, no debug information, asserts off
 
-The second argument specifies whether to build unit and benchmark tests. The default is ON
+The second argument specifies whether to build unit and benchmark tests. The default is OFF
 - tests - build all tests (default)
 - notest - do not build tests
 
@@ -149,7 +158,27 @@ To view the documentation, run
 ```
 
 # License
-MIT
+MIT License
+
+Copyright (c) 2025 Jan Chleboun
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
 
 # Author
 Jan Chleboun (2025)

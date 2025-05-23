@@ -74,40 +74,51 @@ $(function() {
 </div><!--header-->
 <div class="contents">
 
+<p>Class representing the <a class="el" href="classSIPP.html" title="Class representing the SIPP algorithm.">SIPP</a> algorithm.  
+ <a href="classSIPP.html#details">More...</a></p>
+
 <p><code>#include &lt;<a class="el" href="SIPP_8h_source.html">SIPP.h</a>&gt;</code></p>
 <div class="dynheader">
 Collaboration diagram for SIPP:</div>
 <div class="dyncontent">
 <div class="center"><img src="classSIPP__coll__graph.png" border="0" usemap="#SIPP_coll__map" alt="Collaboration graph"/></div>
 <map name="SIPP_coll__map" id="SIPP_coll__map">
-<area shape="rect" title=" " alt="" coords="154,363,205,389"/>
-<area shape="rect" href="classSafeIntervalTable.html" title=" " alt="" coords="37,273,172,300"/>
-<area shape="rect" href="classEdgeConstraintTable.html" title=" " alt="" coords="133,184,287,211"/>
-<area shape="rect" href="classInstance.html" title=" " alt="" coords="10,95,87,121"/>
-<area shape="rect" href="classMap.html" title=" " alt="" coords="23,5,74,32"/>
-<area shape="rect" href="structomp__locks.html" title=" " alt="" coords="312,184,404,211"/>
-<area shape="rect" href="classsipp_1_1NodePool.html" title=" " alt="" coords="200,273,319,300"/>
-<area shape="rect" href="classSIPP__settings.html" title=" " alt="" coords="343,273,453,300"/>
+<area shape="rect" title="Class representing the SIPP algorithm." alt="" coords="154,363,205,389"/>
+<area shape="rect" href="classSafeIntervalTable.html" title="The SafeIntervalTable class stores the safe intervals for each location in the grid." alt="" coords="37,273,172,300"/>
+<area shape="rect" href="classEdgeConstraintTable.html" title="A class representing a table of edge constraints." alt="" coords="133,184,287,211"/>
+<area shape="rect" href="classInstance.html" title="If this is defined, the manhattan and euclidean heuristics are calculated." alt="" coords="10,95,87,121"/>
+<area shape="rect" href="classMap.html" title="Represents a 2D gridmap for pathfinding." alt="" coords="23,5,74,32"/>
+<area shape="rect" href="structomp__locks.html" title="A class that wraps OpenMP locks for parallelization." alt="" coords="312,184,404,211"/>
+<area shape="rect" href="classsipp_1_1NodePool.html" title="Represents a pool of SIPP nodes. This class manages the allocation and deallocation of SIPP nodes...." alt="" coords="200,273,319,300"/>
+<area shape="rect" href="classSIPP__settings.html" title="Represents settings for the SIPP algorithm." alt="" coords="343,273,453,300"/>
 </map>
 <center><span class="legend">[<a href="graph_legend.html">legend</a>]</span></center></div>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
 <tr class="memitem:a87c760657e7e2503a4e82c5be14f285f"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSIPP.html#a87c760657e7e2503a4e82c5be14f285f">SIPP</a> (const <a class="el" href="classInstance.html">Instance</a> &amp;instance_, std::mt19937 &amp;rnd_generator_, const <a class="el" href="classSIPP__settings.html">SIPP_settings</a> &amp;settings_)</td></tr>
+<tr class="memdesc:a87c760657e7e2503a4e82c5be14f285f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Constructor for <a class="el" href="classSIPP.html" title="Class representing the SIPP algorithm.">SIPP</a>.  <a href="classSIPP.html#a87c760657e7e2503a4e82c5be14f285f">More...</a><br /></td></tr>
 <tr class="separator:a87c760657e7e2503a4e82c5be14f285f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ae3b0caeeef506ea4bf0a47bd3933729e"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSIPP.html#ae3b0caeeef506ea4bf0a47bd3933729e">~SIPP</a> ()=default</td></tr>
+<tr class="memdesc:ae3b0caeeef506ea4bf0a47bd3933729e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Destructor for <a class="el" href="classSIPP.html" title="Class representing the SIPP algorithm.">SIPP</a>.  <a href="classSIPP.html#ae3b0caeeef506ea4bf0a47bd3933729e">More...</a><br /></td></tr>
 <tr class="separator:ae3b0caeeef506ea4bf0a47bd3933729e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a79e516cff213d00f124e815a2edf2ea8"><td class="memItemLeft" align="right" valign="top">auto&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSIPP.html#a79e516cff213d00f124e815a2edf2ea8">plan</a> (int agent_num, const std::unordered_set&lt; int &gt; &amp;already_planned) -&gt; <a class="el" href="utils_8h.html#a64881685b4fe27a0cf599222d5fb1c72">TimePointPath</a></td></tr>
+<tr class="memdesc:a79e516cff213d00f124e815a2edf2ea8"><td class="mdescLeft">&#160;</td><td class="mdescRight">Plans a path for the given agent number.  <a href="classSIPP.html#a79e516cff213d00f124e815a2edf2ea8">More...</a><br /></td></tr>
 <tr class="separator:a79e516cff213d00f124e815a2edf2ea8"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a99ea39d64a73b10e97046debfcd2d873"><td class="memItemLeft" align="right" valign="top">auto&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSIPP.html#a99ea39d64a73b10e97046debfcd2d873">plan_sipp_mine</a> (int agent_num) -&gt; <a class="el" href="utils_8h.html#a64881685b4fe27a0cf599222d5fb1c72">TimePointPath</a></td></tr>
+<tr class="memdesc:a99ea39d64a73b10e97046debfcd2d873"><td class="mdescLeft">&#160;</td><td class="mdescRight">Plans a path for the given agent number using the multi-heuristic version of the <a class="el" href="classSIPP.html" title="Class representing the SIPP algorithm.">SIPP</a> algorithm.  <a href="classSIPP.html#a99ea39d64a73b10e97046debfcd2d873">More...</a><br /></td></tr>
 <tr class="separator:a99ea39d64a73b10e97046debfcd2d873"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a9c3c0bb8577a4af7cc66dc11b639cb18"><td class="memItemLeft" align="right" valign="top">auto&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSIPP.html#a9c3c0bb8577a4af7cc66dc11b639cb18">plan_sipp_mine_ap</a> (int agent_num, const std::unordered_set&lt; int &gt; &amp;already_planned) -&gt; <a class="el" href="utils_8h.html#a64881685b4fe27a0cf599222d5fb1c72">TimePointPath</a></td></tr>
+<tr class="memdesc:a9c3c0bb8577a4af7cc66dc11b639cb18"><td class="mdescLeft">&#160;</td><td class="mdescRight">Plans a path for the given agent number using the ap multi-heuristic version of the <a class="el" href="classSIPP.html" title="Class representing the SIPP algorithm.">SIPP</a> algorithm.  <a href="classSIPP.html#a9c3c0bb8577a4af7cc66dc11b639cb18">More...</a><br /></td></tr>
 <tr class="separator:a9c3c0bb8577a4af7cc66dc11b639cb18"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a554425ea66302db84cbbd55252347ddc"><td class="memItemLeft" align="right" valign="top">auto&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSIPP.html#a554425ea66302db84cbbd55252347ddc">plan_mapflns_heuristic</a> (int agent_num) -&gt; <a class="el" href="utils_8h.html#a64881685b4fe27a0cf599222d5fb1c72">TimePointPath</a></td></tr>
+<tr class="memdesc:a554425ea66302db84cbbd55252347ddc"><td class="mdescLeft">&#160;</td><td class="mdescRight">Plans a path for the given agent number using the original single-heuristic version of the <a class="el" href="classSIPP.html" title="Class representing the SIPP algorithm.">SIPP</a> algorithm from MAPF-LNS.  <a href="classSIPP.html#a554425ea66302db84cbbd55252347ddc">More...</a><br /></td></tr>
 <tr class="separator:a554425ea66302db84cbbd55252347ddc"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a440a585afee1b9ff3ae38ed91960b353"><td class="memItemLeft" align="right" valign="top">auto&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSIPP.html#a440a585afee1b9ff3ae38ed91960b353">plan_suboptimal</a> (int agent_num, const std::unordered_set&lt; int &gt; &amp;already_planned, double w=1.0, bool ap=false) -&gt; <a class="el" href="utils_8h.html#a64881685b4fe27a0cf599222d5fb1c72">TimePointPath</a></td></tr>
+<tr class="memdesc:a440a585afee1b9ff3ae38ed91960b353"><td class="mdescLeft">&#160;</td><td class="mdescRight">Plans a path for the given agent number using the original Bounded Suboptimal <a class="el" href="classSIPP.html" title="Class representing the SIPP algorithm.">SIPP</a> algorithm.  <a href="classSIPP.html#a440a585afee1b9ff3ae38ed91960b353">More...</a><br /></td></tr>
 <tr class="separator:a440a585afee1b9ff3ae38ed91960b353"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aecbadddd1d20b7ced6e12aef5ba47d28"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSIPP.html#aecbadddd1d20b7ced6e12aef5ba47d28">reset</a> ()</td></tr>
+<tr class="memdesc:aecbadddd1d20b7ced6e12aef5ba47d28"><td class="mdescLeft">&#160;</td><td class="mdescRight">Reset the <a class="el" href="classSIPP.html" title="Class representing the SIPP algorithm.">SIPP</a> algorithm.  <a href="classSIPP.html#aecbadddd1d20b7ced6e12aef5ba47d28">More...</a><br /></td></tr>
 <tr class="separator:aecbadddd1d20b7ced6e12aef5ba47d28"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-attribs"></a>
@@ -130,8 +141,10 @@ Public Attributes</h2></td></tr>
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pri-methods"></a>
 Private Member Functions</h2></td></tr>
 <tr class="memitem:a2352e85621cb95837dcf2e4b7d66d926"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSIPP.html#a2352e85621cb95837dcf2e4b7d66d926">initialize_iter_info</a> ()</td></tr>
+<tr class="memdesc:a2352e85621cb95837dcf2e4b7d66d926"><td class="mdescLeft">&#160;</td><td class="mdescRight">Initialize the information about the iteration. Reset the number of generated and expanded nodes and the iteration number.  <a href="classSIPP.html#a2352e85621cb95837dcf2e4b7d66d926">More...</a><br /></td></tr>
 <tr class="separator:a2352e85621cb95837dcf2e4b7d66d926"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a278b2398771180c83f6ad7db5254f6c2"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSIPP.html#a278b2398771180c83f6ad7db5254f6c2">update_iter_info</a> (const <a class="el" href="classsipp_1_1SIPPNode.html">sipp::SIPPNode</a> &amp;expanded, bool last_iter)</td></tr>
+<tr class="memdesc:a278b2398771180c83f6ad7db5254f6c2"><td class="mdescLeft">&#160;</td><td class="mdescRight">Update the iteration information.  <a href="classSIPP.html#a278b2398771180c83f6ad7db5254f6c2">More...</a><br /></td></tr>
 <tr class="separator:a278b2398771180c83f6ad7db5254f6c2"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pri-attribs"></a>
@@ -150,8 +163,9 @@ Private Attributes</h2></td></tr>
 <tr class="separator:a7afaeba2df9261f5e339d9631a31919f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
-<div class="textblock">
-<p class="definition">Definition at line <a class="el" href="SIPP_8h_source.html#l00120">120</a> of file <a class="el" href="SIPP_8h_source.html">SIPP.h</a>.</p>
+<div class="textblock"><p>Class representing the <a class="el" href="classSIPP.html" title="Class representing the SIPP algorithm.">SIPP</a> algorithm. </p>
+
+<p class="definition">Definition at line <a class="el" href="SIPP_8h_source.html#l00242">242</a> of file <a class="el" href="SIPP_8h_source.html">SIPP.h</a>.</p>
 </div><h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
 <a id="a87c760657e7e2503a4e82c5be14f285f"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a87c760657e7e2503a4e82c5be14f285f">&#9670;&nbsp;</a></span>SIPP()</h2>
@@ -185,6 +199,16 @@ Private Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
+<p>Constructor for <a class="el" href="classSIPP.html" title="Class representing the SIPP algorithm.">SIPP</a>. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">instance_</td><td>The instance of the problem. </td></tr>
+    <tr><td class="paramname">rnd_generator_</td><td>The random number generator. </td></tr>
+    <tr><td class="paramname">settings_</td><td>The settings for the <a class="el" href="classSIPP.html" title="Class representing the SIPP algorithm.">SIPP</a> algorithm. </td></tr>
+  </table>
+  </dd>
+</dl>
+
 <p class="definition">Definition at line <a class="el" href="SIPP_8cpp_source.html#l00023">23</a> of file <a class="el" href="SIPP_8cpp_source.html">SIPP.cpp</a>.</p>
 
 </div>
@@ -212,6 +236,8 @@ Private Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
+<p>Destructor for <a class="el" href="classSIPP.html" title="Class representing the SIPP algorithm.">SIPP</a>. </p>
+
 </div>
 </div>
 <h2 class="groupheader">Member Function Documentation</h2>
@@ -237,6 +263,8 @@ Private Attributes</h2></td></tr>
   </tr>
 </table>
 </div><div class="memdoc">
+
+<p>Initialize the information about the iteration. Reset the number of generated and expanded nodes and the iteration number. </p>
 
 <p class="definition">Definition at line <a class="el" href="SIPP_8cpp_source.html#l00918">918</a> of file <a class="el" href="SIPP_8cpp_source.html">SIPP.cpp</a>.</p>
 
@@ -268,6 +296,16 @@ Private Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
+<p>Plans a path for the given agent number. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">agent_num</td><td>The agent number to plan the path for. </td></tr>
+    <tr><td class="paramname">already_planned</td><td>A set of already planned agents.</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>A TimePointPath representing the planned path for the agent. </dd></dl>
+
 <p class="definition">Definition at line <a class="el" href="SIPP_8cpp_source.html#l00129">129</a> of file <a class="el" href="SIPP_8cpp_source.html">SIPP.cpp</a>.</p>
 
 </div>
@@ -288,6 +326,15 @@ Private Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
+<p>Plans a path for the given agent number using the original single-heuristic version of the <a class="el" href="classSIPP.html" title="Class representing the SIPP algorithm.">SIPP</a> algorithm from MAPF-LNS. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">agent_num</td><td>The agent number to plan the path for.</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>A TimePointPath representing the planned path for the agent. </dd></dl>
+
 <p class="definition">Definition at line <a class="el" href="SIPP_8cpp_source.html#l00752">752</a> of file <a class="el" href="SIPP_8cpp_source.html">SIPP.cpp</a>.</p>
 
 </div>
@@ -307,6 +354,15 @@ Private Attributes</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+
+<p>Plans a path for the given agent number using the multi-heuristic version of the <a class="el" href="classSIPP.html" title="Class representing the SIPP algorithm.">SIPP</a> algorithm. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">agent_num</td><td>The agent number to plan the path for.</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>A TimePointPath representing the planned path for the agent. </dd></dl>
 
 <p class="definition">Definition at line <a class="el" href="SIPP_8cpp_source.html#l00169">169</a> of file <a class="el" href="SIPP_8cpp_source.html">SIPP.cpp</a>.</p>
 
@@ -337,6 +393,16 @@ Private Attributes</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+
+<p>Plans a path for the given agent number using the ap multi-heuristic version of the <a class="el" href="classSIPP.html" title="Class representing the SIPP algorithm.">SIPP</a> algorithm. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">agent_num</td><td>The agent number to plan the path for. </td></tr>
+    <tr><td class="paramname">already_planned</td><td>A set of already planned agents.</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>A TimePointPath representing the planned path for the agent. </dd></dl>
 
 <p class="definition">Definition at line <a class="el" href="SIPP_8cpp_source.html#l00356">356</a> of file <a class="el" href="SIPP_8cpp_source.html">SIPP.cpp</a>.</p>
 
@@ -380,6 +446,18 @@ Private Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
+<p>Plans a path for the given agent number using the original Bounded Suboptimal <a class="el" href="classSIPP.html" title="Class representing the SIPP algorithm.">SIPP</a> algorithm. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">agent_num</td><td>The agent number to plan the path for. </td></tr>
+    <tr><td class="paramname">already_planned</td><td>A set of already planned agents. </td></tr>
+    <tr><td class="paramname">w</td><td>The suboptimality factor. </td></tr>
+    <tr><td class="paramname">ap</td><td>Whether to use the ap version.</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>A TimePointPath representing the planned path for the agent. </dd></dl>
+
 <p class="definition">Definition at line <a class="el" href="SIPP_8cpp_source.html#l00551">551</a> of file <a class="el" href="SIPP_8cpp_source.html">SIPP.cpp</a>.</p>
 
 </div>
@@ -407,7 +485,9 @@ Private Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="SIPP_8h_source.html#l00142">142</a> of file <a class="el" href="SIPP_8h_source.html">SIPP.h</a>.</p>
+<p>Reset the <a class="el" href="classSIPP.html" title="Class representing the SIPP algorithm.">SIPP</a> algorithm. </p>
+
+<p class="definition">Definition at line <a class="el" href="SIPP_8h_source.html#l00320">320</a> of file <a class="el" href="SIPP_8h_source.html">SIPP.h</a>.</p>
 
 </div>
 </div>
@@ -445,6 +525,15 @@ Private Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
+<p>Update the iteration information. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">expanded</td><td>The expanded node. </td></tr>
+    <tr><td class="paramname">last_iter</td><td>Whether this is the last iteration. If so, the alltime numbers of generated and expanded nodes are updated. </td></tr>
+  </table>
+  </dd>
+</dl>
+
 <p class="definition">Definition at line <a class="el" href="SIPP_8cpp_source.html#l00925">925</a> of file <a class="el" href="SIPP_8cpp_source.html">SIPP.cpp</a>.</p>
 
 </div>
@@ -461,8 +550,9 @@ Private Attributes</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+<p>The number of nodes expanded in all iterations. </p>
 
-<p class="definition">Definition at line <a class="el" href="SIPP_8h_source.html#l00126">126</a> of file <a class="el" href="SIPP_8h_source.html">SIPP.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="SIPP_8h_source.html#l00248">248</a> of file <a class="el" href="SIPP_8h_source.html">SIPP.h</a>.</p>
 
 </div>
 </div>
@@ -477,8 +567,9 @@ Private Attributes</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+<p>The number of nodes expanded in the current iteration. </p>
 
-<p class="definition">Definition at line <a class="el" href="SIPP_8h_source.html#l00127">127</a> of file <a class="el" href="SIPP_8h_source.html">SIPP.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="SIPP_8h_source.html#l00249">249</a> of file <a class="el" href="SIPP_8h_source.html">SIPP.h</a>.</p>
 
 </div>
 </div>
@@ -493,8 +584,9 @@ Private Attributes</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+<p>The number of nodes generated in all iterations. </p>
 
-<p class="definition">Definition at line <a class="el" href="SIPP_8h_source.html#l00124">124</a> of file <a class="el" href="SIPP_8h_source.html">SIPP.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="SIPP_8h_source.html#l00246">246</a> of file <a class="el" href="SIPP_8h_source.html">SIPP.h</a>.</p>
 
 </div>
 </div>
@@ -509,8 +601,9 @@ Private Attributes</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+<p>The number of nodes generated in the current iteration. </p>
 
-<p class="definition">Definition at line <a class="el" href="SIPP_8h_source.html#l00125">125</a> of file <a class="el" href="SIPP_8h_source.html">SIPP.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="SIPP_8h_source.html#l00247">247</a> of file <a class="el" href="SIPP_8h_source.html">SIPP.h</a>.</p>
 
 </div>
 </div>
@@ -533,8 +626,9 @@ Private Attributes</h2></td></tr>
   </tr>
 </table>
 </div><div class="memdoc">
+<p>The instance of the problem. </p>
 
-<p class="definition">Definition at line <a class="el" href="SIPP_8h_source.html#l00150">150</a> of file <a class="el" href="SIPP_8h_source.html">SIPP.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="SIPP_8h_source.html#l00339">339</a> of file <a class="el" href="SIPP_8h_source.html">SIPP.h</a>.</p>
 
 </div>
 </div>
@@ -549,8 +643,9 @@ Private Attributes</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+<p>The iteration information. </p>
 
-<p class="definition">Definition at line <a class="el" href="SIPP_8h_source.html#l00129">129</a> of file <a class="el" href="SIPP_8h_source.html">SIPP.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="SIPP_8h_source.html#l00251">251</a> of file <a class="el" href="SIPP_8h_source.html">SIPP.h</a>.</p>
 
 </div>
 </div>
@@ -565,8 +660,9 @@ Private Attributes</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+<p>The current iteration number. </p>
 
-<p class="definition">Definition at line <a class="el" href="SIPP_8h_source.html#l00128">128</a> of file <a class="el" href="SIPP_8h_source.html">SIPP.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="SIPP_8h_source.html#l00250">250</a> of file <a class="el" href="SIPP_8h_source.html">SIPP.h</a>.</p>
 
 </div>
 </div>
@@ -589,8 +685,9 @@ Private Attributes</h2></td></tr>
   </tr>
 </table>
 </div><div class="memdoc">
+<p>The known maximum time for each node. </p>
 
-<p class="definition">Definition at line <a class="el" href="SIPP_8h_source.html#l00152">152</a> of file <a class="el" href="SIPP_8h_source.html">SIPP.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="SIPP_8h_source.html#l00341">341</a> of file <a class="el" href="SIPP_8h_source.html">SIPP.h</a>.</p>
 
 </div>
 </div>
@@ -613,8 +710,9 @@ Private Attributes</h2></td></tr>
   </tr>
 </table>
 </div><div class="memdoc">
+<p>The known minimum time for each node. </p>
 
-<p class="definition">Definition at line <a class="el" href="SIPP_8h_source.html#l00153">153</a> of file <a class="el" href="SIPP_8h_source.html">SIPP.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="SIPP_8h_source.html#l00342">342</a> of file <a class="el" href="SIPP_8h_source.html">SIPP.h</a>.</p>
 
 </div>
 </div>
@@ -637,8 +735,9 @@ Private Attributes</h2></td></tr>
   </tr>
 </table>
 </div><div class="memdoc">
+<p>The pool of <a class="el" href="classSIPP.html" title="Class representing the SIPP algorithm.">SIPP</a> nodes. </p>
 
-<p class="definition">Definition at line <a class="el" href="SIPP_8h_source.html#l00151">151</a> of file <a class="el" href="SIPP_8h_source.html">SIPP.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="SIPP_8h_source.html#l00340">340</a> of file <a class="el" href="SIPP_8h_source.html">SIPP.h</a>.</p>
 
 </div>
 </div>
@@ -661,8 +760,9 @@ Private Attributes</h2></td></tr>
   </tr>
 </table>
 </div><div class="memdoc">
+<p>The random number generator. </p>
 
-<p class="definition">Definition at line <a class="el" href="SIPP_8h_source.html#l00154">154</a> of file <a class="el" href="SIPP_8h_source.html">SIPP.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="SIPP_8h_source.html#l00343">343</a> of file <a class="el" href="SIPP_8h_source.html">SIPP.h</a>.</p>
 
 </div>
 </div>
@@ -677,8 +777,9 @@ Private Attributes</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+<p>The safe interval table. </p>
 
-<p class="definition">Definition at line <a class="el" href="SIPP_8h_source.html#l00123">123</a> of file <a class="el" href="SIPP_8h_source.html">SIPP.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="SIPP_8h_source.html#l00245">245</a> of file <a class="el" href="SIPP_8h_source.html">SIPP.h</a>.</p>
 
 </div>
 </div>
@@ -701,8 +802,9 @@ Private Attributes</h2></td></tr>
   </tr>
 </table>
 </div><div class="memdoc">
+<p>The settings for the <a class="el" href="classSIPP.html" title="Class representing the SIPP algorithm.">SIPP</a> algorithm. </p>
 
-<p class="definition">Definition at line <a class="el" href="SIPP_8h_source.html#l00155">155</a> of file <a class="el" href="SIPP_8h_source.html">SIPP.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="SIPP_8h_source.html#l00344">344</a> of file <a class="el" href="SIPP_8h_source.html">SIPP.h</a>.</p>
 
 </div>
 </div>

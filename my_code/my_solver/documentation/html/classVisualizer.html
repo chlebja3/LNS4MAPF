@@ -74,110 +74,150 @@ $(function() {
 </div><!--header-->
 <div class="contents">
 
+<p>Class,which represents the visualizer, and encapsulates all visual elements.  
+ <a href="classVisualizer.html#details">More...</a></p>
+
 <p><code>#include &lt;<a class="el" href="Visualizer_8h_source.html">Visualizer.h</a>&gt;</code></p>
 <div class="dynheader">
 Collaboration diagram for Visualizer:</div>
 <div class="dyncontent">
 <div class="center"><img src="classVisualizer__coll__graph.png" border="0" usemap="#Visualizer_coll__map" alt="Collaboration graph"/></div>
 <map name="Visualizer_coll__map" id="Visualizer_coll__map">
-<area shape="rect" title=" " alt="" coords="259,303,346,329"/>
-<area shape="rect" href="classVisualization.html" title=" " alt="" coords="5,184,112,211"/>
-<area shape="rect" href="structSettings.html" title=" " alt="" coords="136,184,211,211"/>
-<area shape="rect" href="classClock.html" title=" " alt="" coords="235,184,293,211"/>
-<area shape="rect" href="classInstance.html" title=" " alt="" coords="639,95,716,121"/>
+<area shape="rect" title="Class,which represents the visualizer, and encapsulates all visual elements." alt="" coords="259,303,346,329"/>
+<area shape="rect" href="classVisualization.html" title="Class representing a visualization of something." alt="" coords="5,184,112,211"/>
+<area shape="rect" href="structSettings.html" title="Struct with info about the instance." alt="" coords="136,184,211,211"/>
+<area shape="rect" href="classClock.html" title="A class for time measurement." alt="" coords="235,184,293,211"/>
+<area shape="rect" href="classInstance.html" title="If this is defined, the manhattan and euclidean heuristics are calculated." alt="" coords="639,95,716,121"/>
 <area shape="rect" href="classComputation.html" title="Handles all computation, invokes the solver, and manages the thread." alt="" coords="451,184,557,211"/>
-<area shape="rect" href="classMap.html" title=" " alt="" coords="652,5,703,32"/>
-<area shape="rect" href="classSharedData.html" title=" " alt="" coords="309,95,408,121"/>
-<area shape="rect" href="classLNS__settings.html" title=" " alt="" coords="448,95,555,121"/>
-<area shape="rect" href="classDestroy__settings.html" title=" " alt="" coords="309,5,441,32"/>
-<area shape="rect" href="classSIPP__settings.html" title=" " alt="" coords="465,5,575,32"/>
+<area shape="rect" href="classMap.html" title="Represents a 2D gridmap for pathfinding." alt="" coords="652,5,703,32"/>
+<area shape="rect" href="classSharedData.html" title="A class to hold shared data between computation and visualization threads." alt="" coords="309,95,408,121"/>
+<area shape="rect" href="classLNS__settings.html" title="Settings for the Large Neighborhood Search (LNS) algorithm." alt="" coords="448,95,555,121"/>
+<area shape="rect" href="classDestroy__settings.html" title="Settings of the destroy operator." alt="" coords="309,5,441,32"/>
+<area shape="rect" href="classSIPP__settings.html" title="Represents settings for the SIPP algorithm." alt="" coords="465,5,575,32"/>
 </map>
 <center><span class="legend">[<a href="graph_legend.html">legend</a>]</span></center></div>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
 <tr class="memitem:a2e676a4ed17244fa3ab7eaf9ad342982"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classVisualizer.html#a2e676a4ed17244fa3ab7eaf9ad342982">Visualizer</a> (<a class="el" href="classInstance.html">Instance</a> &amp;instance_, <a class="el" href="classComputation.html">Computation</a> &amp;computation_thread_, <a class="el" href="classSharedData.html">SharedData</a> &amp;shared_data_, int <a class="el" href="classVisualizer.html#a05ef4a87886b0e8ecde1e89fdb075e04">seed</a>)</td></tr>
+<tr class="memdesc:a2e676a4ed17244fa3ab7eaf9ad342982"><td class="mdescLeft">&#160;</td><td class="mdescRight">Constructs a <a class="el" href="classVisualizer.html" title="Class,which represents the visualizer, and encapsulates all visual elements.">Visualizer</a> object.  <a href="classVisualizer.html#a2e676a4ed17244fa3ab7eaf9ad342982">More...</a><br /></td></tr>
 <tr class="separator:a2e676a4ed17244fa3ab7eaf9ad342982"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a013ec3101407fbe4805f289bc32d1265"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classVisualizer.html#a013ec3101407fbe4805f289bc32d1265">~Visualizer</a> ()</td></tr>
+<tr class="memdesc:a013ec3101407fbe4805f289bc32d1265"><td class="mdescLeft">&#160;</td><td class="mdescRight">Destructor for the <a class="el" href="classVisualizer.html" title="Class,which represents the visualizer, and encapsulates all visual elements.">Visualizer</a> class.  <a href="classVisualizer.html#a013ec3101407fbe4805f289bc32d1265">More...</a><br /></td></tr>
 <tr class="separator:a013ec3101407fbe4805f289bc32d1265"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a2b6436ec715468955ebb9f53b908773f"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classVisualizer.html#a2b6436ec715468955ebb9f53b908773f">start</a> ()</td></tr>
-<tr class="separator:a2b6436ec715468955ebb9f53b908773f"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a0de5d31b1891f82e2ae19aac7e591c70"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classVisualizer.html#a0de5d31b1891f82e2ae19aac7e591c70">stop</a> ()</td></tr>
-<tr class="separator:a0de5d31b1891f82e2ae19aac7e591c70"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a82468c4a2a9c68636c47dbcfb0d12ad0"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classVisualizer.html#a82468c4a2a9c68636c47dbcfb0d12ad0">join_thread</a> ()</td></tr>
-<tr class="separator:a82468c4a2a9c68636c47dbcfb0d12ad0"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga2b6436ec715468955ebb9f53b908773f"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__thread__management.html#ga2b6436ec715468955ebb9f53b908773f">start</a> ()</td></tr>
+<tr class="memdesc:ga2b6436ec715468955ebb9f53b908773f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Starts the visualization thread.  <a href="group__thread__management.html#ga2b6436ec715468955ebb9f53b908773f">More...</a><br /></td></tr>
+<tr class="separator:ga2b6436ec715468955ebb9f53b908773f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga0de5d31b1891f82e2ae19aac7e591c70"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__thread__management.html#ga0de5d31b1891f82e2ae19aac7e591c70">stop</a> ()</td></tr>
+<tr class="memdesc:ga0de5d31b1891f82e2ae19aac7e591c70"><td class="mdescLeft">&#160;</td><td class="mdescRight">Stops the visualization thread.  <a href="group__thread__management.html#ga0de5d31b1891f82e2ae19aac7e591c70">More...</a><br /></td></tr>
+<tr class="separator:ga0de5d31b1891f82e2ae19aac7e591c70"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga82468c4a2a9c68636c47dbcfb0d12ad0"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__thread__management.html#ga82468c4a2a9c68636c47dbcfb0d12ad0">join_thread</a> ()</td></tr>
+<tr class="memdesc:ga82468c4a2a9c68636c47dbcfb0d12ad0"><td class="mdescLeft">&#160;</td><td class="mdescRight">Joins the visualization thread.  <a href="group__thread__management.html#ga82468c4a2a9c68636c47dbcfb0d12ad0">More...</a><br /></td></tr>
+<tr class="separator:ga82468c4a2a9c68636c47dbcfb0d12ad0"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a531350c5ec8ec39867647997690fc9fb"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classVisualizer.html#a531350c5ec8ec39867647997690fc9fb">run</a> ()</td></tr>
+<tr class="memdesc:a531350c5ec8ec39867647997690fc9fb"><td class="mdescLeft">&#160;</td><td class="mdescRight">The function that runs in the visualization thread.  <a href="classVisualizer.html#a531350c5ec8ec39867647997690fc9fb">More...</a><br /></td></tr>
 <tr class="separator:a531350c5ec8ec39867647997690fc9fb"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ab71637c0e046114f0511471ff0134d8e"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classVisualizer.html#ab71637c0e046114f0511471ff0134d8e">mapToTexture</a> (const <a class="el" href="classMap.html">Map</a> &amp;map_data)</td></tr>
+<tr class="memdesc:ab71637c0e046114f0511471ff0134d8e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Create a texture from a map.  <a href="classVisualizer.html#ab71637c0e046114f0511471ff0134d8e">More...</a><br /></td></tr>
 <tr class="separator:ab71637c0e046114f0511471ff0134d8e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ac916e423f190d069e76c7324c686b2d8"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classVisualizer.html#ac916e423f190d069e76c7324c686b2d8">update_agent_circles</a> (const std::vector&lt; <a class="el" href="classPoint2d.html">Point2d</a> &gt; &amp;positions)</td></tr>
+<tr class="memdesc:ac916e423f190d069e76c7324c686b2d8"><td class="mdescLeft">&#160;</td><td class="mdescRight">Update the circles shapes in the visualization with the positions of agents.  <a href="classVisualizer.html#ac916e423f190d069e76c7324c686b2d8">More...</a><br /></td></tr>
 <tr class="separator:ac916e423f190d069e76c7324c686b2d8"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ae15c81eb55577d61e18a0fe07c95a477"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classVisualizer.html#ae15c81eb55577d61e18a0fe07c95a477">update_goal_circles</a> (const std::vector&lt; <a class="el" href="classPoint2d.html">Point2d</a> &gt; &amp;positions)</td></tr>
+<tr class="memdesc:ae15c81eb55577d61e18a0fe07c95a477"><td class="mdescLeft">&#160;</td><td class="mdescRight">Update the goal circles shapes in the visualization with the positions of goals.  <a href="classVisualizer.html#ae15c81eb55577d61e18a0fe07c95a477">More...</a><br /></td></tr>
 <tr class="separator:ae15c81eb55577d61e18a0fe07c95a477"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a9bcf1d67b84c80b368b51ad5b1d7ea0d"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classVisualizer.html#a9bcf1d67b84c80b368b51ad5b1d7ea0d">update_path_vis</a> (int agent_num, const <a class="el" href="utils_8h.html#aeafaa6f891ae3667bf528a84285282b3">Path</a> &amp;path)</td></tr>
+<tr class="memdesc:a9bcf1d67b84c80b368b51ad5b1d7ea0d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Update the visualization of a path for a given agent.  <a href="classVisualizer.html#a9bcf1d67b84c80b368b51ad5b1d7ea0d">More...</a><br /></td></tr>
 <tr class="separator:a9bcf1d67b84c80b368b51ad5b1d7ea0d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a03e8dce489dd159edb7670dc0726978f"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classVisualizer.html#a03e8dce489dd159edb7670dc0726978f">update_all_paths</a> (int time)</td></tr>
+<tr class="memdesc:a03e8dce489dd159edb7670dc0726978f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Update the visualizations of all paths.  <a href="classVisualizer.html#a03e8dce489dd159edb7670dc0726978f">More...</a><br /></td></tr>
 <tr class="separator:a03e8dce489dd159edb7670dc0726978f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aaab67ee59ad133348e5adbf351bb6c8f"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classVisualizer.html#aaab67ee59ad133348e5adbf351bb6c8f">update_all_path_vis</a> (int time)</td></tr>
+<tr class="memdesc:aaab67ee59ad133348e5adbf351bb6c8f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Update the visualization of all paths.  <a href="classVisualizer.html#aaab67ee59ad133348e5adbf351bb6c8f">More...</a><br /></td></tr>
 <tr class="separator:aaab67ee59ad133348e5adbf351bb6c8f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a5a5a7c2d644830332472ee6760846f8d"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classVisualizer.html#a5a5a7c2d644830332472ee6760846f8d">update_cell_rectangles_highlights</a> ()</td></tr>
+<tr class="memdesc:a5a5a7c2d644830332472ee6760846f8d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Update all highlighted cells.  <a href="classVisualizer.html#a5a5a7c2d644830332472ee6760846f8d">More...</a><br /></td></tr>
 <tr class="separator:a5a5a7c2d644830332472ee6760846f8d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a76ffb6fc04d685ce60c106f929b705f0"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classVisualizer.html#a76ffb6fc04d685ce60c106f929b705f0">update_sipp_info</a> ()</td></tr>
+<tr class="memdesc:a76ffb6fc04d685ce60c106f929b705f0"><td class="mdescLeft">&#160;</td><td class="mdescRight">Update the sipp info for the visualization. Iterates from the current lns iteration backwards and find the closest sipp info for the selected agent.  <a href="classVisualizer.html#a76ffb6fc04d685ce60c106f929b705f0">More...</a><br /></td></tr>
 <tr class="separator:a76ffb6fc04d685ce60c106f929b705f0"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a5b9e61af0811391b1e32524439d77432"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classVisualizer.html#a5b9e61af0811391b1e32524439d77432">create_cell_rectangles</a> ()</td></tr>
+<tr class="memdesc:a5b9e61af0811391b1e32524439d77432"><td class="mdescLeft">&#160;</td><td class="mdescRight">Generate rectangles, that represents the cells in the map.  <a href="classVisualizer.html#a5b9e61af0811391b1e32524439d77432">More...</a><br /></td></tr>
 <tr class="separator:a5b9e61af0811391b1e32524439d77432"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a3c0b8c1e8eb6060ca575c77de8a79f86"><td class="memItemLeft" align="right" valign="top">auto&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classVisualizer.html#a3c0b8c1e8eb6060ca575c77de8a79f86">get_agent_position</a> (int agent_num, int time) const -&gt; const <a class="el" href="classPoint2d.html">Point2d</a></td></tr>
+<tr class="memdesc:a3c0b8c1e8eb6060ca575c77de8a79f86"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get position of a given agent at a given time step.  <a href="classVisualizer.html#a3c0b8c1e8eb6060ca575c77de8a79f86">More...</a><br /></td></tr>
 <tr class="separator:a3c0b8c1e8eb6060ca575c77de8a79f86"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ace05188b81382062bdce09c8175840dc"><td class="memItemLeft" align="right" valign="top">auto&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classVisualizer.html#ace05188b81382062bdce09c8175840dc">get_agent_location</a> (int agent_num, int time) const -&gt; int</td></tr>
+<tr class="memdesc:ace05188b81382062bdce09c8175840dc"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get location of a given agent at a given time step.  <a href="classVisualizer.html#ace05188b81382062bdce09c8175840dc">More...</a><br /></td></tr>
 <tr class="separator:ace05188b81382062bdce09c8175840dc"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ad0dc717c84271cd525d5045fabb584e6"><td class="memItemLeft" align="right" valign="top">auto&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classVisualizer.html#ad0dc717c84271cd525d5045fabb584e6">get_agent_positions</a> (int time) const -&gt; std::vector&lt; <a class="el" href="classPoint2d.html">Point2d</a> &gt;</td></tr>
+<tr class="memdesc:ad0dc717c84271cd525d5045fabb584e6"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the positions of all agents at a given time step.  <a href="classVisualizer.html#ad0dc717c84271cd525d5045fabb584e6">More...</a><br /></td></tr>
 <tr class="separator:ad0dc717c84271cd525d5045fabb584e6"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a1a017f479604d04d117ad45cdb8b3a69"><td class="memItemLeft" align="right" valign="top">auto&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classVisualizer.html#a1a017f479604d04d117ad45cdb8b3a69">get_agent_locations</a> (int time) const -&gt; std::vector&lt; int &gt;</td></tr>
+<tr class="memdesc:a1a017f479604d04d117ad45cdb8b3a69"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the locations of all agents at a given time step.  <a href="classVisualizer.html#a1a017f479604d04d117ad45cdb8b3a69">More...</a><br /></td></tr>
 <tr class="separator:a1a017f479604d04d117ad45cdb8b3a69"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aeef8596fea2b78a0754537da7813b14e"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classVisualizer.html#aeef8596fea2b78a0754537da7813b14e">solution_visualization_update</a> (const <a class="el" href="classVisualization.html">Visualization</a> &amp;vis)</td></tr>
+<tr class="memdesc:aeef8596fea2b78a0754537da7813b14e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Update function of the solution visualization.  <a href="classVisualizer.html#aeef8596fea2b78a0754537da7813b14e">More...</a><br /></td></tr>
 <tr class="separator:aeef8596fea2b78a0754537da7813b14e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a069aa119ddf2cd8f6c5ea6bd657b9236"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classVisualizer.html#a069aa119ddf2cd8f6c5ea6bd657b9236">sipp_visualization_update</a> (const <a class="el" href="classVisualization.html">Visualization</a> &amp;vis)</td></tr>
+<tr class="memdesc:a069aa119ddf2cd8f6c5ea6bd657b9236"><td class="mdescLeft">&#160;</td><td class="mdescRight">Update function of the <a class="el" href="classSIPP.html" title="Class representing the SIPP algorithm.">SIPP</a> visualization.  <a href="classVisualizer.html#a069aa119ddf2cd8f6c5ea6bd657b9236">More...</a><br /></td></tr>
 <tr class="separator:a069aa119ddf2cd8f6c5ea6bd657b9236"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:acce90236fdc5b00a22d087a34a9e3787"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classVisualizer.html#acce90236fdc5b00a22d087a34a9e3787">lns_visualization_update</a> (const <a class="el" href="classVisualization.html">Visualization</a> &amp;vis)</td></tr>
+<tr class="memdesc:acce90236fdc5b00a22d087a34a9e3787"><td class="mdescLeft">&#160;</td><td class="mdescRight">Update function of the <a class="el" href="classLNS.html" title="Class representing the Large Neighborhood Search (LNS) algorithm.">LNS</a> visualization.  <a href="classVisualizer.html#acce90236fdc5b00a22d087a34a9e3787">More...</a><br /></td></tr>
 <tr class="separator:acce90236fdc5b00a22d087a34a9e3787"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ab826718bf82d1ffafdcf991d1015d8a7"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classVisualizer.html#ab826718bf82d1ffafdcf991d1015d8a7">number_of_agents_dialog</a> ()</td></tr>
+<tr class="memdesc:ab826718bf82d1ffafdcf991d1015d8a7"><td class="mdescLeft">&#160;</td><td class="mdescRight">Dialog window asking for the number of agents.  <a href="classVisualizer.html#ab826718bf82d1ffafdcf991d1015d8a7">More...</a><br /></td></tr>
 <tr class="separator:ab826718bf82d1ffafdcf991d1015d8a7"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pri-methods"></a>
 Private Member Functions</h2></td></tr>
 <tr class="memitem:ab1083a1f85d0d6c312a71566dfd3156b"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classVisualizer.html#ab1083a1f85d0d6c312a71566dfd3156b">load_fonts</a> ()</td></tr>
+<tr class="memdesc:ab1083a1f85d0d6c312a71566dfd3156b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Load fonts and icons.  <a href="classVisualizer.html#ab1083a1f85d0d6c312a71566dfd3156b">More...</a><br /></td></tr>
 <tr class="separator:ab1083a1f85d0d6c312a71566dfd3156b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a4eb35bccef2b8df5f26e0f512b114c33"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classVisualizer.html#a4eb35bccef2b8df5f26e0f512b114c33">adjust_sfml_part_viewport</a> (sf::RenderWindow &amp;window, sf::View &amp;view, float left_panel_size, float right_panel_size, float bottom_panel_size)</td></tr>
+<tr class="memdesc:a4eb35bccef2b8df5f26e0f512b114c33"><td class="mdescLeft">&#160;</td><td class="mdescRight">Adjust the viewport of the SFML part of the window.  <a href="classVisualizer.html#a4eb35bccef2b8df5f26e0f512b114c33">More...</a><br /></td></tr>
 <tr class="separator:a4eb35bccef2b8df5f26e0f512b114c33"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a6566343e685f6c45d8126eb7c88bcbd7"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classVisualizer.html#a6566343e685f6c45d8126eb7c88bcbd7">process_events</a> (sf::RenderWindow &amp;window, sf::View &amp;view)</td></tr>
+<tr class="memdesc:a6566343e685f6c45d8126eb7c88bcbd7"><td class="mdescLeft">&#160;</td><td class="mdescRight">Process events in the SFML window.  <a href="classVisualizer.html#a6566343e685f6c45d8126eb7c88bcbd7">More...</a><br /></td></tr>
 <tr class="separator:a6566343e685f6c45d8126eb7c88bcbd7"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aa68d0613c3b3ba269d7f5a29d75ca88a"><td class="memItemLeft" align="right" valign="top">auto&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classVisualizer.html#aa68d0613c3b3ba269d7f5a29d75ca88a">generate_random_color</a> (int mix_r, int mix_g, int mix_b, double mix_ratio=0.5) -&gt; sf::Color</td></tr>
 <tr class="memdesc:aa68d0613c3b3ba269d7f5a29d75ca88a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Generate a random color. To make the color palette look more visually pleasing, the random color is mixed with (mix_r, mix_g, mix_b).  <a href="classVisualizer.html#aa68d0613c3b3ba269d7f5a29d75ca88a">More...</a><br /></td></tr>
 <tr class="separator:aa68d0613c3b3ba269d7f5a29d75ca88a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a5039ba670d8066a94163e5f6460d7236"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classVisualizer.html#a5039ba670d8066a94163e5f6460d7236">create_left_panel</a> ()</td></tr>
+<tr class="memdesc:a5039ba670d8066a94163e5f6460d7236"><td class="mdescLeft">&#160;</td><td class="mdescRight">Create the left panel of the window.  <a href="classVisualizer.html#a5039ba670d8066a94163e5f6460d7236">More...</a><br /></td></tr>
 <tr class="separator:a5039ba670d8066a94163e5f6460d7236"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a32c8ba24e8b728ad92220a0b546432eb"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classVisualizer.html#a32c8ba24e8b728ad92220a0b546432eb">create_right_panel</a> ()</td></tr>
+<tr class="memdesc:a32c8ba24e8b728ad92220a0b546432eb"><td class="mdescLeft">&#160;</td><td class="mdescRight">Create the right panel of the window.  <a href="classVisualizer.html#a32c8ba24e8b728ad92220a0b546432eb">More...</a><br /></td></tr>
 <tr class="separator:a32c8ba24e8b728ad92220a0b546432eb"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a9921a604115f1116b0fe449a9b287cf5"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classVisualizer.html#a9921a604115f1116b0fe449a9b287cf5">create_bottom_panel</a> ()</td></tr>
+<tr class="memdesc:a9921a604115f1116b0fe449a9b287cf5"><td class="mdescLeft">&#160;</td><td class="mdescRight">Create the bottom panel of the window.  <a href="classVisualizer.html#a9921a604115f1116b0fe449a9b287cf5">More...</a><br /></td></tr>
 <tr class="separator:a9921a604115f1116b0fe449a9b287cf5"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a5461ebd346832cfbc055d6c0e2cdefd1"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classVisualizer.html#a5461ebd346832cfbc055d6c0e2cdefd1">draw_agents</a> (sf::RenderWindow &amp;window)</td></tr>
+<tr class="memdesc:a5461ebd346832cfbc055d6c0e2cdefd1"><td class="mdescLeft">&#160;</td><td class="mdescRight">Draw the agents.  <a href="classVisualizer.html#a5461ebd346832cfbc055d6c0e2cdefd1">More...</a><br /></td></tr>
 <tr class="separator:a5461ebd346832cfbc055d6c0e2cdefd1"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ab8c444d6c727105cbd234cfa3df11f20"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classVisualizer.html#ab8c444d6c727105cbd234cfa3df11f20">draw_goals</a> (sf::RenderWindow &amp;window)</td></tr>
+<tr class="memdesc:ab8c444d6c727105cbd234cfa3df11f20"><td class="mdescLeft">&#160;</td><td class="mdescRight">Draw the goals.  <a href="classVisualizer.html#ab8c444d6c727105cbd234cfa3df11f20">More...</a><br /></td></tr>
 <tr class="separator:ab8c444d6c727105cbd234cfa3df11f20"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a40746cfc9fc7c70b1d4f94c7acc02699"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classVisualizer.html#a40746cfc9fc7c70b1d4f94c7acc02699">draw_paths</a> (sf::RenderWindow &amp;window)</td></tr>
+<tr class="memdesc:a40746cfc9fc7c70b1d4f94c7acc02699"><td class="mdescLeft">&#160;</td><td class="mdescRight">Draw the path visualizations.  <a href="classVisualizer.html#a40746cfc9fc7c70b1d4f94c7acc02699">More...</a><br /></td></tr>
 <tr class="separator:a40746cfc9fc7c70b1d4f94c7acc02699"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a26485e331245462cf0fa32b8398adda1"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classVisualizer.html#a26485e331245462cf0fa32b8398adda1">draw_cell_rectangles</a> (sf::RenderWindow &amp;window)</td></tr>
+<tr class="memdesc:a26485e331245462cf0fa32b8398adda1"><td class="mdescLeft">&#160;</td><td class="mdescRight">Draw the cells.  <a href="classVisualizer.html#a26485e331245462cf0fa32b8398adda1">More...</a><br /></td></tr>
 <tr class="separator:a26485e331245462cf0fa32b8398adda1"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a59e5f57df1ebdc25e41fe26618f55644"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classVisualizer.html#a59e5f57df1ebdc25e41fe26618f55644">add_to_log</a> (std::string message)</td></tr>
+<tr class="memdesc:a59e5f57df1ebdc25e41fe26618f55644"><td class="mdescLeft">&#160;</td><td class="mdescRight">Add a message to the log, which is displayed in the console.  <a href="classVisualizer.html#a59e5f57df1ebdc25e41fe26618f55644">More...</a><br /></td></tr>
 <tr class="separator:a59e5f57df1ebdc25e41fe26618f55644"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ae57cddd0916fe05ad95b070eaf22fc2d"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classVisualizer.html#ae57cddd0916fe05ad95b070eaf22fc2d">create_docking_space</a> ()</td></tr>
+<tr class="memdesc:ae57cddd0916fe05ad95b070eaf22fc2d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Create the docking space for the window.  <a href="classVisualizer.html#ae57cddd0916fe05ad95b070eaf22fc2d">More...</a><br /></td></tr>
 <tr class="separator:ae57cddd0916fe05ad95b070eaf22fc2d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a4c89b9ca89d4217f3abc02252517d555"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classVisualizer.html#a4c89b9ca89d4217f3abc02252517d555">create_menu_bar</a> ()</td></tr>
+<tr class="memdesc:a4c89b9ca89d4217f3abc02252517d555"><td class="mdescLeft">&#160;</td><td class="mdescRight">Create the menu bar for the window.  <a href="classVisualizer.html#a4c89b9ca89d4217f3abc02252517d555">More...</a><br /></td></tr>
 <tr class="separator:a4c89b9ca89d4217f3abc02252517d555"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pri-static-methods"></a>
 Static Private Member Functions</h2></td></tr>
 <tr class="memitem:a2a4b3454e01bfe0ae090e21ce340118a"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classVisualizer.html#a2a4b3454e01bfe0ae090e21ce340118a">create_visualization_playback_bar</a> (std::string vis_name, <a class="el" href="classVisualization.html">Visualization</a> &amp;vis, int id)</td></tr>
+<tr class="memdesc:a2a4b3454e01bfe0ae090e21ce340118a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Create a playback bar for the visualization.  <a href="classVisualizer.html#a2a4b3454e01bfe0ae090e21ce340118a">More...</a><br /></td></tr>
 <tr class="separator:a2a4b3454e01bfe0ae090e21ce340118a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pri-attribs"></a>
@@ -248,8 +288,12 @@ Private Attributes</h2></td></tr>
 <tr class="separator:a161325feb0685d64902e5051afbf9d84"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
-<div class="textblock">
-<p class="definition">Definition at line <a class="el" href="Visualizer_8h_source.html#l00056">56</a> of file <a class="el" href="Visualizer_8h_source.html">Visualizer.h</a>.</p>
+<div class="textblock"><p>Class,which represents the visualizer, and encapsulates all visual elements. </p>
+<dl class="todo"><dt><b><a class="el" href="todo.html#_todo000006">Todo:</a></b></dt><dd><p class="startdd"><a class="el" href="classInstance.html" title="If this is defined, the manhattan and euclidean heuristics are calculated.">Instance</a> loading does not work. </p>
+<p class="enddd">Resizing of the panels should also resize the sfml part. </p>
+</dd></dl>
+
+<p class="definition">Definition at line <a class="el" href="Visualizer_8h_source.html#l00113">113</a> of file <a class="el" href="Visualizer_8h_source.html">Visualizer.h</a>.</p>
 </div><h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
 <a id="a2e676a4ed17244fa3ab7eaf9ad342982"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a2e676a4ed17244fa3ab7eaf9ad342982">&#9670;&nbsp;</a></span>Visualizer()</h2>
@@ -289,6 +333,17 @@ Private Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
+<p>Constructs a <a class="el" href="classVisualizer.html" title="Class,which represents the visualizer, and encapsulates all visual elements.">Visualizer</a> object. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">instance_</td><td>The instance to be visualized. </td></tr>
+    <tr><td class="paramname">computation_thread_</td><td>The computation thread. </td></tr>
+    <tr><td class="paramname">shared_data_</td><td>The shared data between visualizer and computation thread. </td></tr>
+    <tr><td class="paramname">seed</td><td>The seed for the random number generator. </td></tr>
+  </table>
+  </dd>
+</dl>
+
 <p class="definition">Definition at line <a class="el" href="Visualizer_8cpp_source.html#l00047">47</a> of file <a class="el" href="Visualizer_8cpp_source.html">Visualizer.cpp</a>.</p>
 
 </div>
@@ -307,6 +362,8 @@ Private Attributes</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+
+<p>Destructor for the <a class="el" href="classVisualizer.html" title="Class,which represents the visualizer, and encapsulates all visual elements.">Visualizer</a> class. </p>
 
 <p class="definition">Definition at line <a class="el" href="Visualizer_8cpp_source.html#l00094">94</a> of file <a class="el" href="Visualizer_8cpp_source.html">Visualizer.cpp</a>.</p>
 
@@ -337,17 +394,25 @@ Private Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
+<p>Add a message to the log, which is displayed in the console. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">message</td><td>The message to be added to the log. </td></tr>
+  </table>
+  </dd>
+</dl>
+
 <p class="definition">Definition at line <a class="el" href="Visualizer_8cpp_source.html#l01318">1318</a> of file <a class="el" href="Visualizer_8cpp_source.html">Visualizer.cpp</a>.</p>
 <div class="dynheader">
 Here is the caller graph for this function:</div>
 <div class="dyncontent">
 <div class="center"><img src="classVisualizer_a59e5f57df1ebdc25e41fe26618f55644_icgraph.png" border="0" usemap="#classVisualizer_a59e5f57df1ebdc25e41fe26618f55644_icgraph" alt=""/></div>
 <map name="classVisualizer_a59e5f57df1ebdc25e41fe26618f55644_icgraph" id="classVisualizer_a59e5f57df1ebdc25e41fe26618f55644_icgraph">
-<area shape="rect" title=" " alt="" coords="635,71,800,98"/>
-<area shape="rect" href="classVisualizer.html#a4c89b9ca89d4217f3abc02252517d555" title=" " alt="" coords="447,5,582,47"/>
-<area shape="rect" href="classVisualizer.html#a531350c5ec8ec39867647997690fc9fb" title=" " alt="" coords="280,71,395,98"/>
-<area shape="rect" href="classVisualizer.html#ab826718bf82d1ffafdcf991d1015d8a7" title=" " alt="" coords="443,123,587,164"/>
-<area shape="rect" href="classVisualizer.html#a2b6436ec715468955ebb9f53b908773f" title=" " alt="" coords="108,71,232,98"/>
+<area shape="rect" title="Add a message to the log, which is displayed in the console." alt="" coords="635,71,800,98"/>
+<area shape="rect" href="classVisualizer.html#a4c89b9ca89d4217f3abc02252517d555" title="Create the menu bar for the window." alt="" coords="447,5,582,47"/>
+<area shape="rect" href="classVisualizer.html#a531350c5ec8ec39867647997690fc9fb" title="The function that runs in the visualization thread." alt="" coords="280,71,395,98"/>
+<area shape="rect" href="classVisualizer.html#ab826718bf82d1ffafdcf991d1015d8a7" title="Dialog window asking for the number of agents." alt="" coords="443,123,587,164"/>
+<area shape="rect" href="group__thread__management.html#ga2b6436ec715468955ebb9f53b908773f" title="Starts the visualization thread." alt="" coords="108,71,232,98"/>
 <area shape="rect" href="main_8cpp.html#a808f40e2e9d6eb5463165c031dfa3eb1" title=" " alt="" coords="5,71,60,98"/>
 </map>
 </div>
@@ -406,15 +471,27 @@ Here is the caller graph for this function:</div>
 </table>
 </div><div class="memdoc">
 
+<p>Adjust the viewport of the SFML part of the window. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">window</td><td>The window, where everything is rendered. </td></tr>
+    <tr><td class="paramname">view</td><td>The view, that is used for rendering. </td></tr>
+    <tr><td class="paramname">left_panel_size</td><td>The size of the left panel. </td></tr>
+    <tr><td class="paramname">right_panel_size</td><td>The size of the right panel. </td></tr>
+    <tr><td class="paramname">bottom_panel_size</td><td>The size of the bottom panel. </td></tr>
+  </table>
+  </dd>
+</dl>
+
 <p class="definition">Definition at line <a class="el" href="Visualizer_8cpp_source.html#l00759">759</a> of file <a class="el" href="Visualizer_8cpp_source.html">Visualizer.cpp</a>.</p>
 <div class="dynheader">
 Here is the caller graph for this function:</div>
 <div class="dyncontent">
 <div class="center"><img src="classVisualizer_a4eb35bccef2b8df5f26e0f512b114c33_icgraph.png" border="0" usemap="#classVisualizer_a4eb35bccef2b8df5f26e0f512b114c33_icgraph" alt=""/></div>
 <map name="classVisualizer_a4eb35bccef2b8df5f26e0f512b114c33_icgraph" id="classVisualizer_a4eb35bccef2b8df5f26e0f512b114c33_icgraph">
-<area shape="rect" title=" " alt="" coords="443,5,597,47"/>
-<area shape="rect" href="classVisualizer.html#a531350c5ec8ec39867647997690fc9fb" title=" " alt="" coords="280,13,395,39"/>
-<area shape="rect" href="classVisualizer.html#a2b6436ec715468955ebb9f53b908773f" title=" " alt="" coords="108,13,232,39"/>
+<area shape="rect" title="Adjust the viewport of the SFML part of the window." alt="" coords="443,5,597,47"/>
+<area shape="rect" href="classVisualizer.html#a531350c5ec8ec39867647997690fc9fb" title="The function that runs in the visualization thread." alt="" coords="280,13,395,39"/>
+<area shape="rect" href="group__thread__management.html#ga2b6436ec715468955ebb9f53b908773f" title="Starts the visualization thread." alt="" coords="108,13,232,39"/>
 <area shape="rect" href="main_8cpp.html#a808f40e2e9d6eb5463165c031dfa3eb1" title=" " alt="" coords="5,13,60,39"/>
 </map>
 </div>
@@ -444,15 +521,17 @@ Here is the caller graph for this function:</div>
 </table>
 </div><div class="memdoc">
 
+<p>Create the bottom panel of the window. </p>
+
 <p class="definition">Definition at line <a class="el" href="Visualizer_8cpp_source.html#l01063">1063</a> of file <a class="el" href="Visualizer_8cpp_source.html">Visualizer.cpp</a>.</p>
 <div class="dynheader">
 Here is the caller graph for this function:</div>
 <div class="dyncontent">
 <div class="center"><img src="classVisualizer_a9921a604115f1116b0fe449a9b287cf5_icgraph.png" border="0" usemap="#classVisualizer_a9921a604115f1116b0fe449a9b287cf5_icgraph" alt=""/></div>
 <map name="classVisualizer_a9921a604115f1116b0fe449a9b287cf5_icgraph" id="classVisualizer_a9921a604115f1116b0fe449a9b287cf5_icgraph">
-<area shape="rect" title=" " alt="" coords="443,5,577,47"/>
-<area shape="rect" href="classVisualizer.html#a531350c5ec8ec39867647997690fc9fb" title=" " alt="" coords="280,13,395,39"/>
-<area shape="rect" href="classVisualizer.html#a2b6436ec715468955ebb9f53b908773f" title=" " alt="" coords="108,13,232,39"/>
+<area shape="rect" title="Create the bottom panel of the window." alt="" coords="443,5,577,47"/>
+<area shape="rect" href="classVisualizer.html#a531350c5ec8ec39867647997690fc9fb" title="The function that runs in the visualization thread." alt="" coords="280,13,395,39"/>
+<area shape="rect" href="group__thread__management.html#ga2b6436ec715468955ebb9f53b908773f" title="Starts the visualization thread." alt="" coords="108,13,232,39"/>
 <area shape="rect" href="main_8cpp.html#a808f40e2e9d6eb5463165c031dfa3eb1" title=" " alt="" coords="5,13,60,39"/>
 </map>
 </div>
@@ -473,6 +552,8 @@ Here is the caller graph for this function:</div>
         </tr>
       </table>
 </div><div class="memdoc">
+
+<p>Generate rectangles, that represents the cells in the map. </p>
 
 <p class="definition">Definition at line <a class="el" href="Visualizer_8cpp_source.html#l00437">437</a> of file <a class="el" href="Visualizer_8cpp_source.html">Visualizer.cpp</a>.</p>
 
@@ -501,15 +582,17 @@ Here is the caller graph for this function:</div>
 </table>
 </div><div class="memdoc">
 
+<p>Create the docking space for the window. </p>
+
 <p class="definition">Definition at line <a class="el" href="Visualizer_8cpp_source.html#l00652">652</a> of file <a class="el" href="Visualizer_8cpp_source.html">Visualizer.cpp</a>.</p>
 <div class="dynheader">
 Here is the caller graph for this function:</div>
 <div class="dyncontent">
 <div class="center"><img src="classVisualizer_ae57cddd0916fe05ad95b070eaf22fc2d_icgraph.png" border="0" usemap="#classVisualizer_ae57cddd0916fe05ad95b070eaf22fc2d_icgraph" alt=""/></div>
 <map name="classVisualizer_ae57cddd0916fe05ad95b070eaf22fc2d_icgraph" id="classVisualizer_ae57cddd0916fe05ad95b070eaf22fc2d_icgraph">
-<area shape="rect" title=" " alt="" coords="443,5,577,47"/>
-<area shape="rect" href="classVisualizer.html#a531350c5ec8ec39867647997690fc9fb" title=" " alt="" coords="280,13,395,39"/>
-<area shape="rect" href="classVisualizer.html#a2b6436ec715468955ebb9f53b908773f" title=" " alt="" coords="108,13,232,39"/>
+<area shape="rect" title="Create the docking space for the window." alt="" coords="443,5,577,47"/>
+<area shape="rect" href="classVisualizer.html#a531350c5ec8ec39867647997690fc9fb" title="The function that runs in the visualization thread." alt="" coords="280,13,395,39"/>
+<area shape="rect" href="group__thread__management.html#ga2b6436ec715468955ebb9f53b908773f" title="Starts the visualization thread." alt="" coords="108,13,232,39"/>
 <area shape="rect" href="main_8cpp.html#a808f40e2e9d6eb5463165c031dfa3eb1" title=" " alt="" coords="5,13,60,39"/>
 </map>
 </div>
@@ -539,15 +622,17 @@ Here is the caller graph for this function:</div>
 </table>
 </div><div class="memdoc">
 
+<p>Create the left panel of the window. </p>
+
 <p class="definition">Definition at line <a class="el" href="Visualizer_8cpp_source.html#l00899">899</a> of file <a class="el" href="Visualizer_8cpp_source.html">Visualizer.cpp</a>.</p>
 <div class="dynheader">
 Here is the caller graph for this function:</div>
 <div class="dyncontent">
 <div class="center"><img src="classVisualizer_a5039ba670d8066a94163e5f6460d7236_icgraph.png" border="0" usemap="#classVisualizer_a5039ba670d8066a94163e5f6460d7236_icgraph" alt=""/></div>
 <map name="classVisualizer_a5039ba670d8066a94163e5f6460d7236_icgraph" id="classVisualizer_a5039ba670d8066a94163e5f6460d7236_icgraph">
-<area shape="rect" title=" " alt="" coords="443,5,577,47"/>
-<area shape="rect" href="classVisualizer.html#a531350c5ec8ec39867647997690fc9fb" title=" " alt="" coords="280,13,395,39"/>
-<area shape="rect" href="classVisualizer.html#a2b6436ec715468955ebb9f53b908773f" title=" " alt="" coords="108,13,232,39"/>
+<area shape="rect" title="Create the left panel of the window." alt="" coords="443,5,577,47"/>
+<area shape="rect" href="classVisualizer.html#a531350c5ec8ec39867647997690fc9fb" title="The function that runs in the visualization thread." alt="" coords="280,13,395,39"/>
+<area shape="rect" href="group__thread__management.html#ga2b6436ec715468955ebb9f53b908773f" title="Starts the visualization thread." alt="" coords="108,13,232,39"/>
 <area shape="rect" href="main_8cpp.html#a808f40e2e9d6eb5463165c031dfa3eb1" title=" " alt="" coords="5,13,60,39"/>
 </map>
 </div>
@@ -577,15 +662,17 @@ Here is the caller graph for this function:</div>
 </table>
 </div><div class="memdoc">
 
+<p>Create the menu bar for the window. </p>
+
 <p class="definition">Definition at line <a class="el" href="Visualizer_8cpp_source.html#l01073">1073</a> of file <a class="el" href="Visualizer_8cpp_source.html">Visualizer.cpp</a>.</p>
 <div class="dynheader">
 Here is the caller graph for this function:</div>
 <div class="dyncontent">
 <div class="center"><img src="classVisualizer_a4c89b9ca89d4217f3abc02252517d555_icgraph.png" border="0" usemap="#classVisualizer_a4c89b9ca89d4217f3abc02252517d555_icgraph" alt=""/></div>
 <map name="classVisualizer_a4c89b9ca89d4217f3abc02252517d555_icgraph" id="classVisualizer_a4c89b9ca89d4217f3abc02252517d555_icgraph">
-<area shape="rect" title=" " alt="" coords="443,5,577,47"/>
-<area shape="rect" href="classVisualizer.html#a531350c5ec8ec39867647997690fc9fb" title=" " alt="" coords="280,13,395,39"/>
-<area shape="rect" href="classVisualizer.html#a2b6436ec715468955ebb9f53b908773f" title=" " alt="" coords="108,13,232,39"/>
+<area shape="rect" title="Create the menu bar for the window." alt="" coords="443,5,577,47"/>
+<area shape="rect" href="classVisualizer.html#a531350c5ec8ec39867647997690fc9fb" title="The function that runs in the visualization thread." alt="" coords="280,13,395,39"/>
+<area shape="rect" href="group__thread__management.html#ga2b6436ec715468955ebb9f53b908773f" title="Starts the visualization thread." alt="" coords="108,13,232,39"/>
 <area shape="rect" href="main_8cpp.html#a808f40e2e9d6eb5463165c031dfa3eb1" title=" " alt="" coords="5,13,60,39"/>
 </map>
 </div>
@@ -615,15 +702,17 @@ Here is the caller graph for this function:</div>
 </table>
 </div><div class="memdoc">
 
+<p>Create the right panel of the window. </p>
+
 <p class="definition">Definition at line <a class="el" href="Visualizer_8cpp_source.html#l00955">955</a> of file <a class="el" href="Visualizer_8cpp_source.html">Visualizer.cpp</a>.</p>
 <div class="dynheader">
 Here is the caller graph for this function:</div>
 <div class="dyncontent">
 <div class="center"><img src="classVisualizer_a32c8ba24e8b728ad92220a0b546432eb_icgraph.png" border="0" usemap="#classVisualizer_a32c8ba24e8b728ad92220a0b546432eb_icgraph" alt=""/></div>
 <map name="classVisualizer_a32c8ba24e8b728ad92220a0b546432eb_icgraph" id="classVisualizer_a32c8ba24e8b728ad92220a0b546432eb_icgraph">
-<area shape="rect" title=" " alt="" coords="443,5,577,47"/>
-<area shape="rect" href="classVisualizer.html#a531350c5ec8ec39867647997690fc9fb" title=" " alt="" coords="280,13,395,39"/>
-<area shape="rect" href="classVisualizer.html#a2b6436ec715468955ebb9f53b908773f" title=" " alt="" coords="108,13,232,39"/>
+<area shape="rect" title="Create the right panel of the window." alt="" coords="443,5,577,47"/>
+<area shape="rect" href="classVisualizer.html#a531350c5ec8ec39867647997690fc9fb" title="The function that runs in the visualization thread." alt="" coords="280,13,395,39"/>
+<area shape="rect" href="group__thread__management.html#ga2b6436ec715468955ebb9f53b908773f" title="Starts the visualization thread." alt="" coords="108,13,232,39"/>
 <area shape="rect" href="main_8cpp.html#a808f40e2e9d6eb5463165c031dfa3eb1" title=" " alt="" coords="5,13,60,39"/>
 </map>
 </div>
@@ -670,17 +759,27 @@ Here is the caller graph for this function:</div>
 </table>
 </div><div class="memdoc">
 
+<p>Create a playback bar for the visualization. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">vis_name</td><td>The name of the visualization. </td></tr>
+    <tr><td class="paramname">vis</td><td>The visualization to be used. </td></tr>
+    <tr><td class="paramname">id</td><td>The id used for generating unique ids of the visual elements. Will create ids in range [id, id + 6]. </td></tr>
+  </table>
+  </dd>
+</dl>
+
 <p class="definition">Definition at line <a class="el" href="Visualizer_8cpp_source.html#l00992">992</a> of file <a class="el" href="Visualizer_8cpp_source.html">Visualizer.cpp</a>.</p>
 <div class="dynheader">
 Here is the caller graph for this function:</div>
 <div class="dyncontent">
 <div class="center"><img src="classVisualizer_a2a4b3454e01bfe0ae090e21ce340118a_icgraph.png" border="0" usemap="#classVisualizer_a2a4b3454e01bfe0ae090e21ce340118a_icgraph" alt=""/></div>
 <map name="classVisualizer_a2a4b3454e01bfe0ae090e21ce340118a_icgraph" id="classVisualizer_a2a4b3454e01bfe0ae090e21ce340118a_icgraph">
-<area shape="rect" title=" " alt="" coords="625,39,832,80"/>
-<area shape="rect" href="classVisualizer.html#a5039ba670d8066a94163e5f6460d7236" title=" " alt="" coords="443,5,577,47"/>
-<area shape="rect" href="classVisualizer.html#a32c8ba24e8b728ad92220a0b546432eb" title=" " alt="" coords="443,71,577,112"/>
-<area shape="rect" href="classVisualizer.html#a531350c5ec8ec39867647997690fc9fb" title=" " alt="" coords="280,46,395,73"/>
-<area shape="rect" href="classVisualizer.html#a2b6436ec715468955ebb9f53b908773f" title=" " alt="" coords="108,46,232,73"/>
+<area shape="rect" title="Create a playback bar for the visualization." alt="" coords="625,39,832,80"/>
+<area shape="rect" href="classVisualizer.html#a5039ba670d8066a94163e5f6460d7236" title="Create the left panel of the window." alt="" coords="443,5,577,47"/>
+<area shape="rect" href="classVisualizer.html#a32c8ba24e8b728ad92220a0b546432eb" title="Create the right panel of the window." alt="" coords="443,71,577,112"/>
+<area shape="rect" href="classVisualizer.html#a531350c5ec8ec39867647997690fc9fb" title="The function that runs in the visualization thread." alt="" coords="280,46,395,73"/>
+<area shape="rect" href="group__thread__management.html#ga2b6436ec715468955ebb9f53b908773f" title="Starts the visualization thread." alt="" coords="108,46,232,73"/>
 <area shape="rect" href="main_8cpp.html#a808f40e2e9d6eb5463165c031dfa3eb1" title=" " alt="" coords="5,46,60,73"/>
 </map>
 </div>
@@ -711,15 +810,23 @@ Here is the caller graph for this function:</div>
 </table>
 </div><div class="memdoc">
 
+<p>Draw the agents. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">window</td><td>The window, where everything is rendered. </td></tr>
+  </table>
+  </dd>
+</dl>
+
 <p class="definition">Definition at line <a class="el" href="Visualizer_8cpp_source.html#l00350">350</a> of file <a class="el" href="Visualizer_8cpp_source.html">Visualizer.cpp</a>.</p>
 <div class="dynheader">
 Here is the caller graph for this function:</div>
 <div class="dyncontent">
 <div class="center"><img src="classVisualizer_a5461ebd346832cfbc055d6c0e2cdefd1_icgraph.png" border="0" usemap="#classVisualizer_a5461ebd346832cfbc055d6c0e2cdefd1_icgraph" alt=""/></div>
 <map name="classVisualizer_a5461ebd346832cfbc055d6c0e2cdefd1_icgraph" id="classVisualizer_a5461ebd346832cfbc055d6c0e2cdefd1_icgraph">
-<area shape="rect" title=" " alt="" coords="443,5,620,32"/>
-<area shape="rect" href="classVisualizer.html#a531350c5ec8ec39867647997690fc9fb" title=" " alt="" coords="280,5,395,32"/>
-<area shape="rect" href="classVisualizer.html#a2b6436ec715468955ebb9f53b908773f" title=" " alt="" coords="108,5,232,32"/>
+<area shape="rect" title="Draw the agents." alt="" coords="443,5,620,32"/>
+<area shape="rect" href="classVisualizer.html#a531350c5ec8ec39867647997690fc9fb" title="The function that runs in the visualization thread." alt="" coords="280,5,395,32"/>
+<area shape="rect" href="group__thread__management.html#ga2b6436ec715468955ebb9f53b908773f" title="Starts the visualization thread." alt="" coords="108,5,232,32"/>
 <area shape="rect" href="main_8cpp.html#a808f40e2e9d6eb5463165c031dfa3eb1" title=" " alt="" coords="5,5,60,32"/>
 </map>
 </div>
@@ -750,15 +857,23 @@ Here is the caller graph for this function:</div>
 </table>
 </div><div class="memdoc">
 
+<p>Draw the cells. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">window</td><td>The window, where everything is rendered. </td></tr>
+  </table>
+  </dd>
+</dl>
+
 <p class="definition">Definition at line <a class="el" href="Visualizer_8cpp_source.html#l00481">481</a> of file <a class="el" href="Visualizer_8cpp_source.html">Visualizer.cpp</a>.</p>
 <div class="dynheader">
 Here is the caller graph for this function:</div>
 <div class="dyncontent">
 <div class="center"><img src="classVisualizer_a26485e331245462cf0fa32b8398adda1_icgraph.png" border="0" usemap="#classVisualizer_a26485e331245462cf0fa32b8398adda1_icgraph" alt=""/></div>
 <map name="classVisualizer_a26485e331245462cf0fa32b8398adda1_icgraph" id="classVisualizer_a26485e331245462cf0fa32b8398adda1_icgraph">
-<area shape="rect" title=" " alt="" coords="443,5,599,47"/>
-<area shape="rect" href="classVisualizer.html#a531350c5ec8ec39867647997690fc9fb" title=" " alt="" coords="280,13,395,39"/>
-<area shape="rect" href="classVisualizer.html#a2b6436ec715468955ebb9f53b908773f" title=" " alt="" coords="108,13,232,39"/>
+<area shape="rect" title="Draw the cells." alt="" coords="443,5,599,47"/>
+<area shape="rect" href="classVisualizer.html#a531350c5ec8ec39867647997690fc9fb" title="The function that runs in the visualization thread." alt="" coords="280,13,395,39"/>
+<area shape="rect" href="group__thread__management.html#ga2b6436ec715468955ebb9f53b908773f" title="Starts the visualization thread." alt="" coords="108,13,232,39"/>
 <area shape="rect" href="main_8cpp.html#a808f40e2e9d6eb5463165c031dfa3eb1" title=" " alt="" coords="5,13,60,39"/>
 </map>
 </div>
@@ -789,15 +904,23 @@ Here is the caller graph for this function:</div>
 </table>
 </div><div class="memdoc">
 
+<p>Draw the goals. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">window</td><td>The window, where everything is rendered. </td></tr>
+  </table>
+  </dd>
+</dl>
+
 <p class="definition">Definition at line <a class="el" href="Visualizer_8cpp_source.html#l00390">390</a> of file <a class="el" href="Visualizer_8cpp_source.html">Visualizer.cpp</a>.</p>
 <div class="dynheader">
 Here is the caller graph for this function:</div>
 <div class="dyncontent">
 <div class="center"><img src="classVisualizer_ab8c444d6c727105cbd234cfa3df11f20_icgraph.png" border="0" usemap="#classVisualizer_ab8c444d6c727105cbd234cfa3df11f20_icgraph" alt=""/></div>
 <map name="classVisualizer_ab8c444d6c727105cbd234cfa3df11f20_icgraph" id="classVisualizer_ab8c444d6c727105cbd234cfa3df11f20_icgraph">
-<area shape="rect" title=" " alt="" coords="443,5,611,32"/>
-<area shape="rect" href="classVisualizer.html#a531350c5ec8ec39867647997690fc9fb" title=" " alt="" coords="280,5,395,32"/>
-<area shape="rect" href="classVisualizer.html#a2b6436ec715468955ebb9f53b908773f" title=" " alt="" coords="108,5,232,32"/>
+<area shape="rect" title="Draw the goals." alt="" coords="443,5,611,32"/>
+<area shape="rect" href="classVisualizer.html#a531350c5ec8ec39867647997690fc9fb" title="The function that runs in the visualization thread." alt="" coords="280,5,395,32"/>
+<area shape="rect" href="group__thread__management.html#ga2b6436ec715468955ebb9f53b908773f" title="Starts the visualization thread." alt="" coords="108,5,232,32"/>
 <area shape="rect" href="main_8cpp.html#a808f40e2e9d6eb5463165c031dfa3eb1" title=" " alt="" coords="5,5,60,32"/>
 </map>
 </div>
@@ -828,15 +951,23 @@ Here is the caller graph for this function:</div>
 </table>
 </div><div class="memdoc">
 
+<p>Draw the path visualizations. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">window</td><td>The window, where everything is rendered. </td></tr>
+  </table>
+  </dd>
+</dl>
+
 <p class="definition">Definition at line <a class="el" href="Visualizer_8cpp_source.html#l00617">617</a> of file <a class="el" href="Visualizer_8cpp_source.html">Visualizer.cpp</a>.</p>
 <div class="dynheader">
 Here is the caller graph for this function:</div>
 <div class="dyncontent">
 <div class="center"><img src="classVisualizer_a40746cfc9fc7c70b1d4f94c7acc02699_icgraph.png" border="0" usemap="#classVisualizer_a40746cfc9fc7c70b1d4f94c7acc02699_icgraph" alt=""/></div>
 <map name="classVisualizer_a40746cfc9fc7c70b1d4f94c7acc02699_icgraph" id="classVisualizer_a40746cfc9fc7c70b1d4f94c7acc02699_icgraph">
-<area shape="rect" title=" " alt="" coords="443,5,612,32"/>
-<area shape="rect" href="classVisualizer.html#a531350c5ec8ec39867647997690fc9fb" title=" " alt="" coords="280,5,395,32"/>
-<area shape="rect" href="classVisualizer.html#a2b6436ec715468955ebb9f53b908773f" title=" " alt="" coords="108,5,232,32"/>
+<area shape="rect" title="Draw the path visualizations." alt="" coords="443,5,612,32"/>
+<area shape="rect" href="classVisualizer.html#a531350c5ec8ec39867647997690fc9fb" title="The function that runs in the visualization thread." alt="" coords="280,5,395,32"/>
+<area shape="rect" href="group__thread__management.html#ga2b6436ec715468955ebb9f53b908773f" title="Starts the visualization thread." alt="" coords="108,5,232,32"/>
 <area shape="rect" href="main_8cpp.html#a808f40e2e9d6eb5463165c031dfa3eb1" title=" " alt="" coords="5,5,60,32"/>
 </map>
 </div>
@@ -931,6 +1062,16 @@ Here is the caller graph for this function:</div>
       </table>
 </div><div class="memdoc">
 
+<p>Get location of a given agent at a given time step. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">agent_num</td><td>The number of the agent. </td></tr>
+    <tr><td class="paramname">time</td><td>The time step.</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>The location of the agent at the given time step. </dd></dl>
+
 <p class="definition">Definition at line <a class="el" href="Visualizer_8cpp_source.html#l01176">1176</a> of file <a class="el" href="Visualizer_8cpp_source.html">Visualizer.cpp</a>.</p>
 
 </div>
@@ -950,6 +1091,15 @@ Here is the caller graph for this function:</div>
         </tr>
       </table>
 </div><div class="memdoc">
+
+<p>Get the locations of all agents at a given time step. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">time</td><td>The time step.</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>A vector of locations of all agents at the given time step. </dd></dl>
 
 <p class="definition">Definition at line <a class="el" href="Visualizer_8cpp_source.html#l01196">1196</a> of file <a class="el" href="Visualizer_8cpp_source.html">Visualizer.cpp</a>.</p>
 
@@ -981,16 +1131,26 @@ Here is the caller graph for this function:</div>
       </table>
 </div><div class="memdoc">
 
+<p>Get position of a given agent at a given time step. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">agent_num</td><td>The number of the agent. </td></tr>
+    <tr><td class="paramname">time</td><td>The time step.</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>The position of the agent at the given time step. </dd></dl>
+
 <p class="definition">Definition at line <a class="el" href="Visualizer_8cpp_source.html#l01164">1164</a> of file <a class="el" href="Visualizer_8cpp_source.html">Visualizer.cpp</a>.</p>
 <div class="dynheader">
 Here is the caller graph for this function:</div>
 <div class="dyncontent">
 <div class="center"><img src="classVisualizer_a3c0b8c1e8eb6060ca575c77de8a79f86_icgraph.png" border="0" usemap="#classVisualizer_a3c0b8c1e8eb6060ca575c77de8a79f86_icgraph" alt=""/></div>
 <map name="classVisualizer_a3c0b8c1e8eb6060ca575c77de8a79f86_icgraph" id="classVisualizer_a3c0b8c1e8eb6060ca575c77de8a79f86_icgraph">
-<area shape="rect" title=" " alt="" coords="625,5,784,47"/>
-<area shape="rect" href="classVisualizer.html#a5039ba670d8066a94163e5f6460d7236" title=" " alt="" coords="443,5,577,47"/>
-<area shape="rect" href="classVisualizer.html#a531350c5ec8ec39867647997690fc9fb" title=" " alt="" coords="280,13,395,39"/>
-<area shape="rect" href="classVisualizer.html#a2b6436ec715468955ebb9f53b908773f" title=" " alt="" coords="108,13,232,39"/>
+<area shape="rect" title="Get position of a given agent at a given time step." alt="" coords="625,5,784,47"/>
+<area shape="rect" href="classVisualizer.html#a5039ba670d8066a94163e5f6460d7236" title="Create the left panel of the window." alt="" coords="443,5,577,47"/>
+<area shape="rect" href="classVisualizer.html#a531350c5ec8ec39867647997690fc9fb" title="The function that runs in the visualization thread." alt="" coords="280,13,395,39"/>
+<area shape="rect" href="group__thread__management.html#ga2b6436ec715468955ebb9f53b908773f" title="Starts the visualization thread." alt="" coords="108,13,232,39"/>
 <area shape="rect" href="main_8cpp.html#a808f40e2e9d6eb5463165c031dfa3eb1" title=" " alt="" coords="5,13,60,39"/>
 </map>
 </div>
@@ -1013,44 +1173,24 @@ Here is the caller graph for this function:</div>
       </table>
 </div><div class="memdoc">
 
+<p>Get the positions of all agents at a given time step. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">time</td><td>The time step.</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>A vector of positions of all agents at the given time step. </dd></dl>
+
 <p class="definition">Definition at line <a class="el" href="Visualizer_8cpp_source.html#l01183">1183</a> of file <a class="el" href="Visualizer_8cpp_source.html">Visualizer.cpp</a>.</p>
 <div class="dynheader">
 Here is the caller graph for this function:</div>
 <div class="dyncontent">
 <div class="center"><img src="classVisualizer_ad0dc717c84271cd525d5045fabb584e6_icgraph.png" border="0" usemap="#classVisualizer_ad0dc717c84271cd525d5045fabb584e6_icgraph" alt=""/></div>
 <map name="classVisualizer_ad0dc717c84271cd525d5045fabb584e6_icgraph" id="classVisualizer_ad0dc717c84271cd525d5045fabb584e6_icgraph">
-<area shape="rect" title=" " alt="" coords="424,5,583,47"/>
-<area shape="rect" href="classVisualizer.html#aeef8596fea2b78a0754537da7813b14e" title=" " alt="" coords="212,5,376,47"/>
-<area shape="rect" href="classVisualizer.html#a2e676a4ed17244fa3ab7eaf9ad342982" title=" " alt="" coords="5,13,164,39"/>
-</map>
-</div>
-
-</div>
-</div>
-<a id="a82468c4a2a9c68636c47dbcfb0d12ad0"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a82468c4a2a9c68636c47dbcfb0d12ad0">&#9670;&nbsp;</a></span>join_thread()</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">void Visualizer::join_thread </td>
-          <td>(</td>
-          <td class="paramname"></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p class="definition">Definition at line <a class="el" href="Visualizer_8cpp_source.html#l00113">113</a> of file <a class="el" href="Visualizer_8cpp_source.html">Visualizer.cpp</a>.</p>
-<div class="dynheader">
-Here is the caller graph for this function:</div>
-<div class="dyncontent">
-<div class="center"><img src="classVisualizer_a82468c4a2a9c68636c47dbcfb0d12ad0_icgraph.png" border="0" usemap="#classVisualizer_a82468c4a2a9c68636c47dbcfb0d12ad0_icgraph" alt=""/></div>
-<map name="classVisualizer_a82468c4a2a9c68636c47dbcfb0d12ad0_icgraph" id="classVisualizer_a82468c4a2a9c68636c47dbcfb0d12ad0_icgraph">
-<area shape="rect" title=" " alt="" coords="223,31,389,57"/>
-<area shape="rect" href="main_8cpp.html#a808f40e2e9d6eb5463165c031dfa3eb1" title=" " alt="" coords="63,5,117,32"/>
-<area shape="rect" href="classVisualizer.html#a013ec3101407fbe4805f289bc32d1265" title=" " alt="" coords="5,56,175,83"/>
+<area shape="rect" title="Get the positions of all agents at a given time step." alt="" coords="424,5,583,47"/>
+<area shape="rect" href="classVisualizer.html#aeef8596fea2b78a0754537da7813b14e" title="Update function of the solution visualization." alt="" coords="212,5,376,47"/>
+<area shape="rect" href="classVisualizer.html#a2e676a4ed17244fa3ab7eaf9ad342982" title="Constructs a Visualizer object." alt="" coords="5,13,164,39"/>
 </map>
 </div>
 
@@ -1071,6 +1211,14 @@ Here is the caller graph for this function:</div>
         </tr>
       </table>
 </div><div class="memdoc">
+
+<p>Update function of the <a class="el" href="classLNS.html" title="Class representing the Large Neighborhood Search (LNS) algorithm.">LNS</a> visualization. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">vis</td><td>The visualization to be updated. </td></tr>
+  </table>
+  </dd>
+</dl>
 
 <p class="definition">Definition at line <a class="el" href="Visualizer_8cpp_source.html#l01221">1221</a> of file <a class="el" href="Visualizer_8cpp_source.html">Visualizer.cpp</a>.</p>
 
@@ -1099,15 +1247,17 @@ Here is the caller graph for this function:</div>
 </table>
 </div><div class="memdoc">
 
+<p>Load fonts and icons. </p>
+
 <p class="definition">Definition at line <a class="el" href="Visualizer_8cpp_source.html#l00722">722</a> of file <a class="el" href="Visualizer_8cpp_source.html">Visualizer.cpp</a>.</p>
 <div class="dynheader">
 Here is the caller graph for this function:</div>
 <div class="dyncontent">
 <div class="center"><img src="classVisualizer_ab1083a1f85d0d6c312a71566dfd3156b_icgraph.png" border="0" usemap="#classVisualizer_ab1083a1f85d0d6c312a71566dfd3156b_icgraph" alt=""/></div>
 <map name="classVisualizer_ab1083a1f85d0d6c312a71566dfd3156b_icgraph" id="classVisualizer_ab1083a1f85d0d6c312a71566dfd3156b_icgraph">
-<area shape="rect" title=" " alt="" coords="443,5,605,32"/>
-<area shape="rect" href="classVisualizer.html#a531350c5ec8ec39867647997690fc9fb" title=" " alt="" coords="280,5,395,32"/>
-<area shape="rect" href="classVisualizer.html#a2b6436ec715468955ebb9f53b908773f" title=" " alt="" coords="108,5,232,32"/>
+<area shape="rect" title="Load fonts and icons." alt="" coords="443,5,605,32"/>
+<area shape="rect" href="classVisualizer.html#a531350c5ec8ec39867647997690fc9fb" title="The function that runs in the visualization thread." alt="" coords="280,5,395,32"/>
+<area shape="rect" href="group__thread__management.html#ga2b6436ec715468955ebb9f53b908773f" title="Starts the visualization thread." alt="" coords="108,5,232,32"/>
 <area shape="rect" href="main_8cpp.html#a808f40e2e9d6eb5463165c031dfa3eb1" title=" " alt="" coords="5,5,60,32"/>
 </map>
 </div>
@@ -1130,6 +1280,14 @@ Here is the caller graph for this function:</div>
       </table>
 </div><div class="memdoc">
 
+<p>Create a texture from a map. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">map_data</td><td>The map to be used for creating the texture. </td></tr>
+  </table>
+  </dd>
+</dl>
+
 <p class="definition">Definition at line <a class="el" href="Visualizer_8cpp_source.html#l00276">276</a> of file <a class="el" href="Visualizer_8cpp_source.html">Visualizer.cpp</a>.</p>
 
 </div>
@@ -1149,15 +1307,17 @@ Here is the caller graph for this function:</div>
       </table>
 </div><div class="memdoc">
 
+<p>Dialog window asking for the number of agents. </p>
+
 <p class="definition">Definition at line <a class="el" href="Visualizer_8cpp_source.html#l01284">1284</a> of file <a class="el" href="Visualizer_8cpp_source.html">Visualizer.cpp</a>.</p>
 <div class="dynheader">
 Here is the caller graph for this function:</div>
 <div class="dyncontent">
 <div class="center"><img src="classVisualizer_ab826718bf82d1ffafdcf991d1015d8a7_icgraph.png" border="0" usemap="#classVisualizer_ab826718bf82d1ffafdcf991d1015d8a7_icgraph" alt=""/></div>
 <map name="classVisualizer_ab826718bf82d1ffafdcf991d1015d8a7_icgraph" id="classVisualizer_ab826718bf82d1ffafdcf991d1015d8a7_icgraph">
-<area shape="rect" title=" " alt="" coords="443,5,587,47"/>
-<area shape="rect" href="classVisualizer.html#a531350c5ec8ec39867647997690fc9fb" title=" " alt="" coords="280,13,395,39"/>
-<area shape="rect" href="classVisualizer.html#a2b6436ec715468955ebb9f53b908773f" title=" " alt="" coords="108,13,232,39"/>
+<area shape="rect" title="Dialog window asking for the number of agents." alt="" coords="443,5,587,47"/>
+<area shape="rect" href="classVisualizer.html#a531350c5ec8ec39867647997690fc9fb" title="The function that runs in the visualization thread." alt="" coords="280,13,395,39"/>
+<area shape="rect" href="group__thread__management.html#ga2b6436ec715468955ebb9f53b908773f" title="Starts the visualization thread." alt="" coords="108,13,232,39"/>
 <area shape="rect" href="main_8cpp.html#a808f40e2e9d6eb5463165c031dfa3eb1" title=" " alt="" coords="5,13,60,39"/>
 </map>
 </div>
@@ -1198,15 +1358,24 @@ Here is the caller graph for this function:</div>
 </table>
 </div><div class="memdoc">
 
+<p>Process events in the SFML window. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">window</td><td>The window, where everything is rendered. </td></tr>
+    <tr><td class="paramname">view</td><td>The view, that is used for rendering. </td></tr>
+  </table>
+  </dd>
+</dl>
+
 <p class="definition">Definition at line <a class="el" href="Visualizer_8cpp_source.html#l00800">800</a> of file <a class="el" href="Visualizer_8cpp_source.html">Visualizer.cpp</a>.</p>
 <div class="dynheader">
 Here is the caller graph for this function:</div>
 <div class="dyncontent">
 <div class="center"><img src="classVisualizer_a6566343e685f6c45d8126eb7c88bcbd7_icgraph.png" border="0" usemap="#classVisualizer_a6566343e685f6c45d8126eb7c88bcbd7_icgraph" alt=""/></div>
 <map name="classVisualizer_a6566343e685f6c45d8126eb7c88bcbd7_icgraph" id="classVisualizer_a6566343e685f6c45d8126eb7c88bcbd7_icgraph">
-<area shape="rect" title=" " alt="" coords="443,5,587,47"/>
-<area shape="rect" href="classVisualizer.html#a531350c5ec8ec39867647997690fc9fb" title=" " alt="" coords="280,13,395,39"/>
-<area shape="rect" href="classVisualizer.html#a2b6436ec715468955ebb9f53b908773f" title=" " alt="" coords="108,13,232,39"/>
+<area shape="rect" title="Process events in the SFML window." alt="" coords="443,5,587,47"/>
+<area shape="rect" href="classVisualizer.html#a531350c5ec8ec39867647997690fc9fb" title="The function that runs in the visualization thread." alt="" coords="280,13,395,39"/>
+<area shape="rect" href="group__thread__management.html#ga2b6436ec715468955ebb9f53b908773f" title="Starts the visualization thread." alt="" coords="108,13,232,39"/>
 <area shape="rect" href="main_8cpp.html#a808f40e2e9d6eb5463165c031dfa3eb1" title=" " alt="" coords="5,13,60,39"/>
 </map>
 </div>
@@ -1228,14 +1397,16 @@ Here is the caller graph for this function:</div>
       </table>
 </div><div class="memdoc">
 
+<p>The function that runs in the visualization thread. </p>
+
 <p class="definition">Definition at line <a class="el" href="Visualizer_8cpp_source.html#l00121">121</a> of file <a class="el" href="Visualizer_8cpp_source.html">Visualizer.cpp</a>.</p>
 <div class="dynheader">
 Here is the caller graph for this function:</div>
 <div class="dyncontent">
 <div class="center"><img src="classVisualizer_a531350c5ec8ec39867647997690fc9fb_icgraph.png" border="0" usemap="#classVisualizer_a531350c5ec8ec39867647997690fc9fb_icgraph" alt=""/></div>
 <map name="classVisualizer_a531350c5ec8ec39867647997690fc9fb_icgraph" id="classVisualizer_a531350c5ec8ec39867647997690fc9fb_icgraph">
-<area shape="rect" title=" " alt="" coords="280,5,395,32"/>
-<area shape="rect" href="classVisualizer.html#a2b6436ec715468955ebb9f53b908773f" title=" " alt="" coords="108,5,232,32"/>
+<area shape="rect" title="The function that runs in the visualization thread." alt="" coords="280,5,395,32"/>
+<area shape="rect" href="group__thread__management.html#ga2b6436ec715468955ebb9f53b908773f" title="Starts the visualization thread." alt="" coords="108,5,232,32"/>
 <area shape="rect" href="main_8cpp.html#a808f40e2e9d6eb5463165c031dfa3eb1" title=" " alt="" coords="5,5,60,32"/>
 </map>
 </div>
@@ -1258,6 +1429,14 @@ Here is the caller graph for this function:</div>
       </table>
 </div><div class="memdoc">
 
+<p>Update function of the <a class="el" href="classSIPP.html" title="Class representing the SIPP algorithm.">SIPP</a> visualization. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">vis</td><td>The visualization to be updated. </td></tr>
+  </table>
+  </dd>
+</dl>
+
 <p class="definition">Definition at line <a class="el" href="Visualizer_8cpp_source.html#l01216">1216</a> of file <a class="el" href="Visualizer_8cpp_source.html">Visualizer.cpp</a>.</p>
 
 </div>
@@ -1278,70 +1457,22 @@ Here is the caller graph for this function:</div>
       </table>
 </div><div class="memdoc">
 
+<p>Update function of the solution visualization. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">vis</td><td>The visualization to be updated. </td></tr>
+  </table>
+  </dd>
+</dl>
+
 <p class="definition">Definition at line <a class="el" href="Visualizer_8cpp_source.html#l01209">1209</a> of file <a class="el" href="Visualizer_8cpp_source.html">Visualizer.cpp</a>.</p>
 <div class="dynheader">
 Here is the caller graph for this function:</div>
 <div class="dyncontent">
 <div class="center"><img src="classVisualizer_aeef8596fea2b78a0754537da7813b14e_icgraph.png" border="0" usemap="#classVisualizer_aeef8596fea2b78a0754537da7813b14e_icgraph" alt=""/></div>
 <map name="classVisualizer_aeef8596fea2b78a0754537da7813b14e_icgraph" id="classVisualizer_aeef8596fea2b78a0754537da7813b14e_icgraph">
-<area shape="rect" title=" " alt="" coords="212,5,376,47"/>
-<area shape="rect" href="classVisualizer.html#a2e676a4ed17244fa3ab7eaf9ad342982" title=" " alt="" coords="5,13,164,39"/>
-</map>
-</div>
-
-</div>
-</div>
-<a id="a2b6436ec715468955ebb9f53b908773f"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a2b6436ec715468955ebb9f53b908773f">&#9670;&nbsp;</a></span>start()</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">void Visualizer::start </td>
-          <td>(</td>
-          <td class="paramname"></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p class="definition">Definition at line <a class="el" href="Visualizer_8cpp_source.html#l00100">100</a> of file <a class="el" href="Visualizer_8cpp_source.html">Visualizer.cpp</a>.</p>
-<div class="dynheader">
-Here is the caller graph for this function:</div>
-<div class="dyncontent">
-<div class="center"><img src="classVisualizer_a2b6436ec715468955ebb9f53b908773f_icgraph.png" border="0" usemap="#classVisualizer_a2b6436ec715468955ebb9f53b908773f_icgraph" alt=""/></div>
-<map name="classVisualizer_a2b6436ec715468955ebb9f53b908773f_icgraph" id="classVisualizer_a2b6436ec715468955ebb9f53b908773f_icgraph">
-<area shape="rect" title=" " alt="" coords="108,5,232,32"/>
-<area shape="rect" href="main_8cpp.html#a808f40e2e9d6eb5463165c031dfa3eb1" title=" " alt="" coords="5,5,60,32"/>
-</map>
-</div>
-
-</div>
-</div>
-<a id="a0de5d31b1891f82e2ae19aac7e591c70"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a0de5d31b1891f82e2ae19aac7e591c70">&#9670;&nbsp;</a></span>stop()</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">void Visualizer::stop </td>
-          <td>(</td>
-          <td class="paramname"></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p class="definition">Definition at line <a class="el" href="Visualizer_8cpp_source.html#l00107">107</a> of file <a class="el" href="Visualizer_8cpp_source.html">Visualizer.cpp</a>.</p>
-<div class="dynheader">
-Here is the caller graph for this function:</div>
-<div class="dyncontent">
-<div class="center"><img src="classVisualizer_a0de5d31b1891f82e2ae19aac7e591c70_icgraph.png" border="0" usemap="#classVisualizer_a0de5d31b1891f82e2ae19aac7e591c70_icgraph" alt=""/></div>
-<map name="classVisualizer_a0de5d31b1891f82e2ae19aac7e591c70_icgraph" id="classVisualizer_a0de5d31b1891f82e2ae19aac7e591c70_icgraph">
-<area shape="rect" title=" " alt="" coords="223,5,345,32"/>
-<area shape="rect" href="classVisualizer.html#a013ec3101407fbe4805f289bc32d1265" title=" " alt="" coords="5,5,175,32"/>
+<area shape="rect" title="Update function of the solution visualization." alt="" coords="212,5,376,47"/>
+<area shape="rect" href="classVisualizer.html#a2e676a4ed17244fa3ab7eaf9ad342982" title="Constructs a Visualizer object." alt="" coords="5,13,164,39"/>
 </map>
 </div>
 
@@ -1363,15 +1494,23 @@ Here is the caller graph for this function:</div>
       </table>
 </div><div class="memdoc">
 
+<p>Update the circles shapes in the visualization with the positions of agents. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">positions</td><td>The positions of the agents. </td></tr>
+  </table>
+  </dd>
+</dl>
+
 <p class="definition">Definition at line <a class="el" href="Visualizer_8cpp_source.html#l00324">324</a> of file <a class="el" href="Visualizer_8cpp_source.html">Visualizer.cpp</a>.</p>
 <div class="dynheader">
 Here is the caller graph for this function:</div>
 <div class="dyncontent">
 <div class="center"><img src="classVisualizer_ac916e423f190d069e76c7324c686b2d8_icgraph.png" border="0" usemap="#classVisualizer_ac916e423f190d069e76c7324c686b2d8_icgraph" alt=""/></div>
 <map name="classVisualizer_ac916e423f190d069e76c7324c686b2d8_icgraph" id="classVisualizer_ac916e423f190d069e76c7324c686b2d8_icgraph">
-<area shape="rect" title=" " alt="" coords="424,5,563,47"/>
-<area shape="rect" href="classVisualizer.html#aeef8596fea2b78a0754537da7813b14e" title=" " alt="" coords="212,5,376,47"/>
-<area shape="rect" href="classVisualizer.html#a2e676a4ed17244fa3ab7eaf9ad342982" title=" " alt="" coords="5,13,164,39"/>
+<area shape="rect" title="Update the circles shapes in the visualization with the positions of agents." alt="" coords="424,5,563,47"/>
+<area shape="rect" href="classVisualizer.html#aeef8596fea2b78a0754537da7813b14e" title="Update function of the solution visualization." alt="" coords="212,5,376,47"/>
+<area shape="rect" href="classVisualizer.html#a2e676a4ed17244fa3ab7eaf9ad342982" title="Constructs a Visualizer object." alt="" coords="5,13,164,39"/>
 </map>
 </div>
 
@@ -1393,15 +1532,23 @@ Here is the caller graph for this function:</div>
       </table>
 </div><div class="memdoc">
 
+<p>Update the visualization of all paths. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">time</td><td>The time step to index the paths. </td></tr>
+  </table>
+  </dd>
+</dl>
+
 <p class="definition">Definition at line <a class="el" href="Visualizer_8cpp_source.html#l00604">604</a> of file <a class="el" href="Visualizer_8cpp_source.html">Visualizer.cpp</a>.</p>
 <div class="dynheader">
 Here is the caller graph for this function:</div>
 <div class="dyncontent">
 <div class="center"><img src="classVisualizer_aaab67ee59ad133348e5adbf351bb6c8f_icgraph.png" border="0" usemap="#classVisualizer_aaab67ee59ad133348e5adbf351bb6c8f_icgraph" alt=""/></div>
 <map name="classVisualizer_aaab67ee59ad133348e5adbf351bb6c8f_icgraph" id="classVisualizer_aaab67ee59ad133348e5adbf351bb6c8f_icgraph">
-<area shape="rect" title=" " alt="" coords="424,5,563,47"/>
-<area shape="rect" href="classVisualizer.html#aeef8596fea2b78a0754537da7813b14e" title=" " alt="" coords="212,5,376,47"/>
-<area shape="rect" href="classVisualizer.html#a2e676a4ed17244fa3ab7eaf9ad342982" title=" " alt="" coords="5,13,164,39"/>
+<area shape="rect" title="Update the visualization of all paths." alt="" coords="424,5,563,47"/>
+<area shape="rect" href="classVisualizer.html#aeef8596fea2b78a0754537da7813b14e" title="Update function of the solution visualization." alt="" coords="212,5,376,47"/>
+<area shape="rect" href="classVisualizer.html#a2e676a4ed17244fa3ab7eaf9ad342982" title="Constructs a Visualizer object." alt="" coords="5,13,164,39"/>
 </map>
 </div>
 
@@ -1423,14 +1570,22 @@ Here is the caller graph for this function:</div>
       </table>
 </div><div class="memdoc">
 
+<p>Update the visualizations of all paths. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">time</td><td>The time step to index the paths. </td></tr>
+  </table>
+  </dd>
+</dl>
+
 <p class="definition">Definition at line <a class="el" href="Visualizer_8cpp_source.html#l00629">629</a> of file <a class="el" href="Visualizer_8cpp_source.html">Visualizer.cpp</a>.</p>
 <div class="dynheader">
 Here is the caller graph for this function:</div>
 <div class="dyncontent">
 <div class="center"><img src="classVisualizer_a03e8dce489dd159edb7670dc0726978f_icgraph.png" border="0" usemap="#classVisualizer_a03e8dce489dd159edb7670dc0726978f_icgraph" alt=""/></div>
 <map name="classVisualizer_a03e8dce489dd159edb7670dc0726978f_icgraph" id="classVisualizer_a03e8dce489dd159edb7670dc0726978f_icgraph">
-<area shape="rect" title=" " alt="" coords="256,5,395,47"/>
-<area shape="rect" href="classVisualizer.html#acce90236fdc5b00a22d087a34a9e3787" title=" " alt="" coords="5,5,208,47"/>
+<area shape="rect" title="Update the visualizations of all paths." alt="" coords="256,5,395,47"/>
+<area shape="rect" href="classVisualizer.html#acce90236fdc5b00a22d087a34a9e3787" title="Update function of the LNS visualization." alt="" coords="5,5,208,47"/>
 </map>
 </div>
 
@@ -1451,18 +1606,20 @@ Here is the caller graph for this function:</div>
       </table>
 </div><div class="memdoc">
 
+<p>Update all highlighted cells. </p>
+
 <p class="definition">Definition at line <a class="el" href="Visualizer_8cpp_source.html#l00400">400</a> of file <a class="el" href="Visualizer_8cpp_source.html">Visualizer.cpp</a>.</p>
 <div class="dynheader">
 Here is the caller graph for this function:</div>
 <div class="dyncontent">
 <div class="center"><img src="classVisualizer_a5a5a7c2d644830332472ee6760846f8d_icgraph.png" border="0" usemap="#classVisualizer_a5a5a7c2d644830332472ee6760846f8d_icgraph" alt=""/></div>
 <map name="classVisualizer_a5a5a7c2d644830332472ee6760846f8d_icgraph" id="classVisualizer_a5a5a7c2d644830332472ee6760846f8d_icgraph">
-<area shape="rect" title=" " alt="" coords="701,71,900,112"/>
-<area shape="rect" href="classVisualizer.html#a32c8ba24e8b728ad92220a0b546432eb" title=" " alt="" coords="481,5,615,47"/>
-<area shape="rect" href="classVisualizer.html#acce90236fdc5b00a22d087a34a9e3787" title=" " alt="" coords="447,71,649,112"/>
-<area shape="rect" href="classVisualizer.html#a069aa119ddf2cd8f6c5ea6bd657b9236" title=" " alt="" coords="443,136,653,177"/>
-<area shape="rect" href="classVisualizer.html#a531350c5ec8ec39867647997690fc9fb" title=" " alt="" coords="280,13,395,39"/>
-<area shape="rect" href="classVisualizer.html#a2b6436ec715468955ebb9f53b908773f" title=" " alt="" coords="108,13,232,39"/>
+<area shape="rect" title="Update all highlighted cells." alt="" coords="701,71,900,112"/>
+<area shape="rect" href="classVisualizer.html#a32c8ba24e8b728ad92220a0b546432eb" title="Create the right panel of the window." alt="" coords="481,5,615,47"/>
+<area shape="rect" href="classVisualizer.html#acce90236fdc5b00a22d087a34a9e3787" title="Update function of the LNS visualization." alt="" coords="447,71,649,112"/>
+<area shape="rect" href="classVisualizer.html#a069aa119ddf2cd8f6c5ea6bd657b9236" title="Update function of the SIPP visualization." alt="" coords="443,136,653,177"/>
+<area shape="rect" href="classVisualizer.html#a531350c5ec8ec39867647997690fc9fb" title="The function that runs in the visualization thread." alt="" coords="280,13,395,39"/>
+<area shape="rect" href="group__thread__management.html#ga2b6436ec715468955ebb9f53b908773f" title="Starts the visualization thread." alt="" coords="108,13,232,39"/>
 <area shape="rect" href="main_8cpp.html#a808f40e2e9d6eb5463165c031dfa3eb1" title=" " alt="" coords="5,13,60,39"/>
 </map>
 </div>
@@ -1484,6 +1641,14 @@ Here is the caller graph for this function:</div>
         </tr>
       </table>
 </div><div class="memdoc">
+
+<p>Update the goal circles shapes in the visualization with the positions of goals. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">positions</td><td>The positions of the goals. </td></tr>
+  </table>
+  </dd>
+</dl>
 
 <p class="definition">Definition at line <a class="el" href="Visualizer_8cpp_source.html#l00360">360</a> of file <a class="el" href="Visualizer_8cpp_source.html">Visualizer.cpp</a>.</p>
 
@@ -1515,18 +1680,27 @@ Here is the caller graph for this function:</div>
       </table>
 </div><div class="memdoc">
 
+<p>Update the visualization of a path for a given agent. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">agent_num</td><td>The number of the agent. </td></tr>
+    <tr><td class="paramname">path</td><td>The path to be visualized. </td></tr>
+  </table>
+  </dd>
+</dl>
+
 <p class="definition">Definition at line <a class="el" href="Visualizer_8cpp_source.html#l00516">516</a> of file <a class="el" href="Visualizer_8cpp_source.html">Visualizer.cpp</a>.</p>
 <div class="dynheader">
 Here is the caller graph for this function:</div>
 <div class="dyncontent">
 <div class="center"><img src="classVisualizer_a9bcf1d67b84c80b368b51ad5b1d7ea0d_icgraph.png" border="0" usemap="#classVisualizer_a9bcf1d67b84c80b368b51ad5b1d7ea0d_icgraph" alt=""/></div>
 <map name="classVisualizer_a9bcf1d67b84c80b368b51ad5b1d7ea0d_icgraph" id="classVisualizer_a9bcf1d67b84c80b368b51ad5b1d7ea0d_icgraph">
-<area shape="rect" title=" " alt="" coords="649,39,788,80"/>
-<area shape="rect" href="classVisualizer.html#aaab67ee59ad133348e5adbf351bb6c8f" title=" " alt="" coords="463,5,601,47"/>
-<area shape="rect" href="classVisualizer.html#a03e8dce489dd159edb7670dc0726978f" title=" " alt="" coords="463,71,601,112"/>
-<area shape="rect" href="classVisualizer.html#aeef8596fea2b78a0754537da7813b14e" title=" " alt="" coords="231,5,395,47"/>
-<area shape="rect" href="classVisualizer.html#a2e676a4ed17244fa3ab7eaf9ad342982" title=" " alt="" coords="5,13,164,39"/>
-<area shape="rect" href="classVisualizer.html#acce90236fdc5b00a22d087a34a9e3787" title=" " alt="" coords="212,71,415,112"/>
+<area shape="rect" title="Update the visualization of a path for a given agent." alt="" coords="649,39,788,80"/>
+<area shape="rect" href="classVisualizer.html#aaab67ee59ad133348e5adbf351bb6c8f" title="Update the visualization of all paths." alt="" coords="463,5,601,47"/>
+<area shape="rect" href="classVisualizer.html#a03e8dce489dd159edb7670dc0726978f" title="Update the visualizations of all paths." alt="" coords="463,71,601,112"/>
+<area shape="rect" href="classVisualizer.html#aeef8596fea2b78a0754537da7813b14e" title="Update function of the solution visualization." alt="" coords="231,5,395,47"/>
+<area shape="rect" href="classVisualizer.html#a2e676a4ed17244fa3ab7eaf9ad342982" title="Constructs a Visualizer object." alt="" coords="5,13,164,39"/>
+<area shape="rect" href="classVisualizer.html#acce90236fdc5b00a22d087a34a9e3787" title="Update function of the LNS visualization." alt="" coords="212,71,415,112"/>
 </map>
 </div>
 
@@ -1547,17 +1721,19 @@ Here is the caller graph for this function:</div>
       </table>
 </div><div class="memdoc">
 
+<p>Update the sipp info for the visualization. Iterates from the current lns iteration backwards and find the closest sipp info for the selected agent. </p>
+
 <p class="definition">Definition at line <a class="el" href="Visualizer_8cpp_source.html#l01255">1255</a> of file <a class="el" href="Visualizer_8cpp_source.html">Visualizer.cpp</a>.</p>
 <div class="dynheader">
 Here is the caller graph for this function:</div>
 <div class="dyncontent">
 <div class="center"><img src="classVisualizer_a76ffb6fc04d685ce60c106f929b705f0_icgraph.png" border="0" usemap="#classVisualizer_a76ffb6fc04d685ce60c106f929b705f0_icgraph" alt=""/></div>
 <map name="classVisualizer_a76ffb6fc04d685ce60c106f929b705f0_icgraph" id="classVisualizer_a76ffb6fc04d685ce60c106f929b705f0_icgraph">
-<area shape="rect" title=" " alt="" coords="693,39,832,80"/>
-<area shape="rect" href="classVisualizer.html#acce90236fdc5b00a22d087a34a9e3787" title=" " alt="" coords="443,5,645,47"/>
-<area shape="rect" href="classVisualizer.html#a6566343e685f6c45d8126eb7c88bcbd7" title=" " alt="" coords="472,71,616,112"/>
-<area shape="rect" href="classVisualizer.html#a531350c5ec8ec39867647997690fc9fb" title=" " alt="" coords="280,78,395,105"/>
-<area shape="rect" href="classVisualizer.html#a2b6436ec715468955ebb9f53b908773f" title=" " alt="" coords="108,78,232,105"/>
+<area shape="rect" title="Update the sipp info for the visualization. Iterates from the current lns iteration backwards and fin..." alt="" coords="693,39,832,80"/>
+<area shape="rect" href="classVisualizer.html#acce90236fdc5b00a22d087a34a9e3787" title="Update function of the LNS visualization." alt="" coords="443,5,645,47"/>
+<area shape="rect" href="classVisualizer.html#a6566343e685f6c45d8126eb7c88bcbd7" title="Process events in the SFML window." alt="" coords="472,71,616,112"/>
+<area shape="rect" href="classVisualizer.html#a531350c5ec8ec39867647997690fc9fb" title="The function that runs in the visualization thread." alt="" coords="280,78,395,105"/>
+<area shape="rect" href="group__thread__management.html#ga2b6436ec715468955ebb9f53b908773f" title="Starts the visualization thread." alt="" coords="108,78,232,105"/>
 <area shape="rect" href="main_8cpp.html#a808f40e2e9d6eb5463165c031dfa3eb1" title=" " alt="" coords="5,78,60,105"/>
 </map>
 </div>
@@ -1584,8 +1760,9 @@ Here is the caller graph for this function:</div>
   </tr>
 </table>
 </div><div class="memdoc">
+<p>the circles that represent the agents </p>
 
-<p class="definition">Definition at line <a class="el" href="Visualizer_8h_source.html#l00136">136</a> of file <a class="el" href="Visualizer_8h_source.html">Visualizer.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="Visualizer_8h_source.html#l00398">398</a> of file <a class="el" href="Visualizer_8h_source.html">Visualizer.h</a>.</p>
 
 </div>
 </div>
@@ -1609,7 +1786,7 @@ Here is the caller graph for this function:</div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="Visualizer_8h_source.html#l00138">138</a> of file <a class="el" href="Visualizer_8h_source.html">Visualizer.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="Visualizer_8h_source.html#l00400">400</a> of file <a class="el" href="Visualizer_8h_source.html">Visualizer.h</a>.</p>
 
 </div>
 </div>
@@ -1632,8 +1809,9 @@ Here is the caller graph for this function:</div>
   </tr>
 </table>
 </div><div class="memdoc">
+<p>the path visualizations </p>
 
-<p class="definition">Definition at line <a class="el" href="Visualizer_8h_source.html#l00140">140</a> of file <a class="el" href="Visualizer_8h_source.html">Visualizer.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="Visualizer_8h_source.html#l00402">402</a> of file <a class="el" href="Visualizer_8h_source.html">Visualizer.h</a>.</p>
 
 </div>
 </div>
@@ -1656,8 +1834,9 @@ Here is the caller graph for this function:</div>
   </tr>
 </table>
 </div><div class="memdoc">
+<p>the colors of the agents </p>
 
-<p class="definition">Definition at line <a class="el" href="Visualizer_8h_source.html#l00139">139</a> of file <a class="el" href="Visualizer_8h_source.html">Visualizer.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="Visualizer_8h_source.html#l00401">401</a> of file <a class="el" href="Visualizer_8h_source.html">Visualizer.h</a>.</p>
 
 </div>
 </div>
@@ -1680,8 +1859,9 @@ Here is the caller graph for this function:</div>
   </tr>
 </table>
 </div><div class="memdoc">
+<p>the paths of the agents </p>
 
-<p class="definition">Definition at line <a class="el" href="Visualizer_8h_source.html#l00141">141</a> of file <a class="el" href="Visualizer_8h_source.html">Visualizer.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="Visualizer_8h_source.html#l00403">403</a> of file <a class="el" href="Visualizer_8h_source.html">Visualizer.h</a>.</p>
 
 </div>
 </div>
@@ -1704,8 +1884,9 @@ Here is the caller graph for this function:</div>
   </tr>
 </table>
 </div><div class="memdoc">
+<p>the rectangles that represent the cells </p>
 
-<p class="definition">Definition at line <a class="el" href="Visualizer_8h_source.html#l00142">142</a> of file <a class="el" href="Visualizer_8h_source.html">Visualizer.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="Visualizer_8h_source.html#l00404">404</a> of file <a class="el" href="Visualizer_8h_source.html">Visualizer.h</a>.</p>
 
 </div>
 </div>
@@ -1728,8 +1909,9 @@ Here is the caller graph for this function:</div>
   </tr>
 </table>
 </div><div class="memdoc">
+<p>The clock for time measurement, used for generating timestamps for log messages. </p>
 
-<p class="definition">Definition at line <a class="el" href="Visualizer_8h_source.html#l00162">162</a> of file <a class="el" href="Visualizer_8h_source.html">Visualizer.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="Visualizer_8h_source.html#l00424">424</a> of file <a class="el" href="Visualizer_8h_source.html">Visualizer.h</a>.</p>
 
 </div>
 </div>
@@ -1752,8 +1934,9 @@ Here is the caller graph for this function:</div>
   </tr>
 </table>
 </div><div class="memdoc">
+<p>the computation thread </p>
 
-<p class="definition">Definition at line <a class="el" href="Visualizer_8h_source.html#l00127">127</a> of file <a class="el" href="Visualizer_8h_source.html">Visualizer.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="Visualizer_8h_source.html#l00382">382</a> of file <a class="el" href="Visualizer_8h_source.html">Visualizer.h</a>.</p>
 
 </div>
 </div>
@@ -1776,8 +1959,9 @@ Here is the caller graph for this function:</div>
   </tr>
 </table>
 </div><div class="memdoc">
+<p>the last click position </p>
 
-<p class="definition">Definition at line <a class="el" href="Visualizer_8h_source.html#l00149">149</a> of file <a class="el" href="Visualizer_8h_source.html">Visualizer.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="Visualizer_8h_source.html#l00411">411</a> of file <a class="el" href="Visualizer_8h_source.html">Visualizer.h</a>.</p>
 
 </div>
 </div>
@@ -1800,8 +1984,9 @@ Here is the caller graph for this function:</div>
   </tr>
 </table>
 </div><div class="memdoc">
+<p>the circles that represent the goals </p>
 
-<p class="definition">Definition at line <a class="el" href="Visualizer_8h_source.html#l00137">137</a> of file <a class="el" href="Visualizer_8h_source.html">Visualizer.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="Visualizer_8h_source.html#l00399">399</a> of file <a class="el" href="Visualizer_8h_source.html">Visualizer.h</a>.</p>
 
 </div>
 </div>
@@ -1824,8 +2009,9 @@ Here is the caller graph for this function:</div>
   </tr>
 </table>
 </div><div class="memdoc">
+<p>flag indicating whether the window is moving </p>
 
-<p class="definition">Definition at line <a class="el" href="Visualizer_8h_source.html#l00147">147</a> of file <a class="el" href="Visualizer_8h_source.html">Visualizer.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="Visualizer_8h_source.html#l00409">409</a> of file <a class="el" href="Visualizer_8h_source.html">Visualizer.h</a>.</p>
 
 </div>
 </div>
@@ -1848,8 +2034,9 @@ Here is the caller graph for this function:</div>
   </tr>
 </table>
 </div><div class="memdoc">
+<p>the instance to be visualized </p>
 
-<p class="definition">Definition at line <a class="el" href="Visualizer_8h_source.html#l00126">126</a> of file <a class="el" href="Visualizer_8h_source.html">Visualizer.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="Visualizer_8h_source.html#l00381">381</a> of file <a class="el" href="Visualizer_8h_source.html">Visualizer.h</a>.</p>
 
 </div>
 </div>
@@ -1872,8 +2059,9 @@ Here is the caller graph for this function:</div>
   </tr>
 </table>
 </div><div class="memdoc">
+<p>the selected agent </p>
 
-<p class="definition">Definition at line <a class="el" href="Visualizer_8h_source.html#l00146">146</a> of file <a class="el" href="Visualizer_8h_source.html">Visualizer.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="Visualizer_8h_source.html#l00408">408</a> of file <a class="el" href="Visualizer_8h_source.html">Visualizer.h</a>.</p>
 
 </div>
 </div>
@@ -1896,8 +2084,9 @@ Here is the caller graph for this function:</div>
   </tr>
 </table>
 </div><div class="memdoc">
+<p>flag indicating whether the destroyed paths should be highlighted </p>
 
-<p class="definition">Definition at line <a class="el" href="Visualizer_8h_source.html#l00148">148</a> of file <a class="el" href="Visualizer_8h_source.html">Visualizer.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="Visualizer_8h_source.html#l00410">410</a> of file <a class="el" href="Visualizer_8h_source.html">Visualizer.h</a>.</p>
 
 </div>
 </div>
@@ -1920,8 +2109,9 @@ Here is the caller graph for this function:</div>
   </tr>
 </table>
 </div><div class="memdoc">
+<p>the <a class="el" href="classSIPP.html" title="Class representing the SIPP algorithm.">SIPP</a> info for the selected agent </p>
 
-<p class="definition">Definition at line <a class="el" href="Visualizer_8h_source.html#l00144">144</a> of file <a class="el" href="Visualizer_8h_source.html">Visualizer.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="Visualizer_8h_source.html#l00406">406</a> of file <a class="el" href="Visualizer_8h_source.html">Visualizer.h</a>.</p>
 
 </div>
 </div>
@@ -1944,8 +2134,9 @@ Here is the caller graph for this function:</div>
   </tr>
 </table>
 </div><div class="memdoc">
+<p>The visualization of <a class="el" href="classLNS.html" title="Class representing the Large Neighborhood Search (LNS) algorithm.">LNS</a>. </p>
 
-<p class="definition">Definition at line <a class="el" href="Visualizer_8h_source.html#l00159">159</a> of file <a class="el" href="Visualizer_8h_source.html">Visualizer.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="Visualizer_8h_source.html#l00421">421</a> of file <a class="el" href="Visualizer_8h_source.html">Visualizer.h</a>.</p>
 
 </div>
 </div>
@@ -1968,8 +2159,9 @@ Here is the caller graph for this function:</div>
   </tr>
 </table>
 </div><div class="memdoc">
+<p>the rectangle that represents the currently expanded cell </p>
 
-<p class="definition">Definition at line <a class="el" href="Visualizer_8h_source.html#l00150">150</a> of file <a class="el" href="Visualizer_8h_source.html">Visualizer.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="Visualizer_8h_source.html#l00412">412</a> of file <a class="el" href="Visualizer_8h_source.html">Visualizer.h</a>.</p>
 
 </div>
 </div>
@@ -1992,8 +2184,9 @@ Here is the caller graph for this function:</div>
   </tr>
 </table>
 </div><div class="memdoc">
+<p>the sprite that represents the map </p>
 
-<p class="definition">Definition at line <a class="el" href="Visualizer_8h_source.html#l00135">135</a> of file <a class="el" href="Visualizer_8h_source.html">Visualizer.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="Visualizer_8h_source.html#l00397">397</a> of file <a class="el" href="Visualizer_8h_source.html">Visualizer.h</a>.</p>
 
 </div>
 </div>
@@ -2016,8 +2209,9 @@ Here is the caller graph for this function:</div>
   </tr>
 </table>
 </div><div class="memdoc">
+<p>the map texture </p>
 
-<p class="definition">Definition at line <a class="el" href="Visualizer_8h_source.html#l00134">134</a> of file <a class="el" href="Visualizer_8h_source.html">Visualizer.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="Visualizer_8h_source.html#l00396">396</a> of file <a class="el" href="Visualizer_8h_source.html">Visualizer.h</a>.</p>
 
 </div>
 </div>
@@ -2040,8 +2234,9 @@ Here is the caller graph for this function:</div>
   </tr>
 </table>
 </div><div class="memdoc">
+<p>The random number generator. </p>
 
-<p class="definition">Definition at line <a class="el" href="Visualizer_8h_source.html#l00161">161</a> of file <a class="el" href="Visualizer_8h_source.html">Visualizer.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="Visualizer_8h_source.html#l00423">423</a> of file <a class="el" href="Visualizer_8h_source.html">Visualizer.h</a>.</p>
 
 </div>
 </div>
@@ -2064,8 +2259,9 @@ Here is the caller graph for this function:</div>
   </tr>
 </table>
 </div><div class="memdoc">
+<p>indicator whether the thread should be running </p>
 
-<p class="definition">Definition at line <a class="el" href="Visualizer_8h_source.html#l00125">125</a> of file <a class="el" href="Visualizer_8h_source.html">Visualizer.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="Visualizer_8h_source.html#l00380">380</a> of file <a class="el" href="Visualizer_8h_source.html">Visualizer.h</a>.</p>
 
 </div>
 </div>
@@ -2088,8 +2284,9 @@ Here is the caller graph for this function:</div>
   </tr>
 </table>
 </div><div class="memdoc">
+<p>The seed for the random number generator. </p>
 
-<p class="definition">Definition at line <a class="el" href="Visualizer_8h_source.html#l00160">160</a> of file <a class="el" href="Visualizer_8h_source.html">Visualizer.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="Visualizer_8h_source.html#l00422">422</a> of file <a class="el" href="Visualizer_8h_source.html">Visualizer.h</a>.</p>
 
 </div>
 </div>
@@ -2112,8 +2309,9 @@ Here is the caller graph for this function:</div>
   </tr>
 </table>
 </div><div class="memdoc">
+<p>the <a class="el" href="classLNS.html" title="Class representing the Large Neighborhood Search (LNS) algorithm.">LNS</a> info for the selected agent </p>
 
-<p class="definition">Definition at line <a class="el" href="Visualizer_8h_source.html#l00145">145</a> of file <a class="el" href="Visualizer_8h_source.html">Visualizer.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="Visualizer_8h_source.html#l00407">407</a> of file <a class="el" href="Visualizer_8h_source.html">Visualizer.h</a>.</p>
 
 </div>
 </div>
@@ -2136,8 +2334,9 @@ Here is the caller graph for this function:</div>
   </tr>
 </table>
 </div><div class="memdoc">
+<p>The settings for the visualizer. </p>
 
-<p class="definition">Definition at line <a class="el" href="Visualizer_8h_source.html#l00164">164</a> of file <a class="el" href="Visualizer_8h_source.html">Visualizer.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="Visualizer_8h_source.html#l00426">426</a> of file <a class="el" href="Visualizer_8h_source.html">Visualizer.h</a>.</p>
 
 </div>
 </div>
@@ -2160,8 +2359,9 @@ Here is the caller graph for this function:</div>
   </tr>
 </table>
 </div><div class="memdoc">
+<p>the shared data between visualizer and computation thread </p>
 
-<p class="definition">Definition at line <a class="el" href="Visualizer_8h_source.html#l00128">128</a> of file <a class="el" href="Visualizer_8h_source.html">Visualizer.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="Visualizer_8h_source.html#l00383">383</a> of file <a class="el" href="Visualizer_8h_source.html">Visualizer.h</a>.</p>
 
 </div>
 </div>
@@ -2184,8 +2384,9 @@ Here is the caller graph for this function:</div>
   </tr>
 </table>
 </div><div class="memdoc">
+<p>Flag indicating whether the dialog for the number of agents should be shown. </p>
 
-<p class="definition">Definition at line <a class="el" href="Visualizer_8h_source.html#l00165">165</a> of file <a class="el" href="Visualizer_8h_source.html">Visualizer.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="Visualizer_8h_source.html#l00427">427</a> of file <a class="el" href="Visualizer_8h_source.html">Visualizer.h</a>.</p>
 
 </div>
 </div>
@@ -2208,8 +2409,9 @@ Here is the caller graph for this function:</div>
   </tr>
 </table>
 </div><div class="memdoc">
+<p>the highlights of the cells </p>
 
-<p class="definition">Definition at line <a class="el" href="Visualizer_8h_source.html#l00143">143</a> of file <a class="el" href="Visualizer_8h_source.html">Visualizer.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="Visualizer_8h_source.html#l00405">405</a> of file <a class="el" href="Visualizer_8h_source.html">Visualizer.h</a>.</p>
 
 </div>
 </div>
@@ -2232,8 +2434,9 @@ Here is the caller graph for this function:</div>
   </tr>
 </table>
 </div><div class="memdoc">
+<p>The visualization of <a class="el" href="classSIPP.html" title="Class representing the SIPP algorithm.">SIPP</a>. </p>
 
-<p class="definition">Definition at line <a class="el" href="Visualizer_8h_source.html#l00158">158</a> of file <a class="el" href="Visualizer_8h_source.html">Visualizer.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="Visualizer_8h_source.html#l00420">420</a> of file <a class="el" href="Visualizer_8h_source.html">Visualizer.h</a>.</p>
 
 </div>
 </div>
@@ -2256,8 +2459,9 @@ Here is the caller graph for this function:</div>
   </tr>
 </table>
 </div><div class="memdoc">
+<p>The visualization of the solution. </p>
 
-<p class="definition">Definition at line <a class="el" href="Visualizer_8h_source.html#l00157">157</a> of file <a class="el" href="Visualizer_8h_source.html">Visualizer.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="Visualizer_8h_source.html#l00419">419</a> of file <a class="el" href="Visualizer_8h_source.html">Visualizer.h</a>.</p>
 
 </div>
 </div>
@@ -2280,8 +2484,9 @@ Here is the caller graph for this function:</div>
   </tr>
 </table>
 </div><div class="memdoc">
+<p>the underlying thread for the visualizer </p>
 
-<p class="definition">Definition at line <a class="el" href="Visualizer_8h_source.html#l00124">124</a> of file <a class="el" href="Visualizer_8h_source.html">Visualizer.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="Visualizer_8h_source.html#l00379">379</a> of file <a class="el" href="Visualizer_8h_source.html">Visualizer.h</a>.</p>
 
 </div>
 </div>
@@ -2304,8 +2509,9 @@ Here is the caller graph for this function:</div>
   </tr>
 </table>
 </div><div class="memdoc">
+<p>the log of messages that should be shown in the console the current zoom level </p>
 
-<p class="definition">Definition at line <a class="el" href="Visualizer_8h_source.html#l00153">153</a> of file <a class="el" href="Visualizer_8h_source.html">Visualizer.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="Visualizer_8h_source.html#l00415">415</a> of file <a class="el" href="Visualizer_8h_source.html">Visualizer.h</a>.</p>
 
 </div>
 </div>
@@ -2328,8 +2534,9 @@ Here is the caller graph for this function:</div>
   </tr>
 </table>
 </div><div class="memdoc">
+<p>the zoom step </p>
 
-<p class="definition">Definition at line <a class="el" href="Visualizer_8h_source.html#l00154">154</a> of file <a class="el" href="Visualizer_8h_source.html">Visualizer.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="Visualizer_8h_source.html#l00416">416</a> of file <a class="el" href="Visualizer_8h_source.html">Visualizer.h</a>.</p>
 
 </div>
 </div>

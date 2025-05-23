@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.16)
 
 # enable testing if the user does not specify otherwise
-option(ENABLE_TESTS "Enable tests" ON)
+option(ENABLE_TESTS "Enable tests" OFF)
 
 # Project name and version
 project(simple_MAPF_solver VERSION 1.0 LANGUAGES CXX)

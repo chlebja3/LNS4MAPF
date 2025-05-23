@@ -74,14 +74,17 @@ $(function() {
 </div><!--header-->
 <div class="contents">
 
+<p>Class representing the Large Neighborhood Search (<a class="el" href="classLNS.html" title="Class representing the Large Neighborhood Search (LNS) algorithm.">LNS</a>) algorithm.  
+ <a href="classLNS.html#details">More...</a></p>
+
 <p><code>#include &lt;<a class="el" href="LNS_8h_source.html">LNS.h</a>&gt;</code></p>
 <div class="dynheader">
 Inheritance diagram for LNS:</div>
 <div class="dyncontent">
 <div class="center"><img src="classLNS__inherit__graph.png" border="0" usemap="#LNS_inherit__map" alt="Inheritance graph"/></div>
 <map name="LNS_inherit__map" id="LNS_inherit__map">
-<area shape="rect" title=" " alt="" coords="13,80,60,107"/>
-<area shape="rect" href="classSolver.html" title=" " alt="" coords="5,5,68,32"/>
+<area shape="rect" title="Class representing the Large Neighborhood Search (LNS) algorithm." alt="" coords="13,80,60,107"/>
+<area shape="rect" href="classSolver.html" title="A class that represents a solver for the MAPF problem." alt="" coords="5,5,68,32"/>
 </map>
 <center><span class="legend">[<a href="graph_legend.html">legend</a>]</span></center></div>
 <div class="dynheader">
@@ -89,47 +92,58 @@ Collaboration diagram for LNS:</div>
 <div class="dyncontent">
 <div class="center"><img src="classLNS__coll__graph.png" border="0" usemap="#LNS_coll__map" alt="Collaboration graph"/></div>
 <map name="LNS_coll__map" id="LNS_coll__map">
-<area shape="rect" title=" " alt="" coords="1100,232,1147,259"/>
-<area shape="rect" href="classSolver.html" title=" " alt="" coords="458,169,521,196"/>
-<area shape="rect" href="classInstance.html" title=" " alt="" coords="173,108,251,135"/>
-<area shape="rect" href="classConstraintTable.html" title=" " alt="" coords="817,75,940,101"/>
-<area shape="rect" href="classEdgeConstraintTableWithAgentNums.html" title=" " alt="" coords="359,56,620,83"/>
-<area shape="rect" href="classMap.html" title=" " alt="" coords="5,108,56,135"/>
-<area shape="rect" href="classSolution.html" title=" " alt="" coords="175,188,249,215"/>
-<area shape="rect" href="structomp__locks.html" title=" " alt="" coords="443,5,535,32"/>
-<area shape="rect" href="classSharedData.html" title=" " alt="" coords="829,205,928,232"/>
-<area shape="rect" href="classOperator.html" title=" " alt="" coords="839,259,918,285"/>
-<area shape="rect" href="structLogger.html" title=" " alt="" coords="845,309,912,336"/>
-<area shape="rect" href="classLNS__settings.html" title=" " alt="" coords="825,360,932,387"/>
-<area shape="rect" href="classDestroy__settings.html" title=" " alt="" coords="423,335,555,361"/>
-<area shape="rect" href="classSIPP__settings.html" title=" " alt="" coords="435,385,544,412"/>
+<area shape="rect" title="Class representing the Large Neighborhood Search (LNS) algorithm." alt="" coords="1100,232,1147,259"/>
+<area shape="rect" href="classSolver.html" title="A class that represents a solver for the MAPF problem." alt="" coords="458,169,521,196"/>
+<area shape="rect" href="classInstance.html" title="If this is defined, the manhattan and euclidean heuristics are calculated." alt="" coords="173,108,251,135"/>
+<area shape="rect" href="classConstraintTable.html" title="A class representing a constraint table, which stores all dynamic constraints." alt="" coords="817,75,940,101"/>
+<area shape="rect" href="classEdgeConstraintTableWithAgentNums.html" title="Represents a table of all edge constraints for all agents." alt="" coords="359,56,620,83"/>
+<area shape="rect" href="classMap.html" title="Represents a 2D gridmap for pathfinding." alt="" coords="5,108,56,135"/>
+<area shape="rect" href="classSolution.html" title="A class that represents the solution of the MAPF problem." alt="" coords="175,188,249,215"/>
+<area shape="rect" href="structomp__locks.html" title="A class that wraps OpenMP locks for parallelization." alt="" coords="443,5,535,32"/>
+<area shape="rect" href="classSharedData.html" title="A class to hold shared data between computation and visualization threads." alt="" coords="829,205,928,232"/>
+<area shape="rect" href="classOperator.html" title="Class representing a generic operator for the LNS algorithm." alt="" coords="839,259,918,285"/>
+<area shape="rect" href="structLogger.html" title="This class is used to log the iterations of the LNS algorithm." alt="" coords="845,309,912,336"/>
+<area shape="rect" href="classLNS__settings.html" title="Settings for the Large Neighborhood Search (LNS) algorithm." alt="" coords="825,360,932,387"/>
+<area shape="rect" href="classDestroy__settings.html" title="Settings of the destroy operator." alt="" coords="423,335,555,361"/>
+<area shape="rect" href="classSIPP__settings.html" title="Represents settings for the SIPP algorithm." alt="" coords="435,385,544,412"/>
 </map>
 <center><span class="legend">[<a href="graph_legend.html">legend</a>]</span></center></div>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
 <tr class="memitem:a6d3648748e40c87140940d9912aac986"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classLNS.html#a6d3648748e40c87140940d9912aac986">LNS</a> (const <a class="el" href="classInstance.html">Instance</a> &amp;instance_, std::mt19937 &amp;rnd_generator_, <a class="el" href="classSharedData.html">SharedData</a> *shared_data_, <a class="el" href="classLNS__settings.html">LNS_settings</a> &amp;settings_)</td></tr>
+<tr class="memdesc:a6d3648748e40c87140940d9912aac986"><td class="mdescLeft">&#160;</td><td class="mdescRight">Constructor for the <a class="el" href="classLNS.html" title="Class representing the Large Neighborhood Search (LNS) algorithm.">LNS</a> class.  <a href="classLNS.html#a6d3648748e40c87140940d9912aac986">More...</a><br /></td></tr>
 <tr class="separator:a6d3648748e40c87140940d9912aac986"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a0940ae0dc7588b19b32f5a13c0cc66aa"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classLNS.html#a0940ae0dc7588b19b32f5a13c0cc66aa">~LNS</a> () override=default</td></tr>
+<tr class="memdesc:a0940ae0dc7588b19b32f5a13c0cc66aa"><td class="mdescLeft">&#160;</td><td class="mdescRight">Destructor for the <a class="el" href="classLNS.html" title="Class representing the Large Neighborhood Search (LNS) algorithm.">LNS</a> class.  <a href="classLNS.html#a0940ae0dc7588b19b32f5a13c0cc66aa">More...</a><br /></td></tr>
 <tr class="separator:a0940ae0dc7588b19b32f5a13c0cc66aa"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ab4a4826221160701ee3cf6ca93feb1f7"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classLNS.html#ab4a4826221160701ee3cf6ca93feb1f7">solve</a> () override</td></tr>
+<tr class="memdesc:ab4a4826221160701ee3cf6ca93feb1f7"><td class="mdescLeft">&#160;</td><td class="mdescRight">Solves the given instance using the <a class="el" href="classLNS.html" title="Class representing the Large Neighborhood Search (LNS) algorithm.">LNS</a> algorithm.  <a href="classLNS.html#ab4a4826221160701ee3cf6ca93feb1f7">More...</a><br /></td></tr>
 <tr class="separator:ab4a4826221160701ee3cf6ca93feb1f7"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ab3adf7c10423f40dbbf163c99250bf02"><td class="memItemLeft" align="right" valign="top">auto&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classLNS.html#ab3adf7c10423f40dbbf163c99250bf02">find_initial_solution</a> () -&gt; bool</td></tr>
+<tr class="memdesc:ab3adf7c10423f40dbbf163c99250bf02"><td class="mdescLeft">&#160;</td><td class="mdescRight">Finds the initial solution for the <a class="el" href="classLNS.html" title="Class representing the Large Neighborhood Search (LNS) algorithm.">LNS</a> algorithm.  <a href="classLNS.html#ab3adf7c10423f40dbbf163c99250bf02">More...</a><br /></td></tr>
 <tr class="separator:ab3adf7c10423f40dbbf163c99250bf02"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:abdf4c5b6995536dc47e2327a045b5c58"><td class="memItemLeft" align="right" valign="top">auto&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classLNS.html#abdf4c5b6995536dc47e2327a045b5c58">PrioritizedPlanning</a> () -&gt; <a class="el" href="classSolution.html">Solution</a></td></tr>
+<tr class="memdesc:abdf4c5b6995536dc47e2327a045b5c58"><td class="mdescLeft">&#160;</td><td class="mdescRight">Runs the Prioritized Planning algorithm.  <a href="classLNS.html#abdf4c5b6995536dc47e2327a045b5c58">More...</a><br /></td></tr>
 <tr class="separator:abdf4c5b6995536dc47e2327a045b5c58"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:acbd3a90edf83dc926ce444873cabc269"><td class="memItemLeft" align="right" valign="top">auto&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classLNS.html#acbd3a90edf83dc926ce444873cabc269">get_num_of_generated_nodes</a> () const -&gt; int</td></tr>
+<tr class="memdesc:acbd3a90edf83dc926ce444873cabc269"><td class="mdescLeft">&#160;</td><td class="mdescRight">Getter for the number of generated nodes.  <a href="classLNS.html#acbd3a90edf83dc926ce444873cabc269">More...</a><br /></td></tr>
 <tr class="separator:acbd3a90edf83dc926ce444873cabc269"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a084bdc7fe557b0d491d07c4ec1b9f059"><td class="memItemLeft" align="right" valign="top">auto&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classLNS.html#a084bdc7fe557b0d491d07c4ec1b9f059">get_num_of_expanded_nodes</a> () const -&gt; int</td></tr>
+<tr class="memdesc:a084bdc7fe557b0d491d07c4ec1b9f059"><td class="mdescLeft">&#160;</td><td class="mdescRight">Getter for the number of expanded nodes.  <a href="classLNS.html#a084bdc7fe557b0d491d07c4ec1b9f059">More...</a><br /></td></tr>
 <tr class="separator:a084bdc7fe557b0d491d07c4ec1b9f059"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a319d877bb15af0145e03c374929d3ddc"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classLNS.html#a319d877bb15af0145e03c374929d3ddc">discard_solution</a> (const <a class="el" href="classSolution.html">Solution</a> &amp;sol, const <a class="el" href="classSolution.html">Solution</a> &amp;prev_sol) const</td></tr>
+<tr class="memdesc:a319d877bb15af0145e03c374929d3ddc"><td class="mdescLeft">&#160;</td><td class="mdescRight">Discards the solution if it is not better than the previous one. Restores the <a class="el" href="classSafeIntervalTable.html" title="The SafeIntervalTable class stores the safe intervals for each location in the grid.">SafeIntervalTable</a> and <a class="el" href="classConstraintTable.html" title="A class representing a constraint table, which stores all dynamic constraints.">ConstraintTable</a> to its previous state.  <a href="classLNS.html#a319d877bb15af0145e03c374929d3ddc">More...</a><br /></td></tr>
 <tr class="separator:a319d877bb15af0145e03c374929d3ddc"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a658e49decd804a9fa1a08d065ae6304d"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classLNS.html#a658e49decd804a9fa1a08d065ae6304d">initialize_constraint_table</a> (const std::vector&lt; <a class="el" href="utils_8h.html#a64881685b4fe27a0cf599222d5fb1c72">TimePointPath</a> &gt; &amp;paths)</td></tr>
+<tr class="memdesc:a658e49decd804a9fa1a08d065ae6304d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Builds the constraint table for the given paths.  <a href="classLNS.html#a658e49decd804a9fa1a08d065ae6304d">More...</a><br /></td></tr>
 <tr class="separator:a658e49decd804a9fa1a08d065ae6304d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="inherit_header pub_methods_classSolver"><td colspan="2" onclick="javascript:toggleInherit('pub_methods_classSolver')"><img src="closed.png" alt="-"/>&#160;Public Member Functions inherited from <a class="el" href="classSolver.html">Solver</a></td></tr>
 <tr class="memitem:a9f2fe57e946337cb3225e16004b4db70 inherit pub_methods_classSolver"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSolver.html#a9f2fe57e946337cb3225e16004b4db70">Solver</a> (std::string name_, const <a class="el" href="classInstance.html">Instance</a> &amp;instance_, std::mt19937 &amp;rnd_generator_)</td></tr>
+<tr class="memdesc:a9f2fe57e946337cb3225e16004b4db70 inherit pub_methods_classSolver"><td class="mdescLeft">&#160;</td><td class="mdescRight">Constructor for the <a class="el" href="classSolver.html" title="A class that represents a solver for the MAPF problem.">Solver</a> class.  <a href="classSolver.html#a9f2fe57e946337cb3225e16004b4db70">More...</a><br /></td></tr>
 <tr class="separator:a9f2fe57e946337cb3225e16004b4db70 inherit pub_methods_classSolver"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a83ce5ff88fb25719ccfc5fc4584cece3 inherit pub_methods_classSolver"><td class="memItemLeft" align="right" valign="top">virtual&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSolver.html#a83ce5ff88fb25719ccfc5fc4584cece3">~Solver</a> ()=default</td></tr>
+<tr class="memdesc:a83ce5ff88fb25719ccfc5fc4584cece3 inherit pub_methods_classSolver"><td class="mdescLeft">&#160;</td><td class="mdescRight">Virtual Destructor for the <a class="el" href="classSolver.html" title="A class that represents a solver for the MAPF problem.">Solver</a> class.  <a href="classSolver.html#a83ce5ff88fb25719ccfc5fc4584cece3">More...</a><br /></td></tr>
 <tr class="separator:a83ce5ff88fb25719ccfc5fc4584cece3 inherit pub_methods_classSolver"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-attribs"></a>
@@ -161,22 +175,31 @@ Public Attributes</h2></td></tr>
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pri-methods"></a>
 Private Member Functions</h2></td></tr>
 <tr class="memitem:a27bbdb3f70a081c26dd031c6756b1e95"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classLNS.html#a27bbdb3f70a081c26dd031c6756b1e95">destroy_random</a> (<a class="el" href="classSolution.html">Solution</a> &amp;sol) const</td></tr>
+<tr class="memdesc:a27bbdb3f70a081c26dd031c6756b1e95"><td class="mdescLeft">&#160;</td><td class="mdescRight">The random destroy operator function, which destroys random agents.  <a href="classLNS.html#a27bbdb3f70a081c26dd031c6756b1e95">More...</a><br /></td></tr>
 <tr class="separator:a27bbdb3f70a081c26dd031c6756b1e95"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a4888343908bdd86069e09e7a3796a437"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classLNS.html#a4888343908bdd86069e09e7a3796a437">destroy_randomwalk</a> (<a class="el" href="classSolution.html">Solution</a> &amp;sol) const</td></tr>
+<tr class="memdesc:a4888343908bdd86069e09e7a3796a437"><td class="mdescLeft">&#160;</td><td class="mdescRight">The random walk destroy operator function.  <a href="classLNS.html#a4888343908bdd86069e09e7a3796a437">More...</a><br /></td></tr>
 <tr class="separator:a4888343908bdd86069e09e7a3796a437"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a3e95681dbb28740deef085110991f3b0"><td class="memItemLeft" align="right" valign="top">auto&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classLNS.html#a3e95681dbb28740deef085110991f3b0">random_walk</a> (int agent_num, int neighborhood_size, int start_location, int start_time, int upperbound, std::set&lt; int &gt; &amp;chosen) const -&gt; bool</td></tr>
+<tr class="memdesc:a3e95681dbb28740deef085110991f3b0"><td class="mdescLeft">&#160;</td><td class="mdescRight">The random_walk function of the random walk destroy operator.  <a href="classLNS.html#a3e95681dbb28740deef085110991f3b0">More...</a><br /></td></tr>
 <tr class="separator:a3e95681dbb28740deef085110991f3b0"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a5ccad09a04930841c3615ecf8ec0972d"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classLNS.html#a5ccad09a04930841c3615ecf8ec0972d">destroy_intersection</a> (<a class="el" href="classSolution.html">Solution</a> &amp;sol) const</td></tr>
+<tr class="memdesc:a5ccad09a04930841c3615ecf8ec0972d"><td class="mdescLeft">&#160;</td><td class="mdescRight">The intersection destroy operator function.  <a href="classLNS.html#a5ccad09a04930841c3615ecf8ec0972d">More...</a><br /></td></tr>
 <tr class="separator:a5ccad09a04930841c3615ecf8ec0972d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a4ea599007b8b88f4bff0cf1f12a8e8c6"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classLNS.html#a4ea599007b8b88f4bff0cf1f12a8e8c6">destroy_blocked</a> (<a class="el" href="classSolution.html">Solution</a> &amp;sol) const</td></tr>
+<tr class="memdesc:a4ea599007b8b88f4bff0cf1f12a8e8c6"><td class="mdescLeft">&#160;</td><td class="mdescRight">The blocked destroy operator function.  <a href="classLNS.html#a4ea599007b8b88f4bff0cf1f12a8e8c6">More...</a><br /></td></tr>
 <tr class="separator:a4ea599007b8b88f4bff0cf1f12a8e8c6"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a412b23f4704dc3ce9e01fe0331ca8728"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classLNS.html#a412b23f4704dc3ce9e01fe0331ca8728">destroy_adaptive</a> (<a class="el" href="classSolution.html">Solution</a> &amp;sol) const</td></tr>
+<tr class="memdesc:a412b23f4704dc3ce9e01fe0331ca8728"><td class="mdescLeft">&#160;</td><td class="mdescRight">The adaptive destroy operator function.  <a href="classLNS.html#a412b23f4704dc3ce9e01fe0331ca8728">More...</a><br /></td></tr>
 <tr class="separator:a412b23f4704dc3ce9e01fe0331ca8728"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:af68cb150f64a0c8f249057ab57364f48"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classLNS.html#af68cb150f64a0c8f249057ab57364f48">destroy_random_choose</a> (<a class="el" href="classSolution.html">Solution</a> &amp;sol) const</td></tr>
+<tr class="memdesc:af68cb150f64a0c8f249057ab57364f48"><td class="mdescLeft">&#160;</td><td class="mdescRight">The random choose destroy operator function.  <a href="classLNS.html#af68cb150f64a0c8f249057ab57364f48">More...</a><br /></td></tr>
 <tr class="separator:af68cb150f64a0c8f249057ab57364f48"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a852ca0c6ca9152bef516c29f3c210f66"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classLNS.html#a852ca0c6ca9152bef516c29f3c210f66">get_intersection_agents</a> (std::unordered_set&lt; int &gt; &amp;neighborhood, int current) const</td></tr>
+<tr class="memdesc:a852ca0c6ca9152bef516c29f3c210f66"><td class="mdescLeft">&#160;</td><td class="mdescRight">A function used in the intersection destroy operator to get the agents that are intersecting at a given location.  <a href="classLNS.html#a852ca0c6ca9152bef516c29f3c210f66">More...</a><br /></td></tr>
 <tr class="separator:a852ca0c6ca9152bef516c29f3c210f66"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:af3084016c73f066f5e33e0d4847b50c2"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classLNS.html#af3084016c73f066f5e33e0d4847b50c2">repair_default</a> (<a class="el" href="classSolution.html">Solution</a> &amp;sol) const</td></tr>
+<tr class="memdesc:af3084016c73f066f5e33e0d4847b50c2"><td class="mdescLeft">&#160;</td><td class="mdescRight">The repair operator function, which repairs the solution.  <a href="classLNS.html#af3084016c73f066f5e33e0d4847b50c2">More...</a><br /></td></tr>
 <tr class="separator:af3084016c73f066f5e33e0d4847b50c2"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pri-attribs"></a>
@@ -207,8 +230,9 @@ Private Attributes</h2></td></tr>
 <tr class="separator:a1cf8a164ac392a9c2052a7d2b9a4db74"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
-<div class="textblock">
-<p class="definition">Definition at line <a class="el" href="LNS_8h_source.html#l00092">92</a> of file <a class="el" href="LNS_8h_source.html">LNS.h</a>.</p>
+<div class="textblock"><p>Class representing the Large Neighborhood Search (<a class="el" href="classLNS.html" title="Class representing the Large Neighborhood Search (LNS) algorithm.">LNS</a>) algorithm. </p>
+
+<p class="definition">Definition at line <a class="el" href="LNS_8h_source.html#l00141">141</a> of file <a class="el" href="LNS_8h_source.html">LNS.h</a>.</p>
 </div><h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
 <a id="a6d3648748e40c87140940d9912aac986"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a6d3648748e40c87140940d9912aac986">&#9670;&nbsp;</a></span>LNS()</h2>
@@ -248,6 +272,17 @@ Private Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
+<p>Constructor for the <a class="el" href="classLNS.html" title="Class representing the Large Neighborhood Search (LNS) algorithm.">LNS</a> class. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">instance_</td><td>The instance to be solved. </td></tr>
+    <tr><td class="paramname">rnd_generator_</td><td>Random number generator. </td></tr>
+    <tr><td class="paramname">shared_data_</td><td>Pointer to shared data. </td></tr>
+    <tr><td class="paramname">settings_</td><td><a class="el" href="structSettings.html" title="Struct with info about the instance.">Settings</a> for the <a class="el" href="classLNS.html" title="Class representing the Large Neighborhood Search (LNS) algorithm.">LNS</a> algorithm. </td></tr>
+  </table>
+  </dd>
+</dl>
+
 <p class="definition">Definition at line <a class="el" href="LNS_8cpp_source.html#l00022">22</a> of file <a class="el" href="LNS_8cpp_source.html">LNS.cpp</a>.</p>
 
 </div>
@@ -274,6 +309,8 @@ Private Attributes</h2></td></tr>
   </tr>
 </table>
 </div><div class="memdoc">
+
+<p>Destructor for the <a class="el" href="classLNS.html" title="Class representing the Large Neighborhood Search (LNS) algorithm.">LNS</a> class. </p>
 
 </div>
 </div>
@@ -302,14 +339,22 @@ Private Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
+<p>The adaptive destroy operator function. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">sol</td><td>The solution to be modified. </td></tr>
+  </table>
+  </dd>
+</dl>
+
 <p class="definition">Definition at line <a class="el" href="LNS_8cpp_source.html#l00627">627</a> of file <a class="el" href="LNS_8cpp_source.html">LNS.cpp</a>.</p>
 <div class="dynheader">
 Here is the caller graph for this function:</div>
 <div class="dyncontent">
 <div class="center"><img src="classLNS_a412b23f4704dc3ce9e01fe0331ca8728_icgraph.png" border="0" usemap="#classLNS_a412b23f4704dc3ce9e01fe0331ca8728_icgraph" alt=""/></div>
 <map name="classLNS_a412b23f4704dc3ce9e01fe0331ca8728_icgraph" id="classLNS_a412b23f4704dc3ce9e01fe0331ca8728_icgraph">
-<area shape="rect" title=" " alt="" coords="133,5,301,32"/>
-<area shape="rect" href="classLNS.html#a6d3648748e40c87140940d9912aac986" title=" " alt="" coords="5,5,85,32"/>
+<area shape="rect" title="The adaptive destroy operator function." alt="" coords="133,5,301,32"/>
+<area shape="rect" href="classLNS.html#a6d3648748e40c87140940d9912aac986" title="Constructor for the LNS class." alt="" coords="5,5,85,32"/>
 </map>
 </div>
 
@@ -339,14 +384,22 @@ Here is the caller graph for this function:</div>
 </table>
 </div><div class="memdoc">
 
+<p>The blocked destroy operator function. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">sol</td><td>The solution to be modified. </td></tr>
+  </table>
+  </dd>
+</dl>
+
 <p class="definition">Definition at line <a class="el" href="LNS_8cpp_source.html#l00693">693</a> of file <a class="el" href="LNS_8cpp_source.html">LNS.cpp</a>.</p>
 <div class="dynheader">
 Here is the caller graph for this function:</div>
 <div class="dyncontent">
 <div class="center"><img src="classLNS_a4ea599007b8b88f4bff0cf1f12a8e8c6_icgraph.png" border="0" usemap="#classLNS_a4ea599007b8b88f4bff0cf1f12a8e8c6_icgraph" alt=""/></div>
 <map name="classLNS_a4ea599007b8b88f4bff0cf1f12a8e8c6_icgraph" id="classLNS_a4ea599007b8b88f4bff0cf1f12a8e8c6_icgraph">
-<area shape="rect" title=" " alt="" coords="133,5,295,32"/>
-<area shape="rect" href="classLNS.html#a6d3648748e40c87140940d9912aac986" title=" " alt="" coords="5,5,85,32"/>
+<area shape="rect" title="The blocked destroy operator function." alt="" coords="133,5,295,32"/>
+<area shape="rect" href="classLNS.html#a6d3648748e40c87140940d9912aac986" title="Constructor for the LNS class." alt="" coords="5,5,85,32"/>
 </map>
 </div>
 
@@ -376,16 +429,24 @@ Here is the caller graph for this function:</div>
 </table>
 </div><div class="memdoc">
 
+<p>The intersection destroy operator function. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">sol</td><td>The solution to be modified. </td></tr>
+  </table>
+  </dd>
+</dl>
+
 <p class="definition">Definition at line <a class="el" href="LNS_8cpp_source.html#l00521">521</a> of file <a class="el" href="LNS_8cpp_source.html">LNS.cpp</a>.</p>
 <div class="dynheader">
 Here is the caller graph for this function:</div>
 <div class="dyncontent">
 <div class="center"><img src="classLNS_a5ccad09a04930841c3615ecf8ec0972d_icgraph.png" border="0" usemap="#classLNS_a5ccad09a04930841c3615ecf8ec0972d_icgraph" alt=""/></div>
 <map name="classLNS_a5ccad09a04930841c3615ecf8ec0972d_icgraph" id="classLNS_a5ccad09a04930841c3615ecf8ec0972d_icgraph">
-<area shape="rect" title=" " alt="" coords="349,56,537,83"/>
-<area shape="rect" href="classLNS.html#a412b23f4704dc3ce9e01fe0331ca8728" title=" " alt="" coords="133,5,301,32"/>
-<area shape="rect" href="classLNS.html#a6d3648748e40c87140940d9912aac986" title=" " alt="" coords="5,56,85,83"/>
-<area shape="rect" href="classLNS.html#af68cb150f64a0c8f249057ab57364f48" title=" " alt="" coords="137,107,298,149"/>
+<area shape="rect" title="The intersection destroy operator function." alt="" coords="349,56,537,83"/>
+<area shape="rect" href="classLNS.html#a412b23f4704dc3ce9e01fe0331ca8728" title="The adaptive destroy operator function." alt="" coords="133,5,301,32"/>
+<area shape="rect" href="classLNS.html#a6d3648748e40c87140940d9912aac986" title="Constructor for the LNS class." alt="" coords="5,56,85,83"/>
+<area shape="rect" href="classLNS.html#af68cb150f64a0c8f249057ab57364f48" title="The random choose destroy operator function." alt="" coords="137,107,298,149"/>
 </map>
 </div>
 
@@ -415,18 +476,26 @@ Here is the caller graph for this function:</div>
 </table>
 </div><div class="memdoc">
 
+<p>The random destroy operator function, which destroys random agents. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">sol</td><td>The solution to be modified. </td></tr>
+  </table>
+  </dd>
+</dl>
+
 <p class="definition">Definition at line <a class="el" href="LNS_8cpp_source.html#l00330">330</a> of file <a class="el" href="LNS_8cpp_source.html">LNS.cpp</a>.</p>
 <div class="dynheader">
 Here is the caller graph for this function:</div>
 <div class="dyncontent">
 <div class="center"><img src="classLNS_a27bbdb3f70a081c26dd031c6756b1e95_icgraph.png" border="0" usemap="#classLNS_a27bbdb3f70a081c26dd031c6756b1e95_icgraph" alt=""/></div>
 <map name="classLNS_a27bbdb3f70a081c26dd031c6756b1e95_icgraph" id="classLNS_a27bbdb3f70a081c26dd031c6756b1e95_icgraph">
-<area shape="rect" title=" " alt="" coords="589,73,751,100"/>
-<area shape="rect" href="classLNS.html#a412b23f4704dc3ce9e01fe0331ca8728" title=" " alt="" coords="133,48,301,74"/>
-<area shape="rect" href="classLNS.html#a6d3648748e40c87140940d9912aac986" title=" " alt="" coords="5,106,85,133"/>
-<area shape="rect" href="classLNS.html#af68cb150f64a0c8f249057ab57364f48" title=" " alt="" coords="137,99,298,140"/>
-<area shape="rect" href="classLNS.html#a4888343908bdd86069e09e7a3796a437" title=" " alt="" coords="349,149,541,176"/>
-<area shape="rect" href="classLNS.html#a4ea599007b8b88f4bff0cf1f12a8e8c6" title=" " alt="" coords="137,165,298,192"/>
+<area shape="rect" title="The random destroy operator function, which destroys random agents." alt="" coords="589,73,751,100"/>
+<area shape="rect" href="classLNS.html#a412b23f4704dc3ce9e01fe0331ca8728" title="The adaptive destroy operator function." alt="" coords="133,48,301,74"/>
+<area shape="rect" href="classLNS.html#a6d3648748e40c87140940d9912aac986" title="Constructor for the LNS class." alt="" coords="5,106,85,133"/>
+<area shape="rect" href="classLNS.html#af68cb150f64a0c8f249057ab57364f48" title="The random choose destroy operator function." alt="" coords="137,99,298,140"/>
+<area shape="rect" href="classLNS.html#a4888343908bdd86069e09e7a3796a437" title="The random walk destroy operator function." alt="" coords="349,149,541,176"/>
+<area shape="rect" href="classLNS.html#a4ea599007b8b88f4bff0cf1f12a8e8c6" title="The blocked destroy operator function." alt="" coords="137,165,298,192"/>
 </map>
 </div>
 
@@ -456,14 +525,22 @@ Here is the caller graph for this function:</div>
 </table>
 </div><div class="memdoc">
 
+<p>The random choose destroy operator function. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">sol</td><td>The solution to be modified. </td></tr>
+  </table>
+  </dd>
+</dl>
+
 <p class="definition">Definition at line <a class="el" href="LNS_8cpp_source.html#l00800">800</a> of file <a class="el" href="LNS_8cpp_source.html">LNS.cpp</a>.</p>
 <div class="dynheader">
 Here is the caller graph for this function:</div>
 <div class="dyncontent">
 <div class="center"><img src="classLNS_af68cb150f64a0c8f249057ab57364f48_icgraph.png" border="0" usemap="#classLNS_af68cb150f64a0c8f249057ab57364f48_icgraph" alt=""/></div>
 <map name="classLNS_af68cb150f64a0c8f249057ab57364f48_icgraph" id="classLNS_af68cb150f64a0c8f249057ab57364f48_icgraph">
-<area shape="rect" title=" " alt="" coords="133,5,295,47"/>
-<area shape="rect" href="classLNS.html#a6d3648748e40c87140940d9912aac986" title=" " alt="" coords="5,13,85,39"/>
+<area shape="rect" title="The random choose destroy operator function." alt="" coords="133,5,295,47"/>
+<area shape="rect" href="classLNS.html#a6d3648748e40c87140940d9912aac986" title="Constructor for the LNS class." alt="" coords="5,13,85,39"/>
 </map>
 </div>
 
@@ -493,17 +570,25 @@ Here is the caller graph for this function:</div>
 </table>
 </div><div class="memdoc">
 
+<p>The random walk destroy operator function. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">sol</td><td>The solution to be modified. </td></tr>
+  </table>
+  </dd>
+</dl>
+
 <p class="definition">Definition at line <a class="el" href="LNS_8cpp_source.html#l00346">346</a> of file <a class="el" href="LNS_8cpp_source.html">LNS.cpp</a>.</p>
 <div class="dynheader">
 Here is the caller graph for this function:</div>
 <div class="dyncontent">
 <div class="center"><img src="classLNS_a4888343908bdd86069e09e7a3796a437_icgraph.png" border="0" usemap="#classLNS_a4888343908bdd86069e09e7a3796a437_icgraph" alt=""/></div>
 <map name="classLNS_a4888343908bdd86069e09e7a3796a437_icgraph" id="classLNS_a4888343908bdd86069e09e7a3796a437_icgraph">
-<area shape="rect" title=" " alt="" coords="349,81,541,108"/>
-<area shape="rect" href="classLNS.html#a412b23f4704dc3ce9e01fe0331ca8728" title=" " alt="" coords="133,5,301,32"/>
-<area shape="rect" href="classLNS.html#a6d3648748e40c87140940d9912aac986" title=" " alt="" coords="5,81,85,108"/>
-<area shape="rect" href="classLNS.html#a4ea599007b8b88f4bff0cf1f12a8e8c6" title=" " alt="" coords="137,107,298,133"/>
-<area shape="rect" href="classLNS.html#af68cb150f64a0c8f249057ab57364f48" title=" " alt="" coords="137,158,298,199"/>
+<area shape="rect" title="The random walk destroy operator function." alt="" coords="349,81,541,108"/>
+<area shape="rect" href="classLNS.html#a412b23f4704dc3ce9e01fe0331ca8728" title="The adaptive destroy operator function." alt="" coords="133,5,301,32"/>
+<area shape="rect" href="classLNS.html#a6d3648748e40c87140940d9912aac986" title="Constructor for the LNS class." alt="" coords="5,81,85,108"/>
+<area shape="rect" href="classLNS.html#a4ea599007b8b88f4bff0cf1f12a8e8c6" title="The blocked destroy operator function." alt="" coords="137,107,298,133"/>
+<area shape="rect" href="classLNS.html#af68cb150f64a0c8f249057ab57364f48" title="The random choose destroy operator function." alt="" coords="137,158,298,199"/>
 </map>
 </div>
 
@@ -535,14 +620,23 @@ Here is the caller graph for this function:</div>
       </table>
 </div><div class="memdoc">
 
+<p>Discards the solution if it is not better than the previous one. Restores the <a class="el" href="classSafeIntervalTable.html" title="The SafeIntervalTable class stores the safe intervals for each location in the grid.">SafeIntervalTable</a> and <a class="el" href="classConstraintTable.html" title="A class representing a constraint table, which stores all dynamic constraints.">ConstraintTable</a> to its previous state. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">sol</td><td>The solution to be discarded. </td></tr>
+    <tr><td class="paramname">prev_sol</td><td>The previous solution. </td></tr>
+  </table>
+  </dd>
+</dl>
+
 <p class="definition">Definition at line <a class="el" href="LNS_8cpp_source.html#l00874">874</a> of file <a class="el" href="LNS_8cpp_source.html">LNS.cpp</a>.</p>
 <div class="dynheader">
 Here is the caller graph for this function:</div>
 <div class="dyncontent">
 <div class="center"><img src="classLNS_a319d877bb15af0145e03c374929d3ddc_icgraph.png" border="0" usemap="#classLNS_a319d877bb15af0145e03c374929d3ddc_icgraph" alt=""/></div>
 <map name="classLNS_a319d877bb15af0145e03c374929d3ddc_icgraph" id="classLNS_a319d877bb15af0145e03c374929d3ddc_icgraph">
-<area shape="rect" title=" " alt="" coords="452,5,613,32"/>
-<area shape="rect" href="classLNS.html#ab4a4826221160701ee3cf6ca93feb1f7" title=" " alt="" coords="313,5,404,32"/>
+<area shape="rect" title="Discards the solution if it is not better than the previous one. Restores the SafeIntervalTable and C..." alt="" coords="452,5,613,32"/>
+<area shape="rect" href="classLNS.html#ab4a4826221160701ee3cf6ca93feb1f7" title="Solves the given instance using the LNS algorithm." alt="" coords="313,5,404,32"/>
 <area shape="rect" href="destroy_8cpp.html#a1fe60ef45fb8a4e175eb3b737505f3d5" title=" " alt="" coords="108,5,265,32"/>
 <area shape="rect" href="destroy_8cpp.html#a808f40e2e9d6eb5463165c031dfa3eb1" title=" " alt="" coords="5,5,60,32"/>
 </map>
@@ -565,15 +659,18 @@ Here is the caller graph for this function:</div>
       </table>
 </div><div class="memdoc">
 
+<p>Finds the initial solution for the <a class="el" href="classLNS.html" title="Class representing the Large Neighborhood Search (LNS) algorithm.">LNS</a> algorithm. </p>
+<dl class="section return"><dt>Returns</dt><dd>True if the initial solution is found, false otherwise. </dd></dl>
+
 <p class="definition">Definition at line <a class="el" href="LNS_8cpp_source.html#l00234">234</a> of file <a class="el" href="LNS_8cpp_source.html">LNS.cpp</a>.</p>
 <div class="dynheader">
 Here is the caller graph for this function:</div>
 <div class="dyncontent">
 <div class="center"><img src="classLNS_ab3adf7c10423f40dbbf163c99250bf02_icgraph.png" border="0" usemap="#classLNS_ab3adf7c10423f40dbbf163c99250bf02_icgraph" alt=""/></div>
 <map name="classLNS_ab3adf7c10423f40dbbf163c99250bf02_icgraph" id="classLNS_ab3adf7c10423f40dbbf163c99250bf02_icgraph">
-<area shape="rect" title=" " alt="" coords="519,31,701,57"/>
+<area shape="rect" title="Finds the initial solution for the LNS algorithm." alt="" coords="519,31,701,57"/>
 <area shape="rect" href="feasible_8cpp.html#a1fe60ef45fb8a4e175eb3b737505f3d5" title=" " alt="" coords="313,5,471,32"/>
-<area shape="rect" href="classLNS.html#ab4a4826221160701ee3cf6ca93feb1f7" title=" " alt="" coords="347,56,437,83"/>
+<area shape="rect" href="classLNS.html#ab4a4826221160701ee3cf6ca93feb1f7" title="Solves the given instance using the LNS algorithm." alt="" coords="347,56,437,83"/>
 <area shape="rect" href="feasible_8cpp.html#a808f40e2e9d6eb5463165c031dfa3eb1" title=" " alt="" coords="159,5,214,32"/>
 <area shape="rect" href="destroy_8cpp.html#a1fe60ef45fb8a4e175eb3b737505f3d5" title=" " alt="" coords="108,56,265,83"/>
 <area shape="rect" href="destroy_8cpp.html#a808f40e2e9d6eb5463165c031dfa3eb1" title=" " alt="" coords="5,56,60,83"/>
@@ -616,17 +713,26 @@ Here is the caller graph for this function:</div>
 </table>
 </div><div class="memdoc">
 
+<p>A function used in the intersection destroy operator to get the agents that are intersecting at a given location. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">neighborhood</td><td>The set of agents in the neighborhood. </td></tr>
+    <tr><td class="paramname">current</td><td>The location, for which the intersection agents are added to the neighborhood. </td></tr>
+  </table>
+  </dd>
+</dl>
+
 <p class="definition">Definition at line <a class="el" href="LNS_8cpp_source.html#l00598">598</a> of file <a class="el" href="LNS_8cpp_source.html">LNS.cpp</a>.</p>
 <div class="dynheader">
 Here is the caller graph for this function:</div>
 <div class="dyncontent">
 <div class="center"><img src="classLNS_a852ca0c6ca9152bef516c29f3c210f66_icgraph.png" border="0" usemap="#classLNS_a852ca0c6ca9152bef516c29f3c210f66_icgraph" alt=""/></div>
 <map name="classLNS_a852ca0c6ca9152bef516c29f3c210f66_icgraph" id="classLNS_a852ca0c6ca9152bef516c29f3c210f66_icgraph">
-<area shape="rect" title=" " alt="" coords="585,49,745,90"/>
-<area shape="rect" href="classLNS.html#a5ccad09a04930841c3615ecf8ec0972d" title=" " alt="" coords="349,56,537,83"/>
-<area shape="rect" href="classLNS.html#a412b23f4704dc3ce9e01fe0331ca8728" title=" " alt="" coords="133,5,301,32"/>
-<area shape="rect" href="classLNS.html#a6d3648748e40c87140940d9912aac986" title=" " alt="" coords="5,56,85,83"/>
-<area shape="rect" href="classLNS.html#af68cb150f64a0c8f249057ab57364f48" title=" " alt="" coords="137,107,298,149"/>
+<area shape="rect" title="A function used in the intersection destroy operator to get the agents that are intersecting at a giv..." alt="" coords="585,49,745,90"/>
+<area shape="rect" href="classLNS.html#a5ccad09a04930841c3615ecf8ec0972d" title="The intersection destroy operator function." alt="" coords="349,56,537,83"/>
+<area shape="rect" href="classLNS.html#a412b23f4704dc3ce9e01fe0331ca8728" title="The adaptive destroy operator function." alt="" coords="133,5,301,32"/>
+<area shape="rect" href="classLNS.html#a6d3648748e40c87140940d9912aac986" title="Constructor for the LNS class." alt="" coords="5,56,85,83"/>
+<area shape="rect" href="classLNS.html#af68cb150f64a0c8f249057ab57364f48" title="The random choose destroy operator function." alt="" coords="137,107,298,149"/>
 </map>
 </div>
 
@@ -656,13 +762,16 @@ Here is the caller graph for this function:</div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="LNS_8h_source.html#l00114">114</a> of file <a class="el" href="LNS_8h_source.html">LNS.h</a>.</p>
+<p>Getter for the number of expanded nodes. </p>
+<dl class="section return"><dt>Returns</dt><dd>The number of expanded nodes. </dd></dl>
+
+<p class="definition">Definition at line <a class="el" href="LNS_8h_source.html#l00196">196</a> of file <a class="el" href="LNS_8h_source.html">LNS.h</a>.</p>
 <div class="dynheader">
 Here is the caller graph for this function:</div>
 <div class="dyncontent">
 <div class="center"><img src="classLNS_a084bdc7fe557b0d491d07c4ec1b9f059_icgraph.png" border="0" usemap="#classLNS_a084bdc7fe557b0d491d07c4ec1b9f059_icgraph" alt=""/></div>
 <map name="classLNS_a084bdc7fe557b0d491d07c4ec1b9f059_icgraph" id="classLNS_a084bdc7fe557b0d491d07c4ec1b9f059_icgraph">
-<area shape="rect" title=" " alt="" coords="180,5,383,47"/>
+<area shape="rect" title="Getter for the number of expanded nodes." alt="" coords="180,5,383,47"/>
 <area shape="rect" href="classExperiment.html#ac3467eb067f8623c9cf3cd7c736a8c80" title="Runs the experiment." alt="" coords="5,13,132,39"/>
 </map>
 </div>
@@ -693,13 +802,16 @@ Here is the caller graph for this function:</div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="LNS_8h_source.html#l00110">110</a> of file <a class="el" href="LNS_8h_source.html">LNS.h</a>.</p>
+<p>Getter for the number of generated nodes. </p>
+<dl class="section return"><dt>Returns</dt><dd>The number of generated nodes. </dd></dl>
+
+<p class="definition">Definition at line <a class="el" href="LNS_8h_source.html#l00186">186</a> of file <a class="el" href="LNS_8h_source.html">LNS.h</a>.</p>
 <div class="dynheader">
 Here is the caller graph for this function:</div>
 <div class="dyncontent">
 <div class="center"><img src="classLNS_acbd3a90edf83dc926ce444873cabc269_icgraph.png" border="0" usemap="#classLNS_acbd3a90edf83dc926ce444873cabc269_icgraph" alt=""/></div>
 <map name="classLNS_acbd3a90edf83dc926ce444873cabc269_icgraph" id="classLNS_acbd3a90edf83dc926ce444873cabc269_icgraph">
-<area shape="rect" title=" " alt="" coords="180,5,385,47"/>
+<area shape="rect" title="Getter for the number of generated nodes." alt="" coords="180,5,385,47"/>
 <area shape="rect" href="classExperiment.html#ac3467eb067f8623c9cf3cd7c736a8c80" title="Runs the experiment." alt="" coords="5,13,132,39"/>
 </map>
 </div>
@@ -722,14 +834,22 @@ Here is the caller graph for this function:</div>
       </table>
 </div><div class="memdoc">
 
+<p>Builds the constraint table for the given paths. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">paths</td><td>The paths to be used for initializing the constraint table. </td></tr>
+  </table>
+  </dd>
+</dl>
+
 <p class="definition">Definition at line <a class="el" href="LNS_8cpp_source.html#l00068">68</a> of file <a class="el" href="LNS_8cpp_source.html">LNS.cpp</a>.</p>
 <div class="dynheader">
 Here is the caller graph for this function:</div>
 <div class="dyncontent">
 <div class="center"><img src="classLNS_a658e49decd804a9fa1a08d065ae6304d_icgraph.png" border="0" usemap="#classLNS_a658e49decd804a9fa1a08d065ae6304d_icgraph" alt=""/></div>
 <map name="classLNS_a658e49decd804a9fa1a08d065ae6304d_icgraph" id="classLNS_a658e49decd804a9fa1a08d065ae6304d_icgraph">
-<area shape="rect" title=" " alt="" coords="452,5,635,47"/>
-<area shape="rect" href="classLNS.html#ab4a4826221160701ee3cf6ca93feb1f7" title=" " alt="" coords="313,13,404,39"/>
+<area shape="rect" title="Builds the constraint table for the given paths." alt="" coords="452,5,635,47"/>
+<area shape="rect" href="classLNS.html#ab4a4826221160701ee3cf6ca93feb1f7" title="Solves the given instance using the LNS algorithm." alt="" coords="313,13,404,39"/>
 <area shape="rect" href="destroy_8cpp.html#a1fe60ef45fb8a4e175eb3b737505f3d5" title=" " alt="" coords="108,13,265,39"/>
 <area shape="rect" href="destroy_8cpp.html#a808f40e2e9d6eb5463165c031dfa3eb1" title=" " alt="" coords="5,13,60,39"/>
 </map>
@@ -751,6 +871,9 @@ Here is the caller graph for this function:</div>
         </tr>
       </table>
 </div><div class="memdoc">
+
+<p>Runs the Prioritized Planning algorithm. </p>
+<dl class="section return"><dt>Returns</dt><dd>The solution found by the algorithm. </dd></dl>
 
 <p class="definition">Definition at line <a class="el" href="LNS_8cpp_source.html#l00265">265</a> of file <a class="el" href="LNS_8cpp_source.html">LNS.cpp</a>.</p>
 
@@ -814,18 +937,32 @@ Here is the caller graph for this function:</div>
 </table>
 </div><div class="memdoc">
 
+<p>The random_walk function of the random walk destroy operator. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">agent_num</td><td>The number of the current agent. </td></tr>
+    <tr><td class="paramname">neighborhood_size</td><td>The size of the neighborhood. </td></tr>
+    <tr><td class="paramname">start_location</td><td>The starting location of the randomwalk. </td></tr>
+    <tr><td class="paramname">start_time</td><td>The starting time of the randomwalk. </td></tr>
+    <tr><td class="paramname">upperbound</td><td>The upper bound used in randomwalk. </td></tr>
+    <tr><td class="paramname">chosen</td><td>The set of already chosen agents.</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>True, if the neighborhood is filled, false otherwise. </dd></dl>
+
 <p class="definition">Definition at line <a class="el" href="LNS_8cpp_source.html#l00468">468</a> of file <a class="el" href="LNS_8cpp_source.html">LNS.cpp</a>.</p>
 <div class="dynheader">
 Here is the caller graph for this function:</div>
 <div class="dyncontent">
 <div class="center"><img src="classLNS_a3e95681dbb28740deef085110991f3b0_icgraph.png" border="0" usemap="#classLNS_a3e95681dbb28740deef085110991f3b0_icgraph" alt=""/></div>
 <map name="classLNS_a3e95681dbb28740deef085110991f3b0_icgraph" id="classLNS_a3e95681dbb28740deef085110991f3b0_icgraph">
-<area shape="rect" title=" " alt="" coords="589,81,732,108"/>
-<area shape="rect" href="classLNS.html#a4888343908bdd86069e09e7a3796a437" title=" " alt="" coords="349,81,541,108"/>
-<area shape="rect" href="classLNS.html#a412b23f4704dc3ce9e01fe0331ca8728" title=" " alt="" coords="133,5,301,32"/>
-<area shape="rect" href="classLNS.html#a6d3648748e40c87140940d9912aac986" title=" " alt="" coords="5,81,85,108"/>
-<area shape="rect" href="classLNS.html#a4ea599007b8b88f4bff0cf1f12a8e8c6" title=" " alt="" coords="137,107,298,133"/>
-<area shape="rect" href="classLNS.html#af68cb150f64a0c8f249057ab57364f48" title=" " alt="" coords="137,158,298,199"/>
+<area shape="rect" title="The random_walk function of the random walk destroy operator." alt="" coords="589,81,732,108"/>
+<area shape="rect" href="classLNS.html#a4888343908bdd86069e09e7a3796a437" title="The random walk destroy operator function." alt="" coords="349,81,541,108"/>
+<area shape="rect" href="classLNS.html#a412b23f4704dc3ce9e01fe0331ca8728" title="The adaptive destroy operator function." alt="" coords="133,5,301,32"/>
+<area shape="rect" href="classLNS.html#a6d3648748e40c87140940d9912aac986" title="Constructor for the LNS class." alt="" coords="5,81,85,108"/>
+<area shape="rect" href="classLNS.html#a4ea599007b8b88f4bff0cf1f12a8e8c6" title="The blocked destroy operator function." alt="" coords="137,107,298,133"/>
+<area shape="rect" href="classLNS.html#af68cb150f64a0c8f249057ab57364f48" title="The random choose destroy operator function." alt="" coords="137,158,298,199"/>
 </map>
 </div>
 
@@ -855,6 +992,14 @@ Here is the caller graph for this function:</div>
 </table>
 </div><div class="memdoc">
 
+<p>The repair operator function, which repairs the solution. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">sol</td><td>The solution to be repaired. </td></tr>
+  </table>
+  </dd>
+</dl>
+
 <p class="definition">Definition at line <a class="el" href="LNS_8cpp_source.html#l00821">821</a> of file <a class="el" href="LNS_8cpp_source.html">LNS.cpp</a>.</p>
 
 </div>
@@ -882,6 +1027,8 @@ Here is the caller graph for this function:</div>
 </table>
 </div><div class="memdoc">
 
+<p>Solves the given instance using the <a class="el" href="classLNS.html" title="Class representing the Large Neighborhood Search (LNS) algorithm.">LNS</a> algorithm. </p>
+
 <p>Implements <a class="el" href="classSolver.html#ad073be705a5da281c18b5f8423fda216">Solver</a>.</p>
 
 <p class="definition">Definition at line <a class="el" href="LNS_8cpp_source.html#l00082">82</a> of file <a class="el" href="LNS_8cpp_source.html">LNS.cpp</a>.</p>
@@ -890,7 +1037,7 @@ Here is the caller graph for this function:</div>
 <div class="dyncontent">
 <div class="center"><img src="classLNS_ab4a4826221160701ee3cf6ca93feb1f7_icgraph.png" border="0" usemap="#classLNS_ab4a4826221160701ee3cf6ca93feb1f7_icgraph" alt=""/></div>
 <map name="classLNS_ab4a4826221160701ee3cf6ca93feb1f7_icgraph" id="classLNS_ab4a4826221160701ee3cf6ca93feb1f7_icgraph">
-<area shape="rect" title=" " alt="" coords="313,5,404,32"/>
+<area shape="rect" title="Solves the given instance using the LNS algorithm." alt="" coords="313,5,404,32"/>
 <area shape="rect" href="destroy_8cpp.html#a1fe60ef45fb8a4e175eb3b737505f3d5" title=" " alt="" coords="108,5,265,32"/>
 <area shape="rect" href="destroy_8cpp.html#a808f40e2e9d6eb5463165c031dfa3eb1" title=" " alt="" coords="5,5,60,32"/>
 </map>
@@ -918,8 +1065,9 @@ Here is the caller graph for this function:</div>
   </tr>
 </table>
 </div><div class="memdoc">
+<p>Set of already planned agents. </p>
 
-<p class="definition">Definition at line <a class="el" href="LNS_8h_source.html#l00123">123</a> of file <a class="el" href="LNS_8h_source.html">LNS.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="LNS_8h_source.html#l00218">218</a> of file <a class="el" href="LNS_8h_source.html">LNS.h</a>.</p>
 
 </div>
 </div>
@@ -942,8 +1090,9 @@ Here is the caller graph for this function:</div>
   </tr>
 </table>
 </div><div class="memdoc">
+<p>Constraint table used, which stores the dynamic constraints. </p>
 
-<p class="definition">Definition at line <a class="el" href="LNS_8h_source.html#l00145">145</a> of file <a class="el" href="LNS_8h_source.html">LNS.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="LNS_8h_source.html#l00301">301</a> of file <a class="el" href="LNS_8h_source.html">LNS.h</a>.</p>
 
 </div>
 </div>
@@ -966,8 +1115,9 @@ Here is the caller graph for this function:</div>
   </tr>
 </table>
 </div><div class="memdoc">
+<p>Flag indicating if the constraint table is initialized. </p>
 
-<p class="definition">Definition at line <a class="el" href="LNS_8h_source.html#l00146">146</a> of file <a class="el" href="LNS_8h_source.html">LNS.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="LNS_8h_source.html#l00302">302</a> of file <a class="el" href="LNS_8h_source.html">LNS.h</a>.</p>
 
 </div>
 </div>
@@ -990,8 +1140,9 @@ Here is the caller graph for this function:</div>
   </tr>
 </table>
 </div><div class="memdoc">
+<p>Current time. </p>
 
-<p class="definition">Definition at line <a class="el" href="LNS_8h_source.html#l00143">143</a> of file <a class="el" href="LNS_8h_source.html">LNS.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="LNS_8h_source.html#l00299">299</a> of file <a class="el" href="LNS_8h_source.html">LNS.h</a>.</p>
 
 </div>
 </div>
@@ -1014,8 +1165,9 @@ Here is the caller graph for this function:</div>
   </tr>
 </table>
 </div><div class="memdoc">
+<p>Decay factor for the adaptive destroy operator. </p>
 
-<p class="definition">Definition at line <a class="el" href="LNS_8h_source.html#l00149">149</a> of file <a class="el" href="LNS_8h_source.html">LNS.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="LNS_8h_source.html#l00305">305</a> of file <a class="el" href="LNS_8h_source.html">LNS.h</a>.</p>
 
 </div>
 </div>
@@ -1030,8 +1182,9 @@ Here is the caller graph for this function:</div>
         </tr>
       </table>
 </div><div class="memdoc">
+<p><a class="el" href="classOperator.html" title="Class representing a generic operator for the LNS algorithm.">Operator</a> for the destroy phase. </p>
 
-<p class="definition">Definition at line <a class="el" href="LNS_8h_source.html#l00122">122</a> of file <a class="el" href="LNS_8h_source.html">LNS.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="LNS_8h_source.html#l00217">217</a> of file <a class="el" href="LNS_8h_source.html">LNS.h</a>.</p>
 
 </div>
 </div>
@@ -1054,8 +1207,9 @@ Here is the caller graph for this function:</div>
   </tr>
 </table>
 </div><div class="memdoc">
+<p>Vector of weights for the adaptive destroy operator. </p>
 
-<p class="definition">Definition at line <a class="el" href="LNS_8h_source.html#l00147">147</a> of file <a class="el" href="LNS_8h_source.html">LNS.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="LNS_8h_source.html#l00303">303</a> of file <a class="el" href="LNS_8h_source.html">LNS.h</a>.</p>
 
 </div>
 </div>
@@ -1070,8 +1224,9 @@ Here is the caller graph for this function:</div>
         </tr>
       </table>
 </div><div class="memdoc">
+<p>Flag indicating if the initial solution was found. </p>
 
-<p class="definition">Definition at line <a class="el" href="LNS_8h_source.html#l00126">126</a> of file <a class="el" href="LNS_8h_source.html">LNS.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="LNS_8h_source.html#l00221">221</a> of file <a class="el" href="LNS_8h_source.html">LNS.h</a>.</p>
 
 </div>
 </div>
@@ -1094,8 +1249,9 @@ Here is the caller graph for this function:</div>
   </tr>
 </table>
 </div><div class="memdoc">
+<p>Time taken to find the initial solution. </p>
 
-<p class="definition">Definition at line <a class="el" href="LNS_8h_source.html#l00142">142</a> of file <a class="el" href="LNS_8h_source.html">LNS.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="LNS_8h_source.html#l00298">298</a> of file <a class="el" href="LNS_8h_source.html">LNS.h</a>.</p>
 
 </div>
 </div>
@@ -1118,8 +1274,9 @@ Here is the caller graph for this function:</div>
   </tr>
 </table>
 </div><div class="memdoc">
+<p>Current iteration number. </p>
 
-<p class="definition">Definition at line <a class="el" href="LNS_8h_source.html#l00141">141</a> of file <a class="el" href="LNS_8h_source.html">LNS.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="LNS_8h_source.html#l00297">297</a> of file <a class="el" href="LNS_8h_source.html">LNS.h</a>.</p>
 
 </div>
 </div>
@@ -1142,8 +1299,9 @@ Here is the caller graph for this function:</div>
   </tr>
 </table>
 </div><div class="memdoc">
+<p>Last used destroy strategy. </p>
 
-<p class="definition">Definition at line <a class="el" href="LNS_8h_source.html#l00150">150</a> of file <a class="el" href="LNS_8h_source.html">LNS.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="LNS_8h_source.html#l00306">306</a> of file <a class="el" href="LNS_8h_source.html">LNS.h</a>.</p>
 
 </div>
 </div>
@@ -1158,8 +1316,9 @@ Here is the caller graph for this function:</div>
         </tr>
       </table>
 </div><div class="memdoc">
+<p><a class="el" href="structLogger.html" title="This class is used to log the iterations of the LNS algorithm.">Logger</a> for the <a class="el" href="classLNS.html" title="Class representing the Large Neighborhood Search (LNS) algorithm.">LNS</a> algorithm. </p>
 
-<p class="definition">Definition at line <a class="el" href="LNS_8h_source.html#l00124">124</a> of file <a class="el" href="LNS_8h_source.html">LNS.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="LNS_8h_source.html#l00219">219</a> of file <a class="el" href="LNS_8h_source.html">LNS.h</a>.</p>
 
 </div>
 </div>
@@ -1174,8 +1333,9 @@ Here is the caller graph for this function:</div>
         </tr>
       </table>
 </div><div class="memdoc">
+<p>Pointer to the <a class="el" href="classSIPP.html" title="Class representing the SIPP algorithm.">SIPP</a> planner. </p>
 
-<p class="definition">Definition at line <a class="el" href="LNS_8h_source.html#l00096">96</a> of file <a class="el" href="LNS_8h_source.html">LNS.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="LNS_8h_source.html#l00145">145</a> of file <a class="el" href="LNS_8h_source.html">LNS.h</a>.</p>
 
 </div>
 </div>
@@ -1198,8 +1358,9 @@ Here is the caller graph for this function:</div>
   </tr>
 </table>
 </div><div class="memdoc">
+<p>Reaction factor for the adaptive destroy operator. </p>
 
-<p class="definition">Definition at line <a class="el" href="LNS_8h_source.html#l00148">148</a> of file <a class="el" href="LNS_8h_source.html">LNS.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="LNS_8h_source.html#l00304">304</a> of file <a class="el" href="LNS_8h_source.html">LNS.h</a>.</p>
 
 </div>
 </div>
@@ -1222,8 +1383,9 @@ Here is the caller graph for this function:</div>
   </tr>
 </table>
 </div><div class="memdoc">
+<p>The repair operator. </p>
 
-<p class="definition">Definition at line <a class="el" href="LNS_8h_source.html#l00144">144</a> of file <a class="el" href="LNS_8h_source.html">LNS.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="LNS_8h_source.html#l00300">300</a> of file <a class="el" href="LNS_8h_source.html">LNS.h</a>.</p>
 
 </div>
 </div>
@@ -1238,8 +1400,9 @@ Here is the caller graph for this function:</div>
         </tr>
       </table>
 </div><div class="memdoc">
+<p><a class="el" href="structSettings.html" title="Struct with info about the instance.">Settings</a> for the <a class="el" href="classLNS.html" title="Class representing the Large Neighborhood Search (LNS) algorithm.">LNS</a> algorithm. </p>
 
-<p class="definition">Definition at line <a class="el" href="LNS_8h_source.html#l00125">125</a> of file <a class="el" href="LNS_8h_source.html">LNS.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="LNS_8h_source.html#l00220">220</a> of file <a class="el" href="LNS_8h_source.html">LNS.h</a>.</p>
 
 </div>
 </div>
@@ -1262,8 +1425,9 @@ Here is the caller graph for this function:</div>
   </tr>
 </table>
 </div><div class="memdoc">
+<p>Pointer to shared data. </p>
 
-<p class="definition">Definition at line <a class="el" href="LNS_8h_source.html#l00140">140</a> of file <a class="el" href="LNS_8h_source.html">LNS.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="LNS_8h_source.html#l00296">296</a> of file <a class="el" href="LNS_8h_source.html">LNS.h</a>.</p>
 
 </div>
 </div>
@@ -1286,8 +1450,9 @@ Here is the caller graph for this function:</div>
   </tr>
 </table>
 </div><div class="memdoc">
+<p>Vector of sipp information for each lns iteration. </p>
 
-<p class="definition">Definition at line <a class="el" href="LNS_8h_source.html#l00095">95</a> of file <a class="el" href="LNS_8h_source.html">LNS.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="LNS_8h_source.html#l00144">144</a> of file <a class="el" href="LNS_8h_source.html">LNS.h</a>.</p>
 
 </div>
 </div>
@@ -1310,8 +1475,9 @@ Here is the caller graph for this function:</div>
   </tr>
 </table>
 </div><div class="memdoc">
+<p>Threshold for the blocked destroy operator. </p>
 
-<p class="definition">Definition at line <a class="el" href="LNS_8h_source.html#l00151">151</a> of file <a class="el" href="LNS_8h_source.html">LNS.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="LNS_8h_source.html#l00307">307</a> of file <a class="el" href="LNS_8h_source.html">LNS.h</a>.</p>
 
 </div>
 </div>

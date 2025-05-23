@@ -73,51 +73,69 @@ $(function() {
 </div><!--header-->
 <div class="contents">
 
+<p>The <a class="el" href="classSafeIntervalTable.html" title="The SafeIntervalTable class stores the safe intervals for each location in the grid.">SafeIntervalTable</a> class stores the safe intervals for each location in the grid.  
+ <a href="classSafeIntervalTable.html#details">More...</a></p>
+
 <p><code>#include &lt;<a class="el" href="SafeIntervalTable_8h_source.html">SafeIntervalTable.h</a>&gt;</code></p>
 <div class="dynheader">
 Collaboration diagram for SafeIntervalTable:</div>
 <div class="dyncontent">
 <div class="center"><img src="classSafeIntervalTable__coll__graph.png" border="0" usemap="#SafeIntervalTable_coll__map" alt="Collaboration graph"/></div>
 <map name="SafeIntervalTable_coll__map" id="SafeIntervalTable_coll__map">
-<area shape="rect" title=" " alt="" coords="101,273,235,300"/>
-<area shape="rect" href="classEdgeConstraintTable.html" title=" " alt="" coords="107,184,261,211"/>
-<area shape="rect" href="classInstance.html" title=" " alt="" coords="5,95,83,121"/>
-<area shape="rect" href="classMap.html" title=" " alt="" coords="19,5,69,32"/>
-<area shape="rect" href="structomp__locks.html" title=" " alt="" coords="302,184,394,211"/>
+<area shape="rect" title="The SafeIntervalTable class stores the safe intervals for each location in the grid." alt="" coords="101,273,235,300"/>
+<area shape="rect" href="classEdgeConstraintTable.html" title="A class representing a table of edge constraints." alt="" coords="107,184,261,211"/>
+<area shape="rect" href="classInstance.html" title="If this is defined, the manhattan and euclidean heuristics are calculated." alt="" coords="5,95,83,121"/>
+<area shape="rect" href="classMap.html" title="Represents a 2D gridmap for pathfinding." alt="" coords="19,5,69,32"/>
+<area shape="rect" href="structomp__locks.html" title="A class that wraps OpenMP locks for parallelization." alt="" coords="302,184,394,211"/>
 </map>
 <center><span class="legend">[<a href="graph_legend.html">legend</a>]</span></center></div>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
 <tr class="memitem:a6e918fffce85020e3be33bbca96d7695"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSafeIntervalTable.html#a6e918fffce85020e3be33bbca96d7695">SafeIntervalTable</a> (const <a class="el" href="classInstance.html">Instance</a> &amp;instance_)</td></tr>
+<tr class="memdesc:a6e918fffce85020e3be33bbca96d7695"><td class="mdescLeft">&#160;</td><td class="mdescRight">Constructs a <a class="el" href="classSafeIntervalTable.html" title="The SafeIntervalTable class stores the safe intervals for each location in the grid.">SafeIntervalTable</a> object.  <a href="classSafeIntervalTable.html#a6e918fffce85020e3be33bbca96d7695">More...</a><br /></td></tr>
 <tr class="separator:a6e918fffce85020e3be33bbca96d7695"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:af6adb09c43ac3f60a52033a67d4f7702"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSafeIntervalTable.html#af6adb09c43ac3f60a52033a67d4f7702">add_constraints_parallel</a> (const <a class="el" href="utils_8h.html#a64881685b4fe27a0cf599222d5fb1c72">TimePointPath</a> &amp;path)</td></tr>
+<tr class="memdesc:af6adb09c43ac3f60a52033a67d4f7702"><td class="mdescLeft">&#160;</td><td class="mdescRight">Adds constraints to the safe interval table in parallel.  <a href="classSafeIntervalTable.html#af6adb09c43ac3f60a52033a67d4f7702">More...</a><br /></td></tr>
 <tr class="separator:af6adb09c43ac3f60a52033a67d4f7702"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a4ba1e757e569dc9b12e4f0c2e0a75963"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSafeIntervalTable.html#a4ba1e757e569dc9b12e4f0c2e0a75963">remove_constraints_parallel</a> (const <a class="el" href="utils_8h.html#a64881685b4fe27a0cf599222d5fb1c72">TimePointPath</a> &amp;path)</td></tr>
+<tr class="memdesc:a4ba1e757e569dc9b12e4f0c2e0a75963"><td class="mdescLeft">&#160;</td><td class="mdescRight">Removes constraints from the safe interval table in parallel.  <a href="classSafeIntervalTable.html#a4ba1e757e569dc9b12e4f0c2e0a75963">More...</a><br /></td></tr>
 <tr class="separator:a4ba1e757e569dc9b12e4f0c2e0a75963"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a7323895f0831d0be6a4e6689f65cfee4"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSafeIntervalTable.html#a7323895f0831d0be6a4e6689f65cfee4">add_constraint</a> (const <a class="el" href="classTimePoint.html">TimePoint</a> &amp;timepoint)</td></tr>
+<tr class="memdesc:a7323895f0831d0be6a4e6689f65cfee4"><td class="mdescLeft">&#160;</td><td class="mdescRight">Adds a constraint to the safe interval table.  <a href="classSafeIntervalTable.html#a7323895f0831d0be6a4e6689f65cfee4">More...</a><br /></td></tr>
 <tr class="separator:a7323895f0831d0be6a4e6689f65cfee4"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a787f99329e3378787106076ecaf026a9"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSafeIntervalTable.html#a787f99329e3378787106076ecaf026a9">add_constraints</a> (const <a class="el" href="utils_8h.html#a64881685b4fe27a0cf599222d5fb1c72">TimePointPath</a> &amp;path)</td></tr>
+<tr class="memdesc:a787f99329e3378787106076ecaf026a9"><td class="mdescLeft">&#160;</td><td class="mdescRight">Adds all constraints created by a path to the safe interval table.  <a href="classSafeIntervalTable.html#a787f99329e3378787106076ecaf026a9">More...</a><br /></td></tr>
 <tr class="separator:a787f99329e3378787106076ecaf026a9"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a4c7d822c436caf8822ed179e00b6c94e"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSafeIntervalTable.html#a4c7d822c436caf8822ed179e00b6c94e">remove_constraint</a> (const <a class="el" href="classTimePoint.html">TimePoint</a> &amp;timepoint)</td></tr>
+<tr class="memdesc:a4c7d822c436caf8822ed179e00b6c94e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Removes a constraint from the safe interval table.  <a href="classSafeIntervalTable.html#a4c7d822c436caf8822ed179e00b6c94e">More...</a><br /></td></tr>
 <tr class="separator:a4c7d822c436caf8822ed179e00b6c94e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a468afa97880d6f8daeada75d8cc08cf2"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSafeIntervalTable.html#a468afa97880d6f8daeada75d8cc08cf2">remove_constraints</a> (const <a class="el" href="utils_8h.html#a64881685b4fe27a0cf599222d5fb1c72">TimePointPath</a> &amp;path)</td></tr>
+<tr class="memdesc:a468afa97880d6f8daeada75d8cc08cf2"><td class="mdescLeft">&#160;</td><td class="mdescRight">Removes all constraints created by a path from the safe interval table.  <a href="classSafeIntervalTable.html#a468afa97880d6f8daeada75d8cc08cf2">More...</a><br /></td></tr>
 <tr class="separator:a468afa97880d6f8daeada75d8cc08cf2"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:af102bb7156ab136de4a2b8b2c3470830"><td class="memItemLeft" align="right" valign="top">auto&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSafeIntervalTable.html#af102bb7156ab136de4a2b8b2c3470830">get_safe_intervals</a> (int location, const <a class="el" href="classTimeInterval.html">TimeInterval</a> &amp;time_interval) const -&gt; std::pair&lt; std::list&lt; <a class="el" href="classTimeInterval.html">TimeInterval</a> &gt;::const_iterator, std::list&lt; <a class="el" href="classTimeInterval.html">TimeInterval</a> &gt;::const_iterator &gt;</td></tr>
+<tr class="memdesc:af102bb7156ab136de4a2b8b2c3470830"><td class="mdescLeft">&#160;</td><td class="mdescRight">Gets the safe intervals for a given location and a time interval.  <a href="classSafeIntervalTable.html#af102bb7156ab136de4a2b8b2c3470830">More...</a><br /></td></tr>
 <tr class="separator:af102bb7156ab136de4a2b8b2c3470830"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a309a58ae032c5b664a3dbc36d95fc96e"><td class="memItemLeft" align="right" valign="top">auto&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSafeIntervalTable.html#a309a58ae032c5b664a3dbc36d95fc96e">get_first_safe_interval</a> (int location) const -&gt; std::list&lt; <a class="el" href="classTimeInterval.html">TimeInterval</a> &gt;::const_iterator</td></tr>
+<tr class="memdesc:a309a58ae032c5b664a3dbc36d95fc96e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Gets the first safe interval for a given location.  <a href="classSafeIntervalTable.html#a309a58ae032c5b664a3dbc36d95fc96e">More...</a><br /></td></tr>
 <tr class="separator:a309a58ae032c5b664a3dbc36d95fc96e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:abbefd4b8a1a8dc2763e9ca33652077a9"><td class="memItemLeft" align="right" valign="top">auto&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSafeIntervalTable.html#abbefd4b8a1a8dc2763e9ca33652077a9">get_max_path_len_estimate</a> () -&gt; int</td></tr>
+<tr class="memdesc:abbefd4b8a1a8dc2763e9ca33652077a9"><td class="mdescLeft">&#160;</td><td class="mdescRight">Calculates the estimate of the maximum path length.  <a href="classSafeIntervalTable.html#abbefd4b8a1a8dc2763e9ca33652077a9">More...</a><br /></td></tr>
 <tr class="separator:abbefd4b8a1a8dc2763e9ca33652077a9"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a0bbe8409886f29fc2a4588413540a734"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSafeIntervalTable.html#a0bbe8409886f29fc2a4588413540a734">update_latest_constraint_end_estimate</a> ()</td></tr>
+<tr class="memdesc:a0bbe8409886f29fc2a4588413540a734"><td class="mdescLeft">&#160;</td><td class="mdescRight">Updates the end of the latest constraint. Call after removing constraints, which might make the estimate invalid.  <a href="classSafeIntervalTable.html#a0bbe8409886f29fc2a4588413540a734">More...</a><br /></td></tr>
 <tr class="separator:a0bbe8409886f29fc2a4588413540a734"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aab5207a25c528d600ca267d4ba8ef188"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSafeIntervalTable.html#aab5207a25c528d600ca267d4ba8ef188">build_sequential</a> (const std::vector&lt; <a class="el" href="utils_8h.html#a64881685b4fe27a0cf599222d5fb1c72">TimePointPath</a> &gt; &amp;paths)</td></tr>
+<tr class="memdesc:aab5207a25c528d600ca267d4ba8ef188"><td class="mdescLeft">&#160;</td><td class="mdescRight">Builds the safe interval table sequentially.  <a href="classSafeIntervalTable.html#aab5207a25c528d600ca267d4ba8ef188">More...</a><br /></td></tr>
 <tr class="separator:aab5207a25c528d600ca267d4ba8ef188"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a2c2c1dce378dd039c872a55b1d8dab8c"><td class="memItemLeft" align="right" valign="top">auto&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSafeIntervalTable.html#a2c2c1dce378dd039c872a55b1d8dab8c">get_min_reach_time</a> (int goal) const -&gt; int</td></tr>
+<tr class="memdesc:a2c2c1dce378dd039c872a55b1d8dab8c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the minimal reach time of a location.  <a href="classSafeIntervalTable.html#a2c2c1dce378dd039c872a55b1d8dab8c">More...</a><br /></td></tr>
 <tr class="separator:a2c2c1dce378dd039c872a55b1d8dab8c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a3c935b379679efb82451596f8c1a1f2b"><td class="memItemLeft" align="right" valign="top">auto&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSafeIntervalTable.html#a3c935b379679efb82451596f8c1a1f2b">get_last_safe_interval</a> (int location) const -&gt; const <a class="el" href="classTimeInterval.html">TimeInterval</a> &amp;</td></tr>
+<tr class="memdesc:a3c935b379679efb82451596f8c1a1f2b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Gets the last safe interval for a given location.  <a href="classSafeIntervalTable.html#a3c935b379679efb82451596f8c1a1f2b">More...</a><br /></td></tr>
 <tr class="separator:a3c935b379679efb82451596f8c1a1f2b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aa9d1c371c39f3458f1f8492778a7f72e"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSafeIntervalTable.html#aa9d1c371c39f3458f1f8492778a7f72e">reset</a> ()</td></tr>
+<tr class="memdesc:aa9d1c371c39f3458f1f8492778a7f72e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Resets the safe interval table.  <a href="classSafeIntervalTable.html#aa9d1c371c39f3458f1f8492778a7f72e">More...</a><br /></td></tr>
 <tr class="separator:aa9d1c371c39f3458f1f8492778a7f72e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-attribs"></a>
@@ -143,8 +161,9 @@ Private Attributes</h2></td></tr>
 <tr class="separator:ab832bebfd623be29d421cfdad66a10e2"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
-<div class="textblock">
-<p class="definition">Definition at line <a class="el" href="SafeIntervalTable_8h_source.html#l00071">71</a> of file <a class="el" href="SafeIntervalTable_8h_source.html">SafeIntervalTable.h</a>.</p>
+<div class="textblock"><p>The <a class="el" href="classSafeIntervalTable.html" title="The SafeIntervalTable class stores the safe intervals for each location in the grid.">SafeIntervalTable</a> class stores the safe intervals for each location in the grid. </p>
+
+<p class="definition">Definition at line <a class="el" href="SafeIntervalTable_8h_source.html#l00141">141</a> of file <a class="el" href="SafeIntervalTable_8h_source.html">SafeIntervalTable.h</a>.</p>
 </div><h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
 <a id="a6e918fffce85020e3be33bbca96d7695"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a6e918fffce85020e3be33bbca96d7695">&#9670;&nbsp;</a></span>SafeIntervalTable()</h2>
@@ -170,6 +189,14 @@ Private Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
+<p>Constructs a <a class="el" href="classSafeIntervalTable.html" title="The SafeIntervalTable class stores the safe intervals for each location in the grid.">SafeIntervalTable</a> object. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">instance_</td><td>The instance of the problem. </td></tr>
+  </table>
+  </dd>
+</dl>
+
 <p class="definition">Definition at line <a class="el" href="SafeIntervalTable_8cpp_source.html#l00021">21</a> of file <a class="el" href="SafeIntervalTable_8cpp_source.html">SafeIntervalTable.cpp</a>.</p>
 
 </div>
@@ -191,15 +218,23 @@ Private Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
+<p>Adds a constraint to the safe interval table. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">timepoint</td><td>The time point to add as a constraint. </td></tr>
+  </table>
+  </dd>
+</dl>
+
 <p class="definition">Definition at line <a class="el" href="SafeIntervalTable_8cpp_source.html#l00036">36</a> of file <a class="el" href="SafeIntervalTable_8cpp_source.html">SafeIntervalTable.cpp</a>.</p>
 <div class="dynheader">
 Here is the caller graph for this function:</div>
 <div class="dyncontent">
 <div class="center"><img src="classSafeIntervalTable_a7323895f0831d0be6a4e6689f65cfee4_icgraph.png" border="0" usemap="#classSafeIntervalTable_a7323895f0831d0be6a4e6689f65cfee4_icgraph" alt=""/></div>
 <map name="classSafeIntervalTable_a7323895f0831d0be6a4e6689f65cfee4_icgraph" id="classSafeIntervalTable_a7323895f0831d0be6a4e6689f65cfee4_icgraph">
-<area shape="rect" title=" " alt="" coords="387,5,529,47"/>
-<area shape="rect" href="classSafeIntervalTable.html#a787f99329e3378787106076ecaf026a9" title=" " alt="" coords="196,5,339,47"/>
-<area shape="rect" href="classSafeIntervalTable.html#aab5207a25c528d600ca267d4ba8ef188" title=" " alt="" coords="5,5,148,47"/>
+<area shape="rect" title="Adds a constraint to the safe interval table." alt="" coords="387,5,529,47"/>
+<area shape="rect" href="classSafeIntervalTable.html#a787f99329e3378787106076ecaf026a9" title="Adds all constraints created by a path to the safe interval table." alt="" coords="196,5,339,47"/>
+<area shape="rect" href="classSafeIntervalTable.html#aab5207a25c528d600ca267d4ba8ef188" title="Builds the safe interval table sequentially." alt="" coords="5,5,148,47"/>
 </map>
 </div>
 
@@ -221,14 +256,22 @@ Here is the caller graph for this function:</div>
       </table>
 </div><div class="memdoc">
 
+<p>Adds all constraints created by a path to the safe interval table. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">path</td><td>The path to add constraints for. </td></tr>
+  </table>
+  </dd>
+</dl>
+
 <p class="definition">Definition at line <a class="el" href="SafeIntervalTable_8cpp_source.html#l00203">203</a> of file <a class="el" href="SafeIntervalTable_8cpp_source.html">SafeIntervalTable.cpp</a>.</p>
 <div class="dynheader">
 Here is the caller graph for this function:</div>
 <div class="dyncontent">
 <div class="center"><img src="classSafeIntervalTable_a787f99329e3378787106076ecaf026a9_icgraph.png" border="0" usemap="#classSafeIntervalTable_a787f99329e3378787106076ecaf026a9_icgraph" alt=""/></div>
 <map name="classSafeIntervalTable_a787f99329e3378787106076ecaf026a9_icgraph" id="classSafeIntervalTable_a787f99329e3378787106076ecaf026a9_icgraph">
-<area shape="rect" title=" " alt="" coords="196,5,339,47"/>
-<area shape="rect" href="classSafeIntervalTable.html#aab5207a25c528d600ca267d4ba8ef188" title=" " alt="" coords="5,5,148,47"/>
+<area shape="rect" title="Adds all constraints created by a path to the safe interval table." alt="" coords="196,5,339,47"/>
+<area shape="rect" href="classSafeIntervalTable.html#aab5207a25c528d600ca267d4ba8ef188" title="Builds the safe interval table sequentially." alt="" coords="5,5,148,47"/>
 </map>
 </div>
 
@@ -250,6 +293,15 @@ Here is the caller graph for this function:</div>
       </table>
 </div><div class="memdoc">
 
+<p>Adds constraints to the safe interval table in parallel. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">path</td><td>The path to add constraints for. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section warning"><dt>Warning</dt><dd>This function is not properly tested and has known issues. </dd></dl>
+
 </div>
 </div>
 <a id="aab5207a25c528d600ca267d4ba8ef188"></a>
@@ -267,6 +319,14 @@ Here is the caller graph for this function:</div>
         </tr>
       </table>
 </div><div class="memdoc">
+
+<p>Builds the safe interval table sequentially. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">paths</td><td>The paths to build the safe interval table for. </td></tr>
+  </table>
+  </dd>
+</dl>
 
 <p class="definition">Definition at line <a class="el" href="SafeIntervalTable_8cpp_source.html#l00420">420</a> of file <a class="el" href="SafeIntervalTable_8cpp_source.html">SafeIntervalTable.cpp</a>.</p>
 
@@ -287,6 +347,15 @@ Here is the caller graph for this function:</div>
         </tr>
       </table>
 </div><div class="memdoc">
+
+<p>Gets the first safe interval for a given location. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">location</td><td>The location to get the first safe interval for.</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>An iterator to the first safe interval for the given location. </dd></dl>
 
 <p class="definition">Definition at line <a class="el" href="SafeIntervalTable_8cpp_source.html#l00288">288</a> of file <a class="el" href="SafeIntervalTable_8cpp_source.html">SafeIntervalTable.cpp</a>.</p>
 
@@ -317,7 +386,16 @@ Here is the caller graph for this function:</div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="SafeIntervalTable_8h_source.html#l00098">98</a> of file <a class="el" href="SafeIntervalTable_8h_source.html">SafeIntervalTable.h</a>.</p>
+<p>Gets the last safe interval for a given location. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">location</td><td>The location to get the last safe interval for.</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>A reference to the last safe interval for the given location. </dd></dl>
+
+<p class="definition">Definition at line <a class="el" href="SafeIntervalTable_8h_source.html#l00259">259</a> of file <a class="el" href="SafeIntervalTable_8h_source.html">SafeIntervalTable.h</a>.</p>
 
 </div>
 </div>
@@ -335,6 +413,9 @@ Here is the caller graph for this function:</div>
         </tr>
       </table>
 </div><div class="memdoc">
+
+<p>Calculates the estimate of the maximum path length. </p>
+<dl class="section return"><dt>Returns</dt><dd>The estimate of the maximum path length. </dd></dl>
 
 <p class="definition">Definition at line <a class="el" href="SafeIntervalTable_8cpp_source.html#l00357">357</a> of file <a class="el" href="SafeIntervalTable_8cpp_source.html">SafeIntervalTable.cpp</a>.</p>
 
@@ -365,7 +446,16 @@ Here is the caller graph for this function:</div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="SafeIntervalTable_8h_source.html#l00092">92</a> of file <a class="el" href="SafeIntervalTable_8h_source.html">SafeIntervalTable.h</a>.</p>
+<p>Get the minimal reach time of a location. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">goal</td><td>The goal location to get the minimal reach time for.</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>The minimal reach time of the goal location. </dd></dl>
+
+<p class="definition">Definition at line <a class="el" href="SafeIntervalTable_8h_source.html#l00246">246</a> of file <a class="el" href="SafeIntervalTable_8h_source.html">SafeIntervalTable.h</a>.</p>
 
 </div>
 </div>
@@ -395,6 +485,17 @@ Here is the caller graph for this function:</div>
       </table>
 </div><div class="memdoc">
 
+<p>Gets the safe intervals for a given location and a time interval. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">location</td><td>The location to get the safe intervals for. </td></tr>
+    <tr><td class="paramname">time_interval</td><td>The time interal, the location can be entered. All returned intervals must have nonzero intersection with it.</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>A pair of iterators representing the range of safe intervals for the given location and time interval. </dd></dl>
+<dl class="section warning"><dt>Warning</dt><dd>The returned safe intervals must be checked for edge collisions. </dd></dl>
+
 <p class="definition">Definition at line <a class="el" href="SafeIntervalTable_8cpp_source.html#l00305">305</a> of file <a class="el" href="SafeIntervalTable_8cpp_source.html">SafeIntervalTable.cpp</a>.</p>
 
 </div>
@@ -415,14 +516,22 @@ Here is the caller graph for this function:</div>
       </table>
 </div><div class="memdoc">
 
+<p>Removes a constraint from the safe interval table. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">timepoint</td><td>The time point to remove as a constraint. </td></tr>
+  </table>
+  </dd>
+</dl>
+
 <p class="definition">Definition at line <a class="el" href="SafeIntervalTable_8cpp_source.html#l00117">117</a> of file <a class="el" href="SafeIntervalTable_8cpp_source.html">SafeIntervalTable.cpp</a>.</p>
 <div class="dynheader">
 Here is the caller graph for this function:</div>
 <div class="dyncontent">
 <div class="center"><img src="classSafeIntervalTable_a4c7d822c436caf8822ed179e00b6c94e_icgraph.png" border="0" usemap="#classSafeIntervalTable_a4c7d822c436caf8822ed179e00b6c94e_icgraph" alt=""/></div>
 <map name="classSafeIntervalTable_a4c7d822c436caf8822ed179e00b6c94e_icgraph" id="classSafeIntervalTable_a4c7d822c436caf8822ed179e00b6c94e_icgraph">
-<area shape="rect" title=" " alt="" coords="204,5,348,47"/>
-<area shape="rect" href="classSafeIntervalTable.html#a468afa97880d6f8daeada75d8cc08cf2" title=" " alt="" coords="5,5,156,47"/>
+<area shape="rect" title="Removes a constraint from the safe interval table." alt="" coords="204,5,348,47"/>
+<area shape="rect" href="classSafeIntervalTable.html#a468afa97880d6f8daeada75d8cc08cf2" title="Removes all constraints created by a path from the safe interval table." alt="" coords="5,5,156,47"/>
 </map>
 </div>
 
@@ -444,6 +553,14 @@ Here is the caller graph for this function:</div>
       </table>
 </div><div class="memdoc">
 
+<p>Removes all constraints created by a path from the safe interval table. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">path</td><td>The path to remove constraints for. </td></tr>
+  </table>
+  </dd>
+</dl>
+
 <p class="definition">Definition at line <a class="el" href="SafeIntervalTable_8cpp_source.html#l00244">244</a> of file <a class="el" href="SafeIntervalTable_8cpp_source.html">SafeIntervalTable.cpp</a>.</p>
 
 </div>
@@ -463,6 +580,15 @@ Here is the caller graph for this function:</div>
         </tr>
       </table>
 </div><div class="memdoc">
+
+<p>Removes constraints from the safe interval table in parallel. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">path</td><td>The path to remove constraints for. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section warning"><dt>Warning</dt><dd>This function is not properly tested and has known issues. </dd></dl>
 
 </div>
 </div>
@@ -489,14 +615,16 @@ Here is the caller graph for this function:</div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="SafeIntervalTable_8h_source.html#l00104">104</a> of file <a class="el" href="SafeIntervalTable_8h_source.html">SafeIntervalTable.h</a>.</p>
+<p>Resets the safe interval table. </p>
+
+<p class="definition">Definition at line <a class="el" href="SafeIntervalTable_8h_source.html#l00268">268</a> of file <a class="el" href="SafeIntervalTable_8h_source.html">SafeIntervalTable.h</a>.</p>
 <div class="dynheader">
 Here is the caller graph for this function:</div>
 <div class="dyncontent">
 <div class="center"><img src="classSafeIntervalTable_aa9d1c371c39f3458f1f8492778a7f72e_icgraph.png" border="0" usemap="#classSafeIntervalTable_aa9d1c371c39f3458f1f8492778a7f72e_icgraph" alt=""/></div>
 <map name="classSafeIntervalTable_aa9d1c371c39f3458f1f8492778a7f72e_icgraph" id="classSafeIntervalTable_aa9d1c371c39f3458f1f8492778a7f72e_icgraph">
-<area shape="rect" title=" " alt="" coords="144,5,287,47"/>
-<area shape="rect" href="classSIPP.html#aecbadddd1d20b7ced6e12aef5ba47d28" title=" " alt="" coords="5,13,96,39"/>
+<area shape="rect" title="Resets the safe interval table." alt="" coords="144,5,287,47"/>
+<area shape="rect" href="classSIPP.html#aecbadddd1d20b7ced6e12aef5ba47d28" title="Reset the SIPP algorithm." alt="" coords="5,13,96,39"/>
 </map>
 </div>
 
@@ -517,6 +645,8 @@ Here is the caller graph for this function:</div>
       </table>
 </div><div class="memdoc">
 
+<p>Updates the end of the latest constraint. Call after removing constraints, which might make the estimate invalid. </p>
+
 <p class="definition">Definition at line <a class="el" href="SafeIntervalTable_8cpp_source.html#l00339">339</a> of file <a class="el" href="SafeIntervalTable_8cpp_source.html">SafeIntervalTable.cpp</a>.</p>
 
 </div>
@@ -533,8 +663,9 @@ Here is the caller graph for this function:</div>
         </tr>
       </table>
 </div><div class="memdoc">
+<p>The edge constraint table, which stores the edge collisions. </p>
 
-<p class="definition">Definition at line <a class="el" href="SafeIntervalTable_8h_source.html#l00075">75</a> of file <a class="el" href="SafeIntervalTable_8h_source.html">SafeIntervalTable.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="SafeIntervalTable_8h_source.html#l00151">151</a> of file <a class="el" href="SafeIntervalTable_8h_source.html">SafeIntervalTable.h</a>.</p>
 
 </div>
 </div>
@@ -557,8 +688,9 @@ Here is the caller graph for this function:</div>
   </tr>
 </table>
 </div><div class="memdoc">
+<p>The instance of the problem. </p>
 
-<p class="definition">Definition at line <a class="el" href="SafeIntervalTable_8h_source.html#l00126">126</a> of file <a class="el" href="SafeIntervalTable_8h_source.html">SafeIntervalTable.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="SafeIntervalTable_8h_source.html#l00290">290</a> of file <a class="el" href="SafeIntervalTable_8h_source.html">SafeIntervalTable.h</a>.</p>
 
 </div>
 </div>
@@ -581,8 +713,9 @@ Here is the caller graph for this function:</div>
   </tr>
 </table>
 </div><div class="memdoc">
+<p>The end of the latest constraint. </p>
 
-<p class="definition">Definition at line <a class="el" href="SafeIntervalTable_8h_source.html#l00129">129</a> of file <a class="el" href="SafeIntervalTable_8h_source.html">SafeIntervalTable.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="SafeIntervalTable_8h_source.html#l00293">293</a> of file <a class="el" href="SafeIntervalTable_8h_source.html">SafeIntervalTable.h</a>.</p>
 
 </div>
 </div>
@@ -605,8 +738,9 @@ Here is the caller graph for this function:</div>
   </tr>
 </table>
 </div><div class="memdoc">
+<p>Indicates if the latest constraint end has been updated. </p>
 
-<p class="definition">Definition at line <a class="el" href="SafeIntervalTable_8h_source.html#l00130">130</a> of file <a class="el" href="SafeIntervalTable_8h_source.html">SafeIntervalTable.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="SafeIntervalTable_8h_source.html#l00294">294</a> of file <a class="el" href="SafeIntervalTable_8h_source.html">SafeIntervalTable.h</a>.</p>
 
 </div>
 </div>
@@ -629,8 +763,9 @@ Here is the caller graph for this function:</div>
   </tr>
 </table>
 </div><div class="memdoc">
+<p>The locks used for parallelization. </p>
 
-<p class="definition">Definition at line <a class="el" href="SafeIntervalTable_8h_source.html#l00132">132</a> of file <a class="el" href="SafeIntervalTable_8h_source.html">SafeIntervalTable.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="SafeIntervalTable_8h_source.html#l00296">296</a> of file <a class="el" href="SafeIntervalTable_8h_source.html">SafeIntervalTable.h</a>.</p>
 
 </div>
 </div>
@@ -653,8 +788,9 @@ Here is the caller graph for this function:</div>
   </tr>
 </table>
 </div><div class="memdoc">
+<p>The estimate of the maximum path length. </p>
 
-<p class="definition">Definition at line <a class="el" href="SafeIntervalTable_8h_source.html#l00127">127</a> of file <a class="el" href="SafeIntervalTable_8h_source.html">SafeIntervalTable.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="SafeIntervalTable_8h_source.html#l00291">291</a> of file <a class="el" href="SafeIntervalTable_8h_source.html">SafeIntervalTable.h</a>.</p>
 
 </div>
 </div>
@@ -677,8 +813,9 @@ Here is the caller graph for this function:</div>
   </tr>
 </table>
 </div><div class="memdoc">
+<p>safe intervals for each position </p>
 
-<p class="definition">Definition at line <a class="el" href="SafeIntervalTable_8h_source.html#l00125">125</a> of file <a class="el" href="SafeIntervalTable_8h_source.html">SafeIntervalTable.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="SafeIntervalTable_8h_source.html#l00289">289</a> of file <a class="el" href="SafeIntervalTable_8h_source.html">SafeIntervalTable.h</a>.</p>
 
 </div>
 </div>
@@ -701,8 +838,9 @@ Here is the caller graph for this function:</div>
   </tr>
 </table>
 </div><div class="memdoc">
+<p>The number of unlimited safe intervals used for the max_path_len_estimate calculation. </p>
 
-<p class="definition">Definition at line <a class="el" href="SafeIntervalTable_8h_source.html#l00128">128</a> of file <a class="el" href="SafeIntervalTable_8h_source.html">SafeIntervalTable.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="SafeIntervalTable_8h_source.html#l00292">292</a> of file <a class="el" href="SafeIntervalTable_8h_source.html">SafeIntervalTable.h</a>.</p>
 
 </div>
 </div>

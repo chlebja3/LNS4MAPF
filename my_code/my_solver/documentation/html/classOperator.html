@@ -72,13 +72,18 @@ $(function() {
 </div><!--header-->
 <div class="contents">
 
+<p>Class representing a generic operator for the <a class="el" href="classLNS.html" title="Class representing the Large Neighborhood Search (LNS) algorithm.">LNS</a> algorithm.  
+ <a href="classOperator.html#details">More...</a></p>
+
 <p><code>#include &lt;<a class="el" href="LNS_8h_source.html">LNS.h</a>&gt;</code></p>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
 <tr class="memitem:ac0b15f8ec608a0968494356bf0cdbfcd"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classOperator.html#ac0b15f8ec608a0968494356bf0cdbfcd">Operator</a> (std::function&lt; void(<a class="el" href="classSolution.html">Solution</a> &amp;sol)&gt; func_)</td></tr>
+<tr class="memdesc:ac0b15f8ec608a0968494356bf0cdbfcd"><td class="mdescLeft">&#160;</td><td class="mdescRight">Constructor for the operator.  <a href="classOperator.html#ac0b15f8ec608a0968494356bf0cdbfcd">More...</a><br /></td></tr>
 <tr class="separator:ac0b15f8ec608a0968494356bf0cdbfcd"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a9a795c1178ef96374e294dcc2a6a84f8"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classOperator.html#a9a795c1178ef96374e294dcc2a6a84f8">apply</a> (<a class="el" href="classSolution.html">Solution</a> &amp;solution)</td></tr>
+<tr class="memdesc:a9a795c1178ef96374e294dcc2a6a84f8"><td class="mdescLeft">&#160;</td><td class="mdescRight">Applies the operator to a given solution.  <a href="classOperator.html#a9a795c1178ef96374e294dcc2a6a84f8">More...</a><br /></td></tr>
 <tr class="separator:a9a795c1178ef96374e294dcc2a6a84f8"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pri-attribs"></a>
@@ -87,8 +92,9 @@ Private Attributes</h2></td></tr>
 <tr class="separator:a011c37fa862f02afea291193aa249b44"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
-<div class="textblock">
-<p class="definition">Definition at line <a class="el" href="LNS_8h_source.html#l00056">56</a> of file <a class="el" href="LNS_8h_source.html">LNS.h</a>.</p>
+<div class="textblock"><p>Class representing a generic operator for the <a class="el" href="classLNS.html" title="Class representing the Large Neighborhood Search (LNS) algorithm.">LNS</a> algorithm. </p>
+
+<p class="definition">Definition at line <a class="el" href="LNS_8h_source.html#l00084">84</a> of file <a class="el" href="LNS_8h_source.html">LNS.h</a>.</p>
 </div><h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
 <a id="ac0b15f8ec608a0968494356bf0cdbfcd"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#ac0b15f8ec608a0968494356bf0cdbfcd">&#9670;&nbsp;</a></span>Operator()</h2>
@@ -114,7 +120,15 @@ Private Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="LNS_8h_source.html#l00059">59</a> of file <a class="el" href="LNS_8h_source.html">LNS.h</a>.</p>
+<p>Constructor for the operator. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">func_</td><td>Function to be executed by the operator. </td></tr>
+  </table>
+  </dd>
+</dl>
+
+<p class="definition">Definition at line <a class="el" href="LNS_8h_source.html#l00092">92</a> of file <a class="el" href="LNS_8h_source.html">LNS.h</a>.</p>
 
 </div>
 </div>
@@ -143,14 +157,22 @@ Private Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="LNS_8h_source.html#l00063">63</a> of file <a class="el" href="LNS_8h_source.html">LNS.h</a>.</p>
+<p>Applies the operator to a given solution. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">solution</td><td>The solution to be modified. </td></tr>
+  </table>
+  </dd>
+</dl>
+
+<p class="definition">Definition at line <a class="el" href="LNS_8h_source.html#l00101">101</a> of file <a class="el" href="LNS_8h_source.html">LNS.h</a>.</p>
 <div class="dynheader">
 Here is the caller graph for this function:</div>
 <div class="dyncontent">
 <div class="center"><img src="classOperator_a9a795c1178ef96374e294dcc2a6a84f8_icgraph.png" border="0" usemap="#classOperator_a9a795c1178ef96374e294dcc2a6a84f8_icgraph" alt=""/></div>
 <map name="classOperator_a9a795c1178ef96374e294dcc2a6a84f8_icgraph" id="classOperator_a9a795c1178ef96374e294dcc2a6a84f8_icgraph">
-<area shape="rect" title=" " alt="" coords="452,5,575,32"/>
-<area shape="rect" href="classLNS.html#ab4a4826221160701ee3cf6ca93feb1f7" title=" " alt="" coords="313,5,404,32"/>
+<area shape="rect" title="Applies the operator to a given solution." alt="" coords="452,5,575,32"/>
+<area shape="rect" href="classLNS.html#ab4a4826221160701ee3cf6ca93feb1f7" title="Solves the given instance using the LNS algorithm." alt="" coords="313,5,404,32"/>
 <area shape="rect" href="destroy_8cpp.html#a1fe60ef45fb8a4e175eb3b737505f3d5" title=" " alt="" coords="108,5,265,32"/>
 <area shape="rect" href="destroy_8cpp.html#a808f40e2e9d6eb5463165c031dfa3eb1" title=" " alt="" coords="5,5,60,32"/>
 </map>
@@ -178,8 +200,9 @@ Here is the caller graph for this function:</div>
   </tr>
 </table>
 </div><div class="memdoc">
+<p>Function to be executed by the operator. </p>
 
-<p class="definition">Definition at line <a class="el" href="LNS_8h_source.html#l00069">69</a> of file <a class="el" href="LNS_8h_source.html">LNS.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="LNS_8h_source.html#l00107">107</a> of file <a class="el" href="LNS_8h_source.html">LNS.h</a>.</p>
 
 </div>
 </div>

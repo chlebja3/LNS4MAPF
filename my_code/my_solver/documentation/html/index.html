@@ -76,10 +76,15 @@ Dependencies</h1>
 <p>nlohmann-json3-dev 3.7.3-1</p>
 <p>For tests and benchmarks (should be fetched automatically by CMake if not installed):</p>
 <p>google-test 1.10.0</p>
+<p>google-mock</p>
 <p>google benchmark 1.5.0-4build1</p>
 <p>nativefiledialog-extended (added as submodule, might be needed to run <code>git submodule update --init --recursive</code>)</p>
 <p>sqlite3 - for experiments only</p>
-<h1><a class="anchor" id="autotoc_md2"></a>
+<h2><a class="anchor" id="autotoc_md2"></a>
+Install dependencies</h2>
+<p>To install dependencies, run the following command </p><div class="fragment"><div class="line">sudo apt install libsfml-dev nlohmann-json3-dev</div>
+<div class="line">sudo apt-get install libboost-all-dev</div>
+</div><!-- fragment --><h1><a class="anchor" id="autotoc_md3"></a>
 Build</h1>
 <div class="fragment"><div class="line">./scripts/compile.sh &quot;build type&quot; &quot;tests&quot;</div>
 </div><!-- fragment --><p>There are three build types:</p><ul>
@@ -87,7 +92,7 @@ Build</h1>
 <li>relwithdebinfo - optimizations, debug information, asserts on (default)</li>
 <li>release - optimizations, no debug information, asserts off</li>
 </ul>
-<p>The second argument specifies whether to build unit and benchmark tests. The default is ON</p><ul>
+<p>The second argument specifies whether to build unit and benchmark tests. The default is OFF</p><ul>
 <li>tests - build all tests (default)</li>
 <li>notest - do not build tests</li>
 </ul>
@@ -97,7 +102,7 @@ Build</h1>
 <div class="line">cmake --build .</div>
 </div><!-- fragment --><p>To build with a specific build type, specify the CMAKE_BUILD_TYPE flag (options are Debug, Release, RelWithDebInfo): </p><div class="fragment"><div class="line">cmake -DCMAKE_BUILD_TYPE=Release ..</div>
 </div><!-- fragment --><p>To build without unit and benchmark tests, specify the ENABLE_TESTS flag (default is ON): </p><div class="fragment"><div class="line">cmake -ENABLE_TESTS=OFF ..</div>
-</div><!-- fragment --><h1><a class="anchor" id="autotoc_md3"></a>
+</div><!-- fragment --><h1><a class="anchor" id="autotoc_md4"></a>
 Run</h1>
 <div class="fragment"><div class="line">./scripts/run.sh &quot;arguments&quot; </div>
 </div><!-- fragment --><p>To see all possible arguments run: </p><div class="fragment"><div class="line">./scripts/run.sh -h</div>
@@ -107,48 +112,52 @@ Run</h1>
 <li>empty-16-16 - empty 16x16 map with 20 agents</li>
 <li>den520d - den520d map from the MAPF benchmark with 500 agents</li>
 </ul>
-<h2><a class="anchor" id="autotoc_md4"></a>
+<h2><a class="anchor" id="autotoc_md5"></a>
 Demo 1: Simple 3x3 map, 1 agent</h2>
 <div class="fragment"><div class="line">./scripts/run_specific_instance.sh dummy</div>
-</div><!-- fragment --><h2><a class="anchor" id="autotoc_md5"></a>
+</div><!-- fragment --><h2><a class="anchor" id="autotoc_md6"></a>
 Demo 2: den520d map from the MAPF benchmark with 500 agents</h2>
 <div class="fragment"><div class="line">./scripts/run_specific_instance.sh den520d</div>
-</div><!-- fragment --><h2><a class="anchor" id="autotoc_md6"></a>
+</div><!-- fragment --><h2><a class="anchor" id="autotoc_md7"></a>
 Run with custom settings:</h2>
 <div class="fragment"><div class="line">./build/mapf_solver -m &#39;path to map&#39; -a &#39;path to scen file&#39; -k &#39;number of agents&#39; </div>
 </div><!-- fragment --><p>or</p>
 <div class="fragment"><div class="line">./scripts/run.sh -m &#39;path to map&#39; -a &#39;path to scen file&#39; -k &#39;number of agents&#39; </div>
-</div><!-- fragment --><h1><a class="anchor" id="autotoc_md7"></a>
+</div><!-- fragment --><h1><a class="anchor" id="autotoc_md8"></a>
 Tests</h1>
-<h2><a class="anchor" id="autotoc_md8"></a>
+<h2><a class="anchor" id="autotoc_md9"></a>
 Memory tests</h2>
 <p>To test memory leaks on a specific instance of the map den520d with 500 agents, run </p><div class="fragment"><div class="line">./scripts/run_valgrind.sh den520d</div>
-</div><!-- fragment --><h2><a class="anchor" id="autotoc_md9"></a>
+</div><!-- fragment --><h2><a class="anchor" id="autotoc_md10"></a>
 Unit tests</h2>
 <p>To run all unit tests, run </p><div class="fragment"><div class="line">./scripts/run_tests.sh</div>
 </div><!-- fragment --><p>To run specific tests, run </p><div class="fragment"><div class="line">./scripts/run_specific_test.sh &quot;test name&quot;</div>
-</div><!-- fragment --><p>For example to run all <a class="el" href="classSIPP.html">SIPP</a> related tests: </p><div class="fragment"><div class="line">./scripts/run_specific_test.sh SIPP*</div>
-</div><!-- fragment --><h2><a class="anchor" id="autotoc_md10"></a>
+</div><!-- fragment --><p>For example to run all <a class="el" href="classSIPP.html" title="Class representing the SIPP algorithm.">SIPP</a> related tests: </p><div class="fragment"><div class="line">./scripts/run_specific_test.sh SIPP*</div>
+</div><!-- fragment --><h2><a class="anchor" id="autotoc_md11"></a>
 Benchmarks</h2>
 <div class="fragment"><div class="line">./scripts/run_benchmark.sh &quot;benchmark name&quot;</div>
 </div><!-- fragment --><p>Available benchmarks:</p><ul>
 <li>sipp_bm - benchmark of the sipp algorithm on the den520d map with 500 agents</li>
 <li>vector_operations_bm - benchmark of some vector operations</li>
 </ul>
-<h2><a class="anchor" id="autotoc_md11"></a>
+<h2><a class="anchor" id="autotoc_md12"></a>
 Profiling</h2>
 <p>To profile the program, run </p><div class="fragment"><div class="line">./scripts/profile.sh</div>
 </div><!-- fragment --><p>It is advised to compile the program in the RelWithDebInfo build type but with asserts turned off. I had some trouble with displaying the debug info in kcachegrind when compiled with clang, so it might be needed to switch to gcc</p>
 <div class="fragment"><div class="line">export CC=/usr/bin/gcc</div>
 <div class="line">export CXX=/usr/bin/g++</div>
-</div><!-- fragment --><h1><a class="anchor" id="autotoc_md12"></a>
+</div><!-- fragment --><h1><a class="anchor" id="autotoc_md13"></a>
 Documentation</h1>
 <p>To generate the documentation, run </p><div class="fragment"><div class="line">./scripts/generate_documentations.sh</div>
 </div><!-- fragment --><p>To view the documentation, run </p><div class="fragment"><div class="line">./scripts/show_documentation.sh</div>
-</div><!-- fragment --><h1><a class="anchor" id="autotoc_md13"></a>
+</div><!-- fragment --><h1><a class="anchor" id="autotoc_md14"></a>
 License</h1>
-<p>MIT</p>
-<h1><a class="anchor" id="autotoc_md14"></a>
+<p>MIT License</p>
+<p>Copyright (c) 2025 Jan Chleboun</p>
+<p>Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:</p>
+<p>The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.</p>
+<p>THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.</p>
+<h1><a class="anchor" id="autotoc_md15"></a>
 Author</h1>
 <p>Jan Chleboun (2025) email: <a href="#" onclick="location.href='mai'+'lto:'+'chl'+'eb'+'ja3'+'@f'+'el.'+'cv'+'ut.'+'cz'; return false;">chleb<span style="display: none;">.nosp@m.</span>ja3@<span style="display: none;">.nosp@m.</span>fel.c<span style="display: none;">.nosp@m.</span>vut.<span style="display: none;">.nosp@m.</span>cz</a> </p>
 </div></div><!-- PageDoc -->

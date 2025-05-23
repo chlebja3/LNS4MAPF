@@ -71,31 +71,43 @@ $(function() {
 <div class="title">sipp Namespace Reference</div>  </div>
 </div><!--header-->
 <div class="contents">
+
+<p>Namespace for <a class="el" href="classSIPP.html" title="Class representing the SIPP algorithm.">SIPP</a> nodes.  
+<a href="namespacesipp.html#details">More...</a></p>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="nested-classes"></a>
 Classes</h2></td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classsipp_1_1NodePool.html">NodePool</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Represents a pool of <a class="el" href="classSIPP.html" title="Class representing the SIPP algorithm.">SIPP</a> nodes. This class manages the allocation and deallocation of <a class="el" href="classSIPP.html" title="Class representing the SIPP algorithm.">SIPP</a> nodes. Saves a lot of time. If there are not enough nodes in the pool, it allocates more and stores them in a list, which is then merged into the pool at the end of the iteration. Once a node is allocated, it is not deallocated until the pool is destroyed.  <a href="classsipp_1_1NodePool.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classsipp_1_1SIPPNode.html">SIPPNode</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Represents a node in the <a class="el" href="classSIPP.html" title="Class representing the SIPP algorithm.">SIPP</a> algorithm.  <a href="classsipp_1_1SIPPNode.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classsipp_1_1SIPPNodeComparator.html">SIPPNodeComparator</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Comparator class for SIPPNodes.  <a href="classsipp_1_1SIPPNodeComparator.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classsipp_1_1SIPPNodeComparatorSuboptimal.html">SIPPNodeComparatorSuboptimal</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Comparator class for Bounded Suboptimal <a class="el" href="classSIPP.html" title="Class representing the SIPP algorithm.">SIPP</a>.  <a href="classsipp_1_1SIPPNodeComparatorSuboptimal.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="typedef-members"></a>
 Typedefs</h2></td></tr>
 <tr class="memitem:a7069d4b04897ef89b5dcfec1da790585"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacesipp.html#a7069d4b04897ef89b5dcfec1da790585">PriorityQueue</a> = boost::heap::priority_queue&lt; const <a class="el" href="classsipp_1_1SIPPNode.html">SIPPNode</a> *, boost::heap::compare&lt; <a class="el" href="classsipp_1_1SIPPNodeComparator.html">SIPPNodeComparator</a> &gt; &gt;</td></tr>
+<tr class="memdesc:a7069d4b04897ef89b5dcfec1da790585"><td class="mdescLeft">&#160;</td><td class="mdescRight">Priority queue for <a class="el" href="classSIPP.html" title="Class representing the SIPP algorithm.">SIPP</a> nodes.  <a href="namespacesipp.html#a7069d4b04897ef89b5dcfec1da790585">More...</a><br /></td></tr>
 <tr class="separator:a7069d4b04897ef89b5dcfec1da790585"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ab9f900dc9f1d21e25d0a820a593ef26b"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacesipp.html#ab9f900dc9f1d21e25d0a820a593ef26b">PriorityQueueSuboptimal</a> = boost::heap::priority_queue&lt; const <a class="el" href="classsipp_1_1SIPPNode.html">SIPPNode</a> *, boost::heap::compare&lt; <a class="el" href="classsipp_1_1SIPPNodeComparatorSuboptimal.html">SIPPNodeComparatorSuboptimal</a> &gt; &gt;</td></tr>
+<tr class="memdesc:ab9f900dc9f1d21e25d0a820a593ef26b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Priority queue for suboptimal <a class="el" href="classSIPP.html" title="Class representing the SIPP algorithm.">SIPP</a> nodes.  <a href="namespacesipp.html#ab9f900dc9f1d21e25d0a820a593ef26b">More...</a><br /></td></tr>
 <tr class="separator:ab9f900dc9f1d21e25d0a820a593ef26b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="func-members"></a>
 Functions</h2></td></tr>
 <tr class="memitem:a6e715e7420614c0befe3fca5ad1dd6f0"><td class="memItemLeft" align="right" valign="top">auto&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacesipp.html#a6e715e7420614c0befe3fca5ad1dd6f0">extract_path</a> (<a class="el" href="classsipp_1_1SIPPNode.html">SIPPNode</a> const *final_node) -&gt; <a class="el" href="utils_8h.html#a64881685b4fe27a0cf599222d5fb1c72">TimePointPath</a></td></tr>
+<tr class="memdesc:a6e715e7420614c0befe3fca5ad1dd6f0"><td class="mdescLeft">&#160;</td><td class="mdescRight">Extracts the path from the final node to the start node.  <a href="namespacesipp.html#a6e715e7420614c0befe3fca5ad1dd6f0">More...</a><br /></td></tr>
 <tr class="separator:a6e715e7420614c0befe3fca5ad1dd6f0"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
-<h2 class="groupheader">Typedef Documentation</h2>
+<a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
+<div class="textblock"><p>Namespace for <a class="el" href="classSIPP.html" title="Class representing the SIPP algorithm.">SIPP</a> nodes. </p>
+</div><h2 class="groupheader">Typedef Documentation</h2>
 <a id="a7069d4b04897ef89b5dcfec1da790585"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a7069d4b04897ef89b5dcfec1da790585">&#9670;&nbsp;</a></span>PriorityQueue</h2>
 
@@ -108,7 +120,9 @@ Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="SIPP_8h_source.html#l00108">108</a> of file <a class="el" href="SIPP_8h_source.html">SIPP.h</a>.</p>
+<p>Priority queue for <a class="el" href="classSIPP.html" title="Class representing the SIPP algorithm.">SIPP</a> nodes. </p>
+
+<p class="definition">Definition at line <a class="el" href="SIPP_8h_source.html#l00214">214</a> of file <a class="el" href="SIPP_8h_source.html">SIPP.h</a>.</p>
 
 </div>
 </div>
@@ -124,7 +138,9 @@ Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="SIPP_8h_source.html#l00110">110</a> of file <a class="el" href="SIPP_8h_source.html">SIPP.h</a>.</p>
+<p>Priority queue for suboptimal <a class="el" href="classSIPP.html" title="Class representing the SIPP algorithm.">SIPP</a> nodes. </p>
+
+<p class="definition">Definition at line <a class="el" href="SIPP_8h_source.html#l00221">221</a> of file <a class="el" href="SIPP_8h_source.html">SIPP.h</a>.</p>
 
 </div>
 </div>
@@ -145,17 +161,26 @@ Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
+<p>Extracts the path from the final node to the start node. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">final_node</td><td>The final node of the path.</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>A vector of TimePoints representing the path from the start node to the final node. </dd></dl>
+
 <p class="definition">Definition at line <a class="el" href="SIPP_8cpp_source.html#l00944">944</a> of file <a class="el" href="SIPP_8cpp_source.html">SIPP.cpp</a>.</p>
 <div class="dynheader">
 Here is the caller graph for this function:</div>
 <div class="dyncontent">
 <div class="center"><img src="namespacesipp_a6e715e7420614c0befe3fca5ad1dd6f0_icgraph.png" border="0" usemap="#namespacesipp_a6e715e7420614c0befe3fca5ad1dd6f0_icgraph" alt=""/></div>
 <map name="namespacesipp_a6e715e7420614c0befe3fca5ad1dd6f0_icgraph" id="namespacesipp_a6e715e7420614c0befe3fca5ad1dd6f0_icgraph">
-<area shape="rect" title=" " alt="" coords="236,97,375,123"/>
-<area shape="rect" href="classSIPP.html#a554425ea66302db84cbbd55252347ddc" title=" " alt="" coords="23,5,170,47"/>
-<area shape="rect" href="classSIPP.html#a99ea39d64a73b10e97046debfcd2d873" title=" " alt="" coords="17,71,177,98"/>
-<area shape="rect" href="classSIPP.html#a9c3c0bb8577a4af7cc66dc11b639cb18" title=" " alt="" coords="5,122,188,149"/>
-<area shape="rect" href="classSIPP.html#a440a585afee1b9ff3ae38ed91960b353" title=" " alt="" coords="13,173,180,199"/>
+<area shape="rect" title="Extracts the path from the final node to the start node." alt="" coords="236,97,375,123"/>
+<area shape="rect" href="classSIPP.html#a554425ea66302db84cbbd55252347ddc" title="Plans a path for the given agent number using the original single&#45;heuristic version of the SIPP algor..." alt="" coords="23,5,170,47"/>
+<area shape="rect" href="classSIPP.html#a99ea39d64a73b10e97046debfcd2d873" title="Plans a path for the given agent number using the multi&#45;heuristic version of the SIPP algorithm." alt="" coords="17,71,177,98"/>
+<area shape="rect" href="classSIPP.html#a9c3c0bb8577a4af7cc66dc11b639cb18" title="Plans a path for the given agent number using the ap multi&#45;heuristic version of the SIPP algorithm." alt="" coords="5,122,188,149"/>
+<area shape="rect" href="classSIPP.html#a440a585afee1b9ff3ae38ed91960b353" title="Plans a path for the given agent number using the original Bounded Suboptimal SIPP algorithm." alt="" coords="13,173,180,199"/>
 </map>
 </div>
 

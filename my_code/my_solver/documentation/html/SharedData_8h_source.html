@@ -71,47 +71,41 @@ $(function() {
 <div class="title">SharedData.h</div>  </div>
 </div><!--header-->
 <div class="contents">
-<a href="SharedData_8h.html">Go to the documentation of this file.</a><div class="fragment"><div class="line"><a name="l00001"></a><span class="lineno">    1</span>&#160;<span class="comment">/*</span></div>
-<div class="line"><a name="l00002"></a><span class="lineno">    2</span>&#160;<span class="comment"> * Author: Jan Chleboun</span></div>
-<div class="line"><a name="l00003"></a><span class="lineno">    3</span>&#160;<span class="comment"> * Date: 20-02-2025</span></div>
-<div class="line"><a name="l00004"></a><span class="lineno">    4</span>&#160;<span class="comment"> * Email: chlebja3@fel.cvut.cz</span></div>
-<div class="line"><a name="l00005"></a><span class="lineno">    5</span>&#160;<span class="comment"> * Description:</span></div>
-<div class="line"><a name="l00006"></a><span class="lineno">    6</span>&#160;<span class="comment"> */</span></div>
-<div class="line"><a name="l00007"></a><span class="lineno">    7</span>&#160;<span class="preprocessor">#pragma once</span></div>
-<div class="line"><a name="l00008"></a><span class="lineno">    8</span>&#160;<span class="preprocessor">#include &lt;atomic&gt;</span></div>
-<div class="line"><a name="l00009"></a><span class="lineno">    9</span>&#160;<span class="preprocessor">#include &lt;mutex&gt;</span></div>
-<div class="line"><a name="l00010"></a><span class="lineno">   10</span>&#160; </div>
-<div class="line"><a name="l00011"></a><span class="lineno">   11</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="IterInfo_8h.html">IterInfo.h</a>&quot;</span></div>
-<div class="line"><a name="l00012"></a><span class="lineno">   12</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="utils_8h.html">utils.h</a>&quot;</span></div>
-<div class="line"><a name="l00013"></a><span class="lineno">   13</span>&#160; </div>
-<div class="line"><a name="l00014"></a><span class="lineno"><a class="line" href="classSharedData.html">   14</a></span>&#160;<span class="keyword">class </span><a class="code" href="classSharedData.html">SharedData</a></div>
-<div class="line"><a name="l00015"></a><span class="lineno">   15</span>&#160;{</div>
-<div class="line"><a name="l00016"></a><span class="lineno">   16</span>&#160;<span class="keyword">public</span>:</div>
-<div class="line"><a name="l00017"></a><span class="lineno"><a class="line" href="classSharedData.html#af404913d3f16229b11128dc32c00fbd3">   17</a></span>&#160;  std::atomic&lt;bool&gt; <a class="code" href="classSharedData.html#af404913d3f16229b11128dc32c00fbd3">is_new_info</a>;</div>
-<div class="line"><a name="l00018"></a><span class="lineno"><a class="line" href="classSharedData.html#a9b6d6f30e8fbc9870cf5b91cb877231b">   18</a></span>&#160;  std::atomic&lt;bool&gt; <a class="code" href="classSharedData.html#a9b6d6f30e8fbc9870cf5b91cb877231b">is_end</a>;</div>
-<div class="line"><a name="l00019"></a><span class="lineno">   19</span>&#160; </div>
-<div class="line"><a name="l00020"></a><span class="lineno">   20</span>&#160;  <a class="code" href="classSharedData.html#a67fec283f34fd58f1d767ca561998baf">SharedData</a>();</div>
-<div class="line"><a name="l00021"></a><span class="lineno">   21</span>&#160; </div>
-<div class="line"><a name="l00022"></a><span class="lineno">   22</span>&#160;  <span class="keywordtype">void</span> <a class="code" href="classSharedData.html#afd503bdb7d94bc07c9fa1ab30173085e">update_lns_info</a>(<a class="code" href="classLNSIterationInfo.html">LNSIterationInfo</a> new_info);</div>
-<div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160; </div>
-<div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;  <span class="keyword">auto</span> <a class="code" href="classSharedData.html#acf8b9971a03fe9cae485885168ba6117">consume_lns_info</a>() -&gt; std::vector&lt;LNSIterationInfo&gt;;</div>
-<div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160; </div>
-<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;<span class="keyword">private</span>:</div>
-<div class="line"><a name="l00027"></a><span class="lineno"><a class="line" href="classSharedData.html#a33a6b1a3b86d8fa3e5e9728042688ea5">   27</a></span>&#160;  std::mutex                    <a class="code" href="classSharedData.html#a33a6b1a3b86d8fa3e5e9728042688ea5">mtx</a>;</div>
-<div class="line"><a name="l00028"></a><span class="lineno"><a class="line" href="classSharedData.html#aff98744ece6077e243198b9ee3cb0843">   28</a></span>&#160;  std::vector&lt;LNSIterationInfo&gt; <a class="code" href="classSharedData.html#aff98744ece6077e243198b9ee3cb0843">lns_info</a>;</div>
-<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;};</div>
+<a href="SharedData_8h.html">Go to the documentation of this file.</a><div class="fragment"><div class="line"><a name="l00001"></a><span class="lineno">    1</span>&#160; </div>
+<div class="line"><a name="l00008"></a><span class="lineno">    8</span>&#160;<span class="preprocessor">#pragma once</span></div>
+<div class="line"><a name="l00009"></a><span class="lineno">    9</span>&#160;<span class="preprocessor">#include &lt;atomic&gt;</span></div>
+<div class="line"><a name="l00010"></a><span class="lineno">   10</span>&#160;<span class="preprocessor">#include &lt;mutex&gt;</span></div>
+<div class="line"><a name="l00011"></a><span class="lineno">   11</span>&#160; </div>
+<div class="line"><a name="l00012"></a><span class="lineno">   12</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="IterInfo_8h.html">IterInfo.h</a>&quot;</span></div>
+<div class="line"><a name="l00013"></a><span class="lineno">   13</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="utils_8h.html">utils.h</a>&quot;</span></div>
+<div class="line"><a name="l00014"></a><span class="lineno">   14</span>&#160; </div>
+<div class="line"><a name="l00018"></a><span class="lineno"><a class="line" href="classSharedData.html">   18</a></span>&#160;<span class="keyword">class </span><a class="code" href="classSharedData.html">SharedData</a></div>
+<div class="line"><a name="l00019"></a><span class="lineno">   19</span>&#160;{</div>
+<div class="line"><a name="l00020"></a><span class="lineno">   20</span>&#160;<span class="keyword">public</span>:</div>
+<div class="line"><a name="l00021"></a><span class="lineno"><a class="line" href="classSharedData.html#af404913d3f16229b11128dc32c00fbd3">   21</a></span>&#160;  std::atomic&lt;bool&gt; <a class="code" href="classSharedData.html#af404913d3f16229b11128dc32c00fbd3">is_new_info</a>; </div>
+<div class="line"><a name="l00022"></a><span class="lineno"><a class="line" href="classSharedData.html#a9b6d6f30e8fbc9870cf5b91cb877231b">   22</a></span>&#160;  std::atomic&lt;bool&gt; <a class="code" href="classSharedData.html#a9b6d6f30e8fbc9870cf5b91cb877231b">is_end</a>;      </div>
+<div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;  <a class="code" href="classSharedData.html#a67fec283f34fd58f1d767ca561998baf">SharedData</a>();</div>
+<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160; </div>
+<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;  <span class="keywordtype">void</span> <a class="code" href="classSharedData.html#afd503bdb7d94bc07c9fa1ab30173085e">update_lns_info</a>(<a class="code" href="classLNSIterationInfo.html">LNSIterationInfo</a> new_info);</div>
+<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160; </div>
+<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;  <span class="keyword">auto</span> <a class="code" href="classSharedData.html#acf8b9971a03fe9cae485885168ba6117">consume_lns_info</a>() -&gt; std::vector&lt;LNSIterationInfo&gt;;</div>
+<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160; </div>
+<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;<span class="keyword">private</span>:</div>
+<div class="line"><a name="l00044"></a><span class="lineno"><a class="line" href="classSharedData.html#a33a6b1a3b86d8fa3e5e9728042688ea5">   44</a></span>&#160;  std::mutex                    <a class="code" href="classSharedData.html#a33a6b1a3b86d8fa3e5e9728042688ea5">mtx</a>;      </div>
+<div class="line"><a name="l00045"></a><span class="lineno"><a class="line" href="classSharedData.html#aff98744ece6077e243198b9ee3cb0843">   45</a></span>&#160;  std::vector&lt;LNSIterationInfo&gt; <a class="code" href="classSharedData.html#aff98744ece6077e243198b9ee3cb0843">lns_info</a>; </div>
+<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;};</div>
 </div><!-- fragment --></div><!-- contents -->
-<div class="ttc" id="aclassSharedData_html_af404913d3f16229b11128dc32c00fbd3"><div class="ttname"><a href="classSharedData.html#af404913d3f16229b11128dc32c00fbd3">SharedData::is_new_info</a></div><div class="ttdeci">std::atomic&lt; bool &gt; is_new_info</div><div class="ttdef"><b>Definition:</b> <a href="SharedData_8h_source.html#l00017">SharedData.h:17</a></div></div>
-<div class="ttc" id="aclassSharedData_html_a33a6b1a3b86d8fa3e5e9728042688ea5"><div class="ttname"><a href="classSharedData.html#a33a6b1a3b86d8fa3e5e9728042688ea5">SharedData::mtx</a></div><div class="ttdeci">std::mutex mtx</div><div class="ttdef"><b>Definition:</b> <a href="SharedData_8h_source.html#l00027">SharedData.h:27</a></div></div>
-<div class="ttc" id="aclassSharedData_html_afd503bdb7d94bc07c9fa1ab30173085e"><div class="ttname"><a href="classSharedData.html#afd503bdb7d94bc07c9fa1ab30173085e">SharedData::update_lns_info</a></div><div class="ttdeci">void update_lns_info(LNSIterationInfo new_info)</div><div class="ttdef"><b>Definition:</b> <a href="SharedData_8cpp_source.html#l00016">SharedData.cpp:16</a></div></div>
-<div class="ttc" id="aclassSharedData_html_acf8b9971a03fe9cae485885168ba6117"><div class="ttname"><a href="classSharedData.html#acf8b9971a03fe9cae485885168ba6117">SharedData::consume_lns_info</a></div><div class="ttdeci">auto consume_lns_info() -&gt; std::vector&lt; LNSIterationInfo &gt;</div><div class="ttdef"><b>Definition:</b> <a href="SharedData_8cpp_source.html#l00026">SharedData.cpp:26</a></div></div>
-<div class="ttc" id="autils_8h_html"><div class="ttname"><a href="utils_8h.html">utils.h</a></div></div>
+<div class="ttc" id="aclassSharedData_html_af404913d3f16229b11128dc32c00fbd3"><div class="ttname"><a href="classSharedData.html#af404913d3f16229b11128dc32c00fbd3">SharedData::is_new_info</a></div><div class="ttdeci">std::atomic&lt; bool &gt; is_new_info</div><div class="ttdef"><b>Definition:</b> <a href="SharedData_8h_source.html#l00021">SharedData.h:21</a></div></div>
+<div class="ttc" id="aclassSharedData_html_a33a6b1a3b86d8fa3e5e9728042688ea5"><div class="ttname"><a href="classSharedData.html#a33a6b1a3b86d8fa3e5e9728042688ea5">SharedData::mtx</a></div><div class="ttdeci">std::mutex mtx</div><div class="ttdef"><b>Definition:</b> <a href="SharedData_8h_source.html#l00044">SharedData.h:44</a></div></div>
+<div class="ttc" id="aclassSharedData_html_afd503bdb7d94bc07c9fa1ab30173085e"><div class="ttname"><a href="classSharedData.html#afd503bdb7d94bc07c9fa1ab30173085e">SharedData::update_lns_info</a></div><div class="ttdeci">void update_lns_info(LNSIterationInfo new_info)</div><div class="ttdoc">Function to add information about a lns iteration.</div><div class="ttdef"><b>Definition:</b> <a href="SharedData_8cpp_source.html#l00016">SharedData.cpp:16</a></div></div>
+<div class="ttc" id="aclassSharedData_html_acf8b9971a03fe9cae485885168ba6117"><div class="ttname"><a href="classSharedData.html#acf8b9971a03fe9cae485885168ba6117">SharedData::consume_lns_info</a></div><div class="ttdeci">auto consume_lns_info() -&gt; std::vector&lt; LNSIterationInfo &gt;</div><div class="ttdoc">Function to consume the information about lns iterations.</div><div class="ttdef"><b>Definition:</b> <a href="SharedData_8cpp_source.html#l00026">SharedData.cpp:26</a></div></div>
+<div class="ttc" id="autils_8h_html"><div class="ttname"><a href="utils_8h.html">utils.h</a></div><div class="ttdoc">Utility functions and classes for the project.</div></div>
 <div class="ttc" id="aIterInfo_8h_html"><div class="ttname"><a href="IterInfo_8h.html">IterInfo.h</a></div><div class="ttdoc">Contains classes for storing information about the iterations of the algorithm, which are used for lo...</div></div>
 <div class="ttc" id="aclassLNSIterationInfo_html"><div class="ttname"><a href="classLNSIterationInfo.html">LNSIterationInfo</a></div><div class="ttdoc">Stores information about the iterations of the LNS algorithm.</div><div class="ttdef"><b>Definition:</b> <a href="IterInfo_8h_source.html#l00053">IterInfo.h:53</a></div></div>
-<div class="ttc" id="aclassSharedData_html_a67fec283f34fd58f1d767ca561998baf"><div class="ttname"><a href="classSharedData.html#a67fec283f34fd58f1d767ca561998baf">SharedData::SharedData</a></div><div class="ttdeci">SharedData()</div><div class="ttdef"><b>Definition:</b> <a href="SharedData_8cpp_source.html#l00011">SharedData.cpp:11</a></div></div>
-<div class="ttc" id="aclassSharedData_html_aff98744ece6077e243198b9ee3cb0843"><div class="ttname"><a href="classSharedData.html#aff98744ece6077e243198b9ee3cb0843">SharedData::lns_info</a></div><div class="ttdeci">std::vector&lt; LNSIterationInfo &gt; lns_info</div><div class="ttdef"><b>Definition:</b> <a href="SharedData_8h_source.html#l00028">SharedData.h:28</a></div></div>
-<div class="ttc" id="aclassSharedData_html_a9b6d6f30e8fbc9870cf5b91cb877231b"><div class="ttname"><a href="classSharedData.html#a9b6d6f30e8fbc9870cf5b91cb877231b">SharedData::is_end</a></div><div class="ttdeci">std::atomic&lt; bool &gt; is_end</div><div class="ttdef"><b>Definition:</b> <a href="SharedData_8h_source.html#l00018">SharedData.h:18</a></div></div>
-<div class="ttc" id="aclassSharedData_html"><div class="ttname"><a href="classSharedData.html">SharedData</a></div><div class="ttdef"><b>Definition:</b> <a href="SharedData_8h_source.html#l00014">SharedData.h:14</a></div></div>
+<div class="ttc" id="aclassSharedData_html_a67fec283f34fd58f1d767ca561998baf"><div class="ttname"><a href="classSharedData.html#a67fec283f34fd58f1d767ca561998baf">SharedData::SharedData</a></div><div class="ttdeci">SharedData()</div><div class="ttdoc">Constructor for SharedData.</div><div class="ttdef"><b>Definition:</b> <a href="SharedData_8cpp_source.html#l00011">SharedData.cpp:11</a></div></div>
+<div class="ttc" id="aclassSharedData_html_aff98744ece6077e243198b9ee3cb0843"><div class="ttname"><a href="classSharedData.html#aff98744ece6077e243198b9ee3cb0843">SharedData::lns_info</a></div><div class="ttdeci">std::vector&lt; LNSIterationInfo &gt; lns_info</div><div class="ttdef"><b>Definition:</b> <a href="SharedData_8h_source.html#l00045">SharedData.h:45</a></div></div>
+<div class="ttc" id="aclassSharedData_html_a9b6d6f30e8fbc9870cf5b91cb877231b"><div class="ttname"><a href="classSharedData.html#a9b6d6f30e8fbc9870cf5b91cb877231b">SharedData::is_end</a></div><div class="ttdeci">std::atomic&lt; bool &gt; is_end</div><div class="ttdef"><b>Definition:</b> <a href="SharedData_8h_source.html#l00022">SharedData.h:22</a></div></div>
+<div class="ttc" id="aclassSharedData_html"><div class="ttname"><a href="classSharedData.html">SharedData</a></div><div class="ttdoc">A class to hold shared data between computation and visualization threads.</div><div class="ttdef"><b>Definition:</b> <a href="SharedData_8h_source.html#l00018">SharedData.h:18</a></div></div>
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
 Generated by &#160;<a href="http://www.doxygen.org/index.html">

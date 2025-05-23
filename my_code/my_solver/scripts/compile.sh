@@ -1,9 +1,9 @@
 cd "$(dirname "$0")"
 cd ../build
-export CC=/usr/bin/clang
-export CXX=/usr/bin/clang++-18
-# export CC=/usr/bin/gcc
-#export CXX=/usr/bin/g++
+# export CC=/usr/bin/clang
+# export CXX=/usr/bin/clang++-18
+export CC=/usr/bin/gcc
+export CXX=/usr/bin/g++
 
 # check whether RELEASE or DEBUG
 if [ $# -eq 0 ] || [ $1 == "relwithdebinfo" ]
@@ -31,6 +31,6 @@ else
   echo "Invalid second argument, should be tests/notests"
 fi
 
-cmake .. -DENABLE_TESTS=ON -DCMAKE_BUILD_TYPE=${BUILD_TYPE}
+cmake .. -DENABLE_TESTS=${TESTS} -DCMAKE_BUILD_TYPE=${BUILD_TYPE}
 cmake --build . 
 

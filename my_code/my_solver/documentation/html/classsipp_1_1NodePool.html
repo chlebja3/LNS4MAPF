@@ -76,15 +76,21 @@ $(function() {
 </div><!--header-->
 <div class="contents">
 
+<p>Represents a pool of <a class="el" href="classSIPP.html" title="Class representing the SIPP algorithm.">SIPP</a> nodes. This class manages the allocation and deallocation of <a class="el" href="classSIPP.html" title="Class representing the SIPP algorithm.">SIPP</a> nodes. Saves a lot of time. If there are not enough nodes in the pool, it allocates more and stores them in a list, which is then merged into the pool at the end of the iteration. Once a node is allocated, it is not deallocated until the pool is destroyed.  
+ <a href="classsipp_1_1NodePool.html#details">More...</a></p>
+
 <p><code>#include &lt;<a class="el" href="SIPP_8h_source.html">SIPP.h</a>&gt;</code></p>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
 <tr class="memitem:ada873db59165d3201b4b2a48c00b586b"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classsipp_1_1NodePool.html#ada873db59165d3201b4b2a48c00b586b">NodePool</a> (int size)</td></tr>
+<tr class="memdesc:ada873db59165d3201b4b2a48c00b586b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Constructor for <a class="el" href="classsipp_1_1NodePool.html" title="Represents a pool of SIPP nodes. This class manages the allocation and deallocation of SIPP nodes....">NodePool</a>.  <a href="classsipp_1_1NodePool.html#ada873db59165d3201b4b2a48c00b586b">More...</a><br /></td></tr>
 <tr class="separator:ada873db59165d3201b4b2a48c00b586b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aca2e859e5226c81c9e5fc5e8ce5bfb22"><td class="memItemLeft" align="right" valign="top">auto&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classsipp_1_1NodePool.html#aca2e859e5226c81c9e5fc5e8ce5bfb22">add_node</a> (<a class="el" href="classsipp_1_1SIPPNode.html">SIPPNode</a> node) -&gt; <a class="el" href="classsipp_1_1SIPPNode.html">SIPPNode</a> *</td></tr>
+<tr class="memdesc:aca2e859e5226c81c9e5fc5e8ce5bfb22"><td class="mdescLeft">&#160;</td><td class="mdescRight">Add a node to the pool.  <a href="classsipp_1_1NodePool.html#aca2e859e5226c81c9e5fc5e8ce5bfb22">More...</a><br /></td></tr>
 <tr class="separator:aca2e859e5226c81c9e5fc5e8ce5bfb22"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aa9221fc315db85fcf925e768fc0cab2e"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classsipp_1_1NodePool.html#aa9221fc315db85fcf925e768fc0cab2e">merge_extra</a> ()</td></tr>
+<tr class="memdesc:aa9221fc315db85fcf925e768fc0cab2e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Merge the extra nodes into the pool. Call this after a search algorithm is completed, to carry over the extra nodes to the next run.  <a href="classsipp_1_1NodePool.html#aa9221fc315db85fcf925e768fc0cab2e">More...</a><br /></td></tr>
 <tr class="separator:aa9221fc315db85fcf925e768fc0cab2e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pri-attribs"></a>
@@ -97,8 +103,9 @@ Private Attributes</h2></td></tr>
 <tr class="separator:a37b9d26d09432a5af61dade7ca70d5b8"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
-<div class="textblock">
-<p class="definition">Definition at line <a class="el" href="SIPP_8h_source.html#l00093">93</a> of file <a class="el" href="SIPP_8h_source.html">SIPP.h</a>.</p>
+<div class="textblock"><p>Represents a pool of <a class="el" href="classSIPP.html" title="Class representing the SIPP algorithm.">SIPP</a> nodes. This class manages the allocation and deallocation of <a class="el" href="classSIPP.html" title="Class representing the SIPP algorithm.">SIPP</a> nodes. Saves a lot of time. If there are not enough nodes in the pool, it allocates more and stores them in a list, which is then merged into the pool at the end of the iteration. Once a node is allocated, it is not deallocated until the pool is destroyed. </p>
+
+<p class="definition">Definition at line <a class="el" href="SIPP_8h_source.html#l00177">177</a> of file <a class="el" href="SIPP_8h_source.html">SIPP.h</a>.</p>
 </div><h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
 <a id="ada873db59165d3201b4b2a48c00b586b"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#ada873db59165d3201b4b2a48c00b586b">&#9670;&nbsp;</a></span>NodePool()</h2>
@@ -124,6 +131,14 @@ Private Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
+<p>Constructor for <a class="el" href="classsipp_1_1NodePool.html" title="Represents a pool of SIPP nodes. This class manages the allocation and deallocation of SIPP nodes....">NodePool</a>. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">size</td><td>The initial size of the node pool. </td></tr>
+  </table>
+  </dd>
+</dl>
+
 <p class="definition">Definition at line <a class="el" href="SIPP_8cpp_source.html#l00093">93</a> of file <a class="el" href="SIPP_8cpp_source.html">SIPP.cpp</a>.</p>
 
 </div>
@@ -145,6 +160,15 @@ Private Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
+<p>Add a node to the pool. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">node</td><td>The <a class="el" href="classsipp_1_1SIPPNode.html" title="Represents a node in the SIPP algorithm.">SIPPNode</a> to add to the pool.</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>Pointer to the added <a class="el" href="classsipp_1_1SIPPNode.html" title="Represents a node in the SIPP algorithm.">SIPPNode</a>. </dd></dl>
+
 <p class="definition">Definition at line <a class="el" href="SIPP_8cpp_source.html#l00100">100</a> of file <a class="el" href="SIPP_8cpp_source.html">SIPP.cpp</a>.</p>
 
 </div>
@@ -163,6 +187,8 @@ Private Attributes</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+
+<p>Merge the extra nodes into the pool. Call this after a search algorithm is completed, to carry over the extra nodes to the next run. </p>
 
 <p class="definition">Definition at line <a class="el" href="SIPP_8cpp_source.html#l00116">116</a> of file <a class="el" href="SIPP_8cpp_source.html">SIPP.cpp</a>.</p>
 
@@ -188,8 +214,9 @@ Private Attributes</h2></td></tr>
   </tr>
 </table>
 </div><div class="memdoc">
+<p>The end index of the pool. Nodes after end are empty. </p>
 
-<p class="definition">Definition at line <a class="el" href="SIPP_8h_source.html#l00101">101</a> of file <a class="el" href="SIPP_8h_source.html">SIPP.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="SIPP_8h_source.html#l00203">203</a> of file <a class="el" href="SIPP_8h_source.html">SIPP.h</a>.</p>
 
 </div>
 </div>
@@ -212,8 +239,9 @@ Private Attributes</h2></td></tr>
   </tr>
 </table>
 </div><div class="memdoc">
+<p>The list of extra <a class="el" href="classSIPP.html" title="Class representing the SIPP algorithm.">SIPP</a> nodes. </p>
 
-<p class="definition">Definition at line <a class="el" href="SIPP_8h_source.html#l00103">103</a> of file <a class="el" href="SIPP_8h_source.html">SIPP.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="SIPP_8h_source.html#l00205">205</a> of file <a class="el" href="SIPP_8h_source.html">SIPP.h</a>.</p>
 
 </div>
 </div>
@@ -236,8 +264,9 @@ Private Attributes</h2></td></tr>
   </tr>
 </table>
 </div><div class="memdoc">
+<p>The pool of <a class="el" href="classSIPP.html" title="Class representing the SIPP algorithm.">SIPP</a> nodes. </p>
 
-<p class="definition">Definition at line <a class="el" href="SIPP_8h_source.html#l00102">102</a> of file <a class="el" href="SIPP_8h_source.html">SIPP.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="SIPP_8h_source.html#l00204">204</a> of file <a class="el" href="SIPP_8h_source.html">SIPP.h</a>.</p>
 
 </div>
 </div>

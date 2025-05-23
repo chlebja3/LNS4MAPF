@@ -72,13 +72,18 @@ $(function() {
 </div><!--header-->
 <div class="contents">
 
+<p>A class, which represents an edge constraint along with the number of agent, which causes it.  
+ <a href="classEdgeConstraintWithAgentNum.html#details">More...</a></p>
+
 <p><code>#include &lt;<a class="el" href="ConstraintTable_8h_source.html">ConstraintTable.h</a>&gt;</code></p>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
 <tr class="memitem:a8a068b6194365617eb37495bc4e8635b"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classEdgeConstraintWithAgentNum.html#a8a068b6194365617eb37495bc4e8635b">EdgeConstraintWithAgentNum</a> (int from_, int to_, int t_, int agent_num_)</td></tr>
+<tr class="memdesc:a8a068b6194365617eb37495bc4e8635b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Constructs an edge constraint with the given parameters.  <a href="classEdgeConstraintWithAgentNum.html#a8a068b6194365617eb37495bc4e8635b">More...</a><br /></td></tr>
 <tr class="separator:a8a068b6194365617eb37495bc4e8635b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:afabe5469d0c8e5b5ac0d5d532ce76b8b"><td class="memItemLeft" align="right" valign="top">auto&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classEdgeConstraintWithAgentNum.html#afabe5469d0c8e5b5ac0d5d532ce76b8b">operator==</a> (const <a class="el" href="classEdgeConstraintWithAgentNum.html">EdgeConstraintWithAgentNum</a> &amp;other) const -&gt; bool</td></tr>
+<tr class="memdesc:afabe5469d0c8e5b5ac0d5d532ce76b8b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Equality check operator for the edge constraint.  <a href="classEdgeConstraintWithAgentNum.html#afabe5469d0c8e5b5ac0d5d532ce76b8b">More...</a><br /></td></tr>
 <tr class="separator:afabe5469d0c8e5b5ac0d5d532ce76b8b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-attribs"></a>
@@ -93,8 +98,10 @@ Public Attributes</h2></td></tr>
 <tr class="separator:a8edc0d048a8cb37d887796e264e538be"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
-<div class="textblock">
-<p class="definition">Definition at line <a class="el" href="ConstraintTable_8h_source.html#l00024">24</a> of file <a class="el" href="ConstraintTable_8h_source.html">ConstraintTable.h</a>.</p>
+<div class="textblock"><p>A class, which represents an edge constraint along with the number of agent, which causes it. </p>
+<dl class="deprecated"><dt><b><a class="el" href="deprecated.html#_deprecated000001">Deprecated:</a></b></dt><dd>This class is deprecated, as it is meant for EdgeTable implemented as a vector of hash tables. </dd></dl>
+
+<p class="definition">Definition at line <a class="el" href="ConstraintTable_8h_source.html#l00032">32</a> of file <a class="el" href="ConstraintTable_8h_source.html">ConstraintTable.h</a>.</p>
 </div><h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
 <a id="a8a068b6194365617eb37495bc4e8635b"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a8a068b6194365617eb37495bc4e8635b">&#9670;&nbsp;</a></span>EdgeConstraintWithAgentNum()</h2>
@@ -142,7 +149,18 @@ Public Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="ConstraintTable_8h_source.html#l00032">32</a> of file <a class="el" href="ConstraintTable_8h_source.html">ConstraintTable.h</a>.</p>
+<p>Constructs an edge constraint with the given parameters. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">from_</td><td>The starting location of the edge. </td></tr>
+    <tr><td class="paramname">to_</td><td>The ending location of the edge. </td></tr>
+    <tr><td class="paramname">t_</td><td>The time when the agent traverses the edge. </td></tr>
+    <tr><td class="paramname">agent_num_</td><td>The number of the agent, which causes the constraint. </td></tr>
+  </table>
+  </dd>
+</dl>
+
+<p class="definition">Definition at line <a class="el" href="ConstraintTable_8h_source.html#l00048">48</a> of file <a class="el" href="ConstraintTable_8h_source.html">ConstraintTable.h</a>.</p>
 
 </div>
 </div>
@@ -163,6 +181,15 @@ Public Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
+<p>Equality check operator for the edge constraint. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">other</td><td>The other edge constraint to compare with.</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>True if the edge constraints are equal, false otherwise. </dd></dl>
+
 </div>
 </div>
 <h2 class="groupheader">Member Data Documentation</h2>
@@ -177,8 +204,9 @@ Public Attributes</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+<p>The number of the agent, which causes the constraint. </p>
 
-<p class="definition">Definition at line <a class="el" href="ConstraintTable_8h_source.html#l00030">30</a> of file <a class="el" href="ConstraintTable_8h_source.html">ConstraintTable.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="ConstraintTable_8h_source.html#l00038">38</a> of file <a class="el" href="ConstraintTable_8h_source.html">ConstraintTable.h</a>.</p>
 
 </div>
 </div>
@@ -193,8 +221,9 @@ Public Attributes</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+<p>The starting location of the edge. </p>
 
-<p class="definition">Definition at line <a class="el" href="ConstraintTable_8h_source.html#l00027">27</a> of file <a class="el" href="ConstraintTable_8h_source.html">ConstraintTable.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="ConstraintTable_8h_source.html#l00035">35</a> of file <a class="el" href="ConstraintTable_8h_source.html">ConstraintTable.h</a>.</p>
 
 </div>
 </div>
@@ -209,8 +238,9 @@ Public Attributes</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+<p>The time when the agent traverses the edge. </p>
 
-<p class="definition">Definition at line <a class="el" href="ConstraintTable_8h_source.html#l00029">29</a> of file <a class="el" href="ConstraintTable_8h_source.html">ConstraintTable.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="ConstraintTable_8h_source.html#l00037">37</a> of file <a class="el" href="ConstraintTable_8h_source.html">ConstraintTable.h</a>.</p>
 
 </div>
 </div>
@@ -225,8 +255,9 @@ Public Attributes</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+<p>The ending location of the edge. </p>
 
-<p class="definition">Definition at line <a class="el" href="ConstraintTable_8h_source.html#l00028">28</a> of file <a class="el" href="ConstraintTable_8h_source.html">ConstraintTable.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="ConstraintTable_8h_source.html#l00036">36</a> of file <a class="el" href="ConstraintTable_8h_source.html">ConstraintTable.h</a>.</p>
 
 </div>
 </div>
