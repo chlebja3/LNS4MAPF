@@ -37,6 +37,11 @@ Computation::~Computation()
   join_thread();
 }
 
+void Computation::reset()
+{
+  solver = std::make_unique<LNS>(instance, rnd_generator, shared_data, lns_settings);
+}
+
 void Computation::start()
 {
   // start the underlying thread

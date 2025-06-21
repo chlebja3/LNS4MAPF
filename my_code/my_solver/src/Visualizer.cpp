@@ -66,7 +66,12 @@ Visualizer::Visualizer(Instance& instance_, Computation& computation_thread_, Sh
     rnd_generator = std::mt19937(seed);
   }
 
+  initialize();
+  std::cout << "Visualizer initialized. " << std::endl;
+}
 
+void Visualizer::initialize()
+{
   // generate random colors for the agents
   for (int i = 0; i < (int)instance.get_start_locations().size(); i++)
   {
@@ -82,13 +87,25 @@ Visualizer::Visualizer(Instance& instance_, Computation& computation_thread_, Sh
 
   // generate the rectangles that represent the map
   create_cell_rectangles();
+}
 
-  // initialize visualization for the astar paths
-  // for (int i = 0; i < (int)instance.get_optimal_paths().size(); i++)
-  //{
-  //  update_path(i, instance.get_optimal_paths()[i]);
-  //}
-  std::cout << "Visualizer initialized. " << std::endl;
+void Visualizer::reset()
+{
+  agents_circles.clear();
+  goal_circles.clear();
+  agents_colors.clear();
+  agents_paths_vis.clear();
+  agents_paths = nullptr;
+  cell_rectangles.clear();
+  cell_rectangles_highlights.clear();
+  sipp_info = nullptr;
+  lns_info.clear();
+  selected_agent = -1;
+  is_moving      = false;
+  // reset the visualizations
+  solution_vis.complete_reset();
+  sipp_vis.complete_reset();
+  lns_vis.complete_reset();
 }
 
 Visualizer::~Visualizer()
@@ -1085,11 +1102,13 @@ void Visualizer::create_menu_bar()
     {
       if (ImGui::MenuItem("Load map"))
       {
+        // ask for file name
         std::string map_fname = open_file_dialog("Map file", "map");
         if (!map_fname.empty())
         {
           settings.map_fname = map_fname;
           add_to_log("Loaded map: " + map_fname);
+          // ask for scene name
           std::string scene_fname = open_file_dialog("Scene file", "scen");
           if (!scene_fname.empty())
           {
@@ -1106,25 +1125,6 @@ void Visualizer::create_menu_bar()
         {
           add_to_log("Failed to load a map file.");
         }
-        /*
-        if (!map_path.empty() && !scene_path.empty())
-        {
-          std::cout << "Loaded map: " << map_path << std::endl;
-          // stop computation
-          shared_data.is_end.store(true, std::memory_order_release);
-
-          // wait until computation ended
-          while (!computation_thread.running.load(std::memory_order_acquire))
-          {
-            // sleep a bit
-            std::this_thread::sleep_for(std::chrono::milliseconds(100));
-          }
-
-          // load new instance
-          instance.reset();
-
-          // reset visualization
-        }*/
       }
       if (ImGui::MenuItem("Load scene"))
       {
@@ -1301,16 +1301,48 @@ void Visualizer::number_of_agents_dialog()
       show_agent_num_dialog  = false;
       add_to_log("Number of agents changed to: " + std::to_string(settings.num_of_agents));
       ImGui::CloseCurrentPopup();
+
+      // create new instance
+      if (!settings.map_fname.empty() && !settings.scene_fname.empty())
+      {
+        // stop computation
+        computation_thread.join_thread();
+        shared_data.is_end.store(true, std::memory_order_release);
+
+        std::cout << "Waiting for computation thread end." << std::endl;
+        // wait until computation ended
+        int count = 0;
+        while (computation_thread.running.load(std::memory_order_acquire) && count < 10)
+        {
+          // sleep a bit
+          std::this_thread::sleep_for(std::chrono::milliseconds(100));
+          count++;
+        }
+
+        // load new instance
+        instance.reset();
+        std::cout << "Instance reset." << std::endl;
+        instance.initialize(settings.map_fname, settings.scene_fname, settings.num_of_agents);
+
+        // reset visualization
+        reset();
+        initialize();
+        shared_data.is_end.store(false, std::memory_order_release);
+
+        // reset the computation thread
+        computation_thread.reset();
+        computation_thread.start();
+        ImGui::CloseCurrentPopup();
+      }
+
+      ImGui::SameLine();
+
+      if (ImGui::Button("Cancel"))
+      {
+        show_agent_num_dialog = false;
+        ImGui::CloseCurrentPopup();
+      }
     }
-
-    ImGui::SameLine();
-
-    if (ImGui::Button("Cancel"))
-    {
-      show_agent_num_dialog = false;
-      ImGui::CloseCurrentPopup();
-    }
-
     ImGui::EndPopup();
   }
 }
@@ -1323,6 +1355,13 @@ void Visualizer::add_to_log(std::string message)
 
 Visualization::Visualization(std::function<void(Visualization& vis)> update_func_) : update_func(std::move(update_func_))
 {
+}
+
+void Visualization::complete_reset()
+{
+  is_playing        = false;
+  time              = 0;
+  iteration_counter = 0;
 }
 
 void Visualization::reset()

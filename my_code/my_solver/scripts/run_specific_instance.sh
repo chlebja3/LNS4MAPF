@@ -19,13 +19,22 @@ then
 ./scripts/run.sh -m ../../MAPF-benchmark/mapf-map/random-32-32-10.map -a ../../MAPF-benchmark/mapf-scen-random/scen-random/random-32-32-10-random-1.scen -k 100 $@
 elif [ $1 == "empty-8-8" ]
 then
-./scripts/run.sh -m ../../MAPF-benchmark/mapf-map/empty-8-8.map -a ../../MAPF-benchmark/mapf-scen-random/scen-random/empty-8-8-random-1.scen -k 32 -s 2119874029 -i 1 $@
+./scripts/run.sh -m ../../MAPF-benchmark/mapf-map/empty-8-8.map -a ../../MAPF-benchmark/mapf-scen-random/scen-random/empty-8-8-random-1.scen -k 32 -i 500 $@
 elif [ $1 == "Paris" ]
 then
-./scripts/run.sh -m ../../MAPF-benchmark/mapf-map/Paris_1_256.map -a ../../MAPF-benchmark/mapf-scen-random/scen-random/Paris_1_256-random-1.scen -k 1000 -i 100 $@
+./scripts/run.sh -m ../../MAPF-benchmark/mapf-map/Paris_1_256.map -a ../../MAPF-benchmark/mapf-scen-random/scen-random/Paris_1_256-random-1.scen -k 700 -i 500 $@
 elif [ $1 == "ost" ]
 then
 ./scripts/run.sh -m ../../MAPF-benchmark/mapf-map/ost003d.map -a ../../MAPF-benchmark/mapf-scen-random/scen-random/ost003d-random-7.scen -k 400 -s 692469116 -i 500 --destroy_operator BLOCKED --sipp_implementation SIPP_suboptimal $@
+elif [ $1 == "warehouse" ]
+then
+./scripts/run.sh -m ../../MAPF-benchmark/mapf-map/warehouse-10-20-10-2-1.map -a ../../MAPF-benchmark/mapf-scen-random/scen-random/warehouse-10-20-10-2-1-random-2.scen -k 400 -s 1 -i 500 --destroy_operator BLOCKED --sipp_implementation SIPP_suboptimal $@
+elif [ $1 == "room" ]
+then
+./scripts/run.sh -m ../../MAPF-benchmark/mapf-map/room-64-64-8.map -a ../../MAPF-benchmark/mapf-scen-random/scen-random/room-64-64-8-random-2.scen -k 500 -s 1 -i 150 --destroy_operator BLOCKED --sipp_implementation SIPP_suboptimal $@
+elif [ $1 == "den312d" ]
+then
+./scripts/run.sh -m ../../MAPF-benchmark/mapf-map/den312d.map -a ../../MAPF-benchmark/mapf-scen-random/scen-random/den312d-random-1.scen -k 250 -s 0 -i 500 --destroy_operator BLOCKED --sipp_implementation SIPP_suboptimal $@
 else 
   echo "Unknown instance"
 fi

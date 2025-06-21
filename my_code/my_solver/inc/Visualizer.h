@@ -21,6 +21,11 @@
 #include "SharedData.h"
 
 /**
+ * @brief The speed of the visualizations when played.
+ */
+#define VISUALIZATION_SPEED 80
+
+/**
  * @brief Enum class representing the type of highlight of cells to be used in the visualization.
  */
 enum class Highlight
@@ -40,8 +45,8 @@ public:
   int                                     max_time          = 100;   /**< Maximum time step of the visualization. */
   bool                                    is_playing        = false; /**< Flag indicating whether the visualization is currently playing. */
   int                                     iteration_counter = 0;     /**< Counter for the number of iterations. */
-  float                                   speed             = 2.0;   /**< Speed of the visualization. */
-  std::function<void(Visualization& vis)> update_func;               /**< Function to update the visualization. */
+  float                                   speed             = VISUALIZATION_SPEED; /**< Speed of the visualization. */
+  std::function<void(Visualization& vis)> update_func;                             /**< Function to update the visualization. */
 
   /**
    * @brief Constructs a Visualization object.
@@ -59,6 +64,8 @@ public:
    * @brief Resets the visualization.
    */
   void reset();
+
+  void complete_reset();
 
   /**
    * @brief Pauses the visualization.
@@ -132,6 +139,9 @@ public:
    * @defgroup thread_management Management of threads.
    * @{
    */
+
+  void initialize();
+  void reset();
 
   /**
    * @brief Starts the visualization thread.

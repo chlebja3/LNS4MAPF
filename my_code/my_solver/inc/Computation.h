@@ -45,6 +45,8 @@ public:
    */
   void start();
 
+  void reset();
+
   /**
    * @brief Stops the computation thread.
    */
