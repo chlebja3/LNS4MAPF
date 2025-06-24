@@ -11,7 +11,7 @@
 #include <set>
 #include <utility>
 
-#include "ConstraintTable.h"
+#include "ConstraintManager.h"
 #include "SIPP.h"
 #include "SharedData.h"
 #include "Solver.h"
@@ -185,7 +185,7 @@ public:
    */
   [[nodiscard]] auto get_num_of_generated_nodes() const -> int
   {
-    return planner->generated_all_iter;
+    return planner->get_generated_all_iter();
   }
 
   /**
@@ -195,8 +195,10 @@ public:
    */
   [[nodiscard]] auto get_num_of_expanded_nodes() const -> int
   {
-    return planner->expanded_all_iter;
+    return planner->get_expanded_all_iter();
   }
+
+  void load_initial_solution(Solution& sol);
 
   /**
    * @brief Discards the solution if it is not better than the previous one. Restores the SafeIntervalTable and ConstraintTable to its
@@ -206,13 +208,6 @@ public:
    * @param prev_sol The previous solution.
    */
   void discard_solution(const Solution& sol, const Solution& prev_sol) const;
-
-  /**
-   * @brief Builds the constraint table for the given paths.
-   *
-   * @param paths The paths to be used for initializing the constraint table.
-   */
-  void initialize_constraint_table(const std::vector<TimePointPath>& paths);
 
   Operator                        destroy_operator;               /**< Operator for the destroy phase. */
   mutable std::unordered_set<int> already_planned;                /**< Set of already planned agents. */
@@ -293,16 +288,15 @@ private:
    */
   void repair_default(Solution& sol) const;
 
-  SharedData*                 shared_data;                          /**< Pointer to shared data. */
-  int                         iteration_num = 0;                    /**< Current iteration number. */
-  double                      initial_solution_time;                /**< Time taken to find the initial solution. */
-  double                      curr_time;                            /**< Current time. */
-  Operator                    repair_operator;                      /**< The repair operator. */
-  mutable ConstraintTable     constraint_table;                     /**< Constraint table used, which stores the dynamic constraints. */
-  mutable bool                constraint_table_initialized = false; /**< Flag indicating if the constraint table is initialized. */
-  mutable std::vector<double> destroy_weights;                      /**< Vector of weights for the adaptive destroy operator. */
-  double                      reaction_factor = 0.01;               /**< Reaction factor for the adaptive destroy operator. */
-  double                      decay_factor    = 0.01;               /**< Decay factor for the adaptive destroy operator. */
-  mutable DESTROY_TYPE        last_destroy_strategy;                /**< Last used destroy strategy. */
-  float                       threshold_blocked = 1.0;              /**< Threshold for the blocked destroy operator. */
+  SharedData*                 shared_data;           /**< Pointer to shared data. */
+  int                         iteration_num = 0;     /**< Current iteration number. */
+  double                      initial_solution_time; /**< Time taken to find the initial solution. */
+  double                      curr_time;             /**< Current time. */
+  Operator                    repair_operator;       /**< The repair operator. */
+  mutable ConstraintManager   constraint_manager;
+  mutable std::vector<double> destroy_weights;         /**< Vector of weights for the adaptive destroy operator. */
+  double                      reaction_factor = 0.01;  /**< Reaction factor for the adaptive destroy operator. */
+  double                      decay_factor    = 0.01;  /**< Decay factor for the adaptive destroy operator. */
+  mutable DESTROY_TYPE        last_destroy_strategy;   /**< Last used destroy strategy. */
+  float                       threshold_blocked = 1.0; /**< Threshold for the blocked destroy operator. */
 };

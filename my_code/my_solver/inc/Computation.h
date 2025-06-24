@@ -86,7 +86,7 @@ private:
 
   const Instance& instance;      /**< The instance to be solved. */
   SharedData*     shared_data;   /**< Pointer to the shared data object. */
+  LNS_settings    lns_settings;  /**< The settings for the LNS solver. */
   int             seed;          /**< The seed for the random number generator. */
   std::mt19937    rnd_generator; /**< Random number generator. */
-  LNS_settings    lns_settings;  /**< The settings for the LNS solver. */
 };

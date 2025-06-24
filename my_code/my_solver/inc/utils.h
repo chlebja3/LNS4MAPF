@@ -15,6 +15,7 @@
 #include <chrono>
 #include <climits>
 #include <cstdint>
+#include <list>
 #include <vector>
 
 /**
@@ -26,6 +27,8 @@
  * @note  Uses (void) to silence unused warnings.
  */
 #define assertm(exp, msg) assert((void(msg), exp))
+
+#define NO_AGENT -1
 
 // time measuring
 /**
@@ -70,6 +73,12 @@ enum class INFO_type
   no_info,
   visualisation,
   experiment
+};
+
+enum class TIME_INTERVAL_NODE_type
+{
+  safe_interval,
+  constraint
 };
 
 /**
@@ -314,6 +323,26 @@ public:
   friend auto operator<<(std::ostream& os, TimeInterval const& i) -> std::ostream&;
 };
 
+struct TimeIntervalNode;
+using TimeIntervalNode_it = std::optional<std::list<TimeIntervalNode>::iterator>;
+
+
+struct TimeIntervalNode
+{
+public:
+  TimeIntervalNode(const TimeInterval& interval_, int agent_num_, TIME_INTERVAL_NODE_type type_, TimeIntervalNode_it prev = std::nullopt,
+                   TimeIntervalNode_it next = std::nullopt)
+      : interval(interval_), agent_num(agent_num_), type(type_), prev_interval(prev), next_interval(next)
+  {
+  }
+  TimeInterval            interval;
+  int                     agent_num;
+  TIME_INTERVAL_NODE_type type;
+  TimeIntervalNode_it     prev_interval;
+  TimeIntervalNode_it     next_interval;
+};
+
+
 /**
  * @brief Check if two time intervals overlap.
  *
@@ -483,3 +512,4 @@ auto location_at_time(TimePointPath& path, int time) -> int;
  * @return The selected file path as a string.
  */
 auto open_file_dialog(const std::string& type, const std::string& file_extensions) -> std::string;
+

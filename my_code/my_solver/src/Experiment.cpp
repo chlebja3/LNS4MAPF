@@ -189,8 +189,6 @@ void Experiment::run()
           {
             throw std::runtime_error("Loaded infeasile initial solution.");
           }
-          // calculate cost
-          init_sol.calculate_cost(instance);
         }
 
         // iterate over all implementations
@@ -218,18 +216,7 @@ void Experiment::run()
           // use the loaded initial solution
           if (load_init_sol)
           {
-            solver.solution               = init_sol;
-            solver.found_initial_solution = true;
-
-            // build the safe interval table
-            solver.planner->safe_interval_table.build_sequential(init_sol.paths);
-
-            // add to the log
-            solver.log.bsf_solution_cost.push_back(init_sol.sum_of_costs);
-            solver.log.bsf_makespan.push_back(init_sol.makespan);
-            solver.log.used_operator.push_back(DESTROY_TYPE::ADAPTIVE);
-            solver.log.iteration_time_wall.push_back(0);
-            solver.log.iteration_time_cpu.push_back(0);
+            solver.load_initial_solution(init_sol);
           }
 
           // run the experiment function and measure its execution time

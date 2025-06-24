@@ -7,24 +7,46 @@
 
 #include "ConstraintTable.h"
 
-#include <boost/functional/hash.hpp>
 #include <climits>
 #include <iostream>
 
-constexpr int NUM_DIRECTIONS = magic_enum::enum_count<Direction>() - 1;  // dont consider NONE direction
-                                                                         //
-ConstraintTable::ConstraintTable(const Instance& instance_)
-    : edge_constraint_table(instance_),
-      instance(instance_)
-#ifdef CT_PARALLELIZATION
-      ,
-      locks(instance_.get_num_free_cells())
-#endif
+
+//
+ConstraintTable::ConstraintTable(const Instance& instance_) : instance(instance_)
 {
   // initialize the constraint vectors, static obstacles dont need constraint vectors
   const int num_free_cells = instance.get_num_free_cells();
-  constraints   = std::vector<std::list<std::pair<TimeInterval, int>>>(num_free_cells, std::list<std::pair<TimeInterval, int>>());
-  agents_counts = std::vector<std::unordered_map<int, int>>(num_free_cells, std::unordered_map<int, int>());
+  constraints              = std::vector<std::list<TimeIntervalNode>>(num_free_cells, std::list<TimeIntervalNode>());
+  agents_counts            = std::vector<std::unordered_map<int, int>>(num_free_cells, std::unordered_map<int, int>());
+}
+
+template <typename ListIterator>
+auto find_previous_timeintervalnode(ListIterator begin, ListIterator current, const TimeInterval& target) -> TimeIntervalNode_it
+{
+  if (current != begin)
+  {
+    auto prev = std::prev(current);
+    if (prev->interval.t_max + 1 == target.t_min)
+    {
+      return TimeIntervalNode_it(prev);
+    }
+  }
+  return std::nullopt;
+}
+
+template <typename ListIterator>
+auto find_next_timeintervalnode(ListIterator end, ListIterator current, const TimeInterval& target) -> TimeIntervalNode_it
+{
+  if (current != std::prev(end))
+  {
+    auto next = std::next(current);
+    assertm(target.t_max < INT_MAX, "There should not be a constraint after a constraint ending in infinity.");
+    if (target.t_max + 1 == next->interval.t_min)
+    {
+      return TimeIntervalNode_it(next);
+    }
+  }
+  return std::nullopt;
 }
 
 void ConstraintTable::add_constraint(const TimePoint& timepoint, int agent_num)
@@ -32,23 +54,23 @@ void ConstraintTable::add_constraint(const TimePoint& timepoint, int agent_num)
   // check the location is valid
   assertm(instance.get_map_data().is_in(timepoint.location), "Invalid location.");
   assertm(agent_num >= 0 && agent_num < instance.get_num_of_agents(), "Invalid agent number.");
-  int                                      free_location = instance.location_to_free_location(timepoint.location);
-  std::list<std::pair<TimeInterval, int>>& cur_TI_list   = constraints[free_location];
+  int                          free_location = instance.location_to_free_location(timepoint.location);
+  std::list<TimeIntervalNode>& cur_TI_list   = constraints[free_location];
 
   bool inserted = false;
   // find where to insert the interval
-  for (auto it = cur_TI_list.cbegin(); it != cur_TI_list.cend(); it++)
+  for (auto it = cur_TI_list.begin(); it != cur_TI_list.end(); it++)
   {
     // check that the intervals do not have any overlap
 
-    assertm(!overlap((*it).first, timepoint.interval), "Cannot add overlapping constraints.");
+    assertm(!overlap(it->interval, timepoint.interval), "Cannot add overlapping constraints.");
 
     // insert before the first interval that starts later
-    if (it->first.t_min > timepoint.interval.t_min)
+    if (it->interval.t_min > timepoint.interval.t_min)
     {
-      // check that there is no overlap
-      // assertm(timepoint.interval.t_max < it->t_min, "Cannot add overlapping constraints.");
-      cur_TI_list.insert(it, {timepoint.interval, agent_num});
+      TimeIntervalNode_it prev_ptr = find_previous_timeintervalnode(cur_TI_list.begin(), it, timepoint.interval);
+      TimeIntervalNode_it next_ptr = find_next_timeintervalnode(cur_TI_list.begin(), it, timepoint.interval);
+      cur_TI_list.insert(it, {timepoint.interval, agent_num, TIME_INTERVAL_NODE_type::constraint, prev_ptr, next_ptr});
       inserted = true;
       break;
     }
@@ -57,7 +79,12 @@ void ConstraintTable::add_constraint(const TimePoint& timepoint, int agent_num)
   // if no interval starts later, insert to the back of the list
   if (!inserted)
   {
-    cur_TI_list.emplace_back(timepoint.interval, agent_num);
+    TimeIntervalNode_it prev_ptr = std::nullopt;
+    if (!cur_TI_list.empty())
+    {
+      prev_ptr = std::prev(cur_TI_list.end());
+    }
+    cur_TI_list.emplace_back(timepoint.interval, agent_num, TIME_INTERVAL_NODE_type::constraint, prev_ptr, std::nullopt);
   }
 
   // add to the set of visiting agents
@@ -73,14 +100,13 @@ void ConstraintTable::add_constraint(const TimePoint& timepoint, int agent_num)
   }
 }
 
-void ConstraintTable::remove_constraint(const TimePoint& timepoint, int agent_num)
+auto ConstraintTable::remove_constraint(const TimePoint& timepoint, int agent_num) -> std::pair<TimeIntervalNode_it, TimeIntervalNode_it>
 {
   // check the location is valid
   assertm(instance.get_map_data().is_in(timepoint.location), "Invalid location.");
   int free_location = instance.location_to_free_location(timepoint.location);
 
-
-  std::list<std::pair<TimeInterval, int>>& cur_TI_list = constraints[free_location];
+  std::list<TimeIntervalNode>& cur_TI_list = constraints[free_location];
 
   // check that the list is not empty
   assertm(!cur_TI_list.empty(), "Trying to remove interval from an empty list.");
@@ -95,129 +121,47 @@ void ConstraintTable::remove_constraint(const TimePoint& timepoint, int agent_nu
   }
 
   // remove the interval from the list
-  for (auto it = cur_TI_list.cbegin(); it != cur_TI_list.cend(); it++)
+  for (auto it = cur_TI_list.begin(); it != cur_TI_list.end(); it++)
   {
-    if ((*it).first == timepoint.interval)
+    if (it->interval == timepoint.interval)
     {
+      // the interval pointers will be rewired by the caller (safe interval table)
+      TimeIntervalNode_it prev = it->prev_interval;
+      TimeIntervalNode_it next = it->next_interval;
       cur_TI_list.erase(it);
-      return;
+      return {prev, next};
     }
   }
   // if the interval was not found, throw an error
   throw std::runtime_error("Trying to remove non-existing interval from the constraint table.");
 }
 
-
-void ConstraintTable::add_constraints(const TimePointPath& path, int agent_num)
-{
-  for (int i = 0; i < (int)path.size(); i++)
-  {
-    // add the point constraint
-    // std::cout << "Adding: " << path[i].location << ", " << path[i].interval << std::endl;
-    add_constraint(path[i], agent_num);
-
-    // add the edge constraint
-    if (i > 0)  // skip the first point as there is no edge
-    {
-      // the time when the edge is used is the start time of the later interval
-      edge_constraint_table.add(path[i - 1].location, path[i].location, path[i].interval.t_min, agent_num);
-    }
-  }
-}
-
-
-#ifdef CT_PARALLELIZATION
-void ConstraintTable::add_constraints_parallel(const TimePointPath& path, int agent_num)
-{
-#pragma omp parallel for
-  for (int i = 0; i < (int)path.size(); i++)
-  {
-    // lock the location
-    omp_set_lock(&locks.locks[instance.location_to_free_location(path[i].location)]);
-
-    // add the point constraint
-    add_constraint(path[i], agent_num);
-
-    // add the edge constraint
-    if (i > 0)  // skip the first point as there is no edge
-    {
-      // the time when the edge is used is the start time of the later interval
-      edge_constraint_table.add(path[i - 1].location, path[i].location, path[i].interval.t_min, agent_num);
-    }
-    // release the lock
-    omp_unset_lock(&locks.locks[instance.location_to_free_location(path[i].location)]);
-  }
-}
-#endif
-
-void ConstraintTable::remove_constraints(const TimePointPath& path, int agent_num)
-{
-  for (int i = 0; i < (int)path.size(); i++)
-  {
-    // remove the point constraint
-    // std::cout << "Removing: " << path[i].location << ", " << path[i].interval << std::endl;
-    remove_constraint(path[i], agent_num);
-
-    // remove the edge constraint
-    if (i > 0)  // skip the first point as there is no edge
-    {
-      edge_constraint_table.remove(path[i - 1].location, path[i].location, path[i].interval.t_min);
-    }
-  }
-}
-
-#ifdef CT_PARALLELIZATION
-void ConstraintTable::remove_constraints_parallel(const TimePointPath& path, int agent_num)
-{
-#pragma omp parallel for
-  for (int i = 0; i < (int)path.size(); i++)
-  {
-    // lock the location
-    omp_set_lock(&locks.locks[instance.location_to_free_location(path[i].location)]);
-
-    // remove the point constraint
-    remove_constraint(path[i], agent_num);
-
-    // remove the edge constraint
-    if (i > 0)  // skip the first point as there is no edge
-    {
-      edge_constraint_table.remove(path[i - 1].location, path[i].location, path[i].interval.t_min);
-    }
-
-    // unlock the location
-    omp_unset_lock(&locks.locks[instance.location_to_free_location(path[i].location)]);
-  }
-}
-#endif
-
-auto ConstraintTable::get_blocking_agent(int from, int to, int time) const -> std::pair<int, int>
+auto ConstraintTable::get_blocking_agent(int loc, int time) const -> int
 {
   // check the location is valid
-  assertm(instance.get_map_data().is_in(from) && instance.get_map_data().is_in(to), "Invalid location.");
+  assertm(instance.get_map_data().is_in(loc), "Invalid location.");
 
   // check the time is valid
   assertm(time >= 0, "Invalid time.");
 
-  int to_free = instance.location_to_free_location(to);
-
-  const std::list<std::pair<TimeInterval, int>>& cur_TI_list = constraints[to_free];
+  // retrieve the constraint list
+  int                                loc_free    = instance.location_to_free_location(loc);
+  const std::list<TimeIntervalNode>& cur_TI_list = constraints[loc_free];
 
   // if there are no constraints, return -1 (no agent blocking the square)
   if (cur_TI_list.empty())
   {
-    return std::make_pair(-1, -1);
+    return -1;
   };
 
   // find the constraint
-  int vertex_constraint = -1;
   for (const auto& it : cur_TI_list)
   {
-    const TimeInterval& constraint_tp = it.first;
-    if (constraint_tp.t_min <= time && constraint_tp.t_max >= time)
+    const TimeInterval& constraint_tp = it.interval;
+    if (constraint_tp.t_min <= time && time <= constraint_tp.t_max)
     {
       // return the agent that created the constraint
-      vertex_constraint = it.second;
-      break;
+      return it.agent_num;
     }
     // skip constraints that are too late
     if (constraint_tp.t_min > time)
@@ -226,14 +170,7 @@ auto ConstraintTable::get_blocking_agent(int from, int to, int time) const -> st
     }
   }
 
-  // find edge constraint
-  int edge_constraint = -1;
-  if (from != to)
-  {
-    // we want to look for opposite edge, because there can not be any edge ending in to location without location constraint
-    edge_constraint = edge_constraint_table.get(to, from, time);
-  }
-  return std::make_pair(vertex_constraint, edge_constraint);
+  return -1;
 }
 
 auto ConstraintTable::get_blocking_agents(int location, int time_min) const -> std::vector<int>
@@ -244,16 +181,15 @@ auto ConstraintTable::get_blocking_agents(int location, int time_min) const -> s
   // check the time is valid
   assertm(time_min >= 0, "Invalid time.");
 
-  int to_free = instance.location_to_free_location(location);
+  // retrieve the constraint list
+  int                                to_free     = instance.location_to_free_location(location);
+  const std::list<TimeIntervalNode>& cur_TI_list = constraints[to_free];
 
-  const std::list<std::pair<TimeInterval, int>>& cur_TI_list = constraints[to_free];
-
-  // if there are no constraints, return -1 (no agent blocking the square)
   assertm(!cur_TI_list.empty(), "Trying to get blocking agents from an empty list.");
+  assertm(cur_TI_list.back().interval.t_max == INT_MAX, "Last interval should be infinite.");
 
   std::unordered_set<int> blocking_agents     = {};
   std::vector<int>        blocking_agents_vec = {};
-  assertm(cur_TI_list.back().first.t_max == INT_MAX, "Last interval should be infinite.");
 
   // check how many intervals are present
   if (cur_TI_list.size() < 2)
@@ -265,162 +201,111 @@ auto ConstraintTable::get_blocking_agents(int location, int time_min) const -> s
   for (auto it = std::next(cur_TI_list.rbegin()); it != cur_TI_list.rend(); it++)
   {
     // std::cout << "Interval: " << it->first << ", agent: " << it->second << std::endl;
-    if (it->first.t_max < time_min)
+    if (it->interval.t_max < time_min)
     {
       // there can not be any more blocking agents
       break;
     }
 
     // check whether the agent was not already added
-    const int agent_num = it->second;
-    if (blocking_agents.find(agent_num) == blocking_agents.end())
+    if (blocking_agents.find(it->agent_num) == blocking_agents.end())
     {
       // add the agent to the set
-      blocking_agents.insert(agent_num);
-      blocking_agents_vec.push_back(agent_num);
+      blocking_agents.insert(it->agent_num);
+      blocking_agents_vec.push_back(it->agent_num);
     }
   }
   return blocking_agents_vec;
 }
 
-
-void ConstraintTable::build_sequential(const std::vector<TimePointPath>& paths)
+auto ConstraintTable::insert_constraint(const TimePoint& timepoint, int agent_num, TimeIntervalNode_it prev, TimeIntervalNode_it next)
+    -> TimeIntervalNode_it
 {
-  assertm(static_cast<int>(paths.size()) > 0, "No paths to add.");
-  for (int i = 0; i < static_cast<int>(paths.size()); i++)
+  // check the location is valid
+  assertm(instance.get_map_data().is_in(timepoint.location), "Invalid location.");
+  assertm(agent_num >= 0 && agent_num < instance.get_num_of_agents(), "Invalid agent number.");
+  int                          free_location = instance.location_to_free_location(timepoint.location);
+  std::list<TimeIntervalNode>& cur_TI_list   = constraints[free_location];
+
+  // try to insert after prev
+  if (prev.has_value())
   {
-    add_constraints(paths[i], i);
+    assertm(prev.value()->type == TIME_INTERVAL_NODE_type::constraint, "Previous time interval node must be a constraint.");
+    assertm(prev.value()->interval.t_max + 1 == timepoint.interval.t_min,
+            "Previous constraint must end just before the new constraint starts.");
+    return cur_TI_list.insert(std::next(prev.value()),
+                              TimeIntervalNode(timepoint.interval, agent_num, TIME_INTERVAL_NODE_type::constraint, prev, next));
   }
+  // try to insert before next
+  if (next.has_value())
+  {
+    assertm(next.value()->type == TIME_INTERVAL_NODE_type::constraint, "Next time interval node must be a constraint.");
+    assertm(timepoint.interval.t_max + 1 == next.value()->interval.t_min, "Next constraint must start just after the new constraint ends.");
+    return cur_TI_list.insert(next.value(),
+                              TimeIntervalNode(timepoint.interval, agent_num, TIME_INTERVAL_NODE_type::constraint, prev, next));
+  }
+
+  // the current time interval list is empty
+  assertm(timepoint.interval.t_min == 0 && timepoint.interval.t_max == INT_MAX,
+          "If there is no prev and no next, the interval must be infinite, because there can not be any safe intervals.");
+  assertm(cur_TI_list.empty(), "If prev and next are empty, cur TI list must be also.");
+  return cur_TI_list.insert(cur_TI_list.end(),
+                            TimeIntervalNode(timepoint.interval, agent_num, TIME_INTERVAL_NODE_type::constraint, prev, next));
 }
 
-#ifdef CT_PARALLELIZATION
-void ConstraintTable::build_parallel(const std::vector<TimePointPath>& paths)
+
+void ConstraintTable::delete_constraint(int location, TimeIntervalNode_it node)
 {
-#pragma omp parallel for
-  for (int agent_num = 0; agent_num < static_cast<int>(paths.size()); agent_num++)
+  assertm(node.has_value(), "Can not delete a node without a value.");
+  assertm(node.value()->type == TIME_INTERVAL_NODE_type::constraint, "Deleting constraint, but type is safe interval.");
+  assertm(instance.get_map_data().is_in(location), "Invalid location.");
+
+  int                          free_location = instance.location_to_free_location(location);
+  std::list<TimeIntervalNode>& cur_TI_list   = constraints[free_location];
+  // rewire
+  if (node.value()->prev_interval.has_value())
   {
-    const TimePointPath& path = paths[agent_num];
-    for (int i = 0; i < (int)path.size(); i++)
+    node.value()->prev_interval.value()->next_interval = node.value()->next_interval;
+  }
+  if (node.value()->next_interval.has_value())
+  {
+    node.value()->next_interval.value()->prev_interval = node.value()->prev_interval;
+  }
+  cur_TI_list.erase(node.value());
+}
+
+auto ConstraintTable::remove_constraint_after(const TimePoint& timepoint, int agent_num, TimeIntervalNode_it start)
+    -> std::pair<TimeIntervalNode_it, TimeIntervalNode_it>
+{
+  assertm(start.has_value(), "Start node must have a value.");
+  assertm(start.value()->type == TIME_INTERVAL_NODE_type::constraint, "Start node type must be constraint.");
+  assertm(instance.get_map_data().is_in(timepoint.location), "Invalid location.");
+  int                          free_location = instance.location_to_free_location(timepoint.location);
+  std::list<TimeIntervalNode>& cur_TI_list   = constraints[free_location];
+
+  // go through the list until the constraint is found
+  for (auto it = start.value(); it != cur_TI_list.end(); std::next(it))
+  {
+    if (it->interval == timepoint.interval)
     {
-      // add the point constraint
-      omp_set_lock(&locks.locks[instance.location_to_free_location(path[i].location)]);
-      add_constraint(path[i], agent_num);
-      // add the edge constraint
-      if (i > 0)  // skip the first point as there is no edge
+      assertm(agent_num == it->agent_num, "The agent num must be the same.");
+      TimeIntervalNode_it prev = it->prev_interval;
+      TimeIntervalNode_it next = it->next_interval;
+      // rewire
+      if (prev.has_value())
       {
-        // the time when the edge is used is the start time of the later interval
-        edge_constraint_table.add(path[i - 1].location, path[i].location, path[i].interval.t_min, agent_num);
+        prev.value()->next_interval = next;
       }
-      omp_unset_lock(&locks.locks[instance.location_to_free_location(path[i].location)]);
-    }
-  }
-}
-#endif
-
-#ifdef CT_PARALLELIZATION
-void ConstraintTable::build_parallel_2(const std::vector<TimePointPath>& paths)
-{
-  // calculate how many constraints to add
-  int total_work = 0;
-  for (const auto& path : paths)
-  {
-    total_work += static_cast<int>(path.size());
-  }
-  assertm(total_work > 0, "No constraints to add.");
-
-  std::vector<const TimePoint*> timepoints(total_work);
-  std::vector<int>              agent_nums(total_work);
-  std::vector<int>              prev_location(total_work, -1);
-  int                           idx = 0;
-  for (int i = 0; i < static_cast<int>(paths.size()); i++)
-  {
-    const auto& path = paths[i];
-    for (int j = 0; j < (int)path.size(); j++)
-    {
-      timepoints[idx] = &path[j];
-      agent_nums[idx] = i;
-      if (j > 0)
+      if (next.has_value())
       {
-        prev_location[idx] = path[j - 1].location;
+        next.value()->prev_interval = prev;
       }
-      idx++;
+
+      // remove it from the list
+      cur_TI_list.erase(it);
+      return std::make_pair(prev, next);
     }
+    assertm(it->interval.t_max < timepoint.interval.t_min, "The constraint is not present in the list.");
   }
-
-#pragma omp parallel for
-  for (int i = 0; i < total_work; i++)
-  {
-    // add the point constraint
-    omp_set_lock(&locks.locks[instance.location_to_free_location(timepoints[i]->location)]);
-    add_constraint(*timepoints[i], agent_nums[i]);
-    // add the edge constraint
-    if (prev_location[i] != -1)  // skip the first point as there is no edge
-    {
-      // the time when the edge is used is the start time of the later interval
-      edge_constraint_table.add(prev_location[i], timepoints[i]->location, timepoints[i]->interval.t_min, agent_nums[i]);
-    }
-    omp_unset_lock(&locks.locks[instance.location_to_free_location(timepoints[i]->location)]);
-  }
+  throw std::runtime_error("Could not find the constraint in the constraint list.");
 }
-#endif
-
-EdgeConstraintTableWithAgentNums::EdgeConstraintTableWithAgentNums(const Instance& instance_) : instance(instance_)
-{
-  // initialize the edge constraints
-  edge_constraints.resize(NUM_DIRECTIONS);
-  for (int i = 0; i < NUM_DIRECTIONS; i++)
-  {
-    edge_constraints[i].resize(instance.get_num_free_cells());
-  }
-}
-
-void EdgeConstraintTableWithAgentNums::add(int loc1, int loc2, int time, int agent_num)
-{
-  assertm(loc1 != loc2, "Invalid edge constraint.");
-  const int dir = static_cast<int>(find_direction(loc1, loc2)) - 1;
-  assertm(dir >= 0 && dir <= NUM_DIRECTIONS, "Invalid direction.");
-  // assertm(edge_constraints[dir][loc2].find(time) == edge_constraints[dir][loc2].end(), "Edge constraint already exists.");
-  int loc2_free = instance.location_to_free_location(loc2);
-  assertm(std::find_if(edge_constraints[dir][loc2_free].begin(), edge_constraints[dir][loc2_free].end(),
-                       [time](const std::pair<int, int>& p) { return p.first == time; }) == edge_constraints[dir][loc2_free].end(),
-          "Edge constraint already exists.");
-  // edge_constraints[dir][loc2].insert(time);     // unordered set implementation
-  edge_constraints[dir][loc2_free].push_back({time, agent_num});  // vector implementation
-}
-
-void EdgeConstraintTableWithAgentNums::remove(int loc1, int loc2, int time)
-{
-  const int dir = static_cast<int>(find_direction(loc1, loc2)) - 1;
-  assertm(dir >= 0 && dir <= NUM_DIRECTIONS, "Invalid direction.");
-  int loc2_free = instance.location_to_free_location(loc2);
-// int erased = edge_constraints[dir][loc2].erase(time);
-// assertm(erased == 1, "Trying to erase an edge constraint that is not present.");
-#ifndef NDEBUG
-  int constraints_before = edge_constraints[dir][loc2_free].size();
-  // std::cout << "Constraints before: " << constraints_before << std::endl;
-#endif
-  edge_constraints[dir][loc2_free].erase(std::remove_if(edge_constraints[dir][loc2_free].begin(), edge_constraints[dir][loc2_free].end(),
-                                                        [time](const std::pair<int, int>& p) { return p.first == time; }),
-                                         edge_constraints[dir][loc2_free].end());
-  // std::cout << "Constraints after: " << edge_constraints[dir][loc2].size() << std::endl;
-  assertm(constraints_before - edge_constraints[dir][loc2_free].size() == 1, "Should erase exactly one edge constraint.");
-}
-
-
-auto EdgeConstraintTableWithAgentNums::get(int loc1, int loc2, int time) const -> int
-{
-  const int dir = static_cast<int>(find_direction(loc1, loc2)) - 1;  // dont consider NONE direction
-  assertm(dir >= 0 && dir < NUM_DIRECTIONS, "Invalid direction.");
-
-  int loc2_free = instance.location_to_free_location(loc2);
-  // return edge_constraints[dir][loc2].find(time) != edge_constraints[dir][loc2].end(); // unordered set implementation
-  auto it = std::find_if(edge_constraints[dir][loc2_free].begin(), edge_constraints[dir][loc2_free].end(),
-                         [time](const std::pair<int, int>& p) { return p.first == time; });
-  // check whether found
-  if (it == edge_constraints[dir][loc2_free].end())
-  {
-    return -1;
-  }
-  return it->second;
-}
-

@@ -18,8 +18,8 @@
 // #include <unordered_set>
 // #include <boost/heap/fibonacci_heap.hpp>
 
+#include "ConstraintManager.h"
 #include "IterInfo.h"
-#include "SafeIntervalTable.h"
 
 /**
  * @brief Represents settings for the SIPP algorithm.
@@ -242,27 +242,8 @@ auto extract_path(SIPPNode const* final_node) -> TimePointPath;
 class SIPP
 {
 public:
-  SafeIntervalTable safe_interval_table;     /**< The safe interval table. */
-  int               generated_all_iter  = 0; /**< The number of nodes generated in all iterations. */
-  int               generated_this_iter = 0; /**< The number of nodes generated in the current iteration. */
-  int               expanded_all_iter   = 0; /**< The number of nodes expanded in all iterations. */
-  int               expanded_this_iter  = 0; /**< The number of nodes expanded in the current iteration. */
-  int               iteration_num       = 0; /**< The current iteration number. */
-  SIPPInfo          iter_info;               /**< The iteration information. */
-
-  /**
-   * @brief Constructor for SIPP.
-   *
-   * @param instance_ The instance of the problem.
-   * @param rnd_generator_ The random number generator.
-   * @param settings_ The settings for the SIPP algorithm.
-   */
-  SIPP(const Instance& instance_, std::mt19937& rnd_generator_, const SIPP_settings& settings_);
-
-  /**
-   * @brief   Destructor for SIPP.
-   */
-  ~SIPP() = default;
+  SIPP(const Instance& instance_, std::mt19937& rnd_generator_, const SIPP_settings& settings_,
+       const ConstraintManager& constraint_manager_);
 
   /**
    * @brief Plans a path for the given agent number.
@@ -314,12 +295,21 @@ public:
    */
   auto plan_suboptimal(int agent_num, const std::unordered_set<int>& already_planned, double w = 1.0, bool ap = false) -> TimePointPath;
 
-  /**
-   * @brief Reset the SIPP algorithm.
-   */
-  void reset()
+  [[nodiscard]] auto get_generated_all_iter() const -> int
   {
-    safe_interval_table.reset();
+    return generated_all_iter;
+  }
+
+  [[nodiscard]] auto get_expanded_all_iter() const -> int
+  {
+    return expanded_all_iter;
+  }
+
+  [[nodiscard]] auto get_iter_info() -> SIPPInfo
+  {
+    SIPPInfo info = std::move(iter_info);
+    iter_info.clear();
+    return info;
   }
 
 private:
@@ -336,13 +326,17 @@ private:
    */
   void update_iter_info(const sipp::SIPPNode& expanded, bool last_iter);
 
-  const Instance&      instance;      /**< The instance of the problem. */
-  sipp::NodePool       node_pool;     /**< The pool of SIPP nodes. */
-  std::vector<int>     known_max;     /**< The known maximum time for each node. */
-  std::vector<int>     known_min;     /**< The known minimum time for each node. */
-  std::mt19937&        rnd_generator; /**< The random number generator. */
-  const SIPP_settings& settings;      /**< The settings for the SIPP algorithm. */
-
-  // for destroy operator that takes into account which agents block other agents
-  // std::vector<int> blocked_counts;
+  const Instance&          instance;      /**< The instance of the problem. */
+  sipp::NodePool           node_pool;     /**< The pool of SIPP nodes. */
+  std::vector<int>         known_max;     /**< The known maximum time for each node. */
+  std::vector<int>         known_min;     /**< The known minimum time for each node. */
+  std::mt19937&            rnd_generator; /**< The random number generator. */
+  const SIPP_settings&     settings;      /**< The settings for the SIPP algorithm. */
+  const ConstraintManager& constraint_manager;
+  int                      generated_all_iter  = 0; /**< The number of nodes generated in all iterations. */
+  int                      generated_this_iter = 0; /**< The number of nodes generated in the current iteration. */
+  int                      expanded_all_iter   = 0; /**< The number of nodes expanded in all iterations. */
+  int                      expanded_this_iter  = 0; /**< The number of nodes expanded in the current iteration. */
+  int                      iteration_num       = 0; /**< The current iteration number. */
+  SIPPInfo                 iter_info;               /**< The iteration information. */
 };

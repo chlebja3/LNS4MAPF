@@ -13,7 +13,7 @@
 #include "LNS.h"
 
 Computation::Computation(const Instance& instance_, SharedData* shared_data_, LNS_settings lns_settings_, int seed_ = -1)
-    : instance(instance_), shared_data(shared_data_), running(false), seed(seed_), lns_settings(lns_settings_)
+    : running(false), instance(instance_), shared_data(shared_data_), lns_settings(lns_settings_), seed(seed_)
 {
   // initialized the random generator
   if (seed < 0)

@@ -387,6 +387,7 @@ private:
   bool                 initialized = false;    /**< Flag indicating whether the instance is initialized. */
   std::string          map_fname;              /**< Name of the map file. */
   std::string          scene_fname;            /**< Name of the scene file. */
+  int                  num_of_agents;          /**< Number of agents in the instance. */
   Map                  map_data;               /**< The map data. */
   std::vector<Point2d> start_positions;        /**< Start positions of the agents. */
   std::vector<int>     start_locations;        /**< Start locations of the agents. */
@@ -404,6 +405,5 @@ private:
   std::vector<std::vector<int>> heuristic_distance; /**< Distance heuristic for each agent and location. */
 
   int sum_of_distances = 0; /**< Sum of distances for all agents. */
-  int num_of_agents;        /**< Number of agents in the instance. */
 };
 

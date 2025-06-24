@@ -16,7 +16,7 @@
 #include <utility>
 
 Instance::Instance(std::string map_fname_, std::string scene_fname_, int num_of_agents_, bool calculate_manhattan, bool calculate_euclidean)
-    : num_of_agents(num_of_agents_), map_fname(std::move(map_fname_)), scene_fname(std::move(scene_fname_))
+    : map_fname(std::move(map_fname_)), scene_fname(std::move(scene_fname_)), num_of_agents(num_of_agents_)
 {
   initialize(calculate_manhattan, calculate_euclidean);
 }

@@ -20,12 +20,13 @@
 
 using namespace sipp;
 
-SIPP::SIPP(const Instance& instance_, std::mt19937& rnd_generator_, const SIPP_settings& settings_)
-    : safe_interval_table(SafeIntervalTable(instance_)),
-      instance(instance_),
+SIPP::SIPP(const Instance& instance_, std::mt19937& rnd_generator_, const SIPP_settings& settings_,
+           const ConstraintManager& constraint_manager_)
+    : instance(instance_),
       node_pool(NodePool(INITIAL_NODE_POOL_SIZE * instance.get_num_cells())),
       rnd_generator(rnd_generator_),
-      settings(settings_)
+      settings(settings_),
+      constraint_manager(constraint_manager_)
 {
   known_max.resize(instance.get_num_cells(), -1);
   known_min.resize(instance.get_num_cells(), -1);
@@ -183,15 +184,15 @@ auto SIPP::plan_sipp_mine(const int agent_num) -> TimePointPath
   assertm(map_data.index(start) == 0 && map_data.index(goal) == 0, "Start or goal obstructed.");
 
   // estimate the minimum and maximum time the goal can be reached
-  const int min_time = safe_interval_table.get_min_reach_time(goal);
-  const int max_time = safe_interval_table.get_max_path_len_estimate();
+  const int min_time = constraint_manager.get_min_reach_time(goal);
+  const int max_time = constraint_manager.get_max_path_len_estimate();
   assertm(min_time >= 0 && max_time >= 0, "Time can not be negative.");
 
   // create openlist
   sipp::PriorityQueue open_list{SIPPNodeComparator(&rnd_generator)};
 
   // retrieve the first safe interval
-  auto time_interval_start = safe_interval_table.get_first_safe_interval(start);
+  const auto time_interval_start = constraint_manager.get_first_safe_interval(start)->interval;
 
   // calculate the heuristic of the start node
   {
@@ -199,7 +200,7 @@ auto SIPP::plan_sipp_mine(const int agent_num) -> TimePointPath
     const double h1 = std::max((double)min_time, h2);
 
     // create the start node
-    open_list.push(node_pool.add_node(SIPPNode(start, *time_interval_start, 0, h1, h2, 0, nullptr)));
+    open_list.push(node_pool.add_node(SIPPNode(start, time_interval_start, 0, h1, h2, 0, nullptr)));
 
     if (settings.info_type != INFO_type::no_info)
     {
@@ -278,13 +279,13 @@ auto SIPP::plan_sipp_mine(const int agent_num) -> TimePointPath
 
       // retrieve the safe intervals for the neighbor
 
-      auto [sf_start, sf_end] = safe_interval_table.get_safe_intervals(neighbor, neighbor_entry_time_interval);
+      auto [sf_start, sf_end] = constraint_manager.get_safe_intervals(neighbor, neighbor_entry_time_interval);
 
-      for (auto it = sf_start; it != sf_end; it++)
+      for (auto it = sf_start; it != sf_end; std::next(it))
       {
-        TimePoint neighbor_time_point(neighbor, *it);
+        TimePoint neighbor_time_point(neighbor, it->interval);
         // modify the interval to be valid
-        if (it->t_min < neighbor_entry_time_interval.t_min)
+        if (it->interval.t_min < neighbor_entry_time_interval.t_min)
         {
           neighbor_time_point.interval.t_min = neighbor_entry_time_interval.t_min;
         }
@@ -297,8 +298,8 @@ auto SIPP::plan_sipp_mine(const int agent_num) -> TimePointPath
         }
 
         // check edge collision
-        if (safe_interval_table.edge_constraint_table.get(neighbor_time_point.location, current->time_point.location,
-                                                          neighbor_time_point.interval.t_min))
+        if (constraint_manager.check_edge_collision(neighbor_time_point.location, current->time_point.location,
+                                                    neighbor_time_point.interval.t_min))
         {
           continue;
         }
@@ -372,8 +373,8 @@ auto SIPP::plan_sipp_mine_ap(const int agent_num, const std::unordered_set<int>&
   assertm(map_data.index(start) == 0 && map_data.index(goal) == 0, "Start or goal obstructed.");
 
   // estimate the minimum and maximum time the goal can be reached
-  const int min_time = safe_interval_table.get_min_reach_time(goal);
-  const int max_time = safe_interval_table.get_max_path_len_estimate();
+  const int min_time = constraint_manager.get_min_reach_time(goal);
+  const int max_time = constraint_manager.get_max_path_len_estimate();
   assertm(min_time >= 0 && max_time >= 0, "Time can not be negative.");
 
   // std::cout << "Agent: " << agent_num << ", min time: " << min_time << std::endl;
@@ -385,7 +386,7 @@ auto SIPP::plan_sipp_mine_ap(const int agent_num, const std::unordered_set<int>&
   sipp::PriorityQueue open_list{SIPPNodeComparator(&rnd_generator)};
 
   // retrieve the first safe interval
-  auto time_interval_start = safe_interval_table.get_first_safe_interval(start);
+  const auto time_interval_start = constraint_manager.get_first_safe_interval(start)->interval;
 
   // calculate the heuristic of the start node
   {
@@ -393,7 +394,7 @@ auto SIPP::plan_sipp_mine_ap(const int agent_num, const std::unordered_set<int>&
     const double h1 = std::max((double)min_time, h2);
 
     // create the start node
-    open_list.push(node_pool.add_node(SIPPNode(start, *time_interval_start, 0, h1, h2, 0, nullptr)));
+    open_list.push(node_pool.add_node(SIPPNode(start, time_interval_start, 0, h1, h2, 0, nullptr)));
 
     if (settings.info_type != INFO_type::no_info)
     {
@@ -472,13 +473,13 @@ auto SIPP::plan_sipp_mine_ap(const int agent_num, const std::unordered_set<int>&
 
       // retrieve the safe intervals for the neighbor
 
-      auto [sf_start, sf_end] = safe_interval_table.get_safe_intervals(neighbor, neighbor_entry_time_interval);
+      auto [sf_start, sf_end] = constraint_manager.get_safe_intervals(neighbor, neighbor_entry_time_interval);
 
-      for (auto it = sf_start; it != sf_end; it++)
+      for (auto it = sf_start; it != sf_end; std::next(it))
       {
-        TimePoint neighbor_time_point(neighbor, *it);
+        TimePoint neighbor_time_point(neighbor, it->interval);
         // modify the interval to be valid
-        if (it->t_min < neighbor_entry_time_interval.t_min)
+        if (it->interval.t_min < neighbor_entry_time_interval.t_min)
         {
           neighbor_time_point.interval.t_min = neighbor_entry_time_interval.t_min;
         }
@@ -491,8 +492,8 @@ auto SIPP::plan_sipp_mine_ap(const int agent_num, const std::unordered_set<int>&
         }
 
         // check edge collision
-        if (safe_interval_table.edge_constraint_table.get(neighbor_time_point.location, current->time_point.location,
-                                                          neighbor_time_point.interval.t_min))
+        if (constraint_manager.check_edge_collision(neighbor_time_point.location, current->time_point.location,
+                                                    neighbor_time_point.interval.t_min))
         {
           continue;
         }
@@ -572,16 +573,16 @@ auto SIPP::plan_suboptimal(const int agent_num, const std::unordered_set<int>& a
   assertm(w != 1.0 || suboptimality_absolute == 0, "Absolute suboptimality must be 0 when w is 1.0");
 
   // estimate the minimum and maximum time the goal can be reached
-  const int min_time = safe_interval_table.get_min_reach_time(goal);
-  // const int min_time = safe_interval_table.get_min_reach_time(goal) + suboptimality_absolute;
-  const int max_time = safe_interval_table.get_max_path_len_estimate();
+  const int min_time = constraint_manager.get_min_reach_time(goal);
+  // const int min_time = constraint_manager.get_min_reach_time(goal) + suboptimality_absolute;
+  const int max_time = constraint_manager.get_max_path_len_estimate();
   assertm(min_time >= 0 && max_time >= 0, "Time can not be negative.");
 
   // create openlist
   sipp::PriorityQueueSuboptimal open_list{SIPPNodeComparatorSuboptimal(&rnd_generator, suboptimality_absolute)};
 
   // retrieve the first safe interval
-  auto time_interval_start = safe_interval_table.get_first_safe_interval(start);
+  const auto time_interval_start = constraint_manager.get_first_safe_interval(start)->interval;
 
   // calculate the heuristic of the start node
   {
@@ -589,7 +590,7 @@ auto SIPP::plan_suboptimal(const int agent_num, const std::unordered_set<int>& a
     const double h1 = std::max((double)min_time, h2);
 
     // create the start node
-    open_list.push(node_pool.add_node(SIPPNode(start, *time_interval_start, 0, h1, h2, 0, nullptr)));
+    open_list.push(node_pool.add_node(SIPPNode(start, time_interval_start, 0, h1, h2, 0, nullptr)));
 
     if (settings.info_type != INFO_type::no_info)
     {
@@ -677,13 +678,13 @@ auto SIPP::plan_suboptimal(const int agent_num, const std::unordered_set<int>& a
         }
       }
       // retrieve the safe intervals for the neighbor
-      auto [sf_start, sf_end] = safe_interval_table.get_safe_intervals(neighbor, neighbor_entry_time_interval);
+      auto [sf_start, sf_end] = constraint_manager.get_safe_intervals(neighbor, neighbor_entry_time_interval);
 
-      for (auto it = sf_start; it != sf_end; it++)
+      for (auto it = sf_start; it != sf_end; std::next(it))
       {
-        TimePoint neighbor_time_point(neighbor, *it);
+        TimePoint neighbor_time_point(neighbor, it->interval);
         // modify the interval to be valid
-        if (it->t_min < neighbor_entry_time_interval.t_min)
+        if (it->interval.t_min < neighbor_entry_time_interval.t_min)
         {
           neighbor_time_point.interval.t_min = neighbor_entry_time_interval.t_min;
         }
@@ -696,8 +697,8 @@ auto SIPP::plan_suboptimal(const int agent_num, const std::unordered_set<int>& a
         }
 
         // check edge collision
-        if (safe_interval_table.edge_constraint_table.get(neighbor_time_point.location, current->time_point.location,
-                                                          neighbor_time_point.interval.t_min))
+        if (constraint_manager.check_edge_collision(neighbor_time_point.location, current->time_point.location,
+                                                    neighbor_time_point.interval.t_min))
         {
           continue;
         }
@@ -765,22 +766,22 @@ auto SIPP::plan_mapflns_heuristic(int agent_num) -> TimePointPath
   assertm(map_data.index(start) == 0 && map_data.index(goal) == 0, "Start or goal obstructed.");
 
   // estimate the minimum and maximum time the goal can be reached
-  const int min_time = safe_interval_table.get_min_reach_time(goal);
-  const int max_time = safe_interval_table.get_max_path_len_estimate();
+  const int min_time = constraint_manager.get_min_reach_time(goal);
+  const int max_time = constraint_manager.get_max_path_len_estimate();
   assertm(min_time >= 0 && max_time >= 0, "Time can not be negative.");
 
   // create openlist
   sipp::PriorityQueue open_list{SIPPNodeComparator(&rnd_generator)};
 
   // retrieve the first safe interval
-  auto time_interval_start = safe_interval_table.get_first_safe_interval(start);
+  const auto time_interval_start = constraint_manager.get_first_safe_interval(start)->interval;
 
   // calculate the heuristic of the start node
   {
     const double h = std::max((double)min_time, (double)instance.get_heuristic_distance(agent_num, start));
 
     // create the start node
-    open_list.push(node_pool.add_node(SIPPNode(start, *time_interval_start, 0, h, h, 0, nullptr)));
+    open_list.push(node_pool.add_node(SIPPNode(start, time_interval_start, 0, h, h, 0, nullptr)));
 
     if (settings.info_type != INFO_type::no_info)
     {
@@ -853,14 +854,13 @@ auto SIPP::plan_mapflns_heuristic(int agent_num) -> TimePointPath
 
       // retrieve the safe intervals for the neighbor
 
-      std::list<TimeInterval>::const_iterator sf_start, sf_end;
-      std::tie(sf_start, sf_end) = safe_interval_table.get_safe_intervals(neighbor, neighbor_entry_time_interval);
+      auto [sf_start, sf_end] = constraint_manager.get_safe_intervals(neighbor, neighbor_entry_time_interval);
 
-      for (auto it = sf_start; it != sf_end; it++)
+      for (auto it = sf_start; it != sf_end; std::next(it))
       {
-        TimePoint neighbor_time_point(neighbor, *it);
+        TimePoint neighbor_time_point(neighbor, it->interval);
         // modify the interval to be valid
-        if (it->t_min < neighbor_entry_time_interval.t_min)
+        if (it->interval.t_min < neighbor_entry_time_interval.t_min)
         {
           neighbor_time_point.interval.t_min = neighbor_entry_time_interval.t_min;
         }
@@ -873,8 +873,8 @@ auto SIPP::plan_mapflns_heuristic(int agent_num) -> TimePointPath
         }
 
         // check edge collision
-        if (safe_interval_table.edge_constraint_table.get(neighbor_time_point.location, current->time_point.location,
-                                                          neighbor_time_point.interval.t_min))
+        if (constraint_manager.check_edge_collision(neighbor_time_point.location, current->time_point.location,
+                                                    neighbor_time_point.interval.t_min))
         {
           continue;
         }

@@ -50,10 +50,10 @@ LNS::LNS(const Instance& instance_, std::mt19937& rnd_generator_, SharedData* sh
       settings(settings_),
       shared_data(shared_data_),
       repair_operator(Operator([this](Solution& sol) { repair_default(sol); })),
-      constraint_table(instance)
+      constraint_manager(instance)
 {
   // SIPP's lifetime can not be longer than LNS's lifetime, because then map_data might be deleted before SIPP
-  planner = std::make_unique<SIPP>(instance, rnd_generator, settings.sipp_settings);
+  planner = std::make_unique<SIPP>(instance, rnd_generator, settings.sipp_settings, constraint_manager);
 
   // initialize destroy weights for adaptive LNS to 1
   if (settings.destroy_settings.type == DESTROY_TYPE::ADAPTIVE)
@@ -62,21 +62,6 @@ LNS::LNS(const Instance& instance_, std::mt19937& rnd_generator_, SharedData* sh
     // destroy_weights.assign(magic_enum::enum_count<DESTROY_TYPE>() - 1, 1);
     destroy_weights.assign(3, 1);  // RANDOM, RANDOMWALK, INTERSECTION
   }
-}
-
-
-void LNS::initialize_constraint_table(const std::vector<TimePointPath>& paths)
-{
-  assertm(!constraint_table_initialized, "Constraint table already initialized");
-  constraint_table_initialized = true;
-  // build the constraint table
-  // Clock time_ct_build;
-  // time_ct_build.start();
-  constraint_table.build_sequential(solution.paths);
-  // constraint_table.build_parallel(solution.paths);
-  // constraint_table.build_parallel_2(solution.paths);
-  // auto [time_wall, time_cpu] = time_ct_build.end();
-  // std::cout << "Building the constraint_table took: " << time_wall << " s wall time and " << time_cpu << " s cpu_time" << std::endl;
 }
 
 void LNS::solve()
@@ -93,7 +78,7 @@ void LNS::solve()
     // reset the safe interval table and already planned if needed
     if (!found_initial_solution)
     {
-      planner->reset();
+      constraint_manager.reset();
       already_planned.clear();
     }
 
@@ -112,12 +97,6 @@ void LNS::solve()
   assertm(solution.is_valid(instance), "Found invalid solution");
 
   // std::cout << "Initial solution found in " << initial_solution_time << " second." << std::endl;
-
-  // initialize the constraint table (needed for randomwalk and intersection destroy operator)
-  if (settings.destroy_settings.type != DESTROY_TYPE::RANDOM)
-  {
-    initialize_constraint_table(solution.paths);
-  }
 
   // improve the solution
   while (iteration_num < settings.max_iter && clock.get_current_time().first < settings.time_limit)
@@ -295,8 +274,7 @@ auto LNS::PrioritizedPlanning() -> Solution
     // get the visualization info
     if (settings.sipp_settings.info_type == INFO_type::visualisation)
     {
-      sipp_info[agent_id] = std::move(planner->iter_info);
-      planner->iter_info.clear();
+      sipp_info[agent_id] = planner->get_iter_info();
     }
 
     // check validity
@@ -311,7 +289,7 @@ auto LNS::PrioritizedPlanning() -> Solution
     assertm(instance.check_timepointpath_validity(tp_path), "SIPP planned an invalid timepointpath.");
 
     // update the safe interval table
-    planner->safe_interval_table.add_constraints(tp_path);
+    constraint_manager.add_trajectory(tp_path, agent_id);
 
     // add to the solution
     sol.paths[agent_id] = tp_path;
@@ -347,7 +325,6 @@ void LNS::destroy_randomwalk(Solution& sol) const
 {
   last_destroy_strategy = DESTROY_TYPE::RANDOMWALK;
 
-  assertm(constraint_table_initialized, "Constraint table is not initialized.");
   assertm(settings.destroy_settings.size >= 0 && settings.destroy_settings.size <= instance.get_num_of_agents(),
           "Invalid neighborhood size.");
   // if neighborhood size the same as number of agents or more, return all agents
@@ -484,7 +461,7 @@ auto LNS::random_walk(int agent_num, int neighborhood_size, int start_location, 
       if (t + 1 + next_h_val < upperbound)
       {
         // get the agent that is in conflict and add it to the neighborhood
-        auto [conflicting_agent_vertex, conflicting_agent_edge] = constraint_table.get_blocking_agent(curr, loc, t + 1);
+        auto [conflicting_agent_vertex, conflicting_agent_edge] = constraint_manager.get_blocking_agent(curr, loc, t + 1);
 
         // if there is an agent in collision, add it to the neighborhood
         if (conflicting_agent_vertex != -1)
@@ -521,7 +498,6 @@ auto LNS::random_walk(int agent_num, int neighborhood_size, int start_location, 
 void LNS::destroy_intersection(Solution& sol) const
 {
   last_destroy_strategy = DESTROY_TYPE::INTERSECTION;
-  assertm(constraint_table_initialized, "Constraint table is not initialized.");
 
   // find all intersection vertices
   std::vector<int> intersection_vertices_free;
@@ -529,7 +505,7 @@ void LNS::destroy_intersection(Solution& sol) const
 
   for (int i = 0; i < instance.get_num_free_cells(); i++)
   {
-    const auto& agents_counts = constraint_table.get_agents_counts_free(i);
+    const auto& agents_counts = constraint_manager.get_agents_counts_free(i);
     if (static_cast<int>(agents_counts.size()) >= 3)
     {
       intersection_vertices_free.push_back(i);
@@ -564,7 +540,7 @@ void LNS::destroy_intersection(Solution& sol) const
     known[current] = true;
 
     // check whether intersection vertex
-    auto agents_counts = constraint_table.get_agents_counts(current);
+    auto agents_counts = constraint_manager.get_agents_counts(current);
     if (static_cast<int>(agents_counts.size()) >= 3)
     {
       // add agents that visit this vertex to the neighborhood
@@ -598,7 +574,7 @@ void LNS::destroy_intersection(Solution& sol) const
 void LNS::get_intersection_agents(std::unordered_set<int>& neighborhood, int current) const
 {
   // find maximal T
-  int t_max = constraint_table.get_last_constraint_start(current);
+  int t_max = constraint_manager.get_last_constraint_start(current);
 
   // choose random time
   std::uniform_int_distribution<int> dist(0, t_max);
@@ -607,9 +583,9 @@ void LNS::get_intersection_agents(std::unordered_set<int>& neighborhood, int cur
   while (static_cast<int>(neighborhood.size()) < settings.destroy_settings.size && t + delta <= t_max && t - delta >= 0)
   {
     // find the agent, that blocks the cell at time t + delta
-    auto [blocking_agent_1, blocking_agent_2] = constraint_table.get_blocking_agent(current, current, t + delta);
+    auto [blocking_agent_1, blocking_agent_2] = constraint_manager.get_blocking_agent(current, current, t + delta);
     // find the agent, that blocks the cell at time t - delta
-    auto [blocking_agent_3, blocking_agent_4] = constraint_table.get_blocking_agent(current, current, t - delta);
+    auto [blocking_agent_3, blocking_agent_4] = constraint_manager.get_blocking_agent(current, current, t - delta);
 
     // add the agents to the neighborhood
     std::array<int, 4> blocking_agents = {blocking_agent_1, blocking_agent_2, blocking_agent_3, blocking_agent_4};
@@ -716,13 +692,12 @@ void LNS::destroy_blocked(Solution& sol) const
       continue;
     }
     assertm(reach_time >= instance.get_heuristic_distance(i, instance.get_start_locations()[i]), "Invalid reach time");
-    assertm(constraint_table_initialized, "Constraint table is not initialized.");
     int from = loc;
     if (static_cast<int>(sol.paths[i].size()) > 1)
     {
       from = std::prev(sol.paths[i].end(), 2)->location;
     }
-    auto [blocking_agent_1, blocking_agent_2] = constraint_table.get_blocking_agent(from, loc, reach_time - 1);
+    auto [blocking_agent_1, blocking_agent_2] = constraint_manager.get_blocking_agent(from, loc, reach_time - 1);
     if (blocking_agent_1 != -1 || blocking_agent_2 != -1)
     {
       blocked_agents.push_back(i);
@@ -754,7 +729,7 @@ void LNS::destroy_blocked(Solution& sol) const
   {
     const int        loc                 = instance.get_goal_locations()[chosen_agent];
     const int        min_reach_time      = instance.get_heuristic_distance(chosen_agent, instance.get_start_locations()[chosen_agent]);
-    std::vector<int> blocking_agents_new = constraint_table.get_blocking_agents(loc, min_reach_time - 1);
+    std::vector<int> blocking_agents_new = constraint_manager.get_blocking_agents(loc, min_reach_time - 1);
 
     // add all new blocking agents to the neighborhood
     for (auto it : blocking_agents_new)
@@ -830,16 +805,12 @@ void LNS::repair_default(Solution& sol) const
   }
 
   // remove the destroyed paths
-  for (auto& it : sol.destroyed_paths)
+  for (int agent_id : sol.destroyed_paths)
   {
     // std::cout << "Removing path: " << it << std::endl;
-    planner->safe_interval_table.remove_constraints(sol.paths[it]);
-    if (constraint_table_initialized)
-    {
-      constraint_table.remove_constraints(sol.paths[it], it);
-    }
-    sol.paths[it].clear();
-    already_planned.erase(it);
+    constraint_manager.remove_trajectory(sol.paths[agent_id], agent_id);
+    sol.paths[agent_id].clear();
+    already_planned.erase(agent_id);
   }
   sol.feasible = true;
 
@@ -857,15 +828,10 @@ void LNS::repair_default(Solution& sol) const
     // get the visualization info
     if (settings.sipp_settings.info_type == INFO_type::visualisation)
     {
-      sipp_info[i] = std::move(planner->iter_info);
-      planner->iter_info.clear();
+      sipp_info[i] = planner->get_iter_info();
     }
 
-    planner->safe_interval_table.add_constraints(tp_path);
-    if (constraint_table_initialized)
-    {
-      constraint_table.add_constraints(tp_path, path_idx);
-    }
+    constraint_manager.add_trajectory(tp_path, i);
     sol.paths[path_idx] = tp_path;
     already_planned.insert(path_idx);
   }
@@ -873,26 +839,36 @@ void LNS::repair_default(Solution& sol) const
 
 void LNS::discard_solution(const Solution& sol, const Solution& prev_sol) const
 {
-  for (int it : sol.destroyed_paths)
+  for (int agent_id : sol.destroyed_paths)
   {
     // remove the destroyed paths
-    if (!sol.paths[it].empty())
+    if (!sol.paths[agent_id].empty())
     {
-      planner->safe_interval_table.remove_constraints(sol.paths[it]);
-      if (constraint_table_initialized)
-      {
-        constraint_table.remove_constraints(sol.paths[it], it);
-      }
+      constraint_manager.remove_trajectory(sol.paths[agent_id], agent_id);
     }
   }
 
   // restore the old paths
-  for (int it : sol.destroyed_paths)
+  for (int agent_id : sol.destroyed_paths)
   {
-    planner->safe_interval_table.add_constraints(prev_sol.paths[it]);
-    if (constraint_table_initialized)
-    {
-      constraint_table.add_constraints(prev_sol.paths[it], it);
-    }
+    constraint_manager.add_trajectory(prev_sol.paths[agent_id], agent_id);
   }
+}
+
+void LNS::load_initial_solution(Solution& sol)
+{
+  assertm(found_initial_solution == false, "Solver already has an initial solution");
+  sol.calculate_cost(instance);
+  solution               = sol;
+  found_initial_solution = true;
+
+  // build the constraints
+  constraint_manager.build_sequential(sol.paths);
+
+  // add to the log
+  log.bsf_solution_cost.push_back(sol.sum_of_costs);
+  log.bsf_makespan.push_back(sol.makespan);
+  log.used_operator.push_back(DESTROY_TYPE::ADAPTIVE);
+  log.iteration_time_wall.push_back(0);
+  log.iteration_time_cpu.push_back(0);
 }
