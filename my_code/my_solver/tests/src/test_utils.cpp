@@ -12,8 +12,6 @@
 #include <climits>
 #include <filesystem>
 
-#include "SafeIntervalTable.h"
-
 
 std::string get_base_path_tests()
 {
@@ -54,17 +52,16 @@ TimePointPath generate_random_timepointpath(int len_wanted)
   return tp_path;
 }
 
-auto filter_time_intervals(std::pair<std::list<TimeInterval>::const_iterator, std::list<TimeInterval>::const_iterator> start_goal,
-                           TimeInterval interval, int from, int to, SafeIntervalTable& table) -> std::vector<TimeInterval>
+auto filter_time_intervals(std::pair<std::list<TimeIntervalNode>::const_iterator, std::list<TimeIntervalNode>::const_iterator> start_goal,
+                           TimeInterval interval, int from, int to, const ConstraintManager& constraint_manager)
+    -> std::vector<TimeInterval>
 {
-  std::list<TimeInterval>::const_iterator start;
-  std::list<TimeInterval>::const_iterator end;
-  std::tie(start, end) = start_goal;
+  auto [start, end] = start_goal;
   std::vector<TimeInterval> ret;
 
   for (auto it = start; it != end; it++)
   {
-    TimeInterval new_interval(it->t_min, it->t_max);
+    TimeInterval new_interval(it->interval.t_min, it->interval.t_max);
     // modify the interval to be valid
     if (new_interval.t_min < interval.t_min)
     {
@@ -73,7 +70,7 @@ auto filter_time_intervals(std::pair<std::list<TimeInterval>::const_iterator, st
     assertm(new_interval.t_min <= new_interval.t_max, "Modifying the time interval made it invalid.");
 
     // check edge collision
-    if (table.edge_constraint_table.get(to, from, new_interval.t_min))
+    if (constraint_manager.check_edge_collision(from, to, new_interval.t_min))
     {
       continue;
     }

@@ -209,6 +209,11 @@ public:
    */
   void discard_solution(const Solution& sol, const Solution& prev_sol) const;
 
+  auto get_constraint_manager() -> ConstraintManager&
+  {
+    return constraint_manager;
+  }
+
   Operator                        destroy_operator;               /**< Operator for the destroy phase. */
   mutable std::unordered_set<int> already_planned;                /**< Set of already planned agents. */
   Logger                          log;                            /**< Logger for the LNS algorithm. */

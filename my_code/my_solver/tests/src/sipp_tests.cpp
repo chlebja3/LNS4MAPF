@@ -9,10 +9,10 @@
 
 #include <climits>
 
+#include "ConstraintManager.h"
 #include "Instance.h"
 #include "LNS.h"
 #include "SIPP.h"
-#include "SafeIntervalTable.h"
 #include "magic_enum/magic_enum.hpp"
 #include "test_utils.h"
 
@@ -26,12 +26,14 @@ TEST(SIPPTest, BasicPathEmptyMap)
   std::unique_ptr<Instance> instance =
       std::make_unique<Instance>(base_path + "/tests/test_maps/empty_5_5.map", base_path + "/tests/test_scen/empty_5_5_scen_1.scen", 1);
 
+
   // create SIPP
   for (auto algo : magic_enum::enum_values<SIPP_implementation>())
   {
-    std::mt19937  rnd_generator(0);
-    SIPP_settings sipp_settings(algo, INFO_type::no_info, 1.0);
-    SIPP          sipp(*instance, rnd_generator, sipp_settings);
+    std::mt19937      rnd_generator(0);
+    SIPP_settings     sipp_settings(algo, INFO_type::no_info, 1.0);
+    ConstraintManager constraint_manager(*instance);
+    SIPP              sipp(*instance, rnd_generator, sipp_settings, constraint_manager);
 
     // from (0,0) to (4,4)
     TimePointPath path = sipp.plan(0, {});
@@ -53,9 +55,10 @@ TEST(SIPPTest, StaticObstacleAvoidance)
   // create SIPP
   for (auto algo : magic_enum::enum_values<SIPP_implementation>())
   {
-    std::mt19937  rnd_generator(0);
-    SIPP_settings sipp_settings(algo, INFO_type::no_info, 1.0);
-    SIPP          sipp(*instance, rnd_generator, sipp_settings);
+    std::mt19937      rnd_generator(0);
+    SIPP_settings     sipp_settings(algo, INFO_type::no_info, 1.0);
+    ConstraintManager constraint_manager(*instance);
+    SIPP              sipp(*instance, rnd_generator, sipp_settings, constraint_manager);
 
     // from (0,0) to (4,4)
     TimePointPath path = sipp.plan(0, {});
@@ -86,9 +89,10 @@ TEST(SIPPTest, TimeConstraintHandling)
   // create SIPP
   for (auto algo : magic_enum::enum_values<SIPP_implementation>())
   {
-    std::mt19937  rnd_generator(0);
-    SIPP_settings sipp_settings(algo, INFO_type::no_info, 1.0);
-    SIPP          sipp(*instance, rnd_generator, sipp_settings);
+    std::mt19937      rnd_generator(0);
+    SIPP_settings     sipp_settings(algo, INFO_type::no_info, 1.0);
+    ConstraintManager constraint_manager(*instance);
+    SIPP              sipp(*instance, rnd_generator, sipp_settings, constraint_manager);
 
     // Create a wall from time constraints
     for (int i = 0; i < 5; i++)
@@ -97,7 +101,8 @@ TEST(SIPPTest, TimeConstraintHandling)
       {
         continue;  // passage through (2,2)
       }
-      sipp.safe_interval_table.add_constraint(TimePoint(instance->position_to_location({i, 2}), {0, 20}));
+      TimePointPath obstacle = {TimePoint(instance->position_to_location({i, 2}), {0, 20})};
+      constraint_manager.add_trajectory(obstacle, 0);
     }
 
     TimePointPath path = sipp.plan(0, {});
@@ -129,9 +134,10 @@ TEST(SIPPTest, NoPathPossible)
   // create SIPP
   for (auto algo : magic_enum::enum_values<SIPP_implementation>())
   {
-    std::mt19937  rnd_generator(0);
-    SIPP_settings sipp_settings(algo, INFO_type::no_info, 1.0);
-    SIPP          sipp(*instance, rnd_generator, sipp_settings);
+    std::mt19937      rnd_generator(0);
+    SIPP_settings     sipp_settings(algo, INFO_type::no_info, 1.0);
+    ConstraintManager constraint_manager(*instance);
+    SIPP              sipp(*instance, rnd_generator, sipp_settings, constraint_manager);
 
     TimePointPath path = sipp.plan(0, {});
 
@@ -150,20 +156,20 @@ TEST(SIPPTest, NoPathDueToTimeConstraints)
   // create SIPP
   for (auto algo : magic_enum::enum_values<SIPP_implementation>())
   {
-    std::mt19937  rnd_generator(0);
-    SIPP_settings sipp_settings(algo, INFO_type::no_info, 1.0);
-    SIPP          sipp(*instance, rnd_generator, sipp_settings);
+    std::mt19937      rnd_generator(0);
+    SIPP_settings     sipp_settings(algo, INFO_type::no_info, 1.0);
+    ConstraintManager constraint_manager(*instance);
+    SIPP              sipp(*instance, rnd_generator, sipp_settings, constraint_manager);
 
     // Add constraints that make it impossible to leave start until time 10
-    sipp.safe_interval_table.add_constraint(TimePoint(1, {0, 10}));  // {1, 0}
-    sipp.safe_interval_table.add_constraint(TimePoint(5, {0, 10}));  // {0, 1}
+    constraint_manager.add_trajectory({TimePoint(1, {0, 10})}, 0);  // {1, 0}
+    constraint_manager.add_trajectory({TimePoint(5, {0, 10})}, 1);  // {0, 1}
 
     // add constraints that make it impossible to reach the goal from time 10 to 20
-    sipp.safe_interval_table.add_constraint(TimePoint(instance->position_to_location({3, 4}), {10, 20}));  // {3, 4}
-    sipp.safe_interval_table.add_constraint(TimePoint(instance->position_to_location({4, 3}), {10, 20}));  // {4, 3}
-
-    // test path len estimate
-    EXPECT_EQ(sipp.safe_interval_table.get_max_path_len_estimate(), 20 + 5 * 5) << "Invalid path length estimate.";
+    TimePointPath obstacle = {TimePoint(instance->position_to_location({3, 4}), {10, 20})};
+    constraint_manager.add_trajectory(obstacle, 2);  // {3, 4}
+    TimePointPath obstacle2 = {TimePoint(instance->position_to_location({4, 3}), {10, 20})};
+    constraint_manager.add_trajectory(obstacle2, 3);  // {4, 3}
 
     // plan path
     TimePointPath path = sipp.plan(0, {});
@@ -202,12 +208,14 @@ TEST(SIPPTest, DynamicObstacleAtGoal)
   // create SIPP
   for (auto algo : magic_enum::enum_values<SIPP_implementation>())
   {
-    std::mt19937  rnd_generator(0);
-    SIPP_settings sipp_settings(algo, INFO_type::no_info, 1.0);
-    SIPP          sipp(*instance, rnd_generator, sipp_settings);
+    std::mt19937      rnd_generator(0);
+    SIPP_settings     sipp_settings(algo, INFO_type::no_info, 1.0);
+    ConstraintManager constraint_manager(*instance);
+    SIPP              sipp(*instance, rnd_generator, sipp_settings, constraint_manager);
 
     // add a constraint that blocks the goal after time 20
-    sipp.safe_interval_table.add_constraint(TimePoint(instance->get_goal_locations()[0], {20, 30}));
+    TimePointPath obstacle = {TimePoint(instance->get_goal_locations()[0], {20, 30})};
+    constraint_manager.add_trajectory(obstacle, 0);
 
     TimePointPath path = sipp.plan(0, {});
 
@@ -231,16 +239,17 @@ TEST(SIPPTest, EdgeConstraintsAtGoal)
   // create SIPP
   for (auto algo : magic_enum::enum_values<SIPP_implementation>())
   {
-    std::mt19937  rnd_generator(0);
-    SIPP_settings sipp_settings(algo, INFO_type::no_info, 1.0);
-    SIPP          sipp(*instance, rnd_generator, sipp_settings);
+    std::mt19937      rnd_generator(0);
+    SIPP_settings     sipp_settings(algo, INFO_type::no_info, 1.0);
+    ConstraintManager constraint_manager(*instance);
+    SIPP              sipp(*instance, rnd_generator, sipp_settings, constraint_manager);
 
     // from (2, 0) to (2, 1)
 
     // add edge constraints at the goal so that the agent has to go around
-    sipp.safe_interval_table.add_constraints({TimePoint(5, {0, 0}), TimePoint(2, {1, 1}), TimePoint(1, {2, 2}), TimePoint(0, {3, 3}),
-                                              TimePoint(3, {4, 4}), TimePoint(6, {5, 5}), TimePoint(7, {6, 6}), TimePoint(8, {7, 7})});
-
+    TimePointPath obstacle = {TimePoint(5, {0, 0}), TimePoint(2, {1, 1}), TimePoint(1, {2, 2}), TimePoint(0, {3, 3}),
+                              TimePoint(3, {4, 4}), TimePoint(6, {5, 5}), TimePoint(7, {6, 6}), TimePoint(8, {7, 7})};
+    constraint_manager.add_trajectory(obstacle, 0);
 
     TimePointPath path = sipp.plan(0, {});
 
@@ -253,7 +262,6 @@ TEST(SIPPTest, EdgeConstraintsAtGoal)
   }
 }
 
-
 // SIPP plans the same path as A* when no constraints are present
 TEST(SIPPTest, SamePathAsAStar1)
 {
@@ -265,9 +273,10 @@ TEST(SIPPTest, SamePathAsAStar1)
   // create SIPP
   for (auto algo : magic_enum::enum_values<SIPP_implementation>())
   {
-    std::mt19937  rnd_generator(0);
-    SIPP_settings sipp_settings(algo, INFO_type::no_info, 1.0);
-    SIPP          sipp(*instance, rnd_generator, sipp_settings);
+    std::mt19937      rnd_generator(0);
+    SIPP_settings     sipp_settings(algo, INFO_type::no_info, 1.0);
+    ConstraintManager constraint_manager(*instance);
+    SIPP              sipp(*instance, rnd_generator, sipp_settings, constraint_manager);
 
     // from (0,0) to (4,4)
 
@@ -302,9 +311,10 @@ TEST(SIPPTest, SamePathAsAStar2)
   // create SIPP
   for (auto algo : magic_enum::enum_values<SIPP_implementation>())
   {
-    std::mt19937  rnd_generator(0);
-    SIPP_settings sipp_settings(algo, INFO_type::no_info, 1.0);
-    SIPP          sipp(*instance, rnd_generator, sipp_settings);
+    std::mt19937      rnd_generator(0);
+    SIPP_settings     sipp_settings(algo, INFO_type::no_info, 1.0);
+    ConstraintManager constraint_manager(*instance);
+    SIPP              sipp(*instance, rnd_generator, sipp_settings, constraint_manager);
 
     // from (0,0) to (4,4)
 
@@ -418,7 +428,7 @@ TEST(SIPPTest, SameAfterDestroy)
     int           agent_num = 100;
     TimePointPath path0     = sol.paths[agent_num];
     // remove the path
-    lns.planner->safe_interval_table.remove_constraints(path0);
+    lns.get_constraint_manager().remove_trajectory(path0, agent_num);
     lns.already_planned.erase(agent_num);
 
     // replan

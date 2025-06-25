@@ -37,24 +37,6 @@ public:
    */
   explicit SafeIntervalTable(const Instance& instance_);
 
-#ifdef SIT_PARALLELIZATION
-  /**
-   * @brief Adds constraints to the safe interval table in parallel.
-   *
-   * @param path The path to add constraints for.
-   * @warning This function is not properly tested and has known issues.
-   */
-  void add_constraints_parallel(const TimePointPath& path);
-
-  /**
-   * @brief Removes constraints from the safe interval table in parallel.
-   *
-   * @param path The path to remove constraints for.
-   * @warning This function is not properly tested and has known issues.
-   */
-  void remove_constraints_parallel(const TimePointPath& path);
-#endif
-
   void add_constraint(const TimePoint& timepoint, int agent_num, ConstraintTable& constraint_table);
 
   void remove_constraint(const TimePoint& timepoint, int agent_num, ConstraintTable& constraint_table);
