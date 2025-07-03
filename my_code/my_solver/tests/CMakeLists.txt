@@ -38,21 +38,21 @@ add_executable(unit_tests ${SOURCES})
 include_directories("inc")
 
 # Link GoogleTest and the MAPF library
-target_link_libraries(unit_tests PRIVATE MAPF_lib GTest::gtest_main gmock)
+target_link_libraries(unit_tests PRIVATE MAPF_lib GTest::gtest_main GTest::gmock)
 
 # Create a benchmark tests
 
 # Create a benchmark for path conversion
 add_executable(path_conv_bm src/benchmarks/path_conv_bm.cpp src/test_utils.cpp)
-target_link_libraries(path_conv_bm PRIVATE MAPF_lib benchmark::benchmark benchmark::benchmark_main)
+target_link_libraries(path_conv_bm PRIVATE MAPF_lib GTest::gtest_main GTest::gmock benchmark::benchmark benchmark::benchmark_main)
 
 # Create a benchmark for vector operations
 add_executable(vector_operations_bm src/benchmarks/vector_operations_bm.cpp src/test_utils.cpp)
-target_link_libraries(vector_operations_bm PRIVATE MAPF_lib benchmark::benchmark benchmark::benchmark_main)
+target_link_libraries(vector_operations_bm PRIVATE MAPF_lib GTest::gtest_main GTest::gmock benchmark::benchmark benchmark::benchmark_main)
 
 # Create benchmark for SIPP
 add_executable(sipp_bm src/benchmarks/sipp_bm.cpp src/test_utils.cpp)
-target_link_libraries(sipp_bm PRIVATE MAPF_lib benchmark::benchmark benchmark::benchmark_main)
+target_link_libraries(sipp_bm PRIVATE MAPF_lib GTest::gtest_main GTest::gmock benchmark::benchmark benchmark::benchmark_main)
 
 # Enable CTest integration
 add_test(NAME unit_tests COMMAND unit_tests)

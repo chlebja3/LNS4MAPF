@@ -1,5 +1,16 @@
-cd "$(dirname "$0")"
-cd ../build
+#!/bin/bash
+
+# Resolve the full path of the script
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+
+cd "$SCRIPT_DIR"
+cd ..
+mkdir build
+cd build
+echo "Build dir ${PWD}"
+
+# cd "$(dirname "$0")"
+# cd ../build
 # export CC=/usr/bin/clang
 # export CXX=/usr/bin/clang++-18
 export CC=/usr/bin/gcc
@@ -27,6 +38,7 @@ then
 elif [ $2 == "notest" ]
 then
   TESTS=OFF
+  echo "Disabling tests."
 else
   echo "Invalid second argument, should be tests/notests"
 fi

@@ -8,6 +8,10 @@ Boost 1.71.0
 
 nlohmann-json3-dev 3.7.3-1
 
+GTK+3 
+
+Eigen3 
+
 For tests and benchmarks (should be fetched automatically by CMake if not installed):
 
 google-test 1.10.0
@@ -23,7 +27,7 @@ sqlite3 - for experiments only
 ## Install dependencies
 To install dependencies, run the following command
 ```
-sudo apt install libsfml-dev nlohmann-json3-dev
+sudo apt install libsfml-dev nlohmann-json3-dev libeigen3-dev sqlite3 libsqlite3-dev libgtk-3-dev -y
 sudo apt-get install libboost-all-dev
 ```
 
