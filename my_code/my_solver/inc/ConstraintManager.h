@@ -85,7 +85,8 @@ public:
   // Edge Table functionalities
   [[nodiscard]] auto check_edge_collision(int from, int to, int time) const -> bool
   {
-    return edge_table.get(from, to, time) == -1;
+    // swap to and from, because we need the opposite edge from the edge table
+    return edge_table.get(to, from, time) != -1;
   }
 
 

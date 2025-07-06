@@ -20,3 +20,5 @@ auto filter_time_intervals(std::pair<std::list<TimeIntervalNode>::const_iterator
 
 
 auto find_path_distance_gradient(int agent_num, const Instance& instance) -> Path;
+
+void print_safe_intervals(std::pair<std::list<TimeIntervalNode>::const_iterator, std::list<TimeIntervalNode>::const_iterator> start_goal);

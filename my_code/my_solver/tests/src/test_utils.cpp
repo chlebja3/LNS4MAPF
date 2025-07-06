@@ -67,11 +67,17 @@ auto filter_time_intervals(std::pair<std::list<TimeIntervalNode>::const_iterator
     {
       new_interval.t_min = interval.t_min;
     }
+    if (new_interval.t_max > interval.t_max)
+    {
+      new_interval.t_max = interval.t_max;
+    }
     assertm(new_interval.t_min <= new_interval.t_max, "Modifying the time interval made it invalid.");
+    // std::cout << "New interval: " << new_interval << std::endl;
 
     // check edge collision
     if (constraint_manager.check_edge_collision(from, to, new_interval.t_min))
     {
+      // std::cout << "Edge collision, from: " << from << ", to " << to << ", interval " << new_interval << std::endl;
       continue;
     }
 
@@ -111,3 +117,13 @@ auto find_path_distance_gradient(int agent_num, const Instance& instance) -> Pat
   return ret;
 }
 
+void print_safe_intervals(std::pair<std::list<TimeIntervalNode>::const_iterator, std::list<TimeIntervalNode>::const_iterator> start_goal)
+{
+  auto [start, end] = start_goal;
+
+  std::cout << "Safe intervals: \n";
+  for (auto it = start; it != end; it++)
+  {
+    std::cout << it->interval << std::endl;
+  }
+}

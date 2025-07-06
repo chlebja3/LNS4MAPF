@@ -9,15 +9,12 @@
 #pragma once
 
 #include <climits>
-#include <iostream>
 #include <list>
-#include <memory>
 #include <unordered_map>
 #include <unordered_set>
 #include <vector>
 
 #include "Instance.h"
-#include "magic_enum/magic_enum.hpp"
 #include "utils.h"
 
 /**
@@ -88,6 +85,31 @@ public:
   {
     assertm(instance.get_map_data().is_in(instance.free_location_to_location(free_location)), "Invalid location.");
     return agents_counts[free_location];
+  }
+
+  void increase_agents_counts(int free_location, int agent_num)
+  {
+    if (agents_counts[free_location].find(agent_num) == agents_counts[free_location].end())
+    {
+      agents_counts[free_location][agent_num] = 1;
+    }
+    else
+    {
+      // else increase the count
+      agents_counts[free_location][agent_num] += 1;
+    }
+  }
+
+  void decrease_agents_counts(int free_location, int agent_num)
+  {
+    assertm(agents_counts[free_location].find(agent_num) != agents_counts[free_location].end(),
+            "Removing agent that is not in the agents counts");
+    agents_counts[free_location][agent_num] -= 1;
+    // if the count drops to 0, erase the agent number from keys
+    if (agents_counts[free_location][agent_num] == 0)
+    {
+      agents_counts[free_location].erase(agent_num);
+    }
   }
 
   /**

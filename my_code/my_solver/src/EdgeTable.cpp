@@ -17,50 +17,50 @@ EdgeTable::EdgeTable(const Instance& instance_) : instance(instance_)
   }
 }
 
-void EdgeTable::add(int loc1, int loc2, int time, int agent_num)
+void EdgeTable::add(int from, int to, int time, int agent_num)
 {
-  assertm(loc1 != loc2, "Invalid edge constraint.");
-  const int dir = static_cast<int>(find_direction(loc1, loc2)) - 1;
+  assertm(from != to, "Invalid edge constraint.");
+  const int dir = static_cast<int>(find_direction(from, to)) - 1;
   assertm(dir >= 0 && dir <= NUM_DIRECTIONS, "Invalid direction.");
   // assertm(edge_constraints[dir][loc2].find(time) == edge_constraints[dir][loc2].end(), "Edge constraint already exists.");
-  int loc2_free = instance.location_to_free_location(loc2);
-  assertm(std::find_if(edge_constraints[dir][loc2_free].begin(), edge_constraints[dir][loc2_free].end(),
-                       [time](const std::pair<int, int>& p) { return p.first == time; }) == edge_constraints[dir][loc2_free].end(),
+  int to_free = instance.location_to_free_location(to);
+  assertm(std::find_if(edge_constraints[dir][to_free].begin(), edge_constraints[dir][to_free].end(),
+                       [time](const std::pair<int, int>& p) { return p.first == time; }) == edge_constraints[dir][to_free].end(),
           "Edge constraint already exists.");
   // edge_constraints[dir][loc2].insert(time);     // unordered set implementation
-  edge_constraints[dir][loc2_free].push_back({time, agent_num});  // vector implementation
+  edge_constraints[dir][to_free].push_back({time, agent_num});  // vector implementation
 }
 
-void EdgeTable::remove(int loc1, int loc2, int time)
+void EdgeTable::remove(int from, int to, int time)
 {
-  const int dir = static_cast<int>(find_direction(loc1, loc2)) - 1;
+  const int dir = static_cast<int>(find_direction(from, to)) - 1;
   assertm(dir >= 0 && dir <= NUM_DIRECTIONS, "Invalid direction.");
-  int loc2_free = instance.location_to_free_location(loc2);
+  int to_free = instance.location_to_free_location(to);
 // int erased = edge_constraints[dir][loc2].erase(time);
 // assertm(erased == 1, "Trying to erase an edge constraint that is not present.");
 #ifndef NDEBUG
-  int constraints_before = edge_constraints[dir][loc2_free].size();
+  int constraints_before = edge_constraints[dir][to_free].size();
   // std::cout << "Constraints before: " << constraints_before << std::endl;
 #endif
-  edge_constraints[dir][loc2_free].erase(std::remove_if(edge_constraints[dir][loc2_free].begin(), edge_constraints[dir][loc2_free].end(),
+  edge_constraints[dir][to_free].erase(std::remove_if(edge_constraints[dir][to_free].begin(), edge_constraints[dir][to_free].end(),
                                                         [time](const std::pair<int, int>& p) { return p.first == time; }),
-                                         edge_constraints[dir][loc2_free].end());
+                                         edge_constraints[dir][to_free].end());
   // std::cout << "Constraints after: " << edge_constraints[dir][loc2].size() << std::endl;
-  assertm(constraints_before - edge_constraints[dir][loc2_free].size() == 1, "Should erase exactly one edge constraint.");
+  assertm(constraints_before - edge_constraints[dir][to_free].size() == 1, "Should erase exactly one edge constraint.");
 }
 
 
-auto EdgeTable::get(int loc1, int loc2, int time) const -> int
+auto EdgeTable::get(int from, int to, int time) const -> int
 {
-  const int dir = static_cast<int>(find_direction(loc1, loc2)) - 1;  // dont consider NONE direction
+  const int dir = static_cast<int>(find_direction(from, to)) - 1;  // dont consider NONE direction
   assertm(dir >= 0 && dir < NUM_DIRECTIONS, "Invalid direction.");
 
-  int loc2_free = instance.location_to_free_location(loc2);
+  int to_free = instance.location_to_free_location(to);
   // return edge_constraints[dir][loc2].find(time) != edge_constraints[dir][loc2].end(); // unordered set implementation
-  auto it = std::find_if(edge_constraints[dir][loc2_free].begin(), edge_constraints[dir][loc2_free].end(),
+  auto it = std::find_if(edge_constraints[dir][to_free].begin(), edge_constraints[dir][to_free].end(),
                          [time](const std::pair<int, int>& p) { return p.first == time; });
   // check whether found
-  if (it == edge_constraints[dir][loc2_free].end())
+  if (it == edge_constraints[dir][to_free].end())
   {
     return -1;
   }

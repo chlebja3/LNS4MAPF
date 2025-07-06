@@ -14,8 +14,8 @@
 #include <cassert>
 #include <chrono>
 #include <climits>
-#include <cstdint>
 #include <list>
+#include <optional>
 #include <vector>
 
 /**

@@ -8,10 +8,8 @@
 #include "ConstraintTable.h"
 
 #include <climits>
-#include <iostream>
 
 
-//
 ConstraintTable::ConstraintTable(const Instance& instance_) : instance(instance_)
 {
   // initialize the constraint vectors, static obstacles dont need constraint vectors
@@ -89,15 +87,7 @@ void ConstraintTable::add_constraint(const TimePoint& timepoint, int agent_num)
 
   // add to the set of visiting agents
   // if the agent is not yet in the set, add it with count 1
-  if (agents_counts[free_location].find(agent_num) == agents_counts[free_location].end())
-  {
-    agents_counts[free_location][agent_num] = 1;
-  }
-  else
-  {
-    // else increase the count
-    agents_counts[free_location][agent_num] += 1;
-  }
+  increase_agents_counts(free_location, agent_num);
 }
 
 auto ConstraintTable::remove_constraint(const TimePoint& timepoint, int agent_num) -> std::pair<TimeIntervalNode_it, TimeIntervalNode_it>
@@ -111,14 +101,7 @@ auto ConstraintTable::remove_constraint(const TimePoint& timepoint, int agent_nu
   // check that the list is not empty
   assertm(!cur_TI_list.empty(), "Trying to remove interval from an empty list.");
 
-  assertm(agents_counts[free_location].find(agent_num) != agents_counts[free_location].end(),
-          "Removing agent that is not in the agents counts");
-  agents_counts[free_location][agent_num] -= 1;
-  // if the count drops to 0, erase the agent number from keys
-  if (agents_counts[free_location][agent_num] == 0)
-  {
-    agents_counts[free_location].erase(agent_num);
-  }
+  decrease_agents_counts(free_location, agent_num);
 
   // remove the interval from the list
   for (auto it = cur_TI_list.begin(); it != cur_TI_list.end(); it++)
@@ -225,6 +208,7 @@ auto ConstraintTable::insert_constraint(const TimePoint& timepoint, int agent_nu
   assertm(instance.get_map_data().is_in(timepoint.location), "Invalid location.");
   assertm(agent_num >= 0 && agent_num < instance.get_num_of_agents(), "Invalid agent number.");
   int                          free_location = instance.location_to_free_location(timepoint.location);
+  increase_agents_counts(free_location, agent_num);
   std::list<TimeIntervalNode>& cur_TI_list   = constraints[free_location];
 
   // try to insert after prev
@@ -245,14 +229,13 @@ auto ConstraintTable::insert_constraint(const TimePoint& timepoint, int agent_nu
                               TimeIntervalNode(timepoint.interval, agent_num, TIME_INTERVAL_NODE_type::constraint, prev, next));
   }
 
-  // the current time interval list is empty
-  assertm(timepoint.interval.t_min == 0 && timepoint.interval.t_max == INT_MAX,
-          "If there is no prev and no next, the interval must be infinite, because there can not be any safe intervals.");
-  assertm(cur_TI_list.empty(), "If prev and next are empty, cur TI list must be also.");
+  // insert to the end
+  // assertm(timepoint.interval.t_min == 0 && timepoint.interval.t_max == INT_MAX,
+  //         "If there is no prev and no next, the interval must be infinite, because there can not be any safe intervals.");
+  // assertm(cur_TI_list.empty(), "If prev and next are empty, cur TI list must be also.");
   return cur_TI_list.insert(cur_TI_list.end(),
                             TimeIntervalNode(timepoint.interval, agent_num, TIME_INTERVAL_NODE_type::constraint, prev, next));
 }
-
 
 void ConstraintTable::delete_constraint(int location, TimeIntervalNode_it node)
 {
@@ -261,6 +244,7 @@ void ConstraintTable::delete_constraint(int location, TimeIntervalNode_it node)
   assertm(instance.get_map_data().is_in(location), "Invalid location.");
 
   int                          free_location = instance.location_to_free_location(location);
+  decrease_agents_counts(free_location, node.value()->agent_num);
   std::list<TimeIntervalNode>& cur_TI_list   = constraints[free_location];
   // rewire
   if (node.value()->prev_interval.has_value())

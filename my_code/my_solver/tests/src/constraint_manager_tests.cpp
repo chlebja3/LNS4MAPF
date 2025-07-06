@@ -29,7 +29,7 @@ protected:
     std::string base_path = get_base_path_tests();  // path to my_solver
 
     instance =
-        std::make_unique<Instance>(base_path + "/tests/test_maps/dummy_3_3.map", base_path + "/tests/test_scen/dummy_3_3_scen_1.scen", 1);
+        std::make_unique<Instance>(base_path + "/tests/test_maps/empty_3_3.map", base_path + "/tests/test_scen/empty_3_3_scen_1.scen", 4);
     constraint_manager = std::make_unique<ConstraintManager>(*instance);
   }
 
@@ -59,8 +59,8 @@ TEST_F(ConstraintManagerTest, AddPathConstraints)
   EXPECT_EQ(std::next(start)->interval, TimeInterval(9, INT_MAX));
 
   // test second edge conflict
-  std::tie(start, end) = constraint_manager->get_safe_intervals(6, {5, 9});
-  safe_intervals       = filter_time_intervals(constraint_manager->get_safe_intervals(6, {5, 9}), {5, 9}, 7, 6, *constraint_manager);
+  auto start_end = constraint_manager->get_safe_intervals(6, {5, 9});
+  safe_intervals       = filter_time_intervals(start_end, {5, 9}, 7, 6, *constraint_manager);
   EXPECT_EQ(safe_intervals.size(), 1) << "Expected only one safe interval.";
   EXPECT_EQ(safe_intervals[0], TimeInterval(5, 5));
 }

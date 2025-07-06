@@ -46,11 +46,11 @@ TEST_F(EdgeTableTest, Add)
   edge_table->add(6, 7, 3, 0);
 
   // check that the constraint is in the edge_table
-  EXPECT_TRUE(edge_table->get(6, 7, 3));
+  EXPECT_EQ(edge_table->get(6, 7, 3), 0);
 
   // check that the other times are not there
-  EXPECT_FALSE(edge_table->get(6, 7, 2));
-  EXPECT_FALSE(edge_table->get(6, 7, 4));
+  EXPECT_EQ(edge_table->get(6, 7, 2), -1);
+  EXPECT_EQ(edge_table->get(6, 7, 4), -1);
 }
 
 // remove from edge constraint edge_table
@@ -59,13 +59,13 @@ TEST_F(EdgeTableTest, Remove)
   // add a constraint to the edge_table
   edge_table->add(1, 2, 3, 0);
 
-  EXPECT_TRUE(edge_table->get(1, 2, 3));
+  EXPECT_EQ(edge_table->get(1, 2, 3), 0);
 
   // remove the constraint
   edge_table->remove(1, 2, 3);
 
   // check that the constraint is not in the edge_table
-  EXPECT_FALSE(edge_table->get(1, 2, 3));
+  EXPECT_EQ(edge_table->get(1, 2, 3), -1);
 }
 
 // add an existing edge constraint

@@ -111,6 +111,7 @@ void SafeIntervalTable::remove_constraint(const TimePoint& timepoint, int agent_
   {
     auto [prev, next] = constraint_table.remove_constraint(timepoint, agent_num);
     cur_TI_list.emplace_back(timepoint.interval, agent_num, TIME_INTERVAL_NODE_type::safe_interval, prev, next);
+    // TODO make sure that the prev->next and next->prev is correct
     return;
   }
 
@@ -154,7 +155,7 @@ void SafeIntervalTable::remove_constraint(const TimePoint& timepoint, int agent_
             prev->interval.t_max = it->interval.t_max;
             constraint_table.delete_constraint(timepoint.location, prev->next_interval);
             prev->next_interval = it->next_interval;
-            if (!it->next_interval.has_value())
+            if (it->next_interval.has_value())
             {
               it->next_interval.value()->prev_interval = {prev};
             }
