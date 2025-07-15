@@ -30,7 +30,7 @@ AccessModifierOffset: -2       # e.g., public/private indented 2 left
 SortIncludes: true
 
 # Max column width before wrapping
-ColumnLimit: 100            # Uncomment and set if you want to limit line length
+ColumnLimit: 120            # Uncomment and set if you want to limit line length
 # DisableFormat: false         # If true, disables formatting entirely
 
 # Namespace formatting

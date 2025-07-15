@@ -46,11 +46,11 @@ using Time = std::chrono::steady_clock;
  */
 enum class Direction
 {
-  NONE  = 0,
-  UP    = 1,
+  NONE = 0,
+  UP = 1,
   RIGHT = 2,
-  DOWN  = 3,
-  LEFT  = 4
+  DOWN = 3,
+  LEFT = 4
 };
 
 /**
@@ -127,11 +127,10 @@ public:
   auto end() -> std::pair<double, double>;
 
 private:
-  bool             initialized = false;  ///< Flag to check if the clock is initialized
-  Time::time_point wall_time_start;      ///< Start time for wall clock
-  timespec         cpu_time_start{};     ///< Start time for CPU clock
+  bool initialized = false;          ///< Flag to check if the clock is initialized
+  Time::time_point wall_time_start;  ///< Start time for wall clock
+  timespec cpu_time_start{};         ///< Start time for CPU clock
 };
-
 
 /**
  * @brief A class representing a node in a search algorithm.
@@ -221,7 +220,6 @@ public:
    */
   auto operator-(const Point2d& other) const -> Point2d;
 
-
   /**
    * @brief Check if two points are equal.
    *
@@ -230,7 +228,6 @@ public:
    * @return True if the two points are equal, false otherwise.
    */
   auto operator==(const Point2d& other) const -> bool;
-
 
   /**
    * @brief Add a point to this point.
@@ -256,7 +253,6 @@ public:
   {
     auto operator()(const Point2d& p) const -> size_t;
   };
-
 
   /**
    * @brief Convert the point to a string representation.
@@ -325,23 +321,22 @@ public:
 
 struct TimeIntervalNode;
 using TimeIntervalNode_it = std::optional<std::list<TimeIntervalNode>::iterator>;
-
+using TimeIntervalNode_const_it = std::optional<std::list<TimeIntervalNode>::const_iterator>;
 
 struct TimeIntervalNode
 {
 public:
-  TimeIntervalNode(const TimeInterval& interval_, int agent_num_, TIME_INTERVAL_NODE_type type_, TimeIntervalNode_it prev = std::nullopt,
-                   TimeIntervalNode_it next = std::nullopt)
+  TimeIntervalNode(const TimeInterval& interval_, int agent_num_, TIME_INTERVAL_NODE_type type_,
+                   TimeIntervalNode_it prev = std::nullopt, TimeIntervalNode_it next = std::nullopt)
       : interval(interval_), agent_num(agent_num_), type(type_), prev_interval(prev), next_interval(next)
   {
   }
-  TimeInterval            interval;
-  int                     agent_num;
+  TimeInterval interval;
+  int agent_num;
   TIME_INTERVAL_NODE_type type;
-  TimeIntervalNode_it     prev_interval;
-  TimeIntervalNode_it     next_interval;
+  TimeIntervalNode_it prev_interval;
+  TimeIntervalNode_it next_interval;
 };
-
 
 /**
  * @brief Check if two time intervals overlap.
@@ -359,7 +354,7 @@ auto overlap(const TimeInterval& i1, const TimeInterval& i2) -> bool;
 class TimePoint
 {
 public:
-  int          location;  ///< Location of the time point
+  int location;           ///< Location of the time point
   TimeInterval interval;  ///< Time interval of the time point
 
   /**
@@ -439,8 +434,8 @@ void fix_timepointpath_interval_overlap(TimePointPath& tp_path);
 auto is_valid_timepointpath(const TimePointPath& tp_path) -> bool;
 
 /**
- * @brief Get the path to the project directory, assuming the project is run from the build directory. This function is useful for loading
- * files from the project directory.
+ * @brief Get the path to the project directory, assuming the project is run from the build directory. This function is
+ * useful for loading files from the project directory.
  *
  * @return The path to the project directory.
  */
@@ -455,14 +450,12 @@ auto get_base_path() -> std::string;
  */
 inline auto safe_increase(int num) -> int
 {
-
   if (num == INT_MAX)
   {
     return INT_MAX;
   }
   return num + 1;
 }
-
 
 /**
  * @brief Convert an any type to a string representation.
@@ -512,4 +505,3 @@ auto location_at_time(TimePointPath& path, int time) -> int;
  * @return The selected file path as a string.
  */
 auto open_file_dialog(const std::string& type, const std::string& file_extensions) -> std::string;
-

@@ -14,11 +14,18 @@ auto get_base_path_tests() -> std::string;
 
 auto generate_random_timepointpath(int len) -> TimePointPath;
 
-auto filter_time_intervals(std::pair<std::list<TimeIntervalNode>::const_iterator, std::list<TimeIntervalNode>::const_iterator> start_goal,
-                           TimeInterval interval, int from, int to, const ConstraintManager& constraint_manager)
-    -> std::vector<TimeInterval>;
-
+auto filter_time_intervals(
+    std::pair<std::list<TimeIntervalNode>::const_iterator, std::list<TimeIntervalNode>::const_iterator> start_goal,
+    TimeInterval interval, int from, int to, const ConstraintManager& constraint_manager) -> std::vector<TimeInterval>;
 
 auto find_path_distance_gradient(int agent_num, const Instance& instance) -> Path;
 
-void print_safe_intervals(std::pair<std::list<TimeIntervalNode>::const_iterator, std::list<TimeIntervalNode>::const_iterator> start_goal);
+void print_safe_intervals(
+    std::pair<std::list<TimeIntervalNode>::const_iterator, std::list<TimeIntervalNode>::const_iterator> start_goal);
+
+std::pair<std::vector<TimeInterval>, std::vector<TIME_INTERVAL_NODE_type>> extract_intervals(
+    int location, ConstraintManager& constraint_manager);
+
+void print_all_intervals(int location, ConstraintManager& constraint_manager);
+
+void print_all_intervals_reversed(int location, ConstraintManager& constraint_manager);

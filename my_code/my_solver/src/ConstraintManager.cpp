@@ -95,7 +95,6 @@ void ConstraintManager::build_sequential(const std::vector<TimePointPath>& paths
   }
 }
 
-
 [[nodiscard]] auto ConstraintManager::get_blocking_agent(int from, int to, int time) const -> std::pair<int, int>
 {
   assertm(instance.get_map_data().is_in(from) && instance.get_map_data().is_in(to), "Invalid location.");
@@ -105,10 +104,25 @@ void ConstraintManager::build_sequential(const std::vector<TimePointPath>& paths
   int edge_constraint = -1;
   if (from != to)
   {
-    // we want to look for opposite edge, because there can not be any edge ending in to location without location constraint
+    // we want to look for opposite edge, because there can not be any edge ending in to location without location
+    // constraint
     edge_constraint = edge_table.get(to, from, time);
   }
   return std::make_pair(vertex_constraint, edge_constraint);
+}
+
+[[nodiscard]] auto ConstraintManager::get_first_time_interval(int location) -> TimeIntervalNode_const_it
+{
+  auto first_si = safe_interval_table.get_first_safe_interval(location);
+  auto first_co = constraint_table.get_first_constraint(location);
+  assertm(first_si.has_value() || first_co.has_value(), "There has to be at least one safe interval or constraint.");
+  auto curr = first_si;
+  if (!curr.has_value() ||
+      (first_co.has_value() && first_co.value()->interval.t_max < first_si.value()->interval.t_min))
+  {
+    curr = first_co;
+  }
+  return curr;
 }
 
 /*
@@ -174,7 +188,8 @@ void ConstraintTable::build_parallel_2(const std::vector<TimePointPath>& paths)
     if (prev_location[i] != -1)  // skip the first point as there is no edge
     {
       // the time when the edge is used is the start time of the later interval
-      edge_constraint_table.add(prev_location[i], timepoints[i]->location, timepoints[i]->interval.t_min, agent_nums[i]);
+      edge_constraint_table.add(prev_location[i], timepoints[i]->location, timepoints[i]->interval.t_min,
+agent_nums[i]);
     }
     omp_unset_lock(&locks.locks[instance.location_to_free_location(timepoints[i]->location)]);
   }

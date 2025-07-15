@@ -21,24 +21,22 @@
 class SafeIntervalTableTest : public ::testing::Test
 {
 protected:
-  std::unique_ptr<Instance>          instance;
+  std::unique_ptr<Instance> instance;
   std::unique_ptr<SafeIntervalTable> table;
-  std::unique_ptr<ConstraintTable>   constraint_table;
+  std::unique_ptr<ConstraintTable> constraint_table;
 
   void SetUp() override
   {
     // load instance
     std::string base_path = get_base_path_tests();  // path to my_solver
 
-    instance =
-        std::make_unique<Instance>(base_path + "/tests/test_maps/dummy_3_3.map", base_path + "/tests/test_scen/dummy_3_3_scen_1.scen", 1);
-    table            = std::make_unique<SafeIntervalTable>(*instance);
+    instance = std::make_unique<Instance>(base_path + "/tests/test_maps/dummy_3_3.map",
+                                          base_path + "/tests/test_scen/dummy_3_3_scen_1.scen", 1);
+    table = std::make_unique<SafeIntervalTable>(*instance);
     constraint_table = std::make_unique<ConstraintTable>(*instance);
   }
 
-  void TearDown() override
-  {
-  }
+  void TearDown() override {}
 };
 
 // Constraint Table tests
@@ -50,7 +48,7 @@ TEST_F(SafeIntervalTableTest, SingleConstraint)
   table->add_constraint(tp, 0, *constraint_table);
 
   // test that the first safe interval is right
-  auto first_si = table->get_first_safe_interval(7)->interval;
+  auto first_si = table->get_first_safe_interval(7).value()->interval;
   EXPECT_EQ(first_si, TimeInterval(0, 2));
 
   // test that both the interval before and after the constraint are retrieved
@@ -58,7 +56,6 @@ TEST_F(SafeIntervalTableTest, SingleConstraint)
   ASSERT_EQ(std::distance(start, end), 2) << "Expected two safe intervals after adding a constraint!";
   EXPECT_EQ(start->interval, TimeInterval(0, 2));
   EXPECT_EQ(std::next(start)->interval, TimeInterval(6, INT_MAX));
-
 
   // test that no interval is retrieved when the constraint is in the way
   std::tie(start, end) = table->get_safe_intervals(7, {2, 5});
@@ -88,7 +85,7 @@ TEST_F(SafeIntervalTableTest, RemoveConstraint)
   table->add_constraint(tp, 0, *constraint_table);
   table->remove_constraint(tp, 0, *constraint_table);
 
-  auto first_si = table->get_first_safe_interval(7);
+  auto first_si = table->get_first_safe_interval(7).value();
   EXPECT_TRUE(first_si->interval.t_min == 0 && first_si->interval.t_max == INT_MAX);
 
   auto [start, end] = table->get_safe_intervals(7, {0, INT_MAX});
@@ -98,7 +95,7 @@ TEST_F(SafeIntervalTableTest, RemoveConstraint)
 
 TEST_F(SafeIntervalTableTest, GetSafeIntervalEmpty)
 {
-  auto first_si = table->get_first_safe_interval(8);
+  auto first_si = table->get_first_safe_interval(8).value();
   EXPECT_TRUE(first_si->interval.t_min == 0 && first_si->interval.t_max == INT_MAX)
       << "No constraints should mean an unlimited safe interval.";
 
@@ -130,7 +127,8 @@ TEST_F(SafeIntervalTableTest, RemoveFromEmptyTable)
 {
   TimePoint tp(3, {3, 6});
   // expect assert death
-  EXPECT_DEATH(table->remove_constraint(tp, 0, *constraint_table), "Constraint interval can not have any overlap with safe interval.");
+  EXPECT_DEATH(table->remove_constraint(tp, 0, *constraint_table),
+               "Constraint interval can not have any overlap with safe interval.");
 }
 
 // Constraint removal when no constraint exists
@@ -142,7 +140,8 @@ TEST_F(SafeIntervalTableTest, RemoveNonExistentConstraint)
 {
   TimePoint tp(3, {3, 6});
   // test the second method
-  EXPECT_DEATH(table->remove_constraint(tp, 0, *constraint_table), "Constraint interval can not have any overlap with safe interval.");
+  EXPECT_DEATH(table->remove_constraint(tp, 0, *constraint_table),
+               "Constraint interval can not have any overlap with safe interval.");
 }
 
 // Test 8: Adding a constraint that is already present (should cause assert death)
@@ -156,4 +155,3 @@ TEST_F(SafeIntervalTableTest, AddExistingConstraint)
   table->add_constraint(tp, 0, *constraint_table);
   ASSERT_DEATH(table->add_constraint(tp, 0, *constraint_table), "Can not add an overlapping constraint.");
 }
-

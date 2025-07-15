@@ -1,6 +1,7 @@
 /**
  * @file
- * @brief Contains classes relevant to the SafeIntervalTable, which stores the safe intervals for SIPP.
+ * @brief Contains classes relevant to the SafeIntervalTable, which stores the safe intervals for
+ * SIPP.
  *
  * @author: Jan Chleboun <chlebja3@fel.cvut.cz>
  * @date: 14-02-2025
@@ -20,7 +21,8 @@
 #include "utils.h"
 
 /**
- * @brief If this is defined, the solver is compiled with parallelized versions of the SafeIntervalTable.
+ * @brief If this is defined, the solver is compiled with parallelized versions of the
+ * SafeIntervalTable.
  */
 #define SIT_PARALLELIZATION
 
@@ -41,14 +43,15 @@ public:
 
   void remove_constraint(const TimePoint& timepoint, int agent_num, ConstraintTable& constraint_table);
 
-
   /**
    * @brief Gets the safe intervals for a given location and a time interval.
    *
    * @param location The location to get the safe intervals for.
-   * @param time_interval The time interal, the location can be entered. All returned intervals must have nonzero intersection with it.
+   * @param time_interval The time interal, the location can be entered. All returned intervals must
+   * have nonzero intersection with it.
    *
-   * @return A pair of iterators representing the range of safe intervals for the given location and time interval.
+   * @return A pair of iterators representing the range of safe intervals for the given location and
+   * time interval.
    * @warning The returned safe intervals must be checked for edge collisions.
    */
   [[nodiscard]] auto get_safe_intervals(int location, const TimeInterval& time_interval) const
@@ -59,9 +62,10 @@ public:
    *
    * @param location The location to get the first safe interval for.
    *
-   * @return  An iterator to the first safe interval for the given location.
+   * @return  An optional iterator to the first safe interval for the given location. If there is no value, there is no
+   * safe interval.
    */
-  [[nodiscard]] auto get_first_safe_interval(int location) const -> std::list<TimeIntervalNode>::const_iterator;
+  [[nodiscard]] auto get_first_safe_interval(int location) const -> TimeIntervalNode_const_it;
 
   /**
    * @brief Get the minimal reach time of a location.
@@ -96,11 +100,10 @@ public:
   {
     // reset safe intervals
     int num_free_cells = static_cast<int>(safe_intervals.size());
-    safe_intervals     = std::vector<std::list<TimeIntervalNode>>(
-        num_free_cells,
-        std::list<TimeIntervalNode>(
-            1, TimeIntervalNode(TimeInterval(0, INT_MAX), -1, TIME_INTERVAL_NODE_type::safe_interval, std::nullopt, std::nullopt)));
-
+    safe_intervals = std::vector<std::list<TimeIntervalNode>>(
+        num_free_cells, std::list<TimeIntervalNode>(
+                            1, TimeIntervalNode(TimeInterval(0, INT_MAX), -1, TIME_INTERVAL_NODE_type::safe_interval,
+                                                std::nullopt, std::nullopt)));
 
     // reset latest constraint end
     // latest_constraint_end         = 0;
@@ -115,9 +118,10 @@ public:
 
 private:
   std::vector<std::list<TimeIntervalNode>> safe_intervals; /**< safe intervals for each position */
-  const Instance&                          instance;       /**< The instance of the problem. */
-  // int                                  max_path_len_estimate = INT_MAX; /**< The estimate of the maximum path length. */
-  // int unlimited_safe_intervals; /**< The number of unlimited safe intervals used for the max_path_len_estimate calculation. */
-  // int  latest_constraint_end         = 0;    /**< The end of the latest constraint. */
-  // bool latest_constraint_end_updated = true; /**< Indicates if the latest constraint end has been updated. */
+  const Instance& instance;                                /**< The instance of the problem. */
+  // int                                  max_path_len_estimate = INT_MAX; /**< The estimate of the
+  // maximum path length. */ int unlimited_safe_intervals; /**< The number of unlimited safe
+  // intervals used for the max_path_len_estimate calculation. */ int  latest_constraint_end = 0;
+  // /**< The end of the latest constraint. */ bool latest_constraint_end_updated = true; /**<
+  // Indicates if the latest constraint end has been updated. */
 };

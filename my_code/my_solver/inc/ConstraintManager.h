@@ -10,7 +10,6 @@
 #include "EdgeTable.h"
 #include "SafeIntervalTable.h"
 
-
 class ConstraintManager
 {
 public:
@@ -57,10 +56,12 @@ public:
     return safe_interval_table.get_safe_intervals(location, time_interval);
   }
 
-  [[nodiscard]] auto get_first_safe_interval(int location) const -> std::list<TimeIntervalNode>::const_iterator
+  [[nodiscard]] auto get_first_safe_interval(int location) const -> TimeIntervalNode_const_it
   {
     return safe_interval_table.get_first_safe_interval(location);
   }
+
+  [[nodiscard]] auto get_first_time_interval(int location) -> TimeIntervalNode_const_it;
 
   [[nodiscard]] auto get_min_reach_time(int goal) const -> int
   {
@@ -89,12 +90,11 @@ public:
     return edge_table.get(to, from, time) != -1;
   }
 
-
 private:
   SafeIntervalTable safe_interval_table;
-  ConstraintTable   constraint_table;
-  EdgeTable         edge_table;
-  const Instance&   instance;
+  ConstraintTable constraint_table;
+  EdgeTable edge_table;
+  const Instance& instance;
 #ifdef CM_PARALLELIZATION
   omp_locks locks; /**< The locks used for parallelization. */
 #endif

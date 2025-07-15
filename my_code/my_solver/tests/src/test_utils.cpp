@@ -12,7 +12,6 @@
 #include <climits>
 #include <filesystem>
 
-
 std::string get_base_path_tests()
 {
   return std::filesystem::canonical("/proc/self/exe").parent_path().parent_path().parent_path().string();  // Linux only
@@ -20,11 +19,11 @@ std::string get_base_path_tests()
 
 TimePointPath generate_random_timepointpath(int len_wanted)
 {
-  int                      len             = len_wanted - 1;  // decrease the length as the last element has to be handled separately
-  TimePointPath            tp_path         = {};
-  int                      i               = 0;
-  int                      cur_loc         = 0;  // start at (0, 0)
-  const int                instance_width  = 5;  // lets say the instance has width 5
+  int len = len_wanted - 1;  // decrease the length as the last element has to be handled separately
+  TimePointPath tp_path = {};
+  int i = 0;
+  int cur_loc = 0;               // start at (0, 0)
+  const int instance_width = 5;  // lets say the instance has width 5
   const std::array<int, 4> possible_shifts = {-instance_width, -1, 1, instance_width};
   while (i < len)
   {
@@ -52,9 +51,9 @@ TimePointPath generate_random_timepointpath(int len_wanted)
   return tp_path;
 }
 
-auto filter_time_intervals(std::pair<std::list<TimeIntervalNode>::const_iterator, std::list<TimeIntervalNode>::const_iterator> start_goal,
-                           TimeInterval interval, int from, int to, const ConstraintManager& constraint_manager)
-    -> std::vector<TimeInterval>
+auto filter_time_intervals(
+    std::pair<std::list<TimeIntervalNode>::const_iterator, std::list<TimeIntervalNode>::const_iterator> start_goal,
+    TimeInterval interval, int from, int to, const ConstraintManager& constraint_manager) -> std::vector<TimeInterval>
 {
   auto [start, end] = start_goal;
   std::vector<TimeInterval> ret;
@@ -77,7 +76,8 @@ auto filter_time_intervals(std::pair<std::list<TimeIntervalNode>::const_iterator
     // check edge collision
     if (constraint_manager.check_edge_collision(from, to, new_interval.t_min))
     {
-      // std::cout << "Edge collision, from: " << from << ", to " << to << ", interval " << new_interval << std::endl;
+      // std::cout << "Edge collision, from: " << from << ", to " << to << ", interval " <<
+      // new_interval << std::endl;
       continue;
     }
 
@@ -90,22 +90,22 @@ auto filter_time_intervals(std::pair<std::list<TimeIntervalNode>::const_iterator
 auto find_path_distance_gradient(int agent_num, const Instance& instance) -> Path
 {
   Path ret;
-  int  start = instance.get_start_locations()[agent_num];
+  int start = instance.get_start_locations()[agent_num];
   ret.push_back(start);
-  int curr      = start;
+  int curr = start;
   int curr_dist = instance.get_heuristic_distance(agent_num, curr);
   while (curr_dist > 0)
   {
     // find neighbor locations
     const std::vector<int>& neighbors = instance.get_neighbor_locations(curr);
-    bool                    improved  = false;
+    bool improved = false;
     // iterate over the neighbors
     for (int neighbor : neighbors)
     {
       // check if the neighbor is closer to the goal
       if (instance.get_heuristic_distance(agent_num, neighbor) < curr_dist)
       {
-        curr      = neighbor;
+        curr = neighbor;
         curr_dist = instance.get_heuristic_distance(agent_num, curr);
         ret.push_back(curr);
         improved = true;
@@ -117,7 +117,8 @@ auto find_path_distance_gradient(int agent_num, const Instance& instance) -> Pat
   return ret;
 }
 
-void print_safe_intervals(std::pair<std::list<TimeIntervalNode>::const_iterator, std::list<TimeIntervalNode>::const_iterator> start_goal)
+void print_safe_intervals(
+    std::pair<std::list<TimeIntervalNode>::const_iterator, std::list<TimeIntervalNode>::const_iterator> start_goal)
 {
   auto [start, end] = start_goal;
 
@@ -126,4 +127,50 @@ void print_safe_intervals(std::pair<std::list<TimeIntervalNode>::const_iterator,
   {
     std::cout << it->interval << std::endl;
   }
+}
+
+std::pair<std::vector<TimeInterval>, std::vector<TIME_INTERVAL_NODE_type>> extract_intervals(
+    int location, ConstraintManager& constraint_manager)
+{
+  auto curr = constraint_manager.get_first_time_interval(location);
+
+  std::vector<TimeInterval> intervals;
+  std::vector<TIME_INTERVAL_NODE_type> types;
+
+  // go through the intervals
+  while (curr.has_value())
+  {
+    intervals.push_back(curr.value()->interval);
+    types.push_back(curr.value()->type);
+    curr = curr.value()->next_interval;
+  }
+  return std::make_pair(intervals, types);
+}
+
+void print_all_intervals(int location, ConstraintManager& constraint_manager)
+{
+  auto [intervals, types] = extract_intervals(location, constraint_manager);
+  assertm(intervals.size() == types.size(), "Intervals and types must have the same length");
+  std::cout << "*************************************" << std::endl;
+  for (int i = 0; i < static_cast<int>(intervals.size()); i++)
+  {
+    std::cout << (types[i] == TIME_INTERVAL_NODE_type::safe_interval ? "Safe interval" : "Constraint") << ": "
+              << intervals[i] << ", prev: " << (i > 0 ? intervals[i - 1] : TimeInterval(-1, -1))
+              << ", next: " << (i < static_cast<int>(intervals.size()) - 1 ? intervals[i + 1] : TimeInterval(-1, -1))
+              << std::endl;
+  }
+  std::cout << "-------------------------------------" << std::endl;
+}
+
+void print_all_intervals_reversed(int location, ConstraintManager& constraint_manager)
+{
+  auto [intervals, types] = extract_intervals(location, constraint_manager);
+  assertm(intervals.size() == types.size(), "Intervals and types must have the same length");
+  std::cout << "*************************************" << std::endl;
+  for (int i = static_cast<int>(intervals.size()) - 1; i >= 0; i--)
+  {
+    std::cout << (types[i] == TIME_INTERVAL_NODE_type::safe_interval ? "Safe interval" : "Constraint") << ": "
+              << intervals[i] << std::endl;
+  }
+  std::cout << "-------------------------------------" << std::endl;
 }

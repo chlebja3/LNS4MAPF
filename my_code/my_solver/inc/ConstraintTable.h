@@ -41,7 +41,8 @@ public:
   auto insert_constraint(const TimePoint& timepoint, int agent_num, TimeIntervalNode_it prev, TimeIntervalNode_it next)
       -> TimeIntervalNode_it;
 
-  auto remove_constraint(const TimePoint& timepoint, int agent_num) -> std::pair<TimeIntervalNode_it, TimeIntervalNode_it>;
+  auto remove_constraint(const TimePoint& timepoint, int agent_num)
+      -> std::pair<TimeIntervalNode_it, TimeIntervalNode_it>;
 
   auto remove_constraint_after(const TimePoint& timepoint, int agent_num, TimeIntervalNode_it start)
       -> std::pair<TimeIntervalNode_it, TimeIntervalNode_it>;
@@ -56,8 +57,8 @@ public:
    * @param location The location to check for blocking agents.
    * @param time_min The minimum time to check for blocking agents.
    *
-   * @return  A vector of integers representing the agents that block the location sorted in descending order from the latest to the
-   * earliest.
+   * @return  A vector of integers representing the agents that block the location sorted in
+   * descending order from the latest to the earliest.
    */
   [[nodiscard]] auto get_blocking_agents(int location, int time_min) const -> std::vector<int>;
 
@@ -66,7 +67,8 @@ public:
    *
    * @param location The location to check for agents.
    *
-   * @return A map of integers representing the agents that enter the location and how many times they enter it.
+   * @return A map of integers representing the agents that enter the location and how many times
+   * they enter it.
    */
   [[nodiscard]] auto get_agents_counts(int location) const -> const std::unordered_map<int, int>&
   {
@@ -79,7 +81,8 @@ public:
    *
    * @param free_location The free location to check for agents.
    *
-   * @return A map of integers representing the agents that enter the free location and how many times they enter it.
+   * @return A map of integers representing the agents that enter the free location and how many
+   * times they enter it.
    */
   [[nodiscard]] auto get_agents_counts_free(int free_location) const -> const std::unordered_map<int, int>&
   {
@@ -128,12 +131,14 @@ public:
   {
     const int num_free_cells = instance.get_num_free_cells();
     constraints.clear();
-    constraints   = std::vector<std::list<TimeIntervalNode>>(num_free_cells, std::list<TimeIntervalNode>());
+    constraints = std::vector<std::list<TimeIntervalNode>>(num_free_cells, std::list<TimeIntervalNode>());
     agents_counts = std::vector<std::unordered_map<int, int>>(num_free_cells, std::unordered_map<int, int>());
   }
 
+  [[nodiscard]] auto get_first_constraint(int location) -> TimeIntervalNode_it;
+
 private:
-  std::vector<std::list<TimeIntervalNode>>  constraints;   /**< constraints for each location */
-  const Instance&                           instance;      /**< The instance of the problem. */
+  std::vector<std::list<TimeIntervalNode>> constraints;    /**< constraints for each location */
+  const Instance& instance;                                /**< The instance of the problem. */
   std::vector<std::unordered_map<int, int>> agents_counts; /**< unordered map of times the agents visit each location */
 };

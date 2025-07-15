@@ -22,18 +22,17 @@
 TEST(SIPPTest, BasicPathEmptyMap)
 {
   // load instance
-  std::string               base_path = get_base_path_tests();  // path to my_solver
-  std::unique_ptr<Instance> instance =
-      std::make_unique<Instance>(base_path + "/tests/test_maps/empty_5_5.map", base_path + "/tests/test_scen/empty_5_5_scen_1.scen", 1);
-
+  std::string base_path = get_base_path_tests();  // path to my_solver
+  std::unique_ptr<Instance> instance = std::make_unique<Instance>(
+      base_path + "/tests/test_maps/empty_5_5.map", base_path + "/tests/test_scen/empty_5_5_scen_1.scen", 1);
 
   // create SIPP
   for (auto algo : magic_enum::enum_values<SIPP_implementation>())
   {
-    std::mt19937      rnd_generator(0);
-    SIPP_settings     sipp_settings(algo, INFO_type::no_info, 1.0);
+    std::mt19937 rnd_generator(0);
+    SIPP_settings sipp_settings(algo, INFO_type::no_info, 1.0);
     ConstraintManager constraint_manager(*instance);
-    SIPP              sipp(*instance, rnd_generator, sipp_settings, constraint_manager);
+    SIPP sipp(*instance, rnd_generator, sipp_settings, constraint_manager);
 
     // from (0,0) to (4,4)
     TimePointPath path = sipp.plan(0, {});
@@ -48,17 +47,17 @@ TEST(SIPPTest, BasicPathEmptyMap)
 TEST(SIPPTest, StaticObstacleAvoidance)
 {
   // load instance
-  std::string               base_path = get_base_path_tests();  // path to my_solver
-  std::unique_ptr<Instance> instance =
-      std::make_unique<Instance>(base_path + "/tests/test_maps/wall_5_5.map", base_path + "/tests/test_scen/wall_5_5_scen_1.scen", 1);
+  std::string base_path = get_base_path_tests();  // path to my_solver
+  std::unique_ptr<Instance> instance = std::make_unique<Instance>(
+      base_path + "/tests/test_maps/wall_5_5.map", base_path + "/tests/test_scen/wall_5_5_scen_1.scen", 1);
 
   // create SIPP
   for (auto algo : magic_enum::enum_values<SIPP_implementation>())
   {
-    std::mt19937      rnd_generator(0);
-    SIPP_settings     sipp_settings(algo, INFO_type::no_info, 1.0);
+    std::mt19937 rnd_generator(0);
+    SIPP_settings sipp_settings(algo, INFO_type::no_info, 1.0);
     ConstraintManager constraint_manager(*instance);
-    SIPP              sipp(*instance, rnd_generator, sipp_settings, constraint_manager);
+    SIPP sipp(*instance, rnd_generator, sipp_settings, constraint_manager);
 
     // from (0,0) to (4,4)
     TimePointPath path = sipp.plan(0, {});
@@ -82,17 +81,17 @@ TEST(SIPPTest, StaticObstacleAvoidance)
 TEST(SIPPTest, TimeConstraintHandling)
 {
   // load instance
-  std::string               base_path = get_base_path_tests();  // path to my_solver
-  std::unique_ptr<Instance> instance =
-      std::make_unique<Instance>(base_path + "/tests/test_maps/empty_5_5.map", base_path + "/tests/test_scen/empty_5_5_scen_1.scen", 1);
+  std::string base_path = get_base_path_tests();  // path to my_solver
+  std::unique_ptr<Instance> instance = std::make_unique<Instance>(
+      base_path + "/tests/test_maps/empty_5_5.map", base_path + "/tests/test_scen/empty_5_5_scen_1.scen", 1);
 
   // create SIPP
   for (auto algo : magic_enum::enum_values<SIPP_implementation>())
   {
-    std::mt19937      rnd_generator(0);
-    SIPP_settings     sipp_settings(algo, INFO_type::no_info, 1.0);
+    std::mt19937 rnd_generator(0);
+    SIPP_settings sipp_settings(algo, INFO_type::no_info, 1.0);
     ConstraintManager constraint_manager(*instance);
-    SIPP              sipp(*instance, rnd_generator, sipp_settings, constraint_manager);
+    SIPP sipp(*instance, rnd_generator, sipp_settings, constraint_manager);
 
     // Create a wall from time constraints
     for (int i = 0; i < 5; i++)
@@ -127,17 +126,17 @@ TEST(SIPPTest, TimeConstraintHandling)
 TEST(SIPPTest, NoPathPossible)
 {
   // load instance
-  std::string               base_path = get_base_path_tests();  // path to my_solver
-  std::unique_ptr<Instance> instance =
-      std::make_unique<Instance>(base_path + "/tests/test_maps/biparted_5_5.map", base_path + "/tests/test_scen/empty_5_5_scen_1.scen", 1);
+  std::string base_path = get_base_path_tests();  // path to my_solver
+  std::unique_ptr<Instance> instance = std::make_unique<Instance>(
+      base_path + "/tests/test_maps/biparted_5_5.map", base_path + "/tests/test_scen/empty_5_5_scen_1.scen", 1);
 
   // create SIPP
   for (auto algo : magic_enum::enum_values<SIPP_implementation>())
   {
-    std::mt19937      rnd_generator(0);
-    SIPP_settings     sipp_settings(algo, INFO_type::no_info, 1.0);
+    std::mt19937 rnd_generator(0);
+    SIPP_settings sipp_settings(algo, INFO_type::no_info, 1.0);
     ConstraintManager constraint_manager(*instance);
-    SIPP              sipp(*instance, rnd_generator, sipp_settings, constraint_manager);
+    SIPP sipp(*instance, rnd_generator, sipp_settings, constraint_manager);
 
     TimePointPath path = sipp.plan(0, {});
 
@@ -149,17 +148,17 @@ TEST(SIPPTest, NoPathPossible)
 TEST(SIPPTest, NoPathDueToTimeConstraints)
 {
   // load instance
-  std::string               base_path = get_base_path_tests();  // path to my_solver
-  std::unique_ptr<Instance> instance =
-      std::make_unique<Instance>(base_path + "/tests/test_maps/empty_5_5.map", base_path + "/tests/test_scen/empty_5_5_scen_1.scen", 1);
+  std::string base_path = get_base_path_tests();  // path to my_solver
+  std::unique_ptr<Instance> instance = std::make_unique<Instance>(
+      base_path + "/tests/test_maps/empty_5_5.map", base_path + "/tests/test_scen/empty_5_5_scen_1.scen", 4);
 
   // create SIPP
   for (auto algo : magic_enum::enum_values<SIPP_implementation>())
   {
-    std::mt19937      rnd_generator(0);
-    SIPP_settings     sipp_settings(algo, INFO_type::no_info, 1.0);
+    std::mt19937 rnd_generator(0);
+    SIPP_settings sipp_settings(algo, INFO_type::no_info, 1.0);
     ConstraintManager constraint_manager(*instance);
-    SIPP              sipp(*instance, rnd_generator, sipp_settings, constraint_manager);
+    SIPP sipp(*instance, rnd_generator, sipp_settings, constraint_manager);
 
     // Add constraints that make it impossible to leave start until time 10
     constraint_manager.add_trajectory({TimePoint(1, {0, 10})}, 0);  // {1, 0}
@@ -201,17 +200,17 @@ TEST(SIPPTest, NoPathDueToTimeConstraints)
 TEST(SIPPTest, DynamicObstacleAtGoal)
 {
   // load instance
-  std::string               base_path = get_base_path_tests();  // path to my_solver
-  std::unique_ptr<Instance> instance =
-      std::make_unique<Instance>(base_path + "/tests/test_maps/empty_5_5.map", base_path + "/tests/test_scen/empty_5_5_scen_1.scen", 1);
+  std::string base_path = get_base_path_tests();  // path to my_solver
+  std::unique_ptr<Instance> instance = std::make_unique<Instance>(
+      base_path + "/tests/test_maps/empty_5_5.map", base_path + "/tests/test_scen/empty_5_5_scen_1.scen", 1);
 
   // create SIPP
   for (auto algo : magic_enum::enum_values<SIPP_implementation>())
   {
-    std::mt19937      rnd_generator(0);
-    SIPP_settings     sipp_settings(algo, INFO_type::no_info, 1.0);
+    std::mt19937 rnd_generator(0);
+    SIPP_settings sipp_settings(algo, INFO_type::no_info, 1.0);
     ConstraintManager constraint_manager(*instance);
-    SIPP              sipp(*instance, rnd_generator, sipp_settings, constraint_manager);
+    SIPP sipp(*instance, rnd_generator, sipp_settings, constraint_manager);
 
     // add a constraint that blocks the goal after time 20
     TimePointPath obstacle = {TimePoint(instance->get_goal_locations()[0], {20, 30})};
@@ -232,17 +231,17 @@ TEST(SIPPTest, DynamicObstacleAtGoal)
 TEST(SIPPTest, EdgeConstraintsAtGoal)
 {
   // load instance
-  std::string               base_path = get_base_path_tests();  // path to my_solver
-  std::unique_ptr<Instance> instance =
-      std::make_unique<Instance>(base_path + "/tests/test_maps/dummy_3_3.map", base_path + "/tests/test_scen/dummy_3_3_scen_2.scen", 1);
+  std::string base_path = get_base_path_tests();  // path to my_solver
+  std::unique_ptr<Instance> instance = std::make_unique<Instance>(
+      base_path + "/tests/test_maps/dummy_3_3.map", base_path + "/tests/test_scen/dummy_3_3_scen_2.scen", 1);
 
   // create SIPP
   for (auto algo : magic_enum::enum_values<SIPP_implementation>())
   {
-    std::mt19937      rnd_generator(0);
-    SIPP_settings     sipp_settings(algo, INFO_type::no_info, 1.0);
+    std::mt19937 rnd_generator(0);
+    SIPP_settings sipp_settings(algo, INFO_type::no_info, 1.0);
     ConstraintManager constraint_manager(*instance);
-    SIPP              sipp(*instance, rnd_generator, sipp_settings, constraint_manager);
+    SIPP sipp(*instance, rnd_generator, sipp_settings, constraint_manager);
 
     // from (2, 0) to (2, 1)
 
@@ -257,8 +256,9 @@ TEST(SIPPTest, EdgeConstraintsAtGoal)
     ASSERT_EQ(path.size(), 8) << "SIPP should find a path.";
 
     // check that the path is correct
-    EXPECT_EQ(path, TimePointPath({TimePoint(2, {0, 0}), TimePoint(1, {1, 1}), TimePoint(0, {2, 2}), TimePoint(3, {3, 3}),
-                                   TimePoint(6, {4, 4}), TimePoint(7, {5, 5}), TimePoint(8, {6, 6}), TimePoint(5, {7, INT_MAX})}));
+    EXPECT_EQ(path, TimePointPath({TimePoint(2, {0, 0}), TimePoint(1, {1, 1}), TimePoint(0, {2, 2}),
+                                   TimePoint(3, {3, 3}), TimePoint(6, {4, 4}), TimePoint(7, {5, 5}),
+                                   TimePoint(8, {6, 6}), TimePoint(5, {7, INT_MAX})}));
   }
 }
 
@@ -266,17 +266,17 @@ TEST(SIPPTest, EdgeConstraintsAtGoal)
 TEST(SIPPTest, SamePathAsAStar1)
 {
   // load instance
-  std::string               base_path = get_base_path_tests();  // path to my_solver
-  std::unique_ptr<Instance> instance =
-      std::make_unique<Instance>(base_path + "/tests/test_maps/empty_5_5.map", base_path + "/tests/test_scen/empty_5_5_scen_1.scen", 1);
+  std::string base_path = get_base_path_tests();  // path to my_solver
+  std::unique_ptr<Instance> instance = std::make_unique<Instance>(
+      base_path + "/tests/test_maps/empty_5_5.map", base_path + "/tests/test_scen/empty_5_5_scen_1.scen", 1);
 
   // create SIPP
   for (auto algo : magic_enum::enum_values<SIPP_implementation>())
   {
-    std::mt19937      rnd_generator(0);
-    SIPP_settings     sipp_settings(algo, INFO_type::no_info, 1.0);
+    std::mt19937 rnd_generator(0);
+    SIPP_settings sipp_settings(algo, INFO_type::no_info, 1.0);
     ConstraintManager constraint_manager(*instance);
-    SIPP              sipp(*instance, rnd_generator, sipp_settings, constraint_manager);
+    SIPP sipp(*instance, rnd_generator, sipp_settings, constraint_manager);
 
     // from (0,0) to (4,4)
 
@@ -296,7 +296,8 @@ TEST(SIPPTest, SamePathAsAStar1)
     Path path_sipp_converted = timepointpath_to_path(path_sipp);
 
     // check that the paths have the same length
-    EXPECT_EQ(path_sipp_converted.size(), path_astar.size()) << "The paths found by SIPP and ASTAR should have the same length!";
+    EXPECT_EQ(path_sipp_converted.size(), path_astar.size())
+        << "The paths found by SIPP and ASTAR should have the same length!";
   }
 }
 
@@ -304,17 +305,17 @@ TEST(SIPPTest, SamePathAsAStar1)
 TEST(SIPPTest, SamePathAsAStar2)
 {
   // load instance
-  std::string               base_path = get_base_path_tests();  // path to my_solver
-  std::unique_ptr<Instance> instance =
-      std::make_unique<Instance>(base_path + "/tests/test_maps/den520d.map", base_path + "/tests/test_scen/den520d-random-0.scen", 1);
+  std::string base_path = get_base_path_tests();  // path to my_solver
+  std::unique_ptr<Instance> instance = std::make_unique<Instance>(
+      base_path + "/tests/test_maps/den520d.map", base_path + "/tests/test_scen/den520d-random-0.scen", 1);
 
   // create SIPP
   for (auto algo : magic_enum::enum_values<SIPP_implementation>())
   {
-    std::mt19937      rnd_generator(0);
-    SIPP_settings     sipp_settings(algo, INFO_type::no_info, 1.0);
+    std::mt19937 rnd_generator(0);
+    SIPP_settings sipp_settings(algo, INFO_type::no_info, 1.0);
     ConstraintManager constraint_manager(*instance);
-    SIPP              sipp(*instance, rnd_generator, sipp_settings, constraint_manager);
+    SIPP sipp(*instance, rnd_generator, sipp_settings, constraint_manager);
 
     // from (0,0) to (4,4)
 
@@ -334,7 +335,8 @@ TEST(SIPPTest, SamePathAsAStar2)
     Path path_sipp_converted = timepointpath_to_path(path_sipp);
 
     // check that the paths have the same length
-    EXPECT_EQ(path_sipp_converted.size(), path_astar.size()) << "The paths found by SIPP and ASTAR should have the same length!";
+    EXPECT_EQ(path_sipp_converted.size(), path_astar.size())
+        << "The paths found by SIPP and ASTAR should have the same length!";
   }
 }
 
@@ -343,20 +345,19 @@ TEST(SIPPTest, SamePathAsAStar2)
 TEST(SIPPTest, PrioritizedPlanning1agent)
 {
   // load instance
-  std::string               base_path = get_base_path_tests();  // path to my_solver
-  std::unique_ptr<Instance> instance =
-      std::make_unique<Instance>(base_path + "/tests/test_maps/dummy_3_3.map", base_path + "/tests/test_scen/dummy_3_3_scen_1.scen", 1);
+  std::string base_path = get_base_path_tests();  // path to my_solver
+  std::unique_ptr<Instance> instance = std::make_unique<Instance>(
+      base_path + "/tests/test_maps/dummy_3_3.map", base_path + "/tests/test_scen/dummy_3_3_scen_1.scen", 1);
 
   // create LNS
-
 
   // plan path by Prioritized Planning
   for (auto algo : magic_enum::enum_values<SIPP_implementation>())
   {
-    auto         rnd_generator = std::mt19937(0);
+    auto rnd_generator = std::mt19937(0);
     LNS_settings lns_settings(0, 5, {DESTROY_TYPE::RANDOM, 10}, {algo, INFO_type::no_info, 1.0});
-    LNS          lns(*instance, rnd_generator, nullptr, lns_settings);
-    Solution     sol = lns.PrioritizedPlanning();
+    LNS lns(*instance, rnd_generator, nullptr, lns_settings);
+    Solution sol = lns.PrioritizedPlanning();
     // check solution validity
     EXPECT_TRUE(sol.is_valid(*instance)) << "Solution is invalid!";
   }
@@ -366,19 +367,18 @@ TEST(SIPPTest, PrioritizedPlanning1agent)
 TEST(SIPPTest, PrioritizedPlanningEmpty2agents)
 {
   // load instance
-  std::string               base_path = get_base_path_tests();  // path to my_solver
-  std::unique_ptr<Instance> instance =
-      std::make_unique<Instance>(base_path + "/tests/test_maps/empty_5_5.map", base_path + "/tests/test_scen/empty_5_5_scen_1.scen", 2);
-
+  std::string base_path = get_base_path_tests();  // path to my_solver
+  std::unique_ptr<Instance> instance = std::make_unique<Instance>(
+      base_path + "/tests/test_maps/empty_5_5.map", base_path + "/tests/test_scen/empty_5_5_scen_1.scen", 2);
 
   // plan path by Prioritized Planning
   for (auto algo : magic_enum::enum_values<SIPP_implementation>())
   {
     // create LNS
-    auto         rnd_generator = std::mt19937(0);
+    auto rnd_generator = std::mt19937(0);
     LNS_settings lns_settings(0, 5, {DESTROY_TYPE::RANDOM, 10}, {algo, INFO_type::no_info, 1.0});
-    LNS          lns(*instance, rnd_generator, nullptr, lns_settings);
-    Solution     sol = lns.PrioritizedPlanning();
+    LNS lns(*instance, rnd_generator, nullptr, lns_settings);
+    Solution sol = lns.PrioritizedPlanning();
 
     // check solution validity
     EXPECT_TRUE(sol.is_valid(*instance)) << "Solution is invalid!";
@@ -389,19 +389,18 @@ TEST(SIPPTest, PrioritizedPlanningEmpty2agents)
 TEST(SIPPTest, PrioritizedPlanning)
 {
   // load instance
-  std::string               base_path = get_base_path_tests();  // path to my_solver
-  std::unique_ptr<Instance> instance =
-      std::make_unique<Instance>(base_path + "/tests/test_maps/den520d.map", base_path + "/tests/test_scen/den520d-random-0.scen", 100);
-
+  std::string base_path = get_base_path_tests();  // path to my_solver
+  std::unique_ptr<Instance> instance = std::make_unique<Instance>(
+      base_path + "/tests/test_maps/den520d.map", base_path + "/tests/test_scen/den520d-random-0.scen", 100);
 
   // plan path by Prioritized Planning
   for (auto algo : magic_enum::enum_values<SIPP_implementation>())
   {
     // create LNS
-    auto         rnd_generator = std::mt19937(0);
+    auto rnd_generator = std::mt19937(0);
     LNS_settings lns_settings(0, 5, {DESTROY_TYPE::RANDOM, 10}, {algo, INFO_type::no_info, 1.0});
-    LNS          lns(*instance, rnd_generator, nullptr, lns_settings);
-    Solution     sol = lns.PrioritizedPlanning();
+    LNS lns(*instance, rnd_generator, nullptr, lns_settings);
+    Solution sol = lns.PrioritizedPlanning();
     // check solution validity
     EXPECT_TRUE(sol.is_valid(*instance)) << "Solution is invalid!";
   }
@@ -410,23 +409,22 @@ TEST(SIPPTest, PrioritizedPlanning)
 TEST(SIPPTest, SameAfterDestroy)
 {
   // load instance
-  std::string               base_path = get_base_path_tests();  // path to my_solver
-  std::unique_ptr<Instance> instance =
-      std::make_unique<Instance>(base_path + "/tests/test_maps/den520d.map", base_path + "/tests/test_scen/den520d-random-0.scen", 200);
-
+  std::string base_path = get_base_path_tests();  // path to my_solver
+  std::unique_ptr<Instance> instance = std::make_unique<Instance>(
+      base_path + "/tests/test_maps/den520d.map", base_path + "/tests/test_scen/den520d-random-0.scen", 200);
 
   // plan path by Prioritized Planning
   for (auto algo : magic_enum::enum_values<SIPP_implementation>())
   {
     // create LNS
-    auto         rnd_generator = std::mt19937(0);
+    auto rnd_generator = std::mt19937(0);
     LNS_settings lns_settings(0, 5, {DESTROY_TYPE::RANDOM, 10}, {algo, INFO_type::no_info, 1.0});
-    LNS          lns(*instance, rnd_generator, nullptr, lns_settings);
-    Solution     sol = lns.PrioritizedPlanning();
+    LNS lns(*instance, rnd_generator, nullptr, lns_settings);
+    Solution sol = lns.PrioritizedPlanning();
     // check solution validity
     EXPECT_TRUE(sol.is_valid(*instance)) << "Solution is invalid!";
-    int           agent_num = 100;
-    TimePointPath path0     = sol.paths[agent_num];
+    int agent_num = 100;
+    TimePointPath path0 = sol.paths[agent_num];
     // remove the path
     lns.get_constraint_manager().remove_trajectory(path0, agent_num);
     lns.already_planned.erase(agent_num);
