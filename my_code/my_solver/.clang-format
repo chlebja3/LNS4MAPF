@@ -1,0 +1,71 @@
+# Use Google style as a base
+BasedOnStyle: Google
+
+# Indentation settings
+IndentWidth: 2           # Number of spaces per indent level
+TabWidth: 2              # Number of spaces per tab (if tabs used)
+UseTab: Never            # Use spaces instead of tabs
+
+# Braces
+BreakBeforeBraces: Allman     # Puts opening brace on a new line (Allman style)
+
+# Optional brace style alternatives:
+# BreakBeforeBraces: Attach   # K&R style, e.g., "if () {"
+# BreakBeforeBraces: Linux
+# BreakBeforeBraces: Stroustrup
+
+# Align function parameters/arguments after open brackets
+AlignAfterOpenBracket: Align      # Align vertically
+# AlignAfterOpenBracket: DontAlign
+# AlignAfterOpenBracket: AlwaysBreak
+
+# Allow empty short functions on one line
+AllowShortFunctionsOnASingleLine: Empty
+# Options: None, Inline, Empty, InlineOnly
+
+# Access modifier indentation (for class/struct)
+AccessModifierOffset: -2       # e.g., public/private indented 2 left
+
+# Sort includes alphabetically
+SortIncludes: true
+
+# Max column width before wrapping
+ColumnLimit: 100            # Uncomment and set if you want to limit line length
+# DisableFormat: false         # If true, disables formatting entirely
+
+# Namespace formatting
+# NamespaceIndentation: All    # Indent everything inside namespaces
+# NamespaceIndentation: Inner  # Indent only inner declarations
+# NamespaceIndentation: None   # No indentation
+
+# Reflow long comments into multiple lines
+ReflowComments: true
+
+# Control how trailing commas are handled
+# Cpp11BracedListStyle: true
+# AlwaysBreakAfterDefinitionReturnType: None
+# AlwaysBreakTemplateDeclarations: Yes
+
+# Spaces
+# SpaceBeforeParens: ControlStatements   # Options: Never, ControlStatements, Always
+# SpaceAfterCStyleCast: false
+# SpaceInEmptyParentheses: false
+
+# Enforce consistent pointer/reference style
+# DerivePointerAlignment: false
+# PointerAlignment: Left        # Options: Left, Right, Middle
+
+# Statement macros (like Q_UNUSED in Qt)
+# StatementMacros: ['Q_UNUSED']
+
+# Control case indentation (e.g. switch)
+# IndentCaseLabels: true
+
+# Experimental: JavaScript/JSON/Web support (ignored for C++)
+# Language: Cpp
+
+# Leave a space between template closing brackets?
+# SpacesInAngles: false
+
+# Keep comments at column 0?
+# CommentsInColumns0: false
