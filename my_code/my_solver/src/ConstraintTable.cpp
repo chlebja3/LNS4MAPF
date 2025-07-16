@@ -105,7 +105,6 @@ auto ConstraintTable::remove_constraint(const TimePoint& timepoint, int agent_nu
   // check that the list is not empty
   assertm(!cur_TI_list.empty(), "Trying to remove interval from an empty list.");
 
-  std::cout << "Decrease 1" << std::endl;
   decrease_agents_counts(free_location, agent_num);
 
   // remove the interval from the list
@@ -253,7 +252,6 @@ void ConstraintTable::delete_constraint(int location, TimeIntervalNode_it node)
   assertm(instance.get_map_data().is_in(location), "Invalid location.");
 
   int free_location = instance.location_to_free_location(location);
-  std::cout << "Decrease 2" << std::endl;
   decrease_agents_counts(free_location, node.value()->agent_num);
   std::list<TimeIntervalNode>& cur_TI_list = constraints[free_location];
   cur_TI_list.erase(node.value());

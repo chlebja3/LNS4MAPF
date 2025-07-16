@@ -321,9 +321,8 @@ TEST_F(ConstraintManagerTest, AddAndRemoveAllCases)
   ASSERT_TRUE(constraint_manager->is_valid()) << "Invalid constraint manager after adding back.";
 
   // remove constraint before a different constraint
-  print_all_intervals(7, *constraint_manager);
+  // print_all_intervals(7, *constraint_manager);
   constraint_manager->remove_trajectory(traj1, 0);
-  print_all_intervals(7, *constraint_manager);
   ASSERT_TRUE(constraint_manager->is_valid())
       << "Invalid constraint manager after removing a constraint that precedes a constraint.";
 
