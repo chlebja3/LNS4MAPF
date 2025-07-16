@@ -79,6 +79,7 @@ void LNS::solve()
     // reset the safe interval table and already planned if needed
     if (!found_initial_solution)
     {
+      std::cout << "RESETTING CONSTRAINT MAKANGER" << std::endl;
       constraint_manager.reset();
       already_planned.clear();
     }
@@ -274,7 +275,9 @@ auto LNS::PrioritizedPlanning() -> Solution
     int agent_id = priorities[i];
 
     // plan path for agent
+    // std::cout << "Planning path." << std::endl;
     TimePointPath tp_path = planner->plan(agent_id, already_planned);
+    // std::cout << "Planned" << std::endl;
 
     // get the visualization info
     if (settings.sipp_settings.info_type == INFO_type::visualisation)
@@ -818,7 +821,7 @@ void LNS::repair_default(Solution& sol) const
   // remove the destroyed paths
   for (int agent_id : sol.destroyed_paths)
   {
-    // std::cout << "Removing path: " << it << std::endl;
+    // std::cout << "Removing path: " << agent_id << std::endl;
     constraint_manager.remove_trajectory(sol.paths[agent_id], agent_id);
     sol.paths[agent_id].clear();
     already_planned.erase(agent_id);
@@ -829,6 +832,7 @@ void LNS::repair_default(Solution& sol) const
   for (int i = 0; i < static_cast<int>(sol.destroyed_paths.size()); i++)
   {
     int path_idx = sol.destroyed_paths[i];
+    // std::cout << "Replanning path: " << path_idx << std::endl;
     TimePointPath tp_path = planner->plan(path_idx, already_planned);
     if (tp_path.empty())
     {
@@ -842,7 +846,7 @@ void LNS::repair_default(Solution& sol) const
       sipp_info[i] = planner->get_iter_info();
     }
 
-    constraint_manager.add_trajectory(tp_path, i);
+    constraint_manager.add_trajectory(tp_path, path_idx);
     sol.paths[path_idx] = tp_path;
     already_planned.insert(path_idx);
   }

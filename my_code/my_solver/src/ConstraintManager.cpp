@@ -59,8 +59,10 @@ bool ConstraintManager::is_valid()
         return false;
       }
       // check whether previous interval is right
+      assertm(prev.has_value() && curr.has_value() && curr.value()->prev_interval.has_value(),
+              "Prev and curr and curr->prev must have value at this point. ");
       const TimeIntervalNode prev1 = *prev.value();
-      const TimeIntervalNode prev2 = *curr.value()->prev_interval.value();
+      const TimeIntervalNode prev2 = *(curr.value()->prev_interval.value());
       if (prev1.agent_num != prev2.agent_num || prev1.type != prev2.type ||
           prev1.interval.t_min != prev2.interval.t_min || prev1.interval.t_max != prev2.interval.t_max)
       {

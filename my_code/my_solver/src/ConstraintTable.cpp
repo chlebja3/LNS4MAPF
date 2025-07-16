@@ -269,10 +269,14 @@ auto ConstraintTable::remove_constraint_after(const TimePoint& timepoint, int ag
   // go through the list until the constraint is found
   for (auto it = start.value(); it != cur_TI_list.end(); it++)
   {
-    // std::cout << "Iterating - interval: " << it->interval << ", prev: " << it->prev_interval.value()->interval
-    //           << ", next: " << it->next_interval.value()->interval << std::endl;
+    // std::cout << "Iterating - interval: " << it->interval << ", prev: "
+    //           << (it->prev_interval.has_value() ? it->prev_interval.value()->interval : TimeInterval(-1, -1))
+    //           << ", next: "
+    //           << (it->next_interval.has_value() ? it->next_interval.value()->interval : TimeInterval(-1, -1))
+    //           << ", agent num: " << it->agent_num << std::endl;
     if (it->interval == timepoint.interval)
     {
+      // std::cout << agent_num << ", " << it->agent_num << std::endl;
       assertm(agent_num == it->agent_num, "The agent num must be the same.");
       TimeIntervalNode_it prev = it->prev_interval;
       TimeIntervalNode_it next = it->next_interval;
