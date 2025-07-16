@@ -18,35 +18,36 @@
 #define MIN_BLOCKED_THRESHOLD 0.01
 #define BLOCKED_REACTION_FACTOR 0.1
 
-
 LNS::LNS(const Instance& instance_, std::mt19937& rnd_generator_, SharedData* shared_data_, LNS_settings& settings_)
     : Solver("LNS", instance_, rnd_generator_),
-      destroy_operator(Operator([this](Solution& sol) {
-        if (settings.destroy_settings.type == DESTROY_TYPE::RANDOMWALK)
-        {
-          destroy_randomwalk(sol);
-        }
-        else if (settings.destroy_settings.type == DESTROY_TYPE::INTERSECTION)
-        {
-          destroy_intersection(sol);
-        }
-        else if (settings.destroy_settings.type == DESTROY_TYPE::ADAPTIVE)
-        {
-          destroy_adaptive(sol);
-        }
-        else if (settings.destroy_settings.type == DESTROY_TYPE::RANDOM_CHOOSE)
-        {
-          destroy_random_choose(sol);
-        }
-        else if (settings.destroy_settings.type == DESTROY_TYPE::BLOCKED)
-        {
-          destroy_blocked(sol);
-        }
-        else
-        {
-          destroy_random(sol);
-        }
-      })),
+      destroy_operator(Operator(
+          [this](Solution& sol)
+          {
+            if (settings.destroy_settings.type == DESTROY_TYPE::RANDOMWALK)
+            {
+              destroy_randomwalk(sol);
+            }
+            else if (settings.destroy_settings.type == DESTROY_TYPE::INTERSECTION)
+            {
+              destroy_intersection(sol);
+            }
+            else if (settings.destroy_settings.type == DESTROY_TYPE::ADAPTIVE)
+            {
+              destroy_adaptive(sol);
+            }
+            else if (settings.destroy_settings.type == DESTROY_TYPE::RANDOM_CHOOSE)
+            {
+              destroy_random_choose(sol);
+            }
+            else if (settings.destroy_settings.type == DESTROY_TYPE::BLOCKED)
+            {
+              destroy_blocked(sol);
+            }
+            else
+            {
+              destroy_random(sol);
+            }
+          })),
       settings(settings_),
       shared_data(shared_data_),
       repair_operator(Operator([this](Solution& sol) { repair_default(sol); })),
@@ -126,8 +127,8 @@ void LNS::solve()
     repair_operator.apply(perturbed_sol);
 
     // accept only feasible solutions
-    bool accepted    = false;
-    int  improvement = 0;
+    bool accepted = false;
+    int improvement = 0;
     if (!perturbed_sol.feasible)
     {
       discard_solution(perturbed_sol, solution);
@@ -141,12 +142,13 @@ void LNS::solve()
 
       // find out which destroy strategy was used
       auto destroy_strategy_index_help = magic_enum::enum_index<DESTROY_TYPE>(last_destroy_strategy);
-      int  destroy_strategy_index      = -1;
+      int destroy_strategy_index = -1;
       if (destroy_strategy_index_help.has_value())
       {
         destroy_strategy_index = destroy_strategy_index_help.value();
       }
-      assertm(destroy_strategy_index >= 0 && destroy_strategy_index < static_cast<int>(magic_enum::enum_count<DESTROY_TYPE>()),
+      assertm(destroy_strategy_index >= 0 &&
+                  destroy_strategy_index < static_cast<int>(magic_enum::enum_count<DESTROY_TYPE>()),
               "Wrong destroy strategy index.");
 
       if (improvement <= 0)
@@ -154,14 +156,16 @@ void LNS::solve()
         // update the weights
         if (settings.destroy_settings.type == DESTROY_TYPE::ADAPTIVE)
         {
-          destroy_weights[destroy_strategy_index] = (1 - BLOCKED_REACTION_FACTOR) * destroy_weights[destroy_strategy_index];
+          destroy_weights[destroy_strategy_index] =
+              (1 - BLOCKED_REACTION_FACTOR) * destroy_weights[destroy_strategy_index];
         }
         if (last_destroy_strategy == DESTROY_TYPE::BLOCKED)
         {
           threshold_blocked = std::max((1 - BLOCKED_REACTION_FACTOR) * threshold_blocked, MIN_BLOCKED_THRESHOLD);
         }
         discard_solution(perturbed_sol, solution);
-        // std::cout << "Discarded worse solution, difference: " << perturbed_sol.sum_of_costs - solution.sum_of_costs << std::endl;
+        // std::cout << "Discarded worse solution, difference: " << perturbed_sol.sum_of_costs - solution.sum_of_costs
+        // << std::endl;
       }
       else
       {
@@ -216,7 +220,7 @@ auto LNS::find_initial_solution() -> bool
   clock.start();
 
   // create initial solution
-  solution                                     = PrioritizedPlanning();
+  solution = PrioritizedPlanning();
   auto [init_sol_time_wall, init_sol_time_cpu] = clock.get_current_time();
   solution.calculate_cost(instance);
 
@@ -237,7 +241,8 @@ auto LNS::find_initial_solution() -> bool
     log.iteration_time_cpu.push_back(init_sol_time_cpu);
   }
 
-  // std::cout << "Solution has sum of costs: " << solution.sum_of_costs << ", sol has delay: " << solution.sum_of_delays << std::endl;
+  // std::cout << "Solution has sum of costs: " << solution.sum_of_costs << ", sol has delay: " <<
+  // solution.sum_of_delays << std::endl;
   return solution.feasible;
 }
 
@@ -290,6 +295,7 @@ auto LNS::PrioritizedPlanning() -> Solution
 
     // update the safe interval table
     constraint_manager.add_trajectory(tp_path, agent_id);
+    assertm(constraint_manager.is_valid(), "Invalid structure of constraint manager.");
 
     // add to the solution
     sol.paths[agent_id] = tp_path;
@@ -315,8 +321,8 @@ void LNS::destroy_random(Solution& sol) const
   std::shuffle(path_idcs.begin(), path_idcs.end(), rnd_generator);
   assertm((int)path_idcs.size() > settings.destroy_settings.size, "Not enough paths for the destroy operator.");
   int num_to_destroy = std::min(settings.destroy_settings.size, instance.get_num_of_agents());
-  sol.destroyed_paths =
-      std::vector(std::make_move_iterator(path_idcs.begin()), std::make_move_iterator(path_idcs.begin() + num_to_destroy));
+  sol.destroyed_paths = std::vector(std::make_move_iterator(path_idcs.begin()),
+                                    std::make_move_iterator(path_idcs.begin() + num_to_destroy));
   assertm(sol.destroyed_paths.size() > 0, "No paths were destroyed.");
   sol.feasible = false;
 }
@@ -341,7 +347,7 @@ void LNS::destroy_randomwalk(Solution& sol) const
   assertm(static_cast<int>(sol.delays.size()) == instance.get_num_of_agents(),
           "The length of delay list must be the same as the numebr of agents.");
 
-  int max_delay    = 0;
+  int max_delay = 0;
   int most_delayed = -1;
   for (int i = 0; i < instance.get_num_of_agents(); i++)
   {
@@ -353,7 +359,7 @@ void LNS::destroy_randomwalk(Solution& sol) const
 
     if (sol.delays[i] > max_delay)
     {
-      max_delay    = sol.delays[i];
+      max_delay = sol.delays[i];
       most_delayed = i;
     }
   }
@@ -386,20 +392,21 @@ void LNS::destroy_randomwalk(Solution& sol) const
     tabu_list.clear();
   }
 
-  std::set<int> chosen = {
-      most_delayed};  // TODO in the original code they use set, but I think it makes more sense to use either unordered set or vector
+  std::set<int> chosen = {most_delayed};  // TODO in the original code they use set, but I think it makes more sense to
+                                          // use either unordered set or vector
   int upperbound = sol.paths[most_delayed].back().interval.t_min;
   assertm(upperbound > 0, "Upperbound is too small.");
   // perform the first randomwalk from start - not in pseudocode, but in MAPF-LNS2 implementation
   int chosen_agent = most_delayed;
-  if (!random_walk(chosen_agent, settings.destroy_settings.size, sol.paths[chosen_agent][0].location, 0, upperbound, chosen))
+  if (!random_walk(chosen_agent, settings.destroy_settings.size, sol.paths[chosen_agent][0].location, 0, upperbound,
+                   chosen))
   {
     // perform the random walk again, maximum 10 iterations
     for (int i = 0; i < 10; i++)
     {
       // choose a random time from the agents path
       std::uniform_int_distribution<int> dist_time(0, upperbound);
-      int                                chosen_t = dist_time(rnd_generator);
+      int chosen_t = dist_time(rnd_generator);
 
       // choose location
       int rw_start_location = location_at_time(sol.paths[chosen_agent], chosen_t);
@@ -410,17 +417,18 @@ void LNS::destroy_randomwalk(Solution& sol) const
       {
         break;
       }
-      assertm(static_cast<int>(chosen.size()) < settings.destroy_settings.size, "Enough agents were selected, but false returned.");
+      assertm(static_cast<int>(chosen.size()) < settings.destroy_settings.size,
+              "Enough agents were selected, but false returned.");
 
       // choose a random agent
       std::uniform_int_distribution<int> dist(0, chosen.size() - 1);
-      int                                idx = dist(rnd_generator);
+      int idx = dist(rnd_generator);
       assertm(idx >= 0 && idx < static_cast<int>(chosen.size()), "Index out of bounds.");
       // iterator to the first element
       auto it = chosen.begin();
       std::advance(it, idx);
       chosen_agent = *it;
-      upperbound   = sol.paths[chosen_agent].back().interval.t_min;
+      upperbound = sol.paths[chosen_agent].back().interval.t_min;
     }
   }
 
@@ -441,9 +449,8 @@ void LNS::destroy_randomwalk(Solution& sol) const
   sol.feasible = false;
 }
 
-
-auto LNS::random_walk(int agent_num, int neighborhood_size, int start_location, int start_time, int upperbound, std::set<int>& chosen) const
-    -> bool
+auto LNS::random_walk(int agent_num, int neighborhood_size, int start_location, int start_time, int upperbound,
+                      std::set<int>& chosen) const -> bool
 {
   assertm(static_cast<int>(chosen.size()) < neighborhood_size, "Randomwalk not needed.");
   int curr = start_location;
@@ -461,7 +468,8 @@ auto LNS::random_walk(int agent_num, int neighborhood_size, int start_location, 
       if (t + 1 + next_h_val < upperbound)
       {
         // get the agent that is in conflict and add it to the neighborhood
-        auto [conflicting_agent_vertex, conflicting_agent_edge] = constraint_manager.get_blocking_agent(curr, loc, t + 1);
+        auto [conflicting_agent_vertex, conflicting_agent_edge] =
+            constraint_manager.get_blocking_agent(curr, loc, t + 1);
 
         // if there is an agent in collision, add it to the neighborhood
         if (conflicting_agent_vertex != -1)
@@ -474,7 +482,7 @@ auto LNS::random_walk(int agent_num, int neighborhood_size, int start_location, 
           chosen.insert(conflicting_agent_edge);
         }
 
-        curr  = loc;
+        curr = loc;
         moved = true;
         break;
       }
@@ -518,14 +526,13 @@ void LNS::destroy_intersection(Solution& sol) const
   // pick a random intersection vertex
   {
     std::uniform_int_distribution<int> dist(0, intersection_vertices_free.size() - 1);
-    int                                idx    = dist(rnd_generator);
-    int                                chosen = instance.free_location_to_location(intersection_vertices_free[idx]);
+    int idx = dist(rnd_generator);
+    int chosen = instance.free_location_to_location(intersection_vertices_free[idx]);
     openlist.push(chosen);
   }
 
-
   std::unordered_set<int> neighborhood;  // TODO try set
-  std::vector<bool>       known(instance.get_num_cells(), false);
+  std::vector<bool> known(instance.get_num_cells(), false);
 
   while (!openlist.empty())
   {
@@ -564,7 +571,8 @@ void LNS::destroy_intersection(Solution& sol) const
   assertm(static_cast<int>(neighborhood.size()) > 1, "Not enough agents selected for destroy.");
 
   // convert to vector and shuffle
-  sol.destroyed_paths = std::vector(std::make_move_iterator(neighborhood.begin()), std::make_move_iterator(neighborhood.end()));
+  sol.destroyed_paths =
+      std::vector(std::make_move_iterator(neighborhood.begin()), std::make_move_iterator(neighborhood.end()));
   // shuffle the paths
   std::shuffle(sol.destroyed_paths.begin(), sol.destroyed_paths.end(), rnd_generator);
   assertm(sol.destroyed_paths.size() > 0, "No paths were destroyed.");
@@ -578,8 +586,8 @@ void LNS::get_intersection_agents(std::unordered_set<int>& neighborhood, int cur
 
   // choose random time
   std::uniform_int_distribution<int> dist(0, t_max);
-  int                                t     = dist(rnd_generator);
-  int                                delta = 0;
+  int t = dist(rnd_generator);
+  int delta = 0;
   while (static_cast<int>(neighborhood.size()) < settings.destroy_settings.size && t + delta <= t_max && t - delta >= 0)
   {
     // find the agent, that blocks the cell at time t + delta
@@ -607,14 +615,13 @@ void LNS::destroy_adaptive(Solution& sol) const
   auto sum_of_weights = std::reduce(destroy_weights.begin(), destroy_weights.end());
   assertm(sum_of_weights > 0, "Invalid weights.");
 
-
   // choose a random number in the range [0, sum_of_weights]
   std::uniform_real_distribution<double> dist(0.0, sum_of_weights);
-  double                                 rand_value = dist(rnd_generator);
+  double rand_value = dist(rnd_generator);
 
   // spin the roulette
-  double       cummulative_sum = 0.0;
-  DESTROY_TYPE chosen_type     = DESTROY_TYPE::ADAPTIVE;
+  double cummulative_sum = 0.0;
+  DESTROY_TYPE chosen_type = DESTROY_TYPE::ADAPTIVE;
   for (int i = 0; i < static_cast<int>(destroy_weights.size()); i++)
   {
     cummulative_sum += destroy_weights[i];
@@ -626,11 +633,13 @@ void LNS::destroy_adaptive(Solution& sol) const
         chosen_type = chosen.value();
         break;
       }
-      throw std::runtime_error(std::string("Unknown DESTROY_TYPE ") + std::string(magic_enum::enum_name<DESTROY_TYPE>(chosen_type)) +
+      throw std::runtime_error(std::string("Unknown DESTROY_TYPE ") +
+                               std::string(magic_enum::enum_name<DESTROY_TYPE>(chosen_type)) +
                                std::string(" encountered in adaptive destroy."));
     }
   }
-  assertm(chosen_type != DESTROY_TYPE::ADAPTIVE && chosen_type != DESTROY_TYPE::RANDOM_CHOOSE, "Did not select any destroy strategy.");
+  assertm(chosen_type != DESTROY_TYPE::ADAPTIVE && chosen_type != DESTROY_TYPE::RANDOM_CHOOSE,
+          "Did not select any destroy strategy.");
 
   // if sum of weights too small, increase it
   if (sum_of_weights < 0.1)
@@ -661,7 +670,8 @@ void LNS::destroy_adaptive(Solution& sol) const
       destroy_intersection(sol);
       break;
     default:
-      throw std::runtime_error(std::string("Unknown DESTROY_TYPE ") + std::string(magic_enum::enum_name<DESTROY_TYPE>(chosen_type)) +
+      throw std::runtime_error(std::string("Unknown DESTROY_TYPE ") +
+                               std::string(magic_enum::enum_name<DESTROY_TYPE>(chosen_type)) +
                                std::string(" encountered in adaptive destroy."));
   }
 }
@@ -683,7 +693,7 @@ void LNS::destroy_blocked(Solution& sol) const
   std::vector<int> blocked_agents;
   for (int i = 0; i < instance.get_num_of_agents(); i++)
   {
-    const int loc        = instance.get_goal_locations()[i];
+    const int loc = instance.get_goal_locations()[i];
     const int reach_time = sol.paths[i].back().interval.t_min;
     assertm(sol.paths[i].back().location == loc, "The path does not end in the goal location");
     // skip agents that dont have any delay
@@ -714,21 +724,22 @@ void LNS::destroy_blocked(Solution& sol) const
 
   // choose a random agent from blocked agents
   std::uniform_int_distribution<int> dist(0, blocked_agents.size() - 1);
-  int                                chosen_agent = -1;
+  int chosen_agent = -1;
   {
-    int idx      = dist(rnd_generator);
+    int idx = dist(rnd_generator);
     chosen_agent = blocked_agents[idx];
   }
   // std::cout << "Chosen agent: " << chosen_agent << std::endl;
 
   // add the agent to the neighborhood
   std::unordered_set<int> neighborhood = {chosen_agent};
-  int                     idx          = -1;
-  sol.destroyed_paths                  = {chosen_agent};
+  int idx = -1;
+  sol.destroyed_paths = {chosen_agent};
   while (static_cast<int>(sol.destroyed_paths.size()) < settings.destroy_settings.size)
   {
-    const int        loc                 = instance.get_goal_locations()[chosen_agent];
-    const int        min_reach_time      = instance.get_heuristic_distance(chosen_agent, instance.get_start_locations()[chosen_agent]);
+    const int loc = instance.get_goal_locations()[chosen_agent];
+    const int min_reach_time =
+        instance.get_heuristic_distance(chosen_agent, instance.get_start_locations()[chosen_agent]);
     std::vector<int> blocking_agents_new = constraint_manager.get_blocking_agents(loc, min_reach_time - 1);
 
     // add all new blocking agents to the neighborhood
@@ -775,7 +786,7 @@ void LNS::destroy_blocked(Solution& sol) const
 void LNS::destroy_random_choose(Solution& sol) const
 {
   std::uniform_int_distribution<int> dist(0, 2);
-  int                                rand_value = dist(rnd_generator);
+  int rand_value = dist(rnd_generator);
   // apply the destroy operator
   switch (rand_value)
   {
@@ -817,8 +828,8 @@ void LNS::repair_default(Solution& sol) const
   // replan
   for (int i = 0; i < static_cast<int>(sol.destroyed_paths.size()); i++)
   {
-    int           path_idx = sol.destroyed_paths[i];
-    TimePointPath tp_path  = planner->plan(path_idx, already_planned);
+    int path_idx = sol.destroyed_paths[i];
+    TimePointPath tp_path = planner->plan(path_idx, already_planned);
     if (tp_path.empty())
     {
       sol.feasible = false;
@@ -859,7 +870,7 @@ void LNS::load_initial_solution(Solution& sol)
 {
   assertm(found_initial_solution == false, "Solver already has an initial solution");
   sol.calculate_cost(instance);
-  solution               = sol;
+  solution = sol;
   found_initial_solution = true;
 
   // build the constraints

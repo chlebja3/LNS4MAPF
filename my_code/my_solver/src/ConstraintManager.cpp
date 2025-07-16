@@ -6,11 +6,15 @@
  */
 #include "ConstraintManager.h"
 
+#include <climits>
+
 void ConstraintManager::add_trajectory(const TimePointPath& path, int agent_num)
 {
   for (int i = 0; i < static_cast<int>(path.size()); i++)
   {
     // add to the safe interval table, which will add it to the constraint table also
+    // std::cout << "Adding constraint. Location: " << path[i].location << ", interval: " << path[i].interval
+    //           << ", agent_num: " << agent_num << std::endl;
     safe_interval_table.add_constraint(path[i], agent_num, constraint_table);
 
     // add to the edge table
@@ -20,6 +24,61 @@ void ConstraintManager::add_trajectory(const TimePointPath& path, int agent_num)
       edge_table.add(path[i - 1].location, path[i].location, path[i].interval.t_min, agent_num);
     }
   }
+}
+
+bool ConstraintManager::is_valid()
+{
+  for (int i = 0; i < instance.get_num_free_cells(); i++)
+  {
+    int loc = instance.free_location_to_location(i);
+    auto prev = get_first_time_interval(loc);
+    assertm(prev.has_value(), "First time interval must have value.");
+    if (prev.value()->interval.t_min != 0)
+    {
+      std::cout << "First time interval must start at 0";
+      return false;
+    }
+    auto curr = prev.value()->next_interval;
+    if (!curr.has_value())
+    {
+      // prev must take the whole time
+      // there can not be any previous or next intervals
+      bool valid = prev.value()->interval.t_min == 0 && prev.value()->interval.t_max == INT_MAX &&
+                   !prev.value()->prev_interval.has_value() && !prev.value()->next_interval.has_value();
+      if (!valid)
+      {
+        return false;
+      }
+    }
+    while (curr.has_value())
+    {
+      if (prev.value()->interval.t_max + 1 != curr.value()->interval.t_min)
+      {
+        std::cout << "Intervals " << prev.value()->interval << " and " << curr.value()->interval
+                  << " are not directly after each other." << std::endl;
+        return false;
+      }
+      // check whether previous interval is right
+      const TimeIntervalNode prev1 = *prev.value();
+      const TimeIntervalNode prev2 = *curr.value()->prev_interval.value();
+      if (prev1.agent_num != prev2.agent_num || prev1.type != prev2.type ||
+          prev1.interval.t_min != prev2.interval.t_min || prev1.interval.t_max != prev2.interval.t_max)
+      {
+        std::cout << "Wrong prev interval, prev: " << prev.value()->interval << ", agent: " << prev.value()->agent_num
+                  << ", curr->prev: " << curr.value()->prev_interval.value()->interval
+                  << ", agent:" << curr.value()->prev_interval.value()->agent_num << std::endl;
+        return false;
+      }
+      prev = curr;
+      curr = curr.value()->next_interval;
+    }
+    if (prev.value()->interval.t_max != INT_MAX)
+    {
+      std::cout << "The last interval " << prev.value()->interval << " does not end at infinity." << std::endl;
+      return false;
+    }
+  }
+  return true;
 }
 
 /*
@@ -50,6 +109,8 @@ void ConstraintManager::remove_trajectory(const TimePointPath& path, int agent_n
   for (int i = 0; i < (int)path.size(); i++)
   {
     // remove the constraint from safe interval table, removes it also from constraint table
+    // std::cout << "Removing constraint. Location: " << path[i].location << ", interval: " << path[i].interval
+    //           << ", agent_num: " << agent_num << std::endl;
     safe_interval_table.remove_constraint(path[i], agent_num, constraint_table);
 
     // remove the edge constraint

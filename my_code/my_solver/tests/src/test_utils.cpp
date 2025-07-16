@@ -149,15 +149,18 @@ std::pair<std::vector<TimeInterval>, std::vector<TIME_INTERVAL_NODE_type>> extra
 
 void print_all_intervals(int location, ConstraintManager& constraint_manager)
 {
-  auto [intervals, types] = extract_intervals(location, constraint_manager);
-  assertm(intervals.size() == types.size(), "Intervals and types must have the same length");
+  auto curr = constraint_manager.get_first_time_interval(location);
+
   std::cout << "*************************************" << std::endl;
-  for (int i = 0; i < static_cast<int>(intervals.size()); i++)
+  while (curr.has_value())
   {
-    std::cout << (types[i] == TIME_INTERVAL_NODE_type::safe_interval ? "Safe interval" : "Constraint") << ": "
-              << intervals[i] << ", prev: " << (i > 0 ? intervals[i - 1] : TimeInterval(-1, -1))
-              << ", next: " << (i < static_cast<int>(intervals.size()) - 1 ? intervals[i + 1] : TimeInterval(-1, -1))
-              << std::endl;
+    auto prev = curr.value()->prev_interval;
+    auto next = curr.value()->next_interval;
+    std::cout << (curr.value()->type == TIME_INTERVAL_NODE_type::safe_interval ? "Safe interval" : "Constraint") << ": "
+              << curr.value()->interval
+              << ", prev: " << (prev.has_value() ? prev.value()->interval : TimeInterval(-1, -1))
+              << ", next: " << (next.has_value() ? next.value()->interval : TimeInterval(-1, -1)) << std::endl;
+    curr = curr.value()->next_interval;
   }
   std::cout << "-------------------------------------" << std::endl;
 }

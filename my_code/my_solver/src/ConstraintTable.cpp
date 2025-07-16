@@ -8,6 +8,7 @@
 #include "ConstraintTable.h"
 
 #include <climits>
+#include <iostream>
 
 ConstraintTable::ConstraintTable(const Instance& instance_) : instance(instance_)
 {
@@ -104,6 +105,7 @@ auto ConstraintTable::remove_constraint(const TimePoint& timepoint, int agent_nu
   // check that the list is not empty
   assertm(!cur_TI_list.empty(), "Trying to remove interval from an empty list.");
 
+  std::cout << "Decrease 1" << std::endl;
   decrease_agents_counts(free_location, agent_num);
 
   // remove the interval from the list
@@ -251,6 +253,7 @@ void ConstraintTable::delete_constraint(int location, TimeIntervalNode_it node)
   assertm(instance.get_map_data().is_in(location), "Invalid location.");
 
   int free_location = instance.location_to_free_location(location);
+  std::cout << "Decrease 2" << std::endl;
   decrease_agents_counts(free_location, node.value()->agent_num);
   std::list<TimeIntervalNode>& cur_TI_list = constraints[free_location];
   cur_TI_list.erase(node.value());
@@ -268,11 +271,15 @@ auto ConstraintTable::remove_constraint_after(const TimePoint& timepoint, int ag
   // go through the list until the constraint is found
   for (auto it = start.value(); it != cur_TI_list.end(); it++)
   {
+    // std::cout << "Iterating - interval: " << it->interval << ", prev: " << it->prev_interval.value()->interval
+    //           << ", next: " << it->next_interval.value()->interval << std::endl;
     if (it->interval == timepoint.interval)
     {
       assertm(agent_num == it->agent_num, "The agent num must be the same.");
       TimeIntervalNode_it prev = it->prev_interval;
       TimeIntervalNode_it next = it->next_interval;
+      // std::cout << "Erasing: " << it->interval << ", prev: " << prev.value()->interval
+      //           << ", next: " << next.value()->interval << std::endl;
 
       // remove it from the list
       cur_TI_list.erase(it);

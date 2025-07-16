@@ -285,3 +285,63 @@ TEST_F(ConstraintManagerTest, AddAndRemoveComplicated)
   EXPECT_EQ(intervals, intervals2);
   EXPECT_EQ(types, types2);
 }
+
+TEST_F(ConstraintManagerTest, AddAndRemoveAllCases)
+{
+  TimePointPath traj0({TimePoint(7, {0, 0})});
+  TimePointPath traj1({TimePoint(7, {3, 4})});
+  TimePointPath traj2({TimePoint(7, {5, 5})});
+  TimePointPath traj3({TimePoint(7, {6, 7})});
+  TimePointPath traj4({TimePoint(7, {100, INT_MAX})});
+  constraint_manager->add_trajectory(traj0, 0);  // first constraint
+  ASSERT_TRUE(constraint_manager->is_valid());
+  constraint_manager->add_trajectory(traj4, 0);  // last constraint
+  ASSERT_TRUE(constraint_manager->is_valid());
+  constraint_manager->add_trajectory(traj2, 0);  // split a safe interval
+  ASSERT_TRUE(constraint_manager->is_valid());
+  constraint_manager->add_trajectory(traj1, 0);  // right before
+  ASSERT_TRUE(constraint_manager->is_valid());
+  constraint_manager->add_trajectory(traj3, 0);  // right after
+
+  ASSERT_TRUE(constraint_manager->is_valid()) << "Invalid constraint manager after adding all trajectories.";
+
+  // now remove the constraint in the middle of constraints
+  constraint_manager->remove_trajectory(traj2, 0);
+  ASSERT_TRUE(constraint_manager->is_valid())
+      << "Invalid constraint manager after removing in the middle of constraints.";
+
+  // remove a constraint in the middle of two safe intervals
+  constraint_manager->remove_trajectory(traj1, 0);
+  ASSERT_TRUE(constraint_manager->is_valid())
+      << "Invalid constraint manager after removing in the middle of two safe intervals.";
+
+  // add back
+  constraint_manager->add_trajectory(traj2, 0);
+  constraint_manager->add_trajectory(traj1, 0);
+  ASSERT_TRUE(constraint_manager->is_valid()) << "Invalid constraint manager after adding back.";
+
+  // remove constraint before a different constraint
+  print_all_intervals(7, *constraint_manager);
+  constraint_manager->remove_trajectory(traj1, 0);
+  print_all_intervals(7, *constraint_manager);
+  ASSERT_TRUE(constraint_manager->is_valid())
+      << "Invalid constraint manager after removing a constraint that precedes a constraint.";
+
+  // remove constraint after a different constraint
+  constraint_manager->remove_trajectory(traj3, 0);
+  ASSERT_TRUE(constraint_manager->is_valid())
+      << "Invalid constraint manager after removing a constraint that goes after a constraint.";
+
+  // add back
+  constraint_manager->add_trajectory(traj1, 0);
+  constraint_manager->add_trajectory(traj3, 0);
+  ASSERT_TRUE(constraint_manager->is_valid());
+
+  // remove last constraint
+  constraint_manager->remove_trajectory(traj4, 0);
+  ASSERT_TRUE(constraint_manager->is_valid()) << "Invalid constraint manager after removing last constraint.";
+
+  // remove first constraint
+  constraint_manager->remove_trajectory(traj0, 0);
+  ASSERT_TRUE(constraint_manager->is_valid()) << "Invalid constraint manager after removing first constraint.";
+}

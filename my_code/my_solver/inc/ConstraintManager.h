@@ -90,6 +90,8 @@ public:
     return edge_table.get(to, from, time) != -1;
   }
 
+  bool is_valid();
+
 private:
   SafeIntervalTable safe_interval_table;
   ConstraintTable constraint_table;

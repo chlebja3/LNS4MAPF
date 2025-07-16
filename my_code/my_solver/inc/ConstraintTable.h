@@ -9,6 +9,7 @@
 #pragma once
 
 #include <climits>
+#include <iostream>
 #include <list>
 #include <unordered_map>
 #include <unordered_set>
@@ -92,6 +93,7 @@ public:
 
   void increase_agents_counts(int free_location, int agent_num)
   {
+    // std::cout << "free location: " << free_location << ", adding agent: " << agent_num << std::endl;
     if (agents_counts[free_location].find(agent_num) == agents_counts[free_location].end())
     {
       agents_counts[free_location][agent_num] = 1;
@@ -105,6 +107,7 @@ public:
 
   void decrease_agents_counts(int free_location, int agent_num)
   {
+    // std::cout << "free location: " << free_location << ", removing agent: " << agent_num << std::endl;
     assertm(agents_counts[free_location].find(agent_num) != agents_counts[free_location].end(),
             "Removing agent that is not in the agents counts");
     agents_counts[free_location][agent_num] -= 1;
