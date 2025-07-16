@@ -101,7 +101,7 @@ void Visualizer::reset()
   sipp_info = nullptr;
   lns_info.clear();
   selected_agent = -1;
-  is_moving      = false;
+  is_moving = false;
   // reset the visualizations
   solution_vis.complete_reset();
   sipp_vis.complete_reset();
@@ -117,7 +117,7 @@ Visualizer::~Visualizer()
 void Visualizer::start()
 {
   // start the underlying thread
-  running    = true;
+  running = true;
   vis_thread = std::thread(&Visualizer::run, this);
 }
 
@@ -138,11 +138,11 @@ void Visualizer::join_thread()
 void Visualizer::run()
 {
   // calculate useful constants
-  const int screen_width  = (int)sf::VideoMode::getDesktopMode().width;
+  const int screen_width = (int)sf::VideoMode::getDesktopMode().width;
   const int screen_height = (int)sf::VideoMode::getDesktopMode().height;
 
   // get the map size
-  const int map_width  = instance.get_map_data().width;
+  const int map_width = instance.get_map_data().width;
   const int map_height = instance.get_map_data().height;
 
   // turn on antialiasing
@@ -220,7 +220,8 @@ void Visualizer::run()
           add_to_log("Found better solution with cost: " + std::to_string(it.sol.sum_of_costs));
         }
       }
-      lns_info.insert(lns_info.end(), std::make_move_iterator(new_lns_info.begin()), std::make_move_iterator(new_lns_info.end()));
+      lns_info.insert(lns_info.end(), std::make_move_iterator(new_lns_info.begin()),
+                      std::make_move_iterator(new_lns_info.end()));
       lns_vis.max_time = static_cast<int>(lns_info.size()) - 1;
       // std::cout << "New max time: " << lns_vis.max_time << std::endl;
       lns_vis.update();
@@ -429,7 +430,7 @@ void Visualizer::update_cell_rectangles_highlights()
     {
       for (auto pos : lns_info[std::max(0, lns_vis.time - 1)].sol.converted_paths[it])
       {
-        const Point2d cur_pos                            = instance.location_to_position(pos);
+        const Point2d cur_pos = instance.location_to_position(pos);
         cell_rectangles_highlights[cur_pos.y][cur_pos.x] = Highlight::LNS_DESTROYED;
       }
     }
@@ -440,7 +441,7 @@ void Visualizer::update_cell_rectangles_highlights()
   {
     for (int i = 0; i < std::min(sipp_vis.time, (int)(*sipp_info).size()); i++)
     {
-      const Point2d cur_pos                            = instance.location_to_position((*sipp_info)[i].cur_expanded.location);
+      const Point2d cur_pos = instance.location_to_position((*sipp_info)[i].cur_expanded.location);
       cell_rectangles_highlights[cur_pos.y][cur_pos.x] = Highlight::SIPP_EXPANDED;
       // draw only until time
       if (i == sipp_vis.time)
@@ -455,8 +456,8 @@ void Visualizer::create_cell_rectangles()
 {
   // get the map info
   const Map& map_data = instance.get_map_data();
-  const int  width    = map_data.width;
-  const int  height   = map_data.height;
+  const int width = map_data.width;
+  const int height = map_data.height;
 
   // clear the previous rectangles
   cell_rectangles.clear();
@@ -498,7 +499,8 @@ void Visualizer::create_cell_rectangles()
 void Visualizer::draw_cell_rectangles(sf::RenderWindow& window)
 {
   assertm(static_cast<int>(cell_rectangles.size()) > 0, "No cell rectangles.");
-  assertm(cell_rectangles.size() == cell_rectangles_highlights.size(), "Size of the rectangles vector and counts vector must be the same.");
+  assertm(cell_rectangles.size() == cell_rectangles_highlights.size(),
+          "Size of the rectangles vector and counts vector must be the same.");
   for (int i = 0; i < static_cast<int>(cell_rectangles.size()); i++)
   {
     assertm((int)cell_rectangles[i].size() > 0, "No cell rectangles.");
@@ -523,7 +525,7 @@ void Visualizer::draw_cell_rectangles(sf::RenderWindow& window)
   // draw the currently expanded
   if (selected_agent >= 0 && sipp_vis.time < (int)(*sipp_info).size())
   {
-    const Point2d& cur_pos  = instance.location_to_position((*sipp_info)[sipp_vis.time].cur_expanded.location);
+    const Point2d& cur_pos = instance.location_to_position((*sipp_info)[sipp_vis.time].cur_expanded.location);
     curr_expanded_rectangle = cell_rectangles[cur_pos.y][cur_pos.x];
     curr_expanded_rectangle.setFillColor(sf::Color::Yellow);
     window.draw(curr_expanded_rectangle);
@@ -532,7 +534,8 @@ void Visualizer::draw_cell_rectangles(sf::RenderWindow& window)
 
 void Visualizer::update_path_vis(const int agent_num, const Path& path)
 {
-  assertm(agent_num >= 0 && agent_num < (int)agents_colors.size() && agent_num < instance.get_num_of_agents(), "Invalid agent number.");
+  assertm(agent_num >= 0 && agent_num < (int)agents_colors.size() && agent_num < instance.get_num_of_agents(),
+          "Invalid agent number.");
 
   // check whether the vector is big enough
   if (agent_num >= (int)agents_paths_vis.size())
@@ -547,9 +550,9 @@ void Visualizer::update_path_vis(const int agent_num, const Path& path)
   sf::VertexArray path_vis(sf::Quads);
   if (path.size() >= 2)
   {
-    auto           segment_start = path.cbegin();
-    auto           segment_end   = path.cbegin() + 1;
-    enum Direction dir           = Direction::NONE;
+    auto segment_start = path.cbegin();
+    auto segment_end = path.cbegin() + 1;
+    enum Direction dir = Direction::NONE;
 
     // merge contiguous segments
     for (int i = 2; i < (int)path.size() + 1; i++)
@@ -583,7 +586,7 @@ void Visualizer::update_path_vis(const int agent_num, const Path& path)
 
       // find the rectangle that represents the segment
       Point2d segment_start_pt = instance.location_to_position(*segment_start);
-      Point2d segment_end_pt   = instance.location_to_position(*segment_end);
+      Point2d segment_end_pt = instance.location_to_position(*segment_end);
 
       int min_x, min_y, max_x, max_y;
       min_x = std::min(segment_start_pt.x, segment_end_pt.x);
@@ -593,14 +596,14 @@ void Visualizer::update_path_vis(const int agent_num, const Path& path)
       assertm((max_x - min_x > 0) != (max_y - min_y > 0), "Segment must be either horizontal or vertical.");
 
       // calculate the corners of the rectangle
-      sf::Vector2f left_upper =
-          sf::Vector2f(CELL_SIZE * (min_x + 0.5 - (double)1 / (2 * LINE_WIDTH)), CELL_SIZE * (min_y + 0.5 - (double)1 / (2 * LINE_WIDTH)));
-      sf::Vector2f right_upper =
-          sf::Vector2f(CELL_SIZE * (max_x + 0.5 + (double)1 / (2 * LINE_WIDTH)), CELL_SIZE * (min_y + 0.5 - (double)1 / (2 * LINE_WIDTH)));
-      sf::Vector2f right_lower =
-          sf::Vector2f(CELL_SIZE * (max_x + 0.5 + (double)1 / (2 * LINE_WIDTH)), CELL_SIZE * (max_y + 0.5 + (double)1 / (2 * LINE_WIDTH)));
-      sf::Vector2f left_lower =
-          sf::Vector2f(CELL_SIZE * (min_x + 0.5 - (double)1 / (2 * LINE_WIDTH)), CELL_SIZE * (max_y + 0.5 + (double)1 / (2 * LINE_WIDTH)));
+      sf::Vector2f left_upper = sf::Vector2f(CELL_SIZE * (min_x + 0.5 - (double)1 / (2 * LINE_WIDTH)),
+                                             CELL_SIZE * (min_y + 0.5 - (double)1 / (2 * LINE_WIDTH)));
+      sf::Vector2f right_upper = sf::Vector2f(CELL_SIZE * (max_x + 0.5 + (double)1 / (2 * LINE_WIDTH)),
+                                              CELL_SIZE * (min_y + 0.5 - (double)1 / (2 * LINE_WIDTH)));
+      sf::Vector2f right_lower = sf::Vector2f(CELL_SIZE * (max_x + 0.5 + (double)1 / (2 * LINE_WIDTH)),
+                                              CELL_SIZE * (max_y + 0.5 + (double)1 / (2 * LINE_WIDTH)));
+      sf::Vector2f left_lower = sf::Vector2f(CELL_SIZE * (min_x + 0.5 - (double)1 / (2 * LINE_WIDTH)),
+                                             CELL_SIZE * (max_y + 0.5 + (double)1 / (2 * LINE_WIDTH)));
 
       // add the segment into the path visualization
       path_vis.append(sf::Vertex(left_upper, color));
@@ -614,7 +617,8 @@ void Visualizer::update_path_vis(const int agent_num, const Path& path)
       dir = find_direction(*segment_start, *segment_end);
     }
   }
-  assertm(agent_num < (int)agents_paths_vis.size(), "Agent_num must be bigger than the size of the paths visualization vector.");
+  assertm(agent_num < (int)agents_paths_vis.size(),
+          "Agent_num must be bigger than the size of the paths visualization vector.");
   agents_paths_vis[agent_num] = path_vis;
 }
 
@@ -647,7 +651,8 @@ void Visualizer::update_all_paths(int time)
 {
   // std::cout << "Updating all paths." << std::endl;
   agents_paths = &lns_info[time].sol.converted_paths;
-  assertm(instance.get_num_of_agents() == (int)(*agents_paths).size(), "Number of paths should be the same as the number of agents.");
+  assertm(instance.get_num_of_agents() == (int)(*agents_paths).size(),
+          "Number of paths should be the same as the number of agents.");
 
   int max_path_len = 0;
   // construct the path visualizations and find the new length of the visualization
@@ -665,7 +670,6 @@ void Visualizer::update_all_paths(int time)
   solution_vis.new_data(max_path_len);
 }
 
-
 void Visualizer::create_docking_space(void)
 {
   // get the viewport for the whole window
@@ -676,8 +680,9 @@ void Visualizer::create_docking_space(void)
   ImGui::SetNextWindowViewport(viewport->ID);
 
   // set the flags for the gui overlay
-  ImGuiWindowFlags host_window_flags = ImGuiWindowFlags_NoDocking | ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoCollapse |
-                                       ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoBringToFrontOnFocus |
+  ImGuiWindowFlags host_window_flags = ImGuiWindowFlags_NoDocking | ImGuiWindowFlags_NoTitleBar |
+                                       ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoResize |
+                                       ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoBringToFrontOnFocus |
                                        ImGuiWindowFlags_NoNavFocus | ImGuiWindowFlags_NoBackground;
 
   // set the style
@@ -716,14 +721,17 @@ void Visualizer::create_docking_space(void)
     ImGuiID dock_main_id = dockspace_id;  // Main area
 
     // split bottom
-    ImGuiID dock_bottom = ImGui::DockBuilderSplitNode(dock_main_id, ImGuiDir_Down, BOTTOM_PANEL_SIZE_DEFAULT, nullptr, &dock_main_id);
+    ImGuiID dock_bottom =
+        ImGui::DockBuilderSplitNode(dock_main_id, ImGuiDir_Down, BOTTOM_PANEL_SIZE_DEFAULT, nullptr, &dock_main_id);
 
     // split sides
-    ImGuiID dock_left = ImGui::DockBuilderSplitNode(dock_main_id, ImGuiDir_Left, LEFT_PANEL_SIZE_DEFAULT, nullptr, &dock_main_id);
+    ImGuiID dock_left =
+        ImGui::DockBuilderSplitNode(dock_main_id, ImGuiDir_Left, LEFT_PANEL_SIZE_DEFAULT, nullptr, &dock_main_id);
 
     // calculate the right panel size taking into account the left panel
     const double right_panel_size = (float)RIGHT_PANEL_SIZE_DEFAULT / (1.0 - LEFT_PANEL_SIZE_DEFAULT);
-    ImGuiID      dock_right = ImGui::DockBuilderSplitNode(dock_main_id, ImGuiDir_Right, (float)right_panel_size, nullptr, &dock_main_id);
+    ImGuiID dock_right =
+        ImGui::DockBuilderSplitNode(dock_main_id, ImGuiDir_Right, (float)right_panel_size, nullptr, &dock_main_id);
 
     // Create the dock windows
     ImGui::DockBuilderDockWindow("Left Panel", dock_left);
@@ -757,12 +765,14 @@ void Visualizer::load_fonts()
   static const ImWchar icons_ranges[] = {ICON_MIN_FA, ICON_MAX_FA, 0};  // Unicode range for icons
 
   ImFontConfig config;
-  config.MergeMode        = true;       // Merge with the default font
-  config.PixelSnapH       = true;       // Align to pixels for sharp rendering
+  config.MergeMode = true;              // Merge with the default font
+  config.PixelSnapH = true;             // Align to pixels for sharp rendering
   config.GlyphMinAdvanceX = ICON_SIZE;  // make the icon monospaced
 
-  // if (!io.Fonts->AddFontFromFileTTF((get_base_path() + "/fonts/forkawesome-webfont.ttf").c_str(), 13.0f, &config, icons_ranges))
-  if (io.Fonts->AddFontFromFileTTF((get_base_path() + "/fonts/fa-solid-900.ttf").c_str(), ICON_SIZE, &config, icons_ranges) == nullptr)
+  // if (!io.Fonts->AddFontFromFileTTF((get_base_path() + "/fonts/forkawesome-webfont.ttf").c_str(), 13.0f, &config,
+  // icons_ranges))
+  if (io.Fonts->AddFontFromFileTTF((get_base_path() + "/fonts/fa-solid-900.ttf").c_str(), ICON_SIZE, &config,
+                                   icons_ranges) == nullptr)
   {
     std::cout << "WARNING: Unable to load icons." << std::endl;
   };
@@ -777,39 +787,39 @@ void Visualizer::adjust_sfml_part_viewport(sf::RenderWindow& window, sf::View& v
                                            const float right_panel_size, const float bottom_panel_size)
 {
   // calculate the map parameters
-  const int    map_width        = instance.get_map_data().width;
-  const int    map_height       = instance.get_map_data().height;
+  const int map_width = instance.get_map_data().width;
+  const int map_height = instance.get_map_data().height;
   const double map_aspect_ratio = (double)map_width / (double)map_height;
 
   // get the window parameters
-  const int window_width  = window.getSize().x;
+  const int window_width = window.getSize().x;
   const int window_height = window.getSize().y;
 
   // calculate the size of the part of the window where the sfml stuff will be rendered
-  const double sfml_part_width        = window_width * (1.0 - left_panel_size - right_panel_size);
-  const double sfml_part_height       = window_height * (1.0 - bottom_panel_size);
+  const double sfml_part_width = window_width * (1.0 - left_panel_size - right_panel_size);
+  const double sfml_part_height = window_height * (1.0 - bottom_panel_size);
   const double sfml_part_aspect_ratio = sfml_part_width / sfml_part_height;
-  double       viewport_width, viewport_height;
+  double viewport_width, viewport_height;
 
   // the viewport must have the same aspoect ratio as the map
   if (map_aspect_ratio < sfml_part_aspect_ratio)
   {
     // map is wider
-    viewport_width  = sfml_part_width;
+    viewport_width = sfml_part_width;
     viewport_height = viewport_width / map_aspect_ratio;
   }
   else
   {
     // map is taller
     viewport_height = sfml_part_height;
-    viewport_width  = viewport_height * map_aspect_ratio;
+    viewport_width = viewport_height * map_aspect_ratio;
   }
 
   // calculate the viewport size relative to the window size
-  const auto  viewport_width_rel  = (float)(viewport_width / sfml_part_width);
-  const auto  viewport_height_rel = (float)(viewport_height / sfml_part_height);
-  const float offset_x            = (1 - viewport_width_rel) / 2;
-  const float offset_y            = (1 - viewport_height_rel) / 2;
+  const auto viewport_width_rel = (float)(viewport_width / sfml_part_width);
+  const auto viewport_height_rel = (float)(viewport_height / sfml_part_height);
+  const float offset_x = (1 - viewport_width_rel) / 2;
+  const float offset_y = (1 - viewport_height_rel) / 2;
   view.setViewport(sf::FloatRect({left_panel_size + offset_x, offset_y},
                                  {(float)(viewport_width / window_width), (float)(viewport_height / window_height)}));
 }
@@ -846,17 +856,17 @@ void Visualizer::process_events(sf::RenderWindow& window, sf::View& view)
     {
       if (event.mouseButton.button == sf::Mouse::Left)
       {
-        const int          window_width  = window.getSize().x;
-        const int          window_height = window.getSize().y;
-        const sf::Vector2i mouse_pos     = sf::Vector2i(event.mouseButton.x, event.mouseButton.y);
+        const int window_width = window.getSize().x;
+        const int window_height = window.getSize().y;
+        const sf::Vector2i mouse_pos = sf::Vector2i(event.mouseButton.x, event.mouseButton.y);
         const sf::Vector2f mouse_pos_rel =
             sf::Vector2f((float)mouse_pos.x / (float)window_width, (float)mouse_pos.y / (float)window_height);
         // check whether clicked on the map
         if (view.getViewport().contains(mouse_pos_rel))
         {
           const sf::Vector2f translated_pos = window.mapPixelToCoords(mouse_pos);
-          is_moving                         = true;
-          last_click_pos                    = mouse_pos;
+          is_moving = true;
+          last_click_pos = mouse_pos;
           for (int i = 0; i < (int)agents_circles.size(); i++)
           {
             // check whether clicked on agent
@@ -876,14 +886,14 @@ void Visualizer::process_events(sf::RenderWindow& window, sf::View& view)
       if (is_moving)
       {
         const sf::Vector2i mouse_pos = sf::Mouse::getPosition(window);
-        const sf::Vector2i delta     = last_click_pos - mouse_pos;
+        const sf::Vector2i delta = last_click_pos - mouse_pos;
         // get viewport size
-        const float viewport_width  = view.getViewport().width;
+        const float viewport_width = view.getViewport().width;
         const float viewport_height = view.getViewport().height;
-        const float view_width      = view.getSize().x;
-        const float view_height     = view.getSize().y;
-        const int   window_width    = window.getSize().x;
-        const int   window_height   = window.getSize().y;
+        const float view_width = view.getSize().x;
+        const float view_height = view.getSize().y;
+        const int window_width = window.getSize().x;
+        const int window_height = window.getSize().y;
         view.move(view_width * delta.x / ((float)window_width * viewport_width),
                   view_height * delta.y / ((float)window_height * viewport_height));
         last_click_pos = mouse_pos;
@@ -934,7 +944,8 @@ void Visualizer::create_left_panel()
       const SIPPIterationInfo& cur_info = (*sipp_info)[sipp_vis.time - 1];
 
       ImGui::Text("\tIteration num: %d", cur_info.iteration_num);
-      ImGui::Text("\tExpanded position: %s", ((std::string)instance.location_to_position(cur_info.cur_expanded.location)).c_str());
+      ImGui::Text("\tExpanded position: %s",
+                  ((std::string)instance.location_to_position(cur_info.cur_expanded.location)).c_str());
       ImGui::Text("\tExpanded interval: %s", ((std::string)cur_info.cur_expanded.interval).c_str());
       ImGui::Text("\tg: %lf", cur_info.g);
       ImGui::Text("\th: %lf", cur_info.h);
@@ -948,7 +959,7 @@ void Visualizer::create_left_panel()
 
       // print all already planned agents
       std::stringstream ss;
-      int               i = 0;
+      int i = 0;
       for (const auto& it : lns_info[lns_vis.time].sol.priorities)
       {
         if (it == selected_agent)
@@ -977,31 +988,34 @@ void Visualizer::create_right_panel()
 
   // LNS visualization
   create_visualization_playback_bar("LNS visualization:", lns_vis, 10);
-
-  ImGui::Text("LNS info:");
-  const LNSIterationInfo& cur_info = lns_info[lns_vis.time];
-
-  ImGui::Text("\tIteration num: %d", cur_info.iteration_num);
-  ImGui::Text("\tAccepted: %d", cur_info.accepted);
-  ImGui::Text("\tImprovement: %d", cur_info.improvement);
-  ImGui::Text("\tDestroy strategy: %s", cur_info.destroy_strategy.c_str());
-  // create a stringstrem from all destroyed agents
-  std::stringstream ss;
-  for (const auto& it : cur_info.sol.destroyed_paths)
+  if (lns_info.size() > 0)
   {
-    ss << it << " ";
-  }
-  float panelWidth = ImGui::GetContentRegionAvail().x;
+    ImGui::Text("LNS info:");
+    assertm(static_cast<int>(lns_info.size()) > lns_vis.time, "The lns info is shorter than the visualization time.");
+    const LNSIterationInfo& cur_info = lns_info[lns_vis.time];
 
-  // Enable text wrapping at the panel's width
-  ImGui::PushTextWrapPos(ImGui::GetCursorPos().x + panelWidth);
-  ImGui::Text("\tDestroyed: %s", ss.str().c_str());
-  ImGui::PopTextWrapPos();
-  if (ImGui::Checkbox("Highlight destroyed:", &highlight_destroyed))
-  {
-    update_cell_rectangles_highlights();
-  }
+    ImGui::Text("\tIteration num: %d", cur_info.iteration_num);
+    ImGui::Text("\tAccepted: %d", cur_info.accepted);
+    ImGui::Text("\tImprovement: %d", cur_info.improvement);
+    ImGui::Text("\tDestroy strategy: %s", cur_info.destroy_strategy.c_str());
 
+    // create a stringstrem from all destroyed agents
+    std::stringstream ss;
+    for (const auto& it : cur_info.sol.destroyed_paths)
+    {
+      ss << it << " ";
+    }
+    float panelWidth = ImGui::GetContentRegionAvail().x;
+
+    // Enable text wrapping at the panel's width
+    ImGui::PushTextWrapPos(ImGui::GetCursorPos().x + panelWidth);
+    ImGui::Text("\tDestroyed: %s", ss.str().c_str());
+    ImGui::PopTextWrapPos();
+    if (ImGui::Checkbox("Highlight destroyed:", &highlight_destroyed))
+    {
+      update_cell_rectangles_highlights();
+    }
+  }
 
   ImGui::End();
 }
@@ -1017,8 +1031,8 @@ void Visualizer::create_visualization_playback_bar(std::string vis_name, Visuali
   const float time_text_width = ImGui::CalcTextSize("Time: ").x + ImGui::GetStyle().ItemSpacing.x;
 
   // Get the width of the remaining space in the panel after adding the slider label
-  const float panel_size      = ImGui::GetContentRegionAvail().x;
-  float       available_width = panel_size - time_text_width;
+  const float panel_size = ImGui::GetContentRegionAvail().x;
+  float available_width = panel_size - time_text_width;
 
   // create the slider
   ImGui::Text("Time: ");
@@ -1033,7 +1047,8 @@ void Visualizer::create_visualization_playback_bar(std::string vis_name, Visuali
 
   // calculate the width of button array
   constexpr int num_buttons = 5;
-  float         total_width = num_buttons * ImGui::CalcTextSize(ICON_FA_PLAY).x + 2 * num_buttons * ImGui::GetStyle().FramePadding.x +
+  float total_width = num_buttons * ImGui::CalcTextSize(ICON_FA_PLAY).x +
+                      2 * num_buttons * ImGui::GetStyle().FramePadding.x +
                       (num_buttons - 1) * ImGui::GetStyle().ItemSpacing.x;
 
   // center the playback buttons
@@ -1076,7 +1091,6 @@ void Visualizer::create_visualization_playback_bar(std::string vis_name, Visuali
   ImGui::PopStyleColor(1);
 }
 
-
 void Visualizer::create_bottom_panel()
 {
   ImGui::Begin(ICON_FA_CODE " Console");
@@ -1092,7 +1106,7 @@ void Visualizer::create_menu_bar()
   // Set style
   ImGui::PushStyleVar(ImGuiStyleVar_FramePadding, ImVec2(10, 10));          // Increase padding (width, height)
   ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(10, 10));         // Adjust window padding
-  ImGui::GetStyle().WindowBorderSize        = 2.0f;                         // Add border
+  ImGui::GetStyle().WindowBorderSize = 2.0f;                                // Add border
   ImGui::GetStyle().Colors[ImGuiCol_Border] = ImVec4(0.1F, 0.1F, 0.1F, 1);  // border
 
   // create the widget
@@ -1113,7 +1127,7 @@ void Visualizer::create_menu_bar()
           if (!scene_fname.empty())
           {
             add_to_log("Loaded scene: " + scene_fname);
-            settings.scene_fname  = scene_fname;
+            settings.scene_fname = scene_fname;
             show_agent_num_dialog = true;
           }
           else
@@ -1132,7 +1146,7 @@ void Visualizer::create_menu_bar()
         if (!scene_fname.empty())
         {
           add_to_log("Loaded scene: " + scene_fname);
-          settings.scene_fname  = scene_fname;
+          settings.scene_fname = scene_fname;
           show_agent_num_dialog = true;
         }
         else
@@ -1212,7 +1226,6 @@ void Visualizer::solution_visualization_update(const Visualization& vis)
   update_agent_circles(get_agent_positions(vis.time));
 }
 
-
 void Visualizer::sipp_visualization_update(const Visualization& vis)
 {
   update_cell_rectangles_highlights();
@@ -1235,8 +1248,10 @@ void Visualizer::lns_visualization_update(const Visualization& vis)
   }
 }
 
-// based on https://stackoverflow.com/questions/43044/algorithm-to-randomly-generate-an-aesthetically-pleasing-color-palette
-auto Visualizer::generate_random_color(const int mix_r, const int mix_g, const int mix_b, const double mix_ratio) -> sf::Color
+// based on
+// https://stackoverflow.com/questions/43044/algorithm-to-randomly-generate-an-aesthetically-pleasing-color-palette
+auto Visualizer::generate_random_color(const int mix_r, const int mix_g, const int mix_b, const double mix_ratio)
+    -> sf::Color
 {
   static std::uniform_int_distribution<int> rnd_dist(0, UCHAR_MAX - 1);
   while (true)
@@ -1260,8 +1275,8 @@ void Visualizer::update_sipp_info()
   }
   else
   {
-    // iterate over lns info in the reversed order, find the latest iteration before current visualization time where selected agent was
-    // replanned
+    // iterate over lns info in the reversed order, find the latest iteration before current visualization time where
+    // selected agent was replanned
     int offset = static_cast<int>(lns_info.size()) - 1 - lns_vis.time;
     for (auto info = lns_info.crbegin() + offset; info != lns_info.crend(); info++)
     {
@@ -1298,7 +1313,7 @@ void Visualizer::number_of_agents_dialog()
     if (ImGui::Button("OK"))
     {
       settings.num_of_agents = user_input;
-      show_agent_num_dialog  = false;
+      show_agent_num_dialog = false;
       add_to_log("Number of agents changed to: " + std::to_string(settings.num_of_agents));
       ImGui::CloseCurrentPopup();
 
@@ -1353,21 +1368,22 @@ void Visualizer::add_to_log(std::string message)
   log.push_back(double_to_str(timestamp_wall, '.', 3) + ":\t" + message);
 }
 
-Visualization::Visualization(std::function<void(Visualization& vis)> update_func_) : update_func(std::move(update_func_))
+Visualization::Visualization(std::function<void(Visualization& vis)> update_func_)
+    : update_func(std::move(update_func_))
 {
 }
 
 void Visualization::complete_reset()
 {
-  is_playing        = false;
-  time              = 0;
+  is_playing = false;
+  time = 0;
   iteration_counter = 0;
 }
 
 void Visualization::reset()
 {
-  is_playing        = false;
-  time              = 0;
+  is_playing = false;
+  time = 0;
   iteration_counter = 0;
   update();
 }
@@ -1400,7 +1416,6 @@ void Visualization::step_forward()
   }
 }
 
-
 void Visualization::step_backward()
 {
   if (time > 0)
@@ -1413,9 +1428,9 @@ void Visualization::step_backward()
 void Visualization::new_data(int new_len)
 {
   // reset the visualization time
-  time              = 0;
+  time = 0;
   iteration_counter = 0;
-  max_time          = new_len;
+  max_time = new_len;
 }
 
 void Visualization::next_iteration()
@@ -1434,4 +1449,3 @@ void Visualization::next_iteration()
     update();
   }
 }
-
