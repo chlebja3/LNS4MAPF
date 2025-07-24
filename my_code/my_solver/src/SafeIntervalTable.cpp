@@ -17,11 +17,12 @@ SafeIntervalTable::SafeIntervalTable(const Instance& instance_) : instance(insta
   // initialize the safe interval vectors, cells with static obstacles dont need safe interval
   safe_intervals = std::vector<std::list<TimeIntervalNode>>(
       num_free_cells, std::list<TimeIntervalNode>(
-                          1, TimeIntervalNode(TimeInterval(0, INT_MAX), -1, TIME_INTERVAL_NODE_type::safe_interval,
-                                              std::nullopt, std::nullopt)));
+                          1, TimeIntervalNode(TimeInterval(0, INT_MAX), -1, -1, TIME_INTERVAL_NODE_type::safe_interval,
+                                              std::nullopt, std::nullopt, std::nullopt)));
 }
 
-void SafeIntervalTable::add_constraint(const TimePoint& timepoint, int agent_num, ConstraintTable& constraint_table)
+auto SafeIntervalTable::add_constraint(const TimePoint& timepoint, int agent_num, ConstraintTable& constraint_table,
+                                       TimeIntervalNode_it& prev_in_path) -> TimeIntervalNode_it
 {
   // check the location is valid
   assertm(instance.get_map_data().is_in(timepoint.location), "Invalid location.");
@@ -56,9 +57,9 @@ void SafeIntervalTable::add_constraint(const TimePoint& timepoint, int agent_num
       {
         constraint_node_ptr = constraint_table.insert_constraint(timepoint, agent_num, std::nullopt, it->next_interval);
         auto it_new = cur_TI_list.insert(
-            std::next(it, 1),
-            TimeIntervalNode(TimeInterval(timepoint.interval.t_max + 1, it->interval.t_max), NO_AGENT,
-                             TIME_INTERVAL_NODE_type::safe_interval, constraint_node_ptr, it->next_interval));
+            std::next(it, 1), TimeIntervalNode(TimeInterval(timepoint.interval.t_max + 1, it->interval.t_max), NO_AGENT,
+                                               timepoint.location, TIME_INTERVAL_NODE_type::safe_interval,
+                                               constraint_node_ptr, it->next_interval));
         // change next interval of the constraint to the new safe interval
         constraint_node_ptr.value()->next_interval = {it_new};
         // change prev interval of the constraint to the old safe interval
@@ -82,7 +83,8 @@ void SafeIntervalTable::add_constraint(const TimePoint& timepoint, int agent_num
       }
       assertm(constraint_node_ptr != std::nullopt, "Constraint node pointer can not be a null pointer.");
       it->next_interval = constraint_node_ptr;
-      return;
+      constraint_node_ptr.value()->prev_in_path = prev_in_path;
+      return constraint_node_ptr;
     }
     // shorten intervals ending after the range
     if (it->interval.t_max > timepoint.interval.t_max)
@@ -100,7 +102,8 @@ void SafeIntervalTable::add_constraint(const TimePoint& timepoint, int agent_num
       it->prev_interval = constraint_node_ptr;
       assertm(constraint_node_ptr.has_value(), "Constraint pointer must have value.");
       constraint_node_ptr.value()->next_interval = {it};
-      return;
+      constraint_node_ptr.value()->prev_in_path = prev_in_path;
+      return constraint_node_ptr;
     }
 
     // delete intervals that are fully overlapped by the constraint
@@ -119,7 +122,8 @@ void SafeIntervalTable::add_constraint(const TimePoint& timepoint, int agent_num
     }
 
     it = cur_TI_list.erase(it);
-    return;
+    constraint_node_ptr.value()->prev_in_path = prev_in_path;
+    return constraint_node_ptr;
   }
 }
 
@@ -136,7 +140,8 @@ void SafeIntervalTable::remove_constraint(const TimePoint& timepoint, int agent_
   if (cur_TI_list.empty())
   {
     auto [prev, next] = constraint_table.remove_constraint(timepoint, agent_num);
-    cur_TI_list.emplace_back(timepoint.interval, agent_num, TIME_INTERVAL_NODE_type::safe_interval, prev, next);
+    cur_TI_list.emplace_back(timepoint.interval, agent_num, timepoint.location, TIME_INTERVAL_NODE_type::safe_interval,
+                             prev, next);
     // rewire
     if (prev.has_value())
     {
@@ -169,7 +174,8 @@ void SafeIntervalTable::remove_constraint(const TimePoint& timepoint, int agent_
     // otherwise add a new safe interval
     auto [prev, next] =
         constraint_table.remove_constraint_after(timepoint, agent_num, cur_TI_list.back().next_interval);
-    cur_TI_list.emplace_back(timepoint.interval, agent_num, TIME_INTERVAL_NODE_type::safe_interval, prev, next);
+    cur_TI_list.emplace_back(timepoint.interval, agent_num, timepoint.location, TIME_INTERVAL_NODE_type::safe_interval,
+                             prev, next);
     return;
   }
 
@@ -259,9 +265,9 @@ void SafeIntervalTable::remove_constraint(const TimePoint& timepoint, int agent_
       auto [prev_interval, next_interval] = constraint_table.remove_constraint_after(timepoint, agent_num, curr);
       // std::cout << "prev: " << prev_interval.value()->interval << ", next: " << next_interval.value()->interval
       //           << std::endl;
-      auto new_it =
-          cur_TI_list.insert(it, TimeIntervalNode(timepoint.interval, NO_AGENT, TIME_INTERVAL_NODE_type::safe_interval,
-                                                  prev_interval, next_interval));
+      auto new_it = cur_TI_list.insert(
+          it, TimeIntervalNode(timepoint.interval, NO_AGENT, timepoint.location, TIME_INTERVAL_NODE_type::safe_interval,
+                               prev_interval, next_interval));
       // rewire prev
       if (prev_interval.has_value())
       {

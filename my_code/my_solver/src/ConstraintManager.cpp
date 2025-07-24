@@ -10,12 +10,14 @@
 
 void ConstraintManager::add_trajectory(const TimePointPath& path, int agent_num)
 {
+  TimeIntervalNode_it prev_interval = std::nullopt;
   for (int i = 0; i < static_cast<int>(path.size()); i++)
   {
     // add to the safe interval table, which will add it to the constraint table also
     // std::cout << "Adding constraint. Location: " << path[i].location << ", interval: " << path[i].interval
     //           << ", agent_num: " << agent_num << std::endl;
-    safe_interval_table.add_constraint(path[i], agent_num, constraint_table);
+
+    prev_interval = safe_interval_table.add_constraint(path[i], agent_num, constraint_table, prev_interval);
 
     // add to the edge table
     if (i > 0)  // skip the first point as there is no edge
@@ -204,13 +206,16 @@ void ConstraintManager::build_sequential(const std::vector<TimePointPath>& paths
 
   TimeIntervalNode_const_it last = {last_si};
   // if last is cend, go further from prev safe interval
-  if (is_end_of_list(location, last_si) && time_interval.t_max < INT_MAX)
+  if (is_end_of_list(location, last_si))
   {
-    last = {std::prev(last_si)};  // start with the prev safe interval
-    while (last.value()->interval.t_max <= time_interval.t_max)
+    if (time_interval.t_max < INT_MAX)
     {
-      last = last.value()->next_interval;
-      assertm(last.has_value(), "The interval must have value.");
+      last = {std::prev(last_si)};  // start with the prev safe interval
+      while (last.value()->interval.t_max <= time_interval.t_max)
+      {
+        last = last.value()->next_interval;
+        assertm(last.has_value(), "The interval must have value.");
+      }
     }
   }
   else

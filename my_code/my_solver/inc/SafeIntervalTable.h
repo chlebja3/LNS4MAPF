@@ -39,7 +39,8 @@ public:
    */
   explicit SafeIntervalTable(const Instance& instance_);
 
-  void add_constraint(const TimePoint& timepoint, int agent_num, ConstraintTable& constraint_table);
+  auto add_constraint(const TimePoint& timepoint, int agent_num, ConstraintTable& constraint_table,
+                      TimeIntervalNode_it& prev_in_path) -> TimeIntervalNode_it;
 
   void remove_constraint(const TimePoint& timepoint, int agent_num, ConstraintTable& constraint_table);
 
@@ -101,9 +102,9 @@ public:
     // reset safe intervals
     int num_free_cells = static_cast<int>(safe_intervals.size());
     safe_intervals = std::vector<std::list<TimeIntervalNode>>(
-        num_free_cells, std::list<TimeIntervalNode>(
-                            1, TimeIntervalNode(TimeInterval(0, INT_MAX), -1, TIME_INTERVAL_NODE_type::safe_interval,
-                                                std::nullopt, std::nullopt)));
+        num_free_cells, std::list<TimeIntervalNode>(1, TimeIntervalNode(TimeInterval(0, INT_MAX), -1, -1,
+                                                                        TIME_INTERVAL_NODE_type::safe_interval,
+                                                                        std::nullopt, std::nullopt, std::nullopt)));
 
     // reset latest constraint end
     // latest_constraint_end         = 0;

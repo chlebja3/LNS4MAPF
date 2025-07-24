@@ -70,7 +70,8 @@ void ConstraintTable::add_constraint(const TimePoint& timepoint, int agent_num)
     {
       TimeIntervalNode_it prev_ptr = find_previous_timeintervalnode(cur_TI_list.begin(), it, timepoint.interval);
       TimeIntervalNode_it next_ptr = find_next_timeintervalnode(cur_TI_list.begin(), it, timepoint.interval);
-      cur_TI_list.insert(it, {timepoint.interval, agent_num, TIME_INTERVAL_NODE_type::constraint, prev_ptr, next_ptr});
+      cur_TI_list.insert(it, {timepoint.interval, agent_num, timepoint.location, TIME_INTERVAL_NODE_type::constraint,
+                              prev_ptr, next_ptr});
       inserted = true;
       break;
     }
@@ -84,8 +85,8 @@ void ConstraintTable::add_constraint(const TimePoint& timepoint, int agent_num)
     {
       prev_ptr = std::prev(cur_TI_list.end());
     }
-    cur_TI_list.emplace_back(timepoint.interval, agent_num, TIME_INTERVAL_NODE_type::constraint, prev_ptr,
-                             std::nullopt);
+    cur_TI_list.emplace_back(timepoint.interval, agent_num, timepoint.location, TIME_INTERVAL_NODE_type::constraint,
+                             prev_ptr, std::nullopt);
   }
 
   // add to the set of visiting agents
@@ -222,9 +223,9 @@ auto ConstraintTable::insert_constraint(const TimePoint& timepoint, int agent_nu
             "Previous time interval node must be a constraint.");
     assertm(prev.value()->interval.t_max + 1 == timepoint.interval.t_min,
             "Previous constraint must end just before the new constraint starts.");
-    return cur_TI_list.insert(
-        std::next(prev.value()),
-        TimeIntervalNode(timepoint.interval, agent_num, TIME_INTERVAL_NODE_type::constraint, prev, next));
+    return cur_TI_list.insert(std::next(prev.value()),
+                              TimeIntervalNode(timepoint.interval, agent_num, timepoint.location,
+                                               TIME_INTERVAL_NODE_type::constraint, prev, next));
   }
   // try to insert before next
   if (next.has_value())
@@ -232,8 +233,8 @@ auto ConstraintTable::insert_constraint(const TimePoint& timepoint, int agent_nu
     assertm(next.value()->type == TIME_INTERVAL_NODE_type::constraint, "Next time interval node must be a constraint.");
     // assertm(timepoint.interval.t_max + 1 == next.value()->interval.t_min,
     //         "Next constraint must start just after the new constraint ends.");
-    return cur_TI_list.insert(
-        next.value(), TimeIntervalNode(timepoint.interval, agent_num, TIME_INTERVAL_NODE_type::constraint, prev, next));
+    return cur_TI_list.insert(next.value(), TimeIntervalNode(timepoint.interval, agent_num, timepoint.location,
+                                                             TIME_INTERVAL_NODE_type::constraint, prev, next));
   }
 
   // insert to the end
@@ -241,7 +242,7 @@ auto ConstraintTable::insert_constraint(const TimePoint& timepoint, int agent_nu
   //         "If there is no prev and no next, the interval must be infinite, because there can not be any safe
   //         intervals.");
   // assertm(cur_TI_list.empty(), "If prev and next are empty, cur TI list must be also.");
-  return cur_TI_list.insert(cur_TI_list.end(), TimeIntervalNode(timepoint.interval, agent_num,
+  return cur_TI_list.insert(cur_TI_list.end(), TimeIntervalNode(timepoint.interval, agent_num, timepoint.location,
                                                                 TIME_INTERVAL_NODE_type::constraint, prev, next));
 }
 

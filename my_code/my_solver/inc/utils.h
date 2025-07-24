@@ -337,16 +337,37 @@ using TimeIntervalNode_const_it = std::optional<std::list<TimeIntervalNode>::con
 struct TimeIntervalNode
 {
 public:
-  TimeIntervalNode(const TimeInterval& interval_, int agent_num_, TIME_INTERVAL_NODE_type type_,
-                   TimeIntervalNode_it prev = std::nullopt, TimeIntervalNode_it next = std::nullopt)
-      : interval(interval_), agent_num(agent_num_), type(type_), prev_interval(prev), next_interval(next)
+  TimeIntervalNode(const TimeInterval& interval_, int agent_num_, int location_, TIME_INTERVAL_NODE_type type_,
+                   TimeIntervalNode_it prev_interval_ = std::nullopt, TimeIntervalNode_it next_interval_ = std::nullopt,
+                   TimeIntervalNode_it prev_in_path_ = std::nullopt)
+      : interval(interval_),
+        agent_num(agent_num_),
+        location(location_),
+        type(type_),
+        prev_interval(prev_interval_),
+        next_interval(next_interval_),
+        prev_in_path(prev_in_path_)
   {
   }
   TimeInterval interval;
   int agent_num;
+  int location;
   TIME_INTERVAL_NODE_type type;
   TimeIntervalNode_it prev_interval;
   TimeIntervalNode_it next_interval;
+  TimeIntervalNode_it prev_in_path;
+};
+
+struct Constraint
+{
+public:
+  Constraint(const TimeInterval& interval_, int agent_num_, int location_)
+      : interval(interval_), agent_num(agent_num_), location(location_)
+  {
+  }
+  TimeInterval interval;
+  int agent_num;
+  int location;
 };
 
 /**

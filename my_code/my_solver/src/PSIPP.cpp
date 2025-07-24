@@ -19,6 +19,7 @@
 #define NODE_POOL_MERGE_SIZE \
   500  // merge the extra list with the node pool vector only of there are more elements in the list
 #define INITIAL_NODE_POOL_SIZE 2  // the multiple of map size to use as initial node pool size
+#define MAX_PUSHES 1
 
 using namespace psipp;
 
@@ -43,7 +44,7 @@ auto PSIPPNode::operator==(const PSIPPNode& other) const -> bool
 auto PSIPPNodeComparator::operator()(PSIPPNode const* n1, PSIPPNode const* n2) const -> bool
 {
   // num of pushes is the most important
-  if (n1->num_of_pushes == n2->num_of_pushes)
+  if (n1->pushed.size() == n2->pushed.size())
   {
     // compare f
     if (n1->f == n2->f)
@@ -67,13 +68,13 @@ auto PSIPPNodeComparator::operator()(PSIPPNode const* n1, PSIPPNode const* n2) c
     }
     return n1->f > n2->f;
   }
-  return n1->num_of_pushes > n2->num_of_pushes;
+  return n1->pushed.size() > n2->pushed.size();
 }
 
 auto PSIPPNodeComparatorSuboptimal::operator()(PSIPPNode const* n1, PSIPPNode const* n2) const -> bool
 {
   // num of pushes is the most important
-  if (n1->num_of_pushes == n2->num_of_pushes)
+  if (n1->pushed.size() == n2->pushed.size())
   {
     // compare f
     if (std::abs(n1->f - n2->f) <= max_suboptimality_absolute)
@@ -99,7 +100,7 @@ auto PSIPPNodeComparatorSuboptimal::operator()(PSIPPNode const* n1, PSIPPNode co
     }
     return n1->f > n2->f;
   }
-  return n1->num_of_pushes > n2->num_of_pushes;
+  return n1->pushed.size() > n2->pushed.size();
 }
 
 NodePool::NodePool(const int size)
@@ -211,7 +212,8 @@ auto PSIPP::plan_psipp_mine(const int agent_num) -> TimePointPath
     const double h1 = std::max((double)min_time, h2);
 
     // create the start node
-    open_list.push(node_pool.add_node(PSIPPNode(start, time_interval_start, 0, h1, h2, 0, nullptr)));
+    std::vector<Constraint> pushed;
+    open_list.push(node_pool.add_node(PSIPPNode(start, time_interval_start, 0, h1, h2, 0, nullptr, pushed)));
 
     if (settings.info_type != INFO_type::no_info)
     {
@@ -350,13 +352,17 @@ auto PSIPP::plan_psipp_mine(const int agent_num) -> TimePointPath
         //}
         const double h1 =
             std::max((double)min_time, neighbor_time_point.interval.t_min + h2) - neighbor_time_point.interval.t_min;
-        int new_num_pushes = current->num_of_pushes;
-        if (it->type == TIME_INTERVAL_NODE_type::constraint)
+        std::vector<Constraint> new_pushed = current->pushed;
+        if (current->pushed.size() < MAX_PUSHES && it->type == TIME_INTERVAL_NODE_type::constraint)
         {
-          new_num_pushes++;
+          // can not push agents from start location
+          if (!it->prev_in_path.has_value()) continue;
+
+          new_pushed.emplace_back(it->prev_in_path.value()->interval, it->agent_num,
+                                  it->prev_in_path.value()->location);
         }
         open_list.push(node_pool.add_node(
-            PSIPPNode(neighbor_time_point, neighbor_time_point.interval.t_min, h1, h2, h3, current, new_num_pushes)));
+            PSIPPNode(neighbor_time_point, neighbor_time_point.interval.t_min, h1, h2, h3, current, new_pushed)));
         // std::cout << "interval:" << neighbor_time_point.interval << ", h1: " << h1 << ", h2: " << h2 << std::endl;
 
         if (settings.info_type != INFO_type::no_info)
@@ -420,9 +426,10 @@ auto PSIPP::plan_psipp_mine_ap(const int agent_num, const std::unordered_set<int
   {
     const double h2 = instance.get_heuristic_distance(agent_num, start);
     const double h1 = std::max((double)min_time, h2);
+    std::vector<Constraint> pushed;
 
     // create the start node
-    open_list.push(node_pool.add_node(PSIPPNode(start, time_interval_start, 0, h1, h2, 0, nullptr)));
+    open_list.push(node_pool.add_node(PSIPPNode(start, time_interval_start, 0, h1, h2, 0, nullptr, pushed)));
 
     if (settings.info_type != INFO_type::no_info)
     {
@@ -560,8 +567,9 @@ auto PSIPP::plan_psipp_mine_ap(const int agent_num, const std::unordered_set<int
         //}
         const double h1 = std::max((double)min_time, neighbor_time_point.interval.t_min + h_distance) -
                           neighbor_time_point.interval.t_min;
-        open_list.push(node_pool.add_node(
-            PSIPPNode(neighbor_time_point, neighbor_time_point.interval.t_min, h1, h_ap_goal, h_distance, current)));
+        std::vector<Constraint> pushed;
+        open_list.push(node_pool.add_node(PSIPPNode(neighbor_time_point, neighbor_time_point.interval.t_min, h1,
+                                                    h_ap_goal, h_distance, current, pushed)));
         // std::cout << "interval:" << neighbor_time_point.interval << ", h1: " << h1 << ", h2: " << h2 << std::endl;
 
         if (settings.info_type != INFO_type::no_info)
@@ -630,7 +638,8 @@ auto PSIPP::plan_suboptimal(const int agent_num, const std::unordered_set<int>& 
     const double h1 = std::max((double)min_time, h2);
 
     // create the start node
-    open_list.push(node_pool.add_node(PSIPPNode(start, time_interval_start, 0, h1, h2, 0, nullptr)));
+    std::vector<Constraint> pushed;
+    open_list.push(node_pool.add_node(PSIPPNode(start, time_interval_start, 0, h1, h2, 0, nullptr, pushed)));
 
     if (settings.info_type != INFO_type::no_info)
     {
@@ -772,10 +781,11 @@ auto PSIPP::plan_suboptimal(const int agent_num, const std::unordered_set<int>& 
         //  open_list.push(node_pool.add_node(SIPPNode(neighbor_time_point, neighbor_time_point.interval.t_min, h,
         //  current)));
         //}
+        auto pushed = current->pushed;
         const double h1 =
             std::max((double)min_time, neighbor_time_point.interval.t_min + h2) - neighbor_time_point.interval.t_min;
         open_list.push(node_pool.add_node(
-            PSIPPNode(neighbor_time_point, neighbor_time_point.interval.t_min, h1, h2, h3, current)));
+            PSIPPNode(neighbor_time_point, neighbor_time_point.interval.t_min, h1, h2, h3, current, pushed)));
         // std::cout << "interval:" << neighbor_time_point.interval << ", h1: " << h1 << ", h2: " << h2 << std::endl;
 
         if (settings.info_type != INFO_type::no_info)

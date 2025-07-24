@@ -45,7 +45,9 @@ TEST_F(SafeIntervalTableTest, SingleConstraint)
 {
   TimePoint tp(7, {3, 5});  // location (1,2) with time interval [3,5]
 
-  table->add_constraint(tp, 0, *constraint_table);
+  TimeIntervalNode_it null_int = std::nullopt;
+
+  table->add_constraint(tp, 0, *constraint_table, null_int);
 
   // test that the first safe interval is right
   auto first_si = table->get_first_safe_interval(7).value()->interval;
@@ -66,10 +68,11 @@ TEST_F(SafeIntervalTableTest, SingleConstraint)
 // Adding multiple constraints and ensuring safe intervals are computed correctly
 TEST_F(SafeIntervalTableTest, MultipleSingleConstraints)
 {
-  table->add_constraint(TimePoint(7, {2, 4}), 0, *constraint_table);
-  table->add_constraint(TimePoint(7, {5, 5}), 0, *constraint_table);
-  table->add_constraint(TimePoint(7, {6, 7}), 0, *constraint_table);
-  table->add_constraint(TimePoint(7, {10, 15}), 0, *constraint_table);
+  TimeIntervalNode_it prev_int = std::nullopt;
+  prev_int = table->add_constraint(TimePoint(7, {2, 4}), 0, *constraint_table, prev_int);
+  prev_int = table->add_constraint(TimePoint(7, {5, 5}), 0, *constraint_table, prev_int);
+  prev_int = table->add_constraint(TimePoint(7, {6, 7}), 0, *constraint_table, prev_int);
+  prev_int = table->add_constraint(TimePoint(7, {10, 15}), 0, *constraint_table, prev_int);
 
   auto [start, end] = table->get_safe_intervals(7, {0, 20});
   ASSERT_EQ(std::distance(start, end), 3) << "Expected three safe intervals after adding multiple constraints!";
@@ -82,7 +85,8 @@ TEST_F(SafeIntervalTableTest, MultipleSingleConstraints)
 TEST_F(SafeIntervalTableTest, RemoveConstraint)
 {
   TimePoint tp(7, {3, 5});
-  table->add_constraint(tp, 0, *constraint_table);
+  TimeIntervalNode_it prev_int = std::nullopt;
+  table->add_constraint(tp, 0, *constraint_table, prev_int);
   table->remove_constraint(tp, 0, *constraint_table);
 
   auto first_si = table->get_first_safe_interval(7).value();
@@ -108,8 +112,9 @@ TEST_F(SafeIntervalTableTest, GetSafeIntervalEmpty)
 TEST_F(SafeIntervalTableTest, DynamicAddRemove)
 {
   TimePoint tp(7, {3, 5});
-  table->add_constraint(TimePoint(2, {2, 4}), 0, *constraint_table);
-  table->add_constraint(TimePoint(2, {6, 8}), 0, *constraint_table);
+  TimeIntervalNode_it prev_int = std::nullopt;
+  table->add_constraint(TimePoint(2, {2, 4}), 0, *constraint_table, prev_int);
+  table->add_constraint(TimePoint(2, {6, 8}), 0, *constraint_table, prev_int);
   table->remove_constraint(TimePoint(2, {2, 4}), 0, *constraint_table);
 
   auto [start, end] = table->get_safe_intervals(2, {0, 10});
@@ -152,6 +157,7 @@ TEST_F(SafeIntervalTableTest, AddExistingConstraint)
 #endif
 {
   TimePoint tp(3, {3, 6});
-  table->add_constraint(tp, 0, *constraint_table);
-  ASSERT_DEATH(table->add_constraint(tp, 0, *constraint_table), "Can not add an overlapping constraint.");
+  TimeIntervalNode_it prev_int = std::nullopt;
+  table->add_constraint(tp, 0, *constraint_table, prev_int);
+  ASSERT_DEATH(table->add_constraint(tp, 0, *constraint_table, prev_int), "Can not add an overlapping constraint.");
 }
