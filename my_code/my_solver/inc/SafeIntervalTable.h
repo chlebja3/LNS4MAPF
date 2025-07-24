@@ -116,6 +116,12 @@ public:
     // max_path_len_estimate = INT_MAX;
   }
 
+  auto is_end_of_list(int location, std::list<TimeIntervalNode>::const_iterator it) const -> bool
+  {
+    auto const& cur_TI_list = safe_intervals[instance.location_to_free_location(location)];
+    return it == cur_TI_list.cend();
+  }
+
 private:
   std::vector<std::list<TimeIntervalNode>> safe_intervals; /**< safe intervals for each position */
   const Instance& instance;                                /**< The instance of the problem. */

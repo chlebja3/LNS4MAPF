@@ -188,6 +188,44 @@ void ConstraintManager::build_sequential(const std::vector<TimePointPath>& paths
   return curr;
 }
 
+[[nodiscard]] auto ConstraintManager::get_all_intervals(int location, const TimeInterval& time_interval) const
+    -> std::pair<std::list<TimeIntervalNode>::const_iterator, std::list<TimeIntervalNode>::const_iterator>
+{
+  auto [first_si, last_si] = get_safe_intervals(location, time_interval);
+  // std::cout << "first: " << first_si->interval << ", last: " << is_end_of_list(location, last_si) << std::endl;
+  TimeIntervalNode_const_it first = {first_si};
+  assertm(first.has_value(), "The first safe interval must have value.");
+  // find the first interval
+  while (first.value()->interval.t_min > time_interval.t_min)
+  {
+    assertm(first.has_value(), "The interval must have value.");
+    first = first.value()->prev_interval;
+  }
+
+  TimeIntervalNode_const_it last = {last_si};
+  // if last is cend, go further from prev safe interval
+  if (is_end_of_list(location, last_si) && time_interval.t_max < INT_MAX)
+  {
+    last = {std::prev(last_si)};  // start with the prev safe interval
+    while (last.value()->interval.t_max <= time_interval.t_max)
+    {
+      last = last.value()->next_interval;
+      assertm(last.has_value(), "The interval must have value.");
+    }
+  }
+  else
+  {
+    assertm(last.has_value(), "The last interval must have value.");
+    while (last.value()->prev_interval.value()->interval.t_min > time_interval.t_max)
+    {
+      assertm(last.has_value(), "The interval must have value.");
+      last = last.value()->prev_interval;
+    }
+    assertm(first.has_value() && last.has_value(), "First and last must have value.");
+  }
+  return std::make_pair(first.value(), last.value());
+}
+
 /*
 #ifdef CM_PARALLELIZATION
 void ConstraintTable::build_parallel(const std::vector<TimePointPath>& paths)

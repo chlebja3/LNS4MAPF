@@ -344,3 +344,51 @@ TEST_F(ConstraintManagerTest, AddAndRemoveAllCases)
   constraint_manager->remove_trajectory(traj0, 0);
   ASSERT_TRUE(constraint_manager->is_valid()) << "Invalid constraint manager after removing first constraint.";
 }
+
+TEST_F(ConstraintManagerTest, GetAllTimeIntervals)
+{
+  TimePointPath traj0({TimePoint(7, {0, 0})});
+  TimePointPath traj1({TimePoint(7, {2, 2})});
+  TimePointPath traj2({TimePoint(7, {4, 4})});
+  TimePointPath traj3({TimePoint(7, {5, 5})});
+  TimePointPath traj4({TimePoint(7, {7, INT_MAX})});
+  constraint_manager->add_trajectory(traj0, 0);
+  ASSERT_TRUE(constraint_manager->is_valid());
+  constraint_manager->add_trajectory(traj1, 0);
+  ASSERT_TRUE(constraint_manager->is_valid());
+  constraint_manager->add_trajectory(traj2, 0);
+  ASSERT_TRUE(constraint_manager->is_valid());
+  constraint_manager->add_trajectory(traj3, 0);
+  ASSERT_TRUE(constraint_manager->is_valid());
+  constraint_manager->add_trajectory(traj4, 0);
+
+  ASSERT_TRUE(constraint_manager->is_valid()) << "Invalid constraint manager after adding all trajectories.";
+
+  // now retrieve all time intervals
+  {
+    auto [start, end] = constraint_manager->get_all_intervals(7, TimeInterval(0, INT_MAX));
+    EXPECT_EQ(start->interval, TimeInterval(0, 0));
+    EXPECT_TRUE(constraint_manager->is_end_of_list(7, end));
+  }
+
+  // retrieve only some intervals
+  {
+    auto [start, end] = constraint_manager->get_all_intervals(7, TimeInterval(1, 6));
+    EXPECT_EQ(start->interval, TimeInterval(1, 1));
+    EXPECT_EQ(end->interval, TimeInterval(7, INT_MAX));
+  }
+
+  // check it can go back from SI
+  {
+    auto [start, end] = constraint_manager->get_all_intervals(7, TimeInterval(4, 6));
+    EXPECT_EQ(start->interval, TimeInterval(4, 4));
+    EXPECT_EQ(end->interval, TimeInterval(7, INT_MAX));
+  }
+
+  // check it can go further from SI
+  {
+    auto [start, end] = constraint_manager->get_all_intervals(7, TimeInterval(3, 4));
+    EXPECT_EQ(start->interval, TimeInterval(3, 3));
+    EXPECT_EQ(end->interval, TimeInterval(5, 5));
+  }
+}

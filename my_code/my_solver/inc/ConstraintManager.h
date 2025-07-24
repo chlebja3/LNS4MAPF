@@ -49,6 +49,9 @@ public:
     return constraint_table.get_agents_counts(location);
   }
 
+  [[nodiscard]] auto get_all_intervals(int location, const TimeInterval& time_interval) const
+      -> std::pair<std::list<TimeIntervalNode>::const_iterator, std::list<TimeIntervalNode>::const_iterator>;
+
   // Safe Interval Table functionalities
   [[nodiscard]] auto get_safe_intervals(int location, const TimeInterval& time_interval) const
       -> std::pair<std::list<TimeIntervalNode>::const_iterator, std::list<TimeIntervalNode>::const_iterator>
@@ -90,7 +93,13 @@ public:
     return edge_table.get(to, from, time) != -1;
   }
 
-  bool is_valid();
+  auto is_valid() -> bool;
+
+  auto is_end_of_list(int location, std::list<TimeIntervalNode>::const_iterator it) const -> bool
+  {
+    return safe_interval_table.is_end_of_list(location, it);
+    // TODO also constraint table
+  }
 
 private:
   SafeIntervalTable safe_interval_table;

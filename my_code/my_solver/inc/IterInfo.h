@@ -1,6 +1,7 @@
 /**
  * @file
- * @brief Contains classes for storing information about the iterations of the algorithm, which are used for logging and debugging.
+ * @brief Contains classes for storing information about the iterations of the algorithm, which are used for logging and
+ * debugging.
  *
  * @author: Jan Chleboun <chlebja3@fel.cvut.cz>
  * @date: 22-02-2025
@@ -17,14 +18,14 @@
 class SIPPIterationInfo
 {
 public:
-  const TimePoint cur_expanded;  /**< TimePoint expanded at this iteration */
-  const double    g;             /**< Travel cost (g value) of the represented node */
-  const double    h;             /**< Primary heuristic cost (h value) of the currently represented node */
-  const double    h2;            /**< Secondary heuristic cost (h2 value) of the currently represented node */
-  const double    h3;            /**< Terciary  heuristic cost (h3 value) of the currently represented node */
-  const int       generated;     /**< Number of generated nodes */
-  const int       expanded;      /**< Number of expanded nodes */
-  const int       iteration_num; /**< Iteration number of the represented node */
+  const TimePoint cur_expanded; /**< TimePoint expanded at this iteration */
+  const double g;               /**< Travel cost (g value) of the represented node */
+  const double h;               /**< Primary heuristic cost (h value) of the currently represented node */
+  const double h2;              /**< Secondary heuristic cost (h2 value) of the currently represented node */
+  const double h3;              /**< Terciary  heuristic cost (h3 value) of the currently represented node */
+  const int generated;          /**< Number of generated nodes */
+  const int expanded;           /**< Number of expanded nodes */
+  const int iteration_num;      /**< Iteration number of the represented node */
 
   /**
    * @brief Constructor for SIPPIterationInfo.
@@ -38,8 +39,15 @@ public:
    * @param expanded_ Number of expanded nodes
    * @param iteration_num_ Current iteration number
    */
-  SIPPIterationInfo(const TimePoint& cur_expanded_, double g_, double h_, double h2_, double h3_, int generated_, int expanded_,
-                    int iteration_num_);
+  SIPPIterationInfo(const TimePoint& cur_expanded_, double g_, double h_, double h2_, double h3_, int generated_,
+                    int expanded_, int iteration_num_);
+};
+
+class PSIPPIterationInfo : SIPPIterationInfo
+{
+public:
+  PSIPPIterationInfo(const TimePoint& cur_expanded_, double g_, double h_, double h2_, double h3_, int generated_,
+                     int expanded_, int iteration_num_);
 };
 
 /**
@@ -47,19 +55,21 @@ public:
  */
 using SIPPInfo = std::vector<SIPPIterationInfo>;
 
+using PSIPPInfo = std::vector<PSIPPIterationInfo>;
+
 /**
  * @brief Stores information about the iterations of the LNS algorithm.
  */
 class LNSIterationInfo
 {
 public:
-  int                   iteration_num;    /**< Iteration number */
-  bool                  accepted;         /**< Whether the solution was accepted */
-  int                   improvement;      /**< Improvement of the solution */
-  std::vector<SIPPInfo> sipp_info;        /**< Information about all underlying SIPP searches */
-  Solution              sol;              /**< Solution object representing the current solution */
-  std::vector<int>      planning_order;   /**< The priorities used in this LNS iteration */
-  std::string           destroy_strategy; /**< The destroy strategy used in this LNS iteration */
+  int iteration_num;               /**< Iteration number */
+  bool accepted;                   /**< Whether the solution was accepted */
+  int improvement;                 /**< Improvement of the solution */
+  std::vector<SIPPInfo> sipp_info; /**< Information about all underlying SIPP searches */
+  Solution sol;                    /**< Solution object representing the current solution */
+  std::vector<int> planning_order; /**< The priorities used in this LNS iteration */
+  std::string destroy_strategy;    /**< The destroy strategy used in this LNS iteration */
 
   /**
    * @brief Constructor for LNSIterationInfo.
@@ -71,8 +81,8 @@ public:
    * @param sol_ Solution object representing the current solution
    * @param destroy_strategy_ The destroy strategy used in this LNS iteration
    */
-  LNSIterationInfo(int iteration_num_, bool accepted_, int improvement_, std::vector<SIPPInfo>& sipp_info_, Solution sol_,
-                   std::string destroy_strategy_)
+  LNSIterationInfo(int iteration_num_, bool accepted_, int improvement_, std::vector<SIPPInfo>& sipp_info_,
+                   Solution sol_, std::string destroy_strategy_)
       : iteration_num(iteration_num_),
         accepted(accepted_),
         improvement(improvement_),

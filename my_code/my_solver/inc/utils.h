@@ -66,6 +66,17 @@ enum class SIPP_implementation
 };
 
 /**
+ * @brief An enum for representing the type of PSIPP implementation.
+ */
+enum class PSIPP_implementation
+{
+  PSIPP_mine,
+  PSIPP_mine_ap,
+  PSIPP_suboptimal,
+  PSIPP_suboptimal_ap,
+};
+
+/**
  * @brief An enum for representing the type of SIPP algorithm.
  */
 enum class INFO_type

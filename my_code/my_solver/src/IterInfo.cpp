@@ -6,8 +6,21 @@
  */
 #include "IterInfo.h"
 
-SIPPIterationInfo::SIPPIterationInfo(const TimePoint& cur_expanded_, double g_, double h_, double h2_, double h3_, int generated_,
-                                     int expanded_, int iteration_num_)
-    : cur_expanded(cur_expanded_), g(g_), h(h_), h2(h2_), h3(h3_), generated(generated_), expanded(expanded_), iteration_num(iteration_num_)
+SIPPIterationInfo::SIPPIterationInfo(const TimePoint& cur_expanded_, double g_, double h_, double h2_, double h3_,
+                                     int generated_, int expanded_, int iteration_num_)
+    : cur_expanded(cur_expanded_),
+      g(g_),
+      h(h_),
+      h2(h2_),
+      h3(h3_),
+      generated(generated_),
+      expanded(expanded_),
+      iteration_num(iteration_num_)
+{
+}
+
+PSIPPIterationInfo::PSIPPIterationInfo(const TimePoint& cur_expanded_, double g_, double h_, double h2_, double h3_,
+                                       int generated_, int expanded_, int iteration_num_)
+    : SIPPIterationInfo(cur_expanded_, g_, h_, h2_, h3_, generated_, expanded_, iteration_num_)
 {
 }
