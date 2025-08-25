@@ -361,13 +361,14 @@ public:
 struct Constraint
 {
 public:
-  Constraint(const TimeInterval& interval_, int agent_num_, int location_)
-      : interval(interval_), agent_num(agent_num_), location(location_)
+  Constraint(const TimeInterval& interval_, int agent_num_, int location_, int next_location_)
+      : interval(interval_), agent_num(agent_num_), location(location_), next_location(next_location_)
   {
   }
   TimeInterval interval;
   int agent_num;
   int location;
+  int next_location;
 };
 
 /**

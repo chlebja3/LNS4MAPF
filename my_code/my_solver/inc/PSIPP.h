@@ -15,7 +15,7 @@
 #include <boost/heap/priority_queue.hpp>
 // #include <queue>
 // #include <unordered_map>
-// #include <unordered_set>
+#include <unordered_set>
 // #include <boost/heap/fibonacci_heap.hpp>
 
 #include "ConstraintManager.h"
@@ -260,7 +260,8 @@ public:
    *
    * @return A TimePointPath representing the planned path for the agent.
    */
-  auto plan(int agent_num, const std::unordered_set<int>& already_planned) -> TimePointPath;
+  auto plan(int agent_num, const std::unordered_set<int>& already_planned)
+      -> std::pair<TimePointPath, std::unordered_set<int>>;
 
   /**
    * @brief Plans a path for the given agent number using the multi-heuristic version of the SIPP algorithm.
@@ -269,7 +270,7 @@ public:
    *
    * @return A TimePointPath representing the planned path for the agent.
    */
-  auto plan_psipp_mine(int agent_num) -> TimePointPath;
+  auto plan_psipp_mine(int agent_num) -> std::pair<TimePointPath, std::unordered_set<int>>;
 
   /**
    * @brief Plans a path for the given agent number using the ap multi-heuristic version of the SIPP algorithm.
@@ -279,7 +280,8 @@ public:
    *
    * @return A TimePointPath representing the planned path for the agent.
    */
-  auto plan_psipp_mine_ap(int agent_num, const std::unordered_set<int>& already_planned) -> TimePointPath;
+  auto plan_psipp_mine_ap(int agent_num, const std::unordered_set<int>& already_planned)
+      -> std::pair<TimePointPath, std::unordered_set<int>>;
 
   /**
    * @brief Plans a path for the given agent number using the original Bounded Suboptimal SIPP algorithm.
@@ -292,7 +294,7 @@ public:
    * @return A TimePointPath representing the planned path for the agent.
    */
   auto plan_suboptimal(int agent_num, const std::unordered_set<int>& already_planned, double w = 1.0, bool ap = false)
-      -> TimePointPath;
+      -> std::pair<TimePointPath, std::unordered_set<int>>;
 
   [[nodiscard]] auto get_generated_all_iter() const -> int
   {

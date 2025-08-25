@@ -13,6 +13,7 @@
 #include <cmath>
 #include <memory>
 #include <random>
+#include <unordered_set>
 
 #include "utils.h"
 
@@ -139,7 +140,8 @@ void NodePool::merge_extra()
   end = 0;
 }
 
-auto PSIPP::plan(int agent_num, const std::unordered_set<int>& already_planned) -> TimePointPath
+auto PSIPP::plan(int agent_num, const std::unordered_set<int>& already_planned)
+    -> std::pair<TimePointPath, std::unordered_set<int>>
 {
   // reset vector of blocked counts
   // if (settings.generate_blocked)
@@ -174,7 +176,7 @@ auto PSIPP::plan(int agent_num, const std::unordered_set<int>& already_planned) 
   throw std::runtime_error("Unknown PSIPP implementation");
 }
 
-auto PSIPP::plan_psipp_mine(const int agent_num) -> TimePointPath
+auto PSIPP::plan_psipp_mine(const int agent_num) -> std::pair<TimePointPath, std::unordered_set<int>>
 {
   if (settings.info_type != INFO_type::no_info)
   {
@@ -202,7 +204,7 @@ auto PSIPP::plan_psipp_mine(const int agent_num) -> TimePointPath
   // check whether there is a safe interval
   if (!time_interval_start_it.has_value())
   {
-    return TimePointPath{};
+    return std::make_pair(TimePointPath{}, std::unordered_set<int>());
   }
   const TimeInterval& time_interval_start = time_interval_start_it.value()->interval;
 
@@ -251,7 +253,12 @@ auto PSIPP::plan_psipp_mine(const int agent_num) -> TimePointPath
     // check whether goal location is reached and that there will be no more dynamic constraints at the goal location
     if (current->time_point.location == goal && current->time_point.interval.t_max == INT_MAX)
     {
-      // TODO if number of pushes is not 0, the pushed agents have to be replanned
+      // if number of pushes is not 0, the pushed agents have to be replanned
+      std::unordered_set<int> pushed_agents;
+      for (auto it : current->pushed)
+      {
+        pushed_agents.insert(it.agent_num);
+      }
 
       // extract the path
       TimePointPath ret = psipp::extract_path(current);
@@ -265,7 +272,7 @@ auto PSIPP::plan_psipp_mine(const int agent_num) -> TimePointPath
         update_iter_info(*current, true);
       }
 
-      return ret;
+      return std::make_pair(ret, pushed_agents);
     }
 
     // add to known nodes
@@ -298,7 +305,8 @@ auto PSIPP::plan_psipp_mine(const int agent_num) -> TimePointPath
 
       auto [sf_start, sf_end] = constraint_manager.get_all_intervals(neighbor, neighbor_entry_time_interval);
 
-      for (auto it = sf_start; it != sf_end; it++)
+      for (auto it = sf_start; it != sf_end;
+           it->next_interval.has_value() ? it = it->next_interval.value() : it = sf_end)
       {
         TimePoint neighbor_time_point(neighbor, it->interval);
         // modify the interval to be valid
@@ -311,13 +319,6 @@ auto PSIPP::plan_psipp_mine(const int agent_num) -> TimePointPath
 
         // skip intervals that start later then the maximum time to reach the goal
         if (neighbor_time_point.interval.t_min > max_time)
-        {
-          continue;
-        }
-
-        // check edge collision TODO - if interval is safe interval, we dont have to skip, just push it
-        if (constraint_manager.check_edge_collision(current->time_point.location, neighbor_time_point.location,
-                                                    neighbor_time_point.interval.t_min))
         {
           continue;
         }
@@ -337,32 +338,73 @@ auto PSIPP::plan_psipp_mine(const int agent_num) -> TimePointPath
 
         assertm(neighbor_time_point.interval.t_min > current->time_point.interval.t_min, "Invalid interval.");
 
-        // check whether the is goal reached in the minimal reach time
-        // if (neighbor_time_point.location == goal && neighbor_time_point.interval.t_min == min_time)
-        //{
-        //  // add with heuristic INT_MIN so that the node is selected next
-        //  open_list.push(node_pool.add_node(SIPPNode(neighbor_time_point, neighbor_time_point.interval.t_min, INT_MIN,
-        //  INT_MIN, current)));
-        //}
-        // else
-        //{
-        //  // add to the open list
-        //  open_list.push(node_pool.add_node(SIPPNode(neighbor_time_point, neighbor_time_point.interval.t_min, h,
-        //  current)));
-        //}
         const double h1 =
             std::max((double)min_time, neighbor_time_point.interval.t_min + h2) - neighbor_time_point.interval.t_min;
         std::vector<Constraint> new_pushed = current->pushed;
-        if (current->pushed.size() < MAX_PUSHES && it->type == TIME_INTERVAL_NODE_type::constraint)
+        // check whether the time interval is constraint or there is an edge collision
+        if (it->type == TIME_INTERVAL_NODE_type::constraint ||
+            constraint_manager.check_edge_collision(current->time_point.location, neighbor_time_point.location,
+                                                    neighbor_time_point.interval.t_min))
         {
-          // can not push agents from start location
-          if (!it->prev_in_path.has_value()) continue;
+          if (current->pushed.size() < MAX_PUSHES)
+          {
+            // can not push agents from start location
+            if (!it->prev_in_path.has_value()) continue;
 
-          new_pushed.emplace_back(it->prev_in_path.value()->interval, it->agent_num,
-                                  it->prev_in_path.value()->location);
+            new_pushed.emplace_back(it->interval, it->agent_num, it->prev_in_path.value()->location, it->location);
+          }
+          else
+          {
+            continue;
+          }
         }
-        open_list.push(node_pool.add_node(
-            PSIPPNode(neighbor_time_point, neighbor_time_point.interval.t_min, h1, h2, h3, current, new_pushed)));
+
+        bool is_additional_constraint = false;
+        // go through all the additional constraints and check whether to push them
+        for (auto& additional_const : current->pushed)
+        {
+          if (it->location == additional_const.location &&
+              overlap(neighbor_time_point.interval, additional_const.interval))
+          {
+            is_additional_constraint = true;
+            // handle the interval after the additional constraint
+            if (neighbor_time_point.interval.t_max > additional_const.interval.t_max)
+            {
+              TimeInterval new_interval(additional_const.interval.t_max + 1, neighbor_time_point.interval.t_max);
+              TimePoint new_tp(it->location, new_interval);
+              // insert new node
+              open_list.push(
+                  node_pool.add_node(PSIPPNode(new_tp, new_tp.interval.t_min, h1, h2, h3, current, new_pushed)));
+            }
+            // handle the interval that overlaps with the additional constraint
+            if (it->prev_in_path.has_value())
+            {
+              TimeInterval new_interval(neighbor_time_point.interval.t_min, additional_const.interval.t_max);
+              std::vector<Constraint> pushed_new = new_pushed;
+              pushed_new.emplace_back(new_interval, additional_const.agent_num, it->prev_in_path.value()->location,
+                                      it->location);
+              TimePoint new_tp(it->location, new_interval);
+              // insert new node
+              open_list.push(
+                  node_pool.add_node(PSIPPNode(new_tp, new_tp.interval.t_min, h1, h2, h3, current, pushed_new)));
+            }
+          }
+          // check edge conflict
+          else if (it->location == additional_const.location &&
+                   current->time_point.location == additional_const.next_location &&
+                   neighbor_time_point.interval.t_min == safe_increase(additional_const.interval.t_max))
+          {
+            is_additional_constraint = true;
+            std::vector<Constraint> pushed_new = new_pushed;
+            pushed_new.emplace_back(neighbor_time_point.interval, additional_const.agent_num,
+                                    it->prev_in_path.value()->location, it->location);
+          }
+        }
+        if (!is_additional_constraint)
+        {
+          open_list.push(node_pool.add_node(
+              PSIPPNode(neighbor_time_point, neighbor_time_point.interval.t_min, h1, h2, h3, current, new_pushed)));
+        }
         // std::cout << "interval:" << neighbor_time_point.interval << ", h1: " << h1 << ", h2: " << h2 << std::endl;
 
         if (settings.info_type != INFO_type::no_info)
@@ -381,10 +423,11 @@ auto PSIPP::plan_psipp_mine(const int agent_num) -> TimePointPath
   // reset the node pool
   node_pool.merge_extra();
 
-  return TimePointPath();
+  return std::make_pair(TimePointPath(), std::unordered_set<int>());
 }
 
-auto PSIPP::plan_psipp_mine_ap(const int agent_num, const std::unordered_set<int>& already_planned) -> TimePointPath
+auto PSIPP::plan_psipp_mine_ap(const int agent_num, const std::unordered_set<int>& already_planned)
+    -> std::pair<TimePointPath, std::unordered_set<int>>
 {
   assertm(already_planned.find(agent_num) == already_planned.end(), "Planning agent that was already planned.");
 
@@ -418,7 +461,7 @@ auto PSIPP::plan_psipp_mine_ap(const int agent_num, const std::unordered_set<int
   // check whether there is a safe interval
   if (!time_interval_start_it.has_value())
   {
-    return TimePointPath{};
+    return std::make_pair(TimePointPath{}, std::unordered_set<int>());
   }
   const TimeInterval& time_interval_start = time_interval_start_it.value()->interval;
 
@@ -479,7 +522,7 @@ auto PSIPP::plan_psipp_mine_ap(const int agent_num, const std::unordered_set<int
         update_iter_info(*current, true);
       }
 
-      return ret;
+      return std::make_pair(ret, std::unordered_set<int>());
     }
 
     // add to known nodes
@@ -588,11 +631,11 @@ auto PSIPP::plan_psipp_mine_ap(const int agent_num, const std::unordered_set<int
   // reset the node pool
   node_pool.merge_extra();
 
-  return TimePointPath();
+  return std::make_pair(TimePointPath(), std::unordered_set<int>());
 }
 
 auto PSIPP::plan_suboptimal(const int agent_num, const std::unordered_set<int>& already_planned, double w, bool ap)
-    -> TimePointPath
+    -> std::pair<TimePointPath, std::unordered_set<int>>
 {
   assertm(w >= 1.0, "Suboptimality factor must be more than 1");
   assertm(already_planned.find(agent_num) == already_planned.end(), "Planning agent that was already planned.");
@@ -628,7 +671,7 @@ auto PSIPP::plan_suboptimal(const int agent_num, const std::unordered_set<int>& 
   // check whether there is a safe interval
   if (!time_interval_start_it.has_value())
   {
-    return TimePointPath{};
+    return std::make_pair(TimePointPath{}, std::unordered_set<int>());
   }
   const TimeInterval& time_interval_start = time_interval_start_it.value()->interval;
 
@@ -689,7 +732,7 @@ auto PSIPP::plan_suboptimal(const int agent_num, const std::unordered_set<int>& 
         update_iter_info(*current, true);
       }
 
-      return ret;
+      return std::make_pair(ret, std::unordered_set<int>());
     }
 
     // add to known nodes
@@ -804,7 +847,7 @@ auto PSIPP::plan_suboptimal(const int agent_num, const std::unordered_set<int>& 
   // reset the node pool
   node_pool.merge_extra();
 
-  return TimePointPath();
+  return std::make_pair(TimePointPath(), std::unordered_set<int>());
 }
 
 void PSIPP::initialize_iter_info()

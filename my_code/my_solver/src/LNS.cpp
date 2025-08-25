@@ -261,10 +261,21 @@ auto LNS::PrioritizedPlanning() -> Solution
   std::shuffle(priorities.begin(), priorities.end(), rnd_generator);
 
   // initialize iter info
-  if (settings.sipp_settings.info_type == INFO_type::visualisation)
+  if (settings.use_psipp)
   {
-    sipp_info.clear();
-    sipp_info.resize(agent_num);
+    if (settings.psipp_settings.info_type == INFO_type::visualisation)
+    {
+      psipp_info.clear();
+      psipp_info.resize(agent_num);
+    }
+  }
+  else
+  {
+    if (settings.sipp_settings.info_type == INFO_type::visualisation)
+    {
+      sipp_info.clear();
+      sipp_info.resize(agent_num);
+    }
   }
 
   // plan path for each agent according to its priority
@@ -274,9 +285,39 @@ auto LNS::PrioritizedPlanning() -> Solution
     // get agent with priority i
     int agent_id = priorities[i];
 
+    TimePointPath tp_path;
     // plan path for agent
     // std::cout << "Planning path." << std::endl;
-    TimePointPath tp_path = planner->plan(agent_id, already_planned);
+    if (settings.use_psipp)
+    {
+      std::unordered_set<int> to_replan = {agent_id};
+      while (!to_replan.empty())
+      {
+        auto it = to_replan.begin();
+        if (already_planned.find(*it) != already_planned.end())
+        {
+          constraint_manager.remove_trajectory(sol.paths[*it], *it);
+        }
+        std::unordered_set<int> to_replan_new;
+        std::tie(tp_path, to_replan_new) = psipp->plan(*it, already_planned);
+        if (tp_path.empty())
+        {
+          sol.feasible = false;
+          return sol;
+        }
+        assertm(instance.check_timepointpath_validity(tp_path), "PSIPP planned an invalid timepointpath.");
+        constraint_manager.add_trajectory(tp_path, *it);
+        // add to the solution
+        sol.paths[*it] = tp_path;
+        already_planned.insert(*it);
+        to_replan.erase(it);
+        to_replan.insert(to_replan_new.begin(), to_replan_new.end());
+      }
+    }
+    else
+    {
+      tp_path = planner->plan(agent_id, already_planned);
+    }
     // std::cout << "Planned" << std::endl;
 
     // get the visualization info
@@ -298,7 +339,6 @@ auto LNS::PrioritizedPlanning() -> Solution
 
     // update the safe interval table
     constraint_manager.add_trajectory(tp_path, agent_id);
-    assertm(constraint_manager.is_valid(), "Invalid structure of constraint manager.");
 
     // add to the solution
     sol.paths[agent_id] = tp_path;
@@ -306,6 +346,7 @@ auto LNS::PrioritizedPlanning() -> Solution
     // add to the already planned agents
     already_planned.insert(agent_id);
   }
+  assertm(constraint_manager.is_valid(), "Invalid structure of constraint manager.");
   // add priorities to the visualization info
   if (settings.sipp_settings.info_type == INFO_type::visualisation)
   {

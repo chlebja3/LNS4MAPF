@@ -12,9 +12,11 @@
 #include <utility>
 
 #include "ConstraintManager.h"
+#include "PSIPP.h"
 #include "SIPP.h"
 #include "SharedData.h"
 #include "Solver.h"
+#include "utils.h"
 
 /**
  * @brief Enumeration of destroy strategies used in LNS.
@@ -41,11 +43,9 @@ public:
    * @param type_ Type of destroy strategy.
    * @param size_ Size of the destroy neighborhood.
    */
-  Destroy_settings(DESTROY_TYPE type_, int size_) : type(type_), size(size_)
-  {
-  }
+  Destroy_settings(DESTROY_TYPE type_, int size_) : type(type_), size(size_) {}
   DESTROY_TYPE type; /**< Type of destroy strategy. */
-  int          size; /**< Size of the destroy neighborhood. */
+  int size;          /**< Size of the destroy neighborhood. */
 };
 
 /**
@@ -63,19 +63,25 @@ public:
    * @param sipp_settings_ Settings for the SIPP algorithm.
    * @param restarts_ Whether to use restarts.
    */
-  LNS_settings(int max_iter_, double time_limit_, Destroy_settings destroy_settings_, SIPP_settings sipp_settings_, bool restarts_ = false)
+  LNS_settings(int max_iter_, double time_limit_, Destroy_settings destroy_settings_, SIPP_settings sipp_settings_,
+               PSIPP_settings psipp_settings_ = {PSIPP_implementation::PSIPP_mine, INFO_type::no_info, 1.0},
+               bool restarts_ = false, bool use_psipp_ = false)
       : max_iter(max_iter_),
         time_limit(time_limit_),
         destroy_settings(destroy_settings_),
         sipp_settings(sipp_settings_),
-        restarts(restarts_)
+        psipp_settings(psipp_settings_),
+        restarts(restarts_),
+        use_psipp(use_psipp_)
   {
   }
-  int              max_iter;         /**< Maximum number of iterations. */
-  double           time_limit;       /**< Time limit for the algorithm. */
+  int max_iter;                      /**< Maximum number of iterations. */
+  double time_limit;                 /**< Time limit for the algorithm. */
   Destroy_settings destroy_settings; /**< Settings for the destroy operator. */
-  SIPP_settings    sipp_settings;    /**< Settings for the SIPP algorithm. */
-  bool             restarts;         /**< Whether to use restarts. */
+  SIPP_settings sipp_settings;       /**< Settings for the SIPP algorithm. */
+  PSIPP_settings psipp_settings;     /**< Settings for the PSIPP algorithm. */
+  bool restarts;                     /**< Whether to use restarts. */
+  bool use_psipp;
 };
 
 /**
@@ -89,9 +95,7 @@ public:
    *
    * @param func_ Function to be executed by the operator.
    */
-  explicit Operator(std::function<void(Solution& sol)> func_) : func(std::move(func_))
-  {
-  }
+  explicit Operator(std::function<void(Solution& sol)> func_) : func(std::move(func_)) {}
 
   /**
    * @brief Applies the operator to a given solution.
@@ -128,11 +132,11 @@ struct Logger
     return used_operator_str;
   }
 
-  std::vector<DESTROY_TYPE> used_operator;       /**< Vector of used destroy operators. */
-  std::vector<int>          bsf_solution_cost;   /**< Vector of best solution costs. */
-  std::vector<int>          bsf_makespan;        /**< Vector of best makespan values. */
-  std::vector<double>       iteration_time_cpu;  /**< Vector of CPU times for each iteration. */
-  std::vector<double>       iteration_time_wall; /**< Vector of wall times for each iteration. */
+  std::vector<DESTROY_TYPE> used_operator; /**< Vector of used destroy operators. */
+  std::vector<int> bsf_solution_cost;      /**< Vector of best solution costs. */
+  std::vector<int> bsf_makespan;           /**< Vector of best makespan values. */
+  std::vector<double> iteration_time_cpu;  /**< Vector of CPU times for each iteration. */
+  std::vector<double> iteration_time_wall; /**< Vector of wall times for each iteration. */
 };
 
 /**
@@ -142,7 +146,9 @@ class LNS : public Solver
 {
 public:
   mutable std::vector<SIPPInfo> sipp_info; /**< Vector of sipp information for each lns iteration. */
-  std::unique_ptr<SIPP>         planner;   /**< Pointer to the SIPP planner. */
+  std::unique_ptr<SIPP> planner;           /**< Pointer to the SIPP planner. */
+  mutable std::vector<PSIPPInfo> psipp_info;
+  std::unique_ptr<PSIPP> psipp;
 
   /**
    * @brief Constructor for the LNS class.
@@ -201,8 +207,8 @@ public:
   void load_initial_solution(Solution& sol);
 
   /**
-   * @brief Discards the solution if it is not better than the previous one. Restores the SafeIntervalTable and ConstraintTable to its
-   * previous state.
+   * @brief Discards the solution if it is not better than the previous one. Restores the SafeIntervalTable and
+   * ConstraintTable to its previous state.
    *
    * @param sol The solution to be discarded.
    * @param prev_sol The previous solution.
@@ -214,11 +220,11 @@ public:
     return constraint_manager;
   }
 
-  Operator                        destroy_operator;               /**< Operator for the destroy phase. */
-  mutable std::unordered_set<int> already_planned;                /**< Set of already planned agents. */
-  Logger                          log;                            /**< Logger for the LNS algorithm. */
-  LNS_settings&                   settings;                       /**< Settings for the LNS algorithm. */
-  bool                            found_initial_solution = false; /**< Flag indicating if the initial solution was found. */
+  Operator destroy_operator;                       /**< Operator for the destroy phase. */
+  mutable std::unordered_set<int> already_planned; /**< Set of already planned agents. */
+  Logger log;                                      /**< Logger for the LNS algorithm. */
+  LNS_settings& settings;                          /**< Settings for the LNS algorithm. */
+  bool found_initial_solution = false;             /**< Flag indicating if the initial solution was found. */
 
 private:
   /**
@@ -247,8 +253,8 @@ private:
    *
    * @return True, if the neighborhood is filled, false otherwise.
    */
-  auto random_walk(int agent_num, int neighborhood_size, int start_location, int start_time, int upperbound, std::set<int>& chosen) const
-      -> bool;
+  auto random_walk(int agent_num, int neighborhood_size, int start_location, int start_time, int upperbound,
+                   std::set<int>& chosen) const -> bool;
 
   /**
    * @brief The intersection destroy operator function.
@@ -279,7 +285,8 @@ private:
   void destroy_random_choose(Solution& sol) const;
 
   /**
-   * @brief A function used in the intersection destroy operator to get the agents that are intersecting at a given location.
+   * @brief A function used in the intersection destroy operator to get the agents that are intersecting at a given
+   * location.
    *
    * @param neighborhood The set of agents in the neighborhood.
    * @param current The location, for which the intersection agents are added to the neighborhood.
@@ -293,15 +300,15 @@ private:
    */
   void repair_default(Solution& sol) const;
 
-  SharedData*                 shared_data;           /**< Pointer to shared data. */
-  int                         iteration_num = 0;     /**< Current iteration number. */
-  double                      initial_solution_time; /**< Time taken to find the initial solution. */
-  double                      curr_time;             /**< Current time. */
-  Operator                    repair_operator;       /**< The repair operator. */
-  mutable ConstraintManager   constraint_manager;
-  mutable std::vector<double> destroy_weights;         /**< Vector of weights for the adaptive destroy operator. */
-  double                      reaction_factor = 0.01;  /**< Reaction factor for the adaptive destroy operator. */
-  double                      decay_factor    = 0.01;  /**< Decay factor for the adaptive destroy operator. */
-  mutable DESTROY_TYPE        last_destroy_strategy;   /**< Last used destroy strategy. */
-  float                       threshold_blocked = 1.0; /**< Threshold for the blocked destroy operator. */
+  SharedData* shared_data;      /**< Pointer to shared data. */
+  int iteration_num = 0;        /**< Current iteration number. */
+  double initial_solution_time; /**< Time taken to find the initial solution. */
+  double curr_time;             /**< Current time. */
+  Operator repair_operator;     /**< The repair operator. */
+  mutable ConstraintManager constraint_manager;
+  mutable std::vector<double> destroy_weights; /**< Vector of weights for the adaptive destroy operator. */
+  double reaction_factor = 0.01;               /**< Reaction factor for the adaptive destroy operator. */
+  double decay_factor = 0.01;                  /**< Decay factor for the adaptive destroy operator. */
+  mutable DESTROY_TYPE last_destroy_strategy;  /**< Last used destroy strategy. */
+  float threshold_blocked = 1.0;               /**< Threshold for the blocked destroy operator. */
 };
