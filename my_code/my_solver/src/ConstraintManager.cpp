@@ -194,13 +194,20 @@ void ConstraintManager::build_sequential(const std::vector<TimePointPath>& paths
     -> std::pair<std::list<TimeIntervalNode>::const_iterator, std::list<TimeIntervalNode>::const_iterator>
 {
   auto [first_si, last_si] = get_safe_intervals(location, time_interval);
-  // std::cout << "first: " << first_si->interval << ", last: " << is_end_of_list(location, last_si) << std::endl;
+  // std::cout << "first: " << first_si->interval << ", is end: " << is_end_of_list(location, first_si)
+  //           << ", last: " << is_end_of_list(location, last_si) << std::endl;
+  // no safe intervals
+  if (is_end_of_list(location, first_si))
+  {
+    return {first_si, first_si};
+  }
   TimeIntervalNode_const_it first = {first_si};
   assertm(first.has_value(), "The first safe interval must have value.");
   // find the first interval
   while (first.value()->interval.t_min > time_interval.t_min)
   {
     assertm(first.has_value(), "The interval must have value.");
+    if (first.value()->interval.t_min == 0) break;
     first = first.value()->prev_interval;
   }
 
@@ -211,12 +218,13 @@ void ConstraintManager::build_sequential(const std::vector<TimePointPath>& paths
     if (time_interval.t_max < INT_MAX)
     {
       last = {std::prev(last_si)};  // start with the prev safe interval
-      while (last.value()->interval.t_max <= time_interval.t_max)
+      while (last.has_value() && last.value()->interval.t_min <= time_interval.t_max)  // find first interval after
       {
         last = last.value()->next_interval;
-        assertm(last.has_value(), "The interval must have value.");
+        // assertm(last.has_value(), "The interval must have value.");
       }
     }
+    if (!last.has_value()) last = {last_si};
   }
   else
   {

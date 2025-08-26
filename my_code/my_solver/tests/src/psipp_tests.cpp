@@ -368,6 +368,7 @@ TEST(PSIPPTest, PrioritizedPlanning1agent)
     LNS_settings lns_settings(0, 5, {DESTROY_TYPE::RANDOM, 10},
                               {SIPP_implementation::SIPP_mine, INFO_type::no_info, 1.0},
                               {algo, INFO_type::no_info, 1.0}, false, true);
+    // std::cout << "PSIPP setting: " << magic_enum::enum_name(lns_settings.psipp_settings.implementation) << std::endl;
     LNS lns(*instance, rnd_generator, nullptr, lns_settings);
     Solution sol = lns.PrioritizedPlanning();
     // check solution validity

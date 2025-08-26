@@ -55,6 +55,7 @@ LNS::LNS(const Instance& instance_, std::mt19937& rnd_generator_, SharedData* sh
 {
   // SIPP's lifetime can not be longer than LNS's lifetime, because then map_data might be deleted before SIPP
   planner = std::make_unique<SIPP>(instance, rnd_generator, settings.sipp_settings, constraint_manager);
+  psipp = std::make_unique<PSIPP>(instance, rnd_generator, settings.psipp_settings, constraint_manager);
 
   // initialize destroy weights for adaptive LNS to 1
   if (settings.destroy_settings.type == DESTROY_TYPE::ADAPTIVE)
@@ -294,14 +295,17 @@ auto LNS::PrioritizedPlanning() -> Solution
       while (!to_replan.empty())
       {
         auto it = to_replan.begin();
+        // std::cout << "it: " << *it << std::endl;
         if (already_planned.find(*it) != already_planned.end())
         {
+          // std::cout << "it: " << *it << " was already planned, removing." << std::endl;
           constraint_manager.remove_trajectory(sol.paths[*it], *it);
         }
         std::unordered_set<int> to_replan_new;
         std::tie(tp_path, to_replan_new) = psipp->plan(*it, already_planned);
         if (tp_path.empty())
         {
+          // std::cout << "Empty path, fail." << std::endl;
           sol.feasible = false;
           return sol;
         }
@@ -337,14 +341,17 @@ auto LNS::PrioritizedPlanning() -> Solution
     // check validity
     assertm(instance.check_timepointpath_validity(tp_path), "SIPP planned an invalid timepointpath.");
 
-    // update the safe interval table
-    constraint_manager.add_trajectory(tp_path, agent_id);
+    if (!settings.use_psipp)
+    {
+      // update the safe interval table
+      constraint_manager.add_trajectory(tp_path, agent_id);
 
-    // add to the solution
-    sol.paths[agent_id] = tp_path;
+      // add to the solution
+      sol.paths[agent_id] = tp_path;
 
-    // add to the already planned agents
-    already_planned.insert(agent_id);
+      // add to the already planned agents
+      already_planned.insert(agent_id);
+    }
   }
   assertm(constraint_manager.is_valid(), "Invalid structure of constraint manager.");
   // add priorities to the visualization info
