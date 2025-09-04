@@ -45,29 +45,27 @@ void Clock::start()
 [[nodiscard]] auto Clock::get_current_time() const -> std::pair<double, double>
 {
   assertm(initialized, "Can not retrieve time of uninitialized clock.");
-  double   wall_time = ((dsec)(Time::now() - wall_time_start)).count();
+  double wall_time = ((dsec)(Time::now() - wall_time_start)).count();
   timespec ts{};
   clock_gettime(CLOCK_PROCESS_CPUTIME_ID, &ts);
-  auto cpu_time =
-      (static_cast<double>(ts.tv_sec - cpu_time_start.tv_sec) + static_cast<double>((ts.tv_nsec - cpu_time_start.tv_nsec)) / 1e9);
+  auto cpu_time = (static_cast<double>(ts.tv_sec - cpu_time_start.tv_sec) +
+                   static_cast<double>((ts.tv_nsec - cpu_time_start.tv_nsec)) / 1e9);
   return {wall_time, cpu_time};
 }
 
 auto Clock::end() -> std::pair<double, double>
 {
   assertm(initialized, "Can not end uninitialized clock.");
-  initialized        = false;
-  double   wall_time = ((dsec)(Time::now() - wall_time_start)).count();
+  initialized = false;
+  double wall_time = ((dsec)(Time::now() - wall_time_start)).count();
   timespec ts{};
   clock_gettime(CLOCK_PROCESS_CPUTIME_ID, &ts);
-  auto cpu_time =
-      (static_cast<double>(ts.tv_sec - cpu_time_start.tv_sec) + static_cast<double>((ts.tv_nsec - cpu_time_start.tv_nsec)) / 1e9);
+  auto cpu_time = (static_cast<double>(ts.tv_sec - cpu_time_start.tv_sec) +
+                   static_cast<double>((ts.tv_nsec - cpu_time_start.tv_nsec)) / 1e9);
   return {wall_time, cpu_time};
 }
 
-Node::Node(const double g_, const double h_) : g(g_), h(h_), f(g_ + h_)
-{
-}
+Node::Node(const double g_, const double h_) : g(g_), h(h_), f(g_ + h_) {}
 
 auto Node::operator>(const Node& other) -> bool
 {
@@ -84,10 +82,7 @@ auto Node::operator==(const Node& other) -> bool
   return g == other.g && h == other.h;
 }
 
-
-Point2d::Point2d(int x_, int y_) : x(x_), y(y_)
-{
-}
+Point2d::Point2d(int x_, int y_) : x(x_), y(y_) {}
 
 auto Point2d::operator+(const Point2d& other) const -> Point2d
 {
@@ -113,7 +108,6 @@ auto Point2d::hash_point::operator()(const Point2d& p) const -> size_t
   boost::hash_combine(seed, p.y);
   return seed;
 }
-
 
 Point2d::operator std::string() const
 {
@@ -162,9 +156,7 @@ auto find_direction(const int start, const int end) -> Direction
   return Direction::NONE;
 }
 
-TimeInterval::TimeInterval(const int t_min_, const int t_max_) : t_min(t_min_), t_max(t_max_)
-{
-}
+TimeInterval::TimeInterval(const int t_min_, const int t_max_) : t_min(t_min_), t_max(t_max_) {}
 
 auto TimeInterval::operator==(const TimeInterval& other) const -> bool
 {
@@ -186,9 +178,7 @@ auto overlap(const TimeInterval& i1, const TimeInterval& i2) -> bool
   return !(i1.t_max < i2.t_min || i2.t_max < i1.t_min);
 }
 
-TimePoint::TimePoint(const int location_, const TimeInterval& interval_) : location(location_), interval(interval_)
-{
-}
+TimePoint::TimePoint(const int location_, const TimeInterval& interval_) : location(location_), interval(interval_) {}
 
 auto TimePoint::operator==(const TimePoint& other) const -> bool
 {
@@ -235,7 +225,7 @@ auto path_to_timepointpath(const Path& path) -> TimePointPath
   }
 
   TimePointPath tp_path;
-  TimePoint     curr(path.front(), {0, -1});
+  TimePoint curr(path.front(), {0, -1});
   for (int it : path)
   {
     // if the new location is not the same as the last location, create new interval
@@ -244,7 +234,7 @@ auto path_to_timepointpath(const Path& path) -> TimePointPath
       tp_path.push_back(curr);
 
       // set the new location
-      curr.location       = it;
+      curr.location = it;
       curr.interval.t_min = curr.interval.t_max + 1;
       curr.interval.t_max = curr.interval.t_min;
     }
@@ -257,6 +247,16 @@ auto path_to_timepointpath(const Path& path) -> TimePointPath
   curr.interval.t_max = INT_MAX;
   tp_path.push_back(curr);
   return tp_path;
+}
+
+void print_timepointpath(const TimePointPath& tp_path)
+{
+  std::cout << "Path:" << std::endl;
+  for (auto& it : tp_path)
+  {
+    std::cout << "Location: " << it.location << ", Interval: " << it.interval << std::endl;
+  }
+  std::cout << "---------------------------------" << std::endl;
 }
 
 auto check_timepointpath_interval_no_overlap(const TimePointPath& tp_path) -> bool
@@ -336,14 +336,13 @@ auto get_base_path() -> std::string
   return std::filesystem::canonical("/proc/self/exe").parent_path().parent_path().string();  // Linux only
 }
 
-
 auto fast_random_bool() -> bool
 {
-  static unsigned int num   = 0;
-  static int          count = 0;
+  static unsigned int num = 0;
+  static int count = 0;
   if (count % std::numeric_limits<int>::digits == 0)
   {
-    num   = std::rand();
+    num = std::rand();
     count = 0;
   }
   const bool ret = (bool)((num >> count) & 1);
@@ -443,7 +442,7 @@ auto location_at_time(TimePointPath& path, int time) -> int
 auto open_file_dialog(const std::string& type, const std::string& file_extensions) -> std::string
 {
   // initialize nfd to ensure proper cleanup
-  NFD::Guard      nfdGuard;
+  NFD::Guard nfdGuard;
   NFD::UniquePath outPath;
 
   // prepare the filter

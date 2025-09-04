@@ -292,6 +292,7 @@ auto LNS::PrioritizedPlanning() -> Solution
     if (settings.use_psipp)
     {
       std::unordered_set<int> to_replan = {agent_id};
+      std::unordered_set<int> erased_from_to_replan = {};
       while (!to_replan.empty())
       {
         auto it = to_replan.begin();
@@ -303,6 +304,7 @@ auto LNS::PrioritizedPlanning() -> Solution
         }
         std::unordered_set<int> to_replan_new;
         std::tie(tp_path, to_replan_new) = psipp->plan(*it, already_planned);
+        // print_timepointpath(tp_path);
         if (tp_path.empty())
         {
           // std::cout << "Empty path, fail." << std::endl;
@@ -310,6 +312,26 @@ auto LNS::PrioritizedPlanning() -> Solution
           return sol;
         }
         assertm(instance.check_timepointpath_validity(tp_path), "PSIPP planned an invalid timepointpath.");
+        for (auto id : to_replan_new)
+        {
+          // remove trajectory
+          if (already_planned.find(id) != already_planned.end())
+          {
+            if (erased_from_to_replan.find(id) != erased_from_to_replan.end())
+            {
+              // caught in a cycle
+              // std::cout << "Cycle detected." << std::endl;
+              sol.feasible = false;
+              return sol;
+            }
+            // std::cout << "id: " << id << " was already planned, removing." << std::endl;
+            constraint_manager.remove_trajectory(sol.paths[id], id);
+            sol.paths[id] = TimePointPath();
+            already_planned.erase(id);
+            erased_from_to_replan.insert(id);
+          }
+        }
+        // std::cout << "Adding to CM." << std::endl;
         constraint_manager.add_trajectory(tp_path, *it);
         // add to the solution
         sol.paths[*it] = tp_path;

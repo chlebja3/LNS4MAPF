@@ -6,6 +6,7 @@
  */
 
 #include <gtest/gtest.h>
+#include <utils.h>
 
 #include <climits>
 
@@ -453,5 +454,32 @@ TEST(PSIPPTest, SameAfterDestroy)
 
     // expect the same path
     EXPECT_EQ(path0.back().interval.t_min, path1.back().interval.t_min) << "Paths should have the same length!";
+  }
+}
+
+// Test Prioritized Planning
+TEST(PSIPPTest, MustPush)
+{
+  // load instance
+  std::string base_path = get_base_path_tests();  // path to my_solver
+  std::unique_ptr<Instance> instance = std::make_unique<Instance>(base_path + "/tests/test_maps/must_push.map",
+                                                                  base_path + "/tests/test_scen/must_push.scen", 2);
+
+  // plan path by Prioritized Planning
+  for (auto algo : magic_enum::enum_values<PSIPP_implementation>())
+  {
+    // create LNS
+    if (algo != PSIPP_implementation::PSIPP_mine) continue;  // TODO uncomment when other implementations ready
+    // std::cout << "Algo:" << magic_enum::enum_name(algo) << std::endl;
+    auto rnd_generator = std::mt19937(0);
+    LNS_settings lns_settings(0, 5, {DESTROY_TYPE::RANDOM, 10},
+                              {SIPP_implementation::SIPP_mine, INFO_type::no_info, 1.0},
+                              {algo, INFO_type::no_info, 1.0}, false, true);
+    LNS lns(*instance, rnd_generator, nullptr, lns_settings);
+    // std::cout << "Running PP." << std::endl;
+    Solution sol = lns.PrioritizedPlanning();
+    // std::cout << "Finished." << std::endl;
+    // check solution validity
+    EXPECT_TRUE(sol.is_valid(*instance)) << "Solution is invalid!";
   }
 }

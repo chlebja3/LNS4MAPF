@@ -298,7 +298,7 @@ auto PSIPP::plan_psipp_mine(const int agent_num) -> std::pair<TimePointPath, std
       {
         h3 = 1.0;  // this is the logically right option
       }
-      // std::cout << "Neighbor: " << instance.location_to_position(neighbor) << ", h2: " << h2 << std::endl;
+      // std::cout << "Neighbor position: " << instance.location_to_position(neighbor) << ", h2: " << h2 << std::endl;
 
       // retrieve the intervals for the neighbor
 
@@ -309,7 +309,6 @@ auto PSIPP::plan_psipp_mine(const int agent_num) -> std::pair<TimePointPath, std
       for (auto it = sf_start; it != sf_end;
            it->next_interval.has_value() ? it = it->next_interval.value() : it = sf_end)
       {
-        // std::cout << "Neighbor interval: " << it->interval << std::endl;
         TimePoint neighbor_time_point(neighbor, it->interval);
         assertm(neighbor_time_point.interval.t_min <= neighbor_time_point.interval.t_max,
                 "Neighbor time interval invalid.");
@@ -341,6 +340,7 @@ auto PSIPP::plan_psipp_mine(const int agent_num) -> std::pair<TimePointPath, std
           // std::cout << "Skipping known node" << std::endl;
           continue;
         }
+        // std::cout << "   Neighbor time interval: " << neighbor_time_point.interval << std::endl;
 
         assertm(neighbor_time_point.interval.t_min > current->time_point.interval.t_min, "Invalid interval.");
 
@@ -360,7 +360,10 @@ auto PSIPP::plan_psipp_mine(const int agent_num) -> std::pair<TimePointPath, std
             if (!it->prev_in_path.has_value()) continue;
 
             new_pushed.emplace_back(it->interval, it->agent_num, it->prev_in_path.value()->location, it->location);
-            // std::cout << "Added " << it->interval << " to new pushed." << std::endl;
+            // std::cout << "Added position:" << instance.location_to_position(new_pushed.back().location)
+            //           << " next_location: " << instance.location_to_position(new_pushed.back().next_location)
+            //           << " with time interval interval: " << new_pushed.back().interval << " to new pushed."
+            //           << std::endl;
           }
           else
           {
@@ -372,43 +375,59 @@ auto PSIPP::plan_psipp_mine(const int agent_num) -> std::pair<TimePointPath, std
         // go through all the additional constraints and check whether to push them
         for (auto& additional_const : current->pushed)
         {
-          if (it->location == additional_const.location &&
+          // std::cout << "--->Additional constraint: position:"
+          //           << instance.location_to_position(additional_const.location)
+          //           << " next_position: " << instance.location_to_position(additional_const.next_location)
+          //           << " interval: " << additional_const.interval << std::endl;
+          // std::cout << (neighbor_time_point.location == additional_const.location) << ", "
+          //           << (current->time_point.location == additional_const.next_location) << ", "
+          //           << (neighbor_time_point.interval.t_min == safe_increase(additional_const.interval.t_max))
+          //           << std::endl;
+          if (neighbor_time_point.location == additional_const.location &&
               overlap(neighbor_time_point.interval, additional_const.interval))
           {
             is_additional_constraint = true;
-            // std::cout << "Additional constarint" << std::endl;
+            // std::cout << "Additional constraint" << std::endl;
             // handle the interval after the additional constraint
             if (neighbor_time_point.interval.t_max > additional_const.interval.t_max)
             {
               TimeInterval new_interval(additional_const.interval.t_max + 1, neighbor_time_point.interval.t_max);
-              TimePoint new_tp(it->location, new_interval);
+              TimePoint new_tp(neighbor_time_point.location, new_interval);
               // insert new node
               open_list.push(
                   node_pool.add_node(PSIPPNode(new_tp, new_tp.interval.t_min, h1, h2, h3, current, new_pushed)));
             }
             // handle the interval that overlaps with the additional constraint
-            if (it->prev_in_path.has_value())
+            if (additional_const.prev_in_path.has_value())
             {
               TimeInterval new_interval(neighbor_time_point.interval.t_min, additional_const.interval.t_max);
               std::vector<Constraint> pushed_new = new_pushed;
-              pushed_new.emplace_back(new_interval, additional_const.agent_num, it->prev_in_path.value()->location,
-                                      it->location);
-              TimePoint new_tp(it->location, new_interval);
+              pushed_new.emplace_back(new_interval, additional_const.agent_num,
+                                      additional_const.prev_in_path.value()->location, additional_const.location);
+              TimePoint new_tp(neighbor_time_point.location, new_interval);
               // insert new node
               open_list.push(
                   node_pool.add_node(PSIPPNode(new_tp, new_tp.interval.t_min, h1, h2, h3, current, pushed_new)));
             }
           }
-          // check edge conflict
-          else if (it->location == additional_const.location &&
+          // check edge conflict TODO check whether maximum number of pushed not exceeded
+          else if (neighbor_time_point.location == additional_const.location &&
                    current->time_point.location == additional_const.next_location &&
                    neighbor_time_point.interval.t_min == safe_increase(additional_const.interval.t_max))
           {
             // std::cout << "Additional edge constraint" << std::endl;
+
             is_additional_constraint = true;
-            std::vector<Constraint> pushed_new = new_pushed;
-            pushed_new.emplace_back(neighbor_time_point.interval, additional_const.agent_num,
-                                    it->prev_in_path.value()->location, it->location);
+            if (additional_const.prev_in_path.has_value())
+            {
+              std::vector<Constraint> pushed_new = new_pushed;
+              pushed_new.emplace_back(neighbor_time_point.interval, additional_const.agent_num,
+                                      additional_const.prev_in_path.value()->location, additional_const.location);
+              TimePoint new_tp(neighbor_time_point.location, neighbor_time_point.interval);
+              // insert new node
+              open_list.push(
+                  node_pool.add_node(PSIPPNode(new_tp, new_tp.interval.t_min, h1, h2, h3, current, pushed_new)));
+            }
           }
         }
         if (!is_additional_constraint)

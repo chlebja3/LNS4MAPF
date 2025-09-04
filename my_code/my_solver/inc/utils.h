@@ -361,14 +361,20 @@ public:
 struct Constraint
 {
 public:
-  Constraint(const TimeInterval& interval_, int agent_num_, int location_, int next_location_)
-      : interval(interval_), agent_num(agent_num_), location(location_), next_location(next_location_)
+  Constraint(const TimeInterval& interval_, int agent_num_, int location_, int next_location_,
+             TimeIntervalNode_it prev_in_path_ = std::nullopt)
+      : interval(interval_),
+        agent_num(agent_num_),
+        location(location_),
+        next_location(next_location_),
+        prev_in_path(prev_in_path_)
   {
   }
   TimeInterval interval;
   int agent_num;
   int location;
   int next_location;
+  TimeIntervalNode_it prev_in_path;
 };
 
 /**
@@ -465,6 +471,8 @@ void fix_timepointpath_interval_overlap(TimePointPath& tp_path);
  * @return True if the TimePointPath is valid, false otherwise.
  */
 auto is_valid_timepointpath(const TimePointPath& tp_path) -> bool;
+
+void print_timepointpath(const TimePointPath& tp_path);
 
 /**
  * @brief Get the path to the project directory, assuming the project is run from the build directory. This function is
