@@ -191,7 +191,7 @@ void LNS::solve()
     auto [iteration_time_wall, iteration_time_cpu] = iteration_clock.end();
 
     // construct LNS iteration info and add to the shared data
-    if (settings.sipp_settings.info_type == INFO_type::visualisation)
+    if (!settings.use_psipp && settings.sipp_settings.info_type == INFO_type::visualisation)
     {
       // get the pointer to the original perturbed solution (which might have been moved)
       Solution* sol = &solution;
@@ -347,7 +347,7 @@ auto LNS::PrioritizedPlanning() -> Solution
     // std::cout << "Planned" << std::endl;
 
     // get the visualization info
-    if (settings.sipp_settings.info_type == INFO_type::visualisation)
+    if (!settings.use_psipp && settings.sipp_settings.info_type == INFO_type::visualisation)
     {
       sipp_info[agent_id] = planner->get_iter_info();
     }
@@ -911,7 +911,7 @@ void LNS::repair_default(Solution& sol) const
     }
 
     // get the visualization info
-    if (settings.sipp_settings.info_type == INFO_type::visualisation)
+    if (!settings.use_psipp && settings.sipp_settings.info_type == INFO_type::visualisation)
     {
       sipp_info[i] = planner->get_iter_info();
     }

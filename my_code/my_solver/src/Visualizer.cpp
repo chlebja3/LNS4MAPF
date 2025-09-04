@@ -67,7 +67,6 @@ Visualizer::Visualizer(Instance& instance_, Computation& computation_thread_, Sh
   }
 
   initialize();
-  std::cout << "Visualizer initialized. " << std::endl;
 }
 
 void Visualizer::initialize()

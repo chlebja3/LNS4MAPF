@@ -38,6 +38,9 @@ auto main(int argc, char** argv) -> int
       "time limit to find the solution, in seconds")(
       "sipp_implementation", po::value<std::string>()->default_value("SIPP_mine"),
       "implementation of SIPP (SIPP_mine, SIPP_mapf_lns, SIPP_suboptimal)")(
+      "psipp_implementation", po::value<std::string>()->default_value("PSIPP_mine"),
+      "implementation of PSIPP (PSIPP_mine, PSIPP_suboptimal)")("use_psipp", po::value<bool>()->default_value(true),
+                                                                "Use PSIPP instead of SIPP")(
       "Restarts,r", po::value<bool>()->default_value(true),
       "restart the search if no feasible initial solution was found")(
       "destroy_operator", po::value<std::string>()->default_value("ADAPTIVE"),
@@ -45,7 +48,8 @@ auto main(int argc, char** argv) -> int
       "neighborhood_size,n", po::value<int>()->default_value(DEFAULT_NEIGHBORHOOD_SIZE),
       "Size of the neighborhood used by the destroy operator (number of paths to be destroyed)")(
       "seed,s", po::value<int>()->default_value(-1),
-      "seed of the random generators for reproducability, to achieve non reproducible random behavior, use negative "
+      "seed of the random generators for reproducability, to achieve non reproducible random behavior, use "
+      "negative "
       "value")("output_paths", po::value<std::string>()->default_value(""),
                "Output file for the paths of the generated solution. If not used, the solution will not be exported.");
 
@@ -72,6 +76,7 @@ auto main(int argc, char** argv) -> int
   const std::string map_name = vm["map"].as<std::string>();
   const std::string scene_name = vm["agents"].as<std::string>();
   const std::string sipp_algo = vm["sipp_implementation"].as<std::string>();
+  const std::string psipp_algo = vm["psipp_implementation"].as<std::string>();
   const std::string destroy_name = vm["destroy_operator"].as<std::string>();
   const std::string output_paths_file = vm["output_paths"].as<std::string>();
   const int neighborhood_size = vm["neighborhood_size"].as<int>();
@@ -82,6 +87,7 @@ auto main(int argc, char** argv) -> int
   const bool restarts = vm["Restarts"].as<bool>();
   const double w = vm["sipp_suboptimality"].as<double>();
   const int seed = vm["seed"].as<int>();
+  const bool use_psipp = vm["use_psipp"].as<bool>();
 
   // create the instance
   std::unique_ptr<Instance> instance = std::make_unique<Instance>(map_name, scene_name, agent_num);
@@ -139,8 +145,6 @@ auto main(int argc, char** argv) -> int
 
   // create destroy settings
   Destroy_settings destroy_settings = Destroy_settings(destroy_type, neighborhood_size);
-
-  bool use_psipp = false;
 
   // create LNS settings
   LNS_settings lns_settings =
