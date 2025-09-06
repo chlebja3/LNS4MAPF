@@ -352,12 +352,8 @@ auto PSIPP::plan_psipp_mine(const int agent_num) -> std::pair<TimePointPath, std
             std::max((double)min_time, neighbor_time_point.interval.t_min + h2) - neighbor_time_point.interval.t_min;
         std::vector<Constraint> new_pushed = current->pushed;
         // check whether the time interval is constraint or there is an edge collision
-        if (it->type == TIME_INTERVAL_NODE_type::constraint ||
-            constraint_manager.check_edge_collision(current->time_point.location, neighbor_time_point.location,
-                                                    neighbor_time_point.interval.t_min))
+        if (it->type == TIME_INTERVAL_NODE_type::constraint)
         {
-          // std::cout << (it->type == TIME_INTERVAL_NODE_type::constraint ? "Constraint" : "Edge collision") <<
-          // std::endl;
           if (current->pushed.size() < MAX_PUSHES)
           {
             // can not push agents from start location
@@ -368,6 +364,32 @@ auto PSIPP::plan_psipp_mine(const int agent_num) -> std::pair<TimePointPath, std
             //           << " next_location: " << instance.location_to_position(new_pushed.back().next_location)
             //           << " with time interval interval: " << new_pushed.back().interval << " to new pushed."
             //           << std::endl;
+          }
+          else
+          {
+            continue;
+          }
+        }
+        if (constraint_manager.check_edge_collision(current->time_point.location, neighbor_time_point.location,
+                                                    neighbor_time_point.interval.t_min))
+        {
+          if (new_pushed.size() < MAX_PUSHES)
+          {
+            // as there is an edge collision, the agent must be leaving the cell, so it was previously there
+            auto constraint = it->prev_interval;
+            // can not push agents from start location
+            assertm(constraint.has_value(), "Constraint that causes the edge collision must have value.");
+            assertm(constraint_manager.get_edge_collision(current->time_point.location, neighbor_time_point.location,
+                                                          neighbor_time_point.interval.t_min) ==
+                        constraint.value()->agent_num,
+                    "The constraint has different agent number than the edge collision.");
+
+            new_pushed.emplace_back(it->interval, constraint.value()->agent_num, constraint.value()->location,
+                                    constraint.value()->location);
+            // std::cout << "Added position:" << instance.location_to_position(new_pushed.back().location)
+            //           << " next_location: " << instance.location_to_position(new_pushed.back().next_location)
+            //           << " with time interval interval: " << new_pushed.back().interval
+            //           << " to new pushed because of edge collision." << std::endl;
           }
           else
           {
@@ -434,6 +456,7 @@ auto PSIPP::plan_psipp_mine(const int agent_num) -> std::pair<TimePointPath, std
             }
           }
         }
+        if (new_pushed.size() > MAX_PUSHES) continue;
         if (!is_additional_constraint)
         {
           // std::cout << "No additional constraint. Adding: " << neighbor_time_point.interval << std::endl;

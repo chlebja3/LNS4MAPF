@@ -93,6 +93,12 @@ public:
     return edge_table.get(to, from, time) != -1;
   }
 
+  [[nodiscard]] auto get_edge_collision(int from, int to, int time) const -> int
+  {
+    // swap to and from, because we need the opposite edge from the edge table
+    return edge_table.get(to, from, time);
+  }
+
   auto is_valid() -> bool;
 
   auto is_end_of_list(int location, std::list<TimeIntervalNode>::const_iterator it) const -> bool

@@ -18,7 +18,7 @@ auto Solution::is_valid(const Instance& instance) const -> bool
   // check that each agent has a path
   if (instance.get_num_of_agents() != (int)paths.size())
   {
-    // std::cout << "Agent without a path." << std::endl;
+    std::cout << "Agent without a path." << std::endl;
     return false;
   }
 
@@ -29,6 +29,7 @@ auto Solution::is_valid(const Instance& instance) const -> bool
     // check validity of each timepointpath
     if (!instance.check_timepointpath_validity(paths[i]))
     {
+      std::cout << "Invalid timepointpath." << std::endl;
       return false;
     }
 
@@ -43,21 +44,21 @@ auto Solution::is_valid(const Instance& instance) const -> bool
     // check that no path has length 0
     if (converted_paths[i].empty())
     {
-      // std::cout << "Empty path." << std::endl;
+      std::cout << "Empty path." << std::endl;
       return false;
     }
 
     // check that the path starts in the start position
     if (!(converted_paths[i].front() == instance.get_start_locations()[i]))
     {
-      // std::cout << "Path does not start in the start position." << std::endl;
+      std::cout << "Path does not start in the start position." << std::endl;
       return false;
     }
 
     // check that the path ends in the goal position
     if (!(converted_paths[i].back() == instance.get_goal_locations()[i]))
     {
-      // std::cout << "Path does not end in the goal position." << std::endl;
+      std::cout << "Path does not end in the goal position." << std::endl;
       return false;
     }
 
@@ -77,7 +78,7 @@ auto Solution::is_valid(const Instance& instance) const -> bool
 
     for (const auto& path : converted_paths)
     {
-      int       idx          = t;
+      int idx = t;
       const int cur_path_len = (int)path.size();
 
       // paths that are already finished at time t
@@ -94,7 +95,7 @@ auto Solution::is_valid(const Instance& instance) const -> bool
         Point2d p2 = instance.location_to_position(path[idx]);
         if (abs(p2.x - p1.x) + abs(p2.y - p1.y) > 1)
         {
-          // std::cout << "Invalid move." << std::endl;
+          std::cout << "Invalid move." << std::endl;
           return false;
         }
       }
@@ -102,21 +103,21 @@ auto Solution::is_valid(const Instance& instance) const -> bool
       // check the path does not leave the map
       if (!instance.get_map_data().is_in(path[idx]))
       {
-        // std::cout << "Path leaves the map in point " << path[idx] << std::endl;
+        std::cout << "Path leaves the map in point " << path[idx] << std::endl;
         return false;
       }
 
       // check collisions with static obstacles
       if (instance.get_map_data().index(path[idx]) != 0)
       {
-        // std::cout << "Collision with static obstacle." << std::endl;
+        std::cout << "Collision with static obstacle." << std::endl;
         return false;
       }
 
       // check collisions with dynamic obstacles
       if (occupied.find(path[idx]) != occupied.end())
       {
-        // std::cout << "Collision with dynamic obstacle." << std::endl;
+        std::cout << "Collision with dynamic obstacle." << std::endl;
         return false;
       }
 
@@ -143,7 +144,7 @@ auto Solution::is_valid(const Instance& instance) const -> bool
 
         if (converted_paths[i][t] == converted_paths[j][t - 1] && converted_paths[i][t - 1] == converted_paths[j][t])
         {
-          // std::cout << "Agents swap edges." << std::endl;
+          std::cout << "Agents " << i << " and " << j << " swap edges at time " << t << "." << std::endl;
           return false;
         }
       }
@@ -166,7 +167,7 @@ void Solution::load(const std::string& filename, const Instance& instance)
 
   // read agents one by one
   std::string line;
-  int         expected_agent_num = 0;
+  int expected_agent_num = 0;
 
   while (getline(sol_file, line))
   {
@@ -302,25 +303,27 @@ void Solution::calculate_cost(const Instance& instance)
   {
     delays.resize(paths.size(), -1);
     sum_of_delays = -1;
-    sum_of_costs  = -1;
-    makespan      = -1;
+    sum_of_costs = -1;
+    makespan = -1;
     return;
   }
   assertm(feasible, "Can not calculate cost of infeasible solution");
   assertm(!paths.empty(), "Can not calculate cost of an empty solution.");
   delays.resize(paths.size(), 0);
   sum_of_delays = 0;
-  sum_of_costs  = 0;
-  makespan      = paths[0].back().interval.t_min;
+  sum_of_costs = 0;
+  makespan = paths[0].back().interval.t_min;
 
   for (int i = 0; i < static_cast<int>(paths.size()); i++)
   {
     makespan = std::max(makespan, paths[i].back().interval.t_min);
     sum_of_costs += paths[i].back().interval.t_min;
-    const int delay = paths[i].back().interval.t_min - instance.get_heuristic_distance(i, instance.get_start_locations()[i]);
+    const int delay =
+        paths[i].back().interval.t_min - instance.get_heuristic_distance(i, instance.get_start_locations()[i]);
     sum_of_delays += delay;
     assertm(delay >= 0, "Delay can not be negative.");
-    assertm(sum_of_costs >= delay && sum_of_costs >= makespan, "Sum of costs should be greater than delay and makespan.");
+    assertm(sum_of_costs >= delay && sum_of_costs >= makespan,
+            "Sum of costs should be greater than delay and makespan.");
     delays[i] = delay;
   }
 }

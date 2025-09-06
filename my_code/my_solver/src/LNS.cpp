@@ -288,7 +288,7 @@ auto LNS::PrioritizedPlanning() -> Solution
 
     TimePointPath tp_path;
     // plan path for agent
-    // std::cout << "Planning path." << std::endl;
+    // std::cout << "  Planning path of agent " << agent_id << "." << std::endl;
     if (settings.use_psipp)
     {
       std::unordered_set<int> to_replan = {agent_id};
@@ -296,10 +296,10 @@ auto LNS::PrioritizedPlanning() -> Solution
       while (!to_replan.empty())
       {
         auto it = to_replan.begin();
-        // std::cout << "it: " << *it << std::endl;
+        // std::cout << "to replan: " << *it << std::endl;
         if (already_planned.find(*it) != already_planned.end())
         {
-          // std::cout << "it: " << *it << " was already planned, removing." << std::endl;
+          // std::cout << "agent " << *it << " was already planned, removing." << std::endl;
           constraint_manager.remove_trajectory(sol.paths[*it], *it);
         }
         std::unordered_set<int> to_replan_new;
@@ -307,20 +307,21 @@ auto LNS::PrioritizedPlanning() -> Solution
         // print_timepointpath(tp_path);
         if (tp_path.empty())
         {
-          // std::cout << "Empty path, fail." << std::endl;
+          std::cout << "Empty path, fail." << std::endl;
           sol.feasible = false;
           return sol;
         }
         assertm(instance.check_timepointpath_validity(tp_path), "PSIPP planned an invalid timepointpath.");
         for (auto id : to_replan_new)
         {
+          // std::cout << "   Added " << id << " into to_replan." << std::endl;
           // remove trajectory
           if (already_planned.find(id) != already_planned.end())
           {
             if (erased_from_to_replan.find(id) != erased_from_to_replan.end())
             {
               // caught in a cycle
-              // std::cout << "Cycle detected." << std::endl;
+              std::cout << "Cycle detected." << std::endl;
               sol.feasible = false;
               return sol;
             }
@@ -331,7 +332,7 @@ auto LNS::PrioritizedPlanning() -> Solution
             erased_from_to_replan.insert(id);
           }
         }
-        // std::cout << "Adding to CM." << std::endl;
+        // std::cout << "Adding to CM agent " << *it << "." << std::endl;
         constraint_manager.add_trajectory(tp_path, *it);
         // add to the solution
         sol.paths[*it] = tp_path;
