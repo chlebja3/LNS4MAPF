@@ -327,6 +327,9 @@ auto PSIPP::plan_psipp_mine(const int agent_num) -> std::pair<TimePointPath, std
           continue;
         }
 
+        // std::cout << "   Neighbor time interval: " << neighbor_time_point.interval << ", neighbor entry time interval
+        // "
+        //           << neighbor_entry_time_interval << std::endl;
         assertm(neighbor_time_point.interval.t_min <= neighbor_entry_time_interval.t_max,
                 "Unreachable interval among neighbors.");
 

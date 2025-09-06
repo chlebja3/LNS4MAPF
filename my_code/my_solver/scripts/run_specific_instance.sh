@@ -13,7 +13,7 @@ then
 ./build/simple_MAPF_solver -m ../../my_map/must_push.map -a ../../my_map/must_push.scen -k 2 -n 1 -i 0 $@ 
 elif [ $1 == "empty" ]
 then
-./scripts/run.sh -m ../../MAPF-benchmark/mapf-map/empty-16-16.map -a ../../MAPF-benchmark/mapf-scen-random/scen-random/empty-16-16-random-1.scen -k 128 $@
+./scripts/run.sh -m ../../MAPF-benchmark/mapf-map/empty-16-16.map -a ../../MAPF-benchmark/mapf-scen-random/scen-random/empty-16-16-random-1.scen -k 100 $@
 elif [ $1 == "empty-32-32" ]
 then
 ./scripts/run.sh -m ../../MAPF-benchmark/mapf-map/empty-32-32.map -a ../../MAPF-benchmark/mapf-scen-random/scen-random/empty-32-32-random-1.scen -k 400 $@
@@ -31,7 +31,7 @@ then
 ./scripts/run.sh -m ../../MAPF-benchmark/mapf-map/ost003d.map -a ../../MAPF-benchmark/mapf-scen-random/scen-random/ost003d-random-7.scen -k 400 -s 692469116 -i 500 --destroy_operator BLOCKED --sipp_implementation SIPP_suboptimal $@
 elif [ $1 == "warehouse" ]
 then
-./scripts/run.sh -m ../../MAPF-benchmark/mapf-map/warehouse-10-20-10-2-1.map -a ../../MAPF-benchmark/mapf-scen-random/scen-random/warehouse-10-20-10-2-1-random-2.scen -k 400 -s 1 -i 500 --destroy_operator BLOCKED --sipp_implementation SIPP_suboptimal $@
+./scripts/run.sh -m ../../MAPF-benchmark/mapf-map/warehouse-10-20-10-2-1.map -a ../../MAPF-benchmark/mapf-scen-random/scen-random/warehouse-10-20-10-2-1-random-2.scen -k 500 -s 1 -i 0 --destroy_operator BLOCKED --sipp_implementation SIPP_suboptimal $@
 elif [ $1 == "room" ]
 then
 ./scripts/run.sh -m ../../MAPF-benchmark/mapf-map/room-64-64-8.map -a ../../MAPF-benchmark/mapf-scen-random/scen-random/room-64-64-8-random-2.scen -k 500 -s 1 -i 150 --destroy_operator BLOCKED --sipp_implementation SIPP_suboptimal $@

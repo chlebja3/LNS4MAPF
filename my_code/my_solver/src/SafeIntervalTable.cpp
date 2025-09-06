@@ -187,14 +187,14 @@ void SafeIntervalTable::remove_constraint(const TimePoint& timepoint, int agent_
         constraint_table.remove_constraint_after(timepoint, agent_num, cur_TI_list.back().next_interval);
     cur_TI_list.emplace_back(timepoint.interval, agent_num, timepoint.location, TIME_INTERVAL_NODE_type::safe_interval,
                              prev, next);
-    // rewire TODO is this right?
+    // rewire
     if (prev.has_value())
     {
-      prev.value()->next_interval = next;
+      prev.value()->next_interval = {std::prev(cur_TI_list.end())};
     }
     if (next.has_value())
     {
-      next.value()->prev_interval = prev;
+      next.value()->prev_interval = {std::prev(cur_TI_list.end())};
     }
     return;
   }

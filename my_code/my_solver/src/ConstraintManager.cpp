@@ -18,6 +18,7 @@ void ConstraintManager::add_trajectory(const TimePointPath& path, int agent_num)
     //           << ", agent_num: " << agent_num << std::endl;
 
     prev_interval = safe_interval_table.add_constraint(path[i], agent_num, constraint_table, prev_interval);
+    assertm(is_valid(), "Adding constraint made CM invalid.");
 
     // add to the edge table
     if (i > 0)  // skip the first point as there is no edge
@@ -86,7 +87,8 @@ bool ConstraintManager::is_valid()
     }
     if (prev.value()->interval.t_max != INT_MAX)
     {
-      std::cout << "The last interval " << prev.value()->interval << " does not end at infinity." << std::endl;
+      std::cout << "The last interval " << prev.value()->interval << " associated with location "
+                << prev.value()->location << " does not end at infinity." << std::endl;
       return false;
     }
   }
@@ -124,6 +126,7 @@ void ConstraintManager::remove_trajectory(const TimePointPath& path, int agent_n
     // std::cout << "Removing constraint. Location: " << path[i].location << ", interval: " << path[i].interval
     //           << ", agent_num: " << agent_num << std::endl;
     safe_interval_table.remove_constraint(path[i], agent_num, constraint_table);
+    assertm(is_valid(), "Removing constraint made CM invalid.");
 
     // remove the edge constraint
     if (i > 0)  // skip the first point as there is no edge
