@@ -35,6 +35,7 @@ bool ConstraintManager::is_valid()
     int loc = instance.free_location_to_location(i);
     auto prev = get_first_time_interval(loc);
     assertm(prev.has_value(), "First time interval must have value.");
+    assertm(prev.value()->location == loc, "First interval must be associated with this location.");
     if (prev.value()->interval.t_min != 0)
     {
       std::cout << "First time interval must start at 0";
@@ -54,6 +55,13 @@ bool ConstraintManager::is_valid()
     }
     while (curr.has_value())
     {
+      // check whether the right location is used
+      if (curr.value()->location != loc)
+      {
+        std::cout << "Interval " << curr.value()->interval << " with location " << curr.value()->location
+                  << " is not associated with the current location " << loc << std::endl;
+        return false;
+      }
       if (prev.value()->interval.t_max + 1 != curr.value()->interval.t_min)
       {
         std::cout << "Intervals " << prev.value()->interval << " and " << curr.value()->interval

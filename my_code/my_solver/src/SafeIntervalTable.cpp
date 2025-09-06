@@ -19,6 +19,11 @@ SafeIntervalTable::SafeIntervalTable(const Instance& instance_) : instance(insta
       num_free_cells, std::list<TimeIntervalNode>(
                           1, TimeIntervalNode(TimeInterval(0, INT_MAX), -1, -1, TIME_INTERVAL_NODE_type::safe_interval,
                                               std::nullopt, std::nullopt, std::nullopt)));
+  // set the right location
+  for (int i = 0; i < instance.get_num_free_cells(); i++)
+  {
+    safe_intervals[i].begin()->location = instance.free_location_to_location(i);
+  }
 }
 
 auto SafeIntervalTable::add_constraint(const TimePoint& timepoint, int agent_num, ConstraintTable& constraint_table,

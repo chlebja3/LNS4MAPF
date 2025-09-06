@@ -330,9 +330,10 @@ auto PSIPP::plan_psipp_mine(const int agent_num) -> std::pair<TimePointPath, std
         assertm(neighbor_time_point.interval.t_min <= neighbor_entry_time_interval.t_max,
                 "Unreachable interval among neighbors.");
 
-        assertm(neighbor_time_point.interval.t_min <= min_time || known_min[neighbor] == INT_MAX ||
-                    neighbor_time_point.interval.t_min >= known_min[neighbor],
-                "The heuristic can be non consistent only for nodes starting before the goal obstruction time.");
+        assertm(
+            neighbor_time_point.interval.t_min <= min_time || known_min[neighbor] == INT_MAX ||
+                neighbor_time_point.interval.t_min >= known_min[neighbor] || current->pushed.size() > 0,
+            "The heuristic can be non consistent only for nodes starting before the goal obstruction or after pushes.");
         // check whether known
         if (neighbor_time_point.interval.t_min >= known_min[neighbor] &&
             neighbor_time_point.interval.t_min <= known_max[neighbor])

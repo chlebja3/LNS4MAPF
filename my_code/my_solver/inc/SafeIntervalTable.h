@@ -106,6 +106,11 @@ public:
                                                                         TIME_INTERVAL_NODE_type::safe_interval,
                                                                         std::nullopt, std::nullopt, std::nullopt)));
 
+    // set the right location
+    for (int i = 0; i < instance.get_num_free_cells(); i++)
+    {
+      safe_intervals[i].begin()->location = instance.free_location_to_location(i);
+    }
     // reset latest constraint end
     // latest_constraint_end         = 0;
     // latest_constraint_end_updated = true;
