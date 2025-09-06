@@ -130,6 +130,7 @@ auto SafeIntervalTable::add_constraint(const TimePoint& timepoint, int agent_num
     constraint_node_ptr.value()->prev_in_path = prev_in_path;
     return constraint_node_ptr;
   }
+  throw std::runtime_error("Did not add any constraint.");
 }
 
 void SafeIntervalTable::remove_constraint(const TimePoint& timepoint, int agent_num, ConstraintTable& constraint_table)
@@ -173,6 +174,11 @@ void SafeIntervalTable::remove_constraint(const TimePoint& timepoint, int agent_
       auto to_del = cur_TI_list.back().next_interval;
       assertm(to_del.has_value(), "Constraint we are deleting must have value.");
       cur_TI_list.back().next_interval = to_del.value()->next_interval;
+      // rewire
+      if (cur_TI_list.back().next_interval.has_value())
+      {
+        cur_TI_list.back().next_interval.value()->prev_interval = {std::prev(cur_TI_list.end())};
+      }
       constraint_table.delete_constraint(timepoint.location, to_del);
       return;
     }
@@ -181,6 +187,15 @@ void SafeIntervalTable::remove_constraint(const TimePoint& timepoint, int agent_
         constraint_table.remove_constraint_after(timepoint, agent_num, cur_TI_list.back().next_interval);
     cur_TI_list.emplace_back(timepoint.interval, agent_num, timepoint.location, TIME_INTERVAL_NODE_type::safe_interval,
                              prev, next);
+    // rewire TODO is this right?
+    if (prev.has_value())
+    {
+      prev.value()->next_interval = next;
+    }
+    if (next.has_value())
+    {
+      next.value()->prev_interval = prev;
+    }
     return;
   }
 
