@@ -8,7 +8,8 @@ cursor = conn.cursor()
 
 # Load data into Pandas DataFrame
 # exp_name = "feasible"
-exp_name = "feasible_restarts"
+# exp_name = "feasible_restarts"
+exp_name = "psipp_feasible"
 df = pd.read_sql_query("SELECT * FROM " + exp_name, conn)
 df["delay"] = df["init_sol_sum_of_cost"] - df["sum_of_dist"]
 
@@ -63,8 +64,8 @@ for metric in metric_names:
     fig, axes = plt.subplots(nrows=3, ncols=2, figsize=(6, 7), sharey=False)
     axes = axes.flatten()
 
-    if num_maps == 1:  # If only one map, axes is not an array
-        axes = [axes]
+    # if num_maps == 1:  # If only one map, axes is not an array
+    #     axes = [axes]
 
     # Iterate over each map
     if metric == "feasible":
@@ -73,18 +74,19 @@ for metric in metric_names:
 
             # Plot each algorithm
             for algo_name, algo_group in map_group.groupby('algo_name'):
-                display_name = "MAPF-LNS2"
-                if "mapf_lns" in algo_name:
-                    display_name = "original heuristic"
-                elif "mine" in algo_name:
-                    display_name = "multiple heuristics"
-                elif "suboptimal" in algo_name:
-                    display_name = "suboptimal"
-                    if exp_name != "feasible":
-                        if "w_1,10" in algo_name:
-                            display_name += " w = 1.1"
-                        else:
-                            display_name += " w = 1.0"
+                # display_name = "MAPF-LNS2"
+                # if "mapf_lns" in algo_name:
+                #     display_name = "original heuristic"
+                # elif "mine" in algo_name:
+                #     display_name = "multiple heuristics"
+                # elif "suboptimal" in algo_name:
+                #     display_name = "suboptimal"
+                #     if exp_name != "feasible":
+                #         if "w_1,10" in algo_name:
+                #             display_name += " w = 1.1"
+                #         else:
+                #             display_name += " w = 1.0"
+                display_name = algo_name
 
                 ax.plot(algo_group["num_agents"], algo_group[(metric, "mean")], marker='o', label=f"{display_name}")
 
@@ -99,18 +101,19 @@ for metric in metric_names:
 
             # Plot each algorithm
             for algo_name, algo_group in map_group.groupby('algo_name'):
-                display_name = "MAPF-LNS2"
-                if "mapf_lns" in algo_name:
-                    display_name = "original heuristic"
-                elif "mine" in algo_name:
-                    display_name = "multiple heuristics"
-                elif "suboptimal" in algo_name:
-                    display_name = "suboptimal"
-                    if exp_name != "feasible":
-                        if "w_1,10" in algo_name:
-                            display_name += " w = 1.1"
-                        else:
-                            display_name += " w = 1.0"
+                # display_name = "MAPF-LNS2"
+                # if "mapf_lns" in algo_name:
+                #     display_name = "original heuristic"
+                # elif "mine" in algo_name:
+                #     display_name = "multiple heuristics"
+                # elif "suboptimal" in algo_name:
+                #     display_name = "suboptimal"
+                #     if exp_name != "feasible":
+                #         if "w_1,10" in algo_name:
+                #             display_name += " w = 1.1"
+                #         else:
+                #             display_name += " w = 1.0"
+                display_name = algo_name
                 ax.plot(algo_group["num_agents"], algo_group[(metric, "mean")], marker='o', label=f"{display_name}")
                 # print("Algo name:", algo_name)
                 # print(algo_group[(metric, "mean")])
@@ -141,8 +144,8 @@ stats_gap = df_gap.agg({
 fig, axes = plt.subplots(nrows=3, ncols=2, figsize=(6, 7), sharey=False)
 axes = axes.flatten()
 
-if num_maps == 1:  # If only one map, axes is not an array
-    axes = [axes]
+# if num_maps == 1:  # If only one map, axes is not an array
+#     axes = [axes]
 
 # Iterate over each map
 for i, (map_name, map_group) in enumerate(stats_gap.groupby('map_name')):
