@@ -35,8 +35,9 @@ public:
    * @param w_ The suboptimality factor.
    * @param p_ The parameter p for the Bounded Suboptimal PSIPP algorithm.
    */
-  PSIPP_settings(PSIPP_implementation implementation_, INFO_type info_type_, double w_, int p_ = 1.0)
-      : implementation(implementation_), info_type(info_type_), w(w_), p(p_)
+  PSIPP_settings(PSIPP_implementation implementation_, INFO_type info_type_, double w_, int p_ = 1.0,
+                 int max_pushes_ = 1)
+      : implementation(implementation_), info_type(info_type_), w(w_), p(p_), max_pushes(max_pushes_)
   {
   }
 
@@ -44,7 +45,7 @@ public:
   INFO_type info_type;                 /**< The type of information, that should be generated during the search. */
   double w;                            /**< The suboptimality factor. */
   double p;                            /**< The parameter p for the Bounded Suboptimal PSIPP algorithm. */
-  int max_pushes = 1;                  // maximum of allowed pushes
+  int max_pushes;                      // maximum of allowed pushes
   // bool                generate_blocked = false;
 };
 

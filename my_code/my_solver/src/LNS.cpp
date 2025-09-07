@@ -80,7 +80,7 @@ void LNS::solve()
     // reset the safe interval table and already planned if needed
     if (!found_initial_solution)
     {
-      std::cout << "RESETTING CONSTRAINT MAKANGER" << std::endl;
+      // std::cout << "RESETTING CONSTRAINT MANAGER" << std::endl;
       constraint_manager.reset();
       already_planned.clear();
     }
@@ -307,7 +307,7 @@ auto LNS::PrioritizedPlanning() -> Solution
         // print_timepointpath(tp_path);
         if (tp_path.empty())
         {
-          std::cout << "Empty path, fail." << std::endl;
+          // std::cout << "Empty path, fail." << std::endl;
           sol.feasible = false;
           return sol;
         }
@@ -321,7 +321,7 @@ auto LNS::PrioritizedPlanning() -> Solution
             if (erased_from_to_replan.find(id) != erased_from_to_replan.end())
             {
               // caught in a cycle
-              std::cout << "Cycle detected." << std::endl;
+              // std::cout << "Cycle detected." << std::endl;
               sol.feasible = false;
               return sol;
             }

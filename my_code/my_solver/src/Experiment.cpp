@@ -11,9 +11,10 @@
 #include "LNS.h"
 #include "Solver.h"
 
-Experiment::Experiment(std::string experiment_name_, std::function<void(LNS& vis)> experiment_function_, std::vector<std::string> maps_,
-                       std::vector<std::vector<int>> agent_nums_, std::vector<double> time_limits_, std::vector<Algorithm>& algorithms_,
-                       int runs_per_map_, bool show_progress_, bool load_init_sol_)
+Experiment::Experiment(std::string experiment_name_, std::function<void(LNS& vis)> experiment_function_,
+                       std::vector<std::string> maps_, std::vector<std::vector<int>> agent_nums_,
+                       std::vector<double> time_limits_, std::vector<Algorithm>& algorithms_, int runs_per_map_,
+                       bool show_progress_, bool load_init_sol_)
     : experiment_name(std::move(experiment_name_)),
       experiment_function(std::move(experiment_function_)),
       maps(std::move(maps_)),
@@ -60,8 +61,8 @@ void Experiment::run()
     if (show_progress)
     {
       multi_progress_bar->set_progress<0>(static_cast<size_t>(i));
-      multi_progress_bar->set_option<0>(
-          indicators::option::PostfixText{std::to_string(i) + "/" + std::to_string(static_cast<int>(maps.size())) + "    "});
+      multi_progress_bar->set_option<0>(indicators::option::PostfixText{
+          std::to_string(i) + "/" + std::to_string(static_cast<int>(maps.size())) + "    "});
     }
 
     double time_limit = time_limits[i];
@@ -81,13 +82,14 @@ void Experiment::run()
       skipped_maps++;
       skipped_agent_nums += static_cast<int>(agent_nums[i].size());
       skipped_runs += static_cast<int>(agent_nums[i].size()) * runs_per_map;
-      skipped_implementations += static_cast<int>(agent_nums[i].size()) * runs_per_map * static_cast<int>(algorithms.size());
+      skipped_implementations +=
+          static_cast<int>(agent_nums[i].size()) * runs_per_map * static_cast<int>(algorithms.size());
       continue;
     }
 
     // retrieve map name and scene names
-    const std::string              map_name = maps[i];
-    const std::vector<std::string> scenes   = get_scene_names(map_name, runs_per_map);
+    const std::string map_name = maps[i];
+    const std::vector<std::string> scenes = get_scene_names(map_name, runs_per_map);
 
     if (show_progress)
     {
@@ -106,7 +108,7 @@ void Experiment::run()
 
       // skip agent_nums that were already solved
       const int start_offset_an = start_offset_map + j * runs_per_map * static_cast<int>(algorithms.size());
-      const int end_offset_an   = start_offset_map + (j + 1) * runs_per_map * static_cast<int>(algorithms.size());
+      const int end_offset_an = start_offset_map + (j + 1) * runs_per_map * static_cast<int>(algorithms.size());
       if (std::all_of(skips.begin() + start_offset_an, skips.begin() + end_offset_an, [](bool b) { return b; }))
       {
         if (show_progress)
@@ -137,7 +139,7 @@ void Experiment::run()
 
         // skip runs that were already solved
         const int start_offset_run = start_offset_an + k * static_cast<int>(algorithms.size());
-        const int end_offset_run   = start_offset_an + (k + 1) * static_cast<int>(algorithms.size());
+        const int end_offset_run = start_offset_an + (k + 1) * static_cast<int>(algorithms.size());
         if (std::all_of(skips.begin() + start_offset_run, skips.begin() + end_offset_run, [](bool b) { return b; }))
         {
           skipped_runs++;
@@ -147,9 +149,9 @@ void Experiment::run()
 
         // choose instance
         assertm(scenes.size() == instances.size(), "The size of scenes and instances must be the same.");
-        const int          idx        = k % static_cast<int>(scenes.size());
+        const int idx = k % static_cast<int>(scenes.size());
         const std::string& scene_name = scenes[idx];
-        const Instance&    instance   = instances[idx];
+        const Instance& instance = instances[idx];
         // check whether enough agents loaded
         if (instance.get_num_of_agents() != agent_num)
         {
@@ -157,7 +159,8 @@ void Experiment::run()
                                    std::to_string(agent_num));
         }
 
-        // generate a random seed (same for all implementations) TODO - for experiments found in the database use the same seed
+        // generate a random seed (same for all implementations) TODO - for experiments found in the database use the
+        // same seed
         int seed = 0;
         // look into the database for a seed
         size_t dot_pos = scene_name.find('.');
@@ -165,8 +168,10 @@ void Experiment::run()
         {
           throw std::runtime_error("Could not find dot in scene name: '" + scene_name + "'");
         }
-        const std::string scene_name_stripped = scene_name.substr(map_name.size() + 1, scene_name.find('.') - map_name.size() - 1);
-        int               seed_from_db = get_seed_from_db(agent_num, map_name, scene_name_stripped, k / static_cast<int>(scenes.size()));
+        const std::string scene_name_stripped =
+            scene_name.substr(map_name.size() + 1, scene_name.find('.') - map_name.size() - 1);
+        int seed_from_db =
+            get_seed_from_db(agent_num, map_name, scene_name_stripped, k / static_cast<int>(scenes.size()));
         // std::cout << "Seed from db: " << seed_from_db << std::endl;
         if (seed_from_db >= 0)
         {
@@ -182,7 +187,8 @@ void Experiment::run()
         if (load_init_sol)
         {
           // get the file name
-          std::string initsol_path = get_initsol_path(agent_num, map_name, scene_name_stripped, k / static_cast<int>(scenes.size()));
+          std::string initsol_path =
+              get_initsol_path(agent_num, map_name, scene_name_stripped, k / static_cast<int>(scenes.size()));
           // load the solution
           init_sol.load(initsol_path, instance);
           if (!init_sol.feasible)
@@ -200,7 +206,6 @@ void Experiment::run()
             skipped_implementations++;
             continue;
           }
-
 
           Algorithm& algo = algorithms[l];
 
@@ -230,7 +235,7 @@ void Experiment::run()
 
           // write the results of the experiment
           const std::string algorithm_name = algo.get_name();
-          nlohmann::json    experiment_res = {{"experiment_name", experiment_name},
+          nlohmann::json experiment_res = {{"experiment_name", experiment_name},
                                            {"map_name", map_name},
                                            {"scene_name", scene_name},
                                            {"num_agents", agent_num},
@@ -260,24 +265,25 @@ void Experiment::run()
   // mark all progress bars as finished
   if (show_progress)
   {
-    multi_progress_bar->set_option<0>(indicators::option::PostfixText{std::to_string(static_cast<int>(maps.size())) + "/" +
-                                                                      std::to_string(static_cast<int>(maps.size())) + "     "});
+    multi_progress_bar->set_option<0>(indicators::option::PostfixText{
+        std::to_string(static_cast<int>(maps.size())) + "/" + std::to_string(static_cast<int>(maps.size())) + "     "});
     multi_progress_bar->set_progress<0>(maps.size());
     multi_progress_bar->set_progress<1>(agent_nums.back().size());
-    multi_progress_bar->set_option<1>(indicators::option::PostfixText{std::to_string(agent_nums.back().size()) + "/" +
-                                                                      std::to_string(agent_nums.back().size()) + "     "});
+    multi_progress_bar->set_option<1>(indicators::option::PostfixText{
+        std::to_string(agent_nums.back().size()) + "/" + std::to_string(agent_nums.back().size()) + "     "});
     multi_progress_bar->set_option<2>(
         indicators::option::PostfixText{std::to_string(runs_per_map) + "/" + std::to_string(runs_per_map) + "     "});
     multi_progress_bar->set_progress<2>(static_cast<size_t>(runs_per_map));
   }
 
-  std::cout << "Experiment finished. Skipped: " << skipped_maps << "/" << static_cast<int>(maps.size()) << " maps, " << skipped_agent_nums
-            << "/" << sum_agent_nums << " agent_nums, " << skipped_runs << "/" << sum_agent_nums * runs_per_map << " runs, "
-            << skipped_implementations << "/" << sum_agent_nums * runs_per_map * static_cast<int>(algorithms.size()) << " implementations."
-            << std::endl;
+  std::cout << "Experiment finished. Skipped: " << skipped_maps << "/" << static_cast<int>(maps.size()) << " maps, "
+            << skipped_agent_nums << "/" << sum_agent_nums << " agent_nums, " << skipped_runs << "/"
+            << sum_agent_nums * runs_per_map << " runs, " << skipped_implementations << "/"
+            << sum_agent_nums * runs_per_map * static_cast<int>(algorithms.size()) << " implementations." << std::endl;
 }
 
-auto Experiment::get_seed_from_db(int agent_num, const std::string& map_name, const std::string& scene_name_stripped, int run) -> int
+auto Experiment::get_seed_from_db(int agent_num, const std::string& map_name, const std::string& scene_name_stripped,
+                                  int run) -> int
 {
   // Query the database
   std::string command = "SELECT seed FROM " + experiment_name + " WHERE file_name = ?";
@@ -285,28 +291,30 @@ auto Experiment::get_seed_from_db(int agent_num, const std::string& map_name, co
   std::string experiment_filename;
   if (experiment_name == "sipp_pp")
   {
-    experiment_filename = experiment_name + "_" + std::to_string(agent_num) + "agents_" + map_name + "-" + scene_name_stripped +
-                          "SIPP_lns_orig_" + std::to_string(run);
+    experiment_filename = experiment_name + "_" + std::to_string(agent_num) + "agents_" + map_name + "-" +
+                          scene_name_stripped + "SIPP_lns_orig_" + std::to_string(run);
   }
   else if (experiment_name == "influence_of_p" || experiment_name == "influence_of_w" || experiment_name == "repair" ||
-           experiment_name == "influence_of_ap" || experiment_name == "overall_improvement")
+           experiment_name == "influence_of_ap" || experiment_name == "overall_improvement" ||
+           experiment_name == "psipp_feasible")
   {
     return -1;  // w and p are only in my solver
   }
   else if (experiment_name == "destroy")
   {
-    experiment_filename = experiment_name + "_" + std::to_string(agent_num) + "agents_" + map_name + "_" + scene_name_stripped +
-                          "_destroy_type_ORIGO_Adaptive_neighborhood_size_4_" + std::to_string(run);
+    experiment_filename = experiment_name + "_" + std::to_string(agent_num) + "agents_" + map_name + "_" +
+                          scene_name_stripped + "_destroy_type_ORIGO_Adaptive_neighborhood_size_4_" +
+                          std::to_string(run);
   }
   else if (experiment_name == "repair")
   {
-    experiment_filename =
-        experiment_name + "_" + std::to_string(agent_num) + "agents_" + map_name + "_" + scene_name_stripped + "_" + std::to_string(run);
+    experiment_filename = experiment_name + "_" + std::to_string(agent_num) + "agents_" + map_name + "_" +
+                          scene_name_stripped + "_" + std::to_string(run);
   }
   else if (experiment_name == "feasible" || experiment_name == "feasible_restarts")
   {
-    experiment_filename = experiment_name + "_" + std::to_string(agent_num) + "agents_" + map_name + "-" + scene_name_stripped +
-                          "SIPP_lns_orig_" + std::to_string(run);
+    experiment_filename = experiment_name + "_" + std::to_string(agent_num) + "agents_" + map_name + "-" +
+                          scene_name_stripped + "SIPP_lns_orig_" + std::to_string(run);
   }
   else
   {
@@ -345,18 +353,18 @@ auto Experiment::get_seed_from_db(int agent_num, const std::string& map_name, co
   return -1;
 }
 
-auto Experiment::get_initsol_path(int agent_num, const std::string& map_name, const std::string& scene_name_stripped, int run)
-    -> std::string
+auto Experiment::get_initsol_path(int agent_num, const std::string& map_name, const std::string& scene_name_stripped,
+                                  int run) -> std::string
 {
-  return get_base_path() + "/experiments/" + experiment_name + "_" + "initsols/" + experiment_name + "_" + std::to_string(agent_num) +
-         "agents_" + map_name + "_" + scene_name_stripped + "_" + std::to_string(run);
+  return get_base_path() + "/experiments/" + experiment_name + "_" + "initsols/" + experiment_name + "_" +
+         std::to_string(agent_num) + "agents_" + map_name + "_" + scene_name_stripped + "_" + std::to_string(run);
 }
 
 void Experiment::open_database()
 {
   std::string path_to_database =
-      std::filesystem::canonical("/proc/self/exe").parent_path().parent_path().parent_path().parent_path().string() + "/experiments/" +
-      DATABASE_NAME;
+      std::filesystem::canonical("/proc/self/exe").parent_path().parent_path().parent_path().parent_path().string() +
+      "/experiments/" + DATABASE_NAME;
   int rc = sqlite3_open(path_to_database.c_str(), &db);
   // check that the database was opened successfully
   if (rc != SQLITE_OK)

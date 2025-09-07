@@ -23,6 +23,7 @@ namespace po = boost::program_options;
 constexpr int DEFAULT_MAX_ITER = 10;
 constexpr double DEFAULT_TIME_LIMIT = 30.0;
 constexpr int DEFAULT_NEIGHBORHOOD_SIZE = 10;
+constexpr int DEFAULT_MAX_PUSHES = 1;
 
 auto main(int argc, char** argv) -> int
 {
@@ -41,17 +42,20 @@ auto main(int argc, char** argv) -> int
       "psipp_implementation", po::value<std::string>()->default_value("PSIPP_mine"),
       "implementation of PSIPP (PSIPP_mine, PSIPP_suboptimal)")("use_psipp", po::value<bool>()->default_value(true),
                                                                 "Use PSIPP instead of SIPP")(
-      "Restarts,r", po::value<bool>()->default_value(true),
-      "restart the search if no feasible initial solution was found")(
-      "destroy_operator", po::value<std::string>()->default_value("ADAPTIVE"),
-      "Destroy operator to be used in LNS (RANDOM, RANDOMWALK, INTERSECTION, ADAPTIVE, RANDOM_CHOOSE, BLOCKED)")(
-      "neighborhood_size,n", po::value<int>()->default_value(DEFAULT_NEIGHBORHOOD_SIZE),
-      "Size of the neighborhood used by the destroy operator (number of paths to be destroyed)")(
-      "seed,s", po::value<int>()->default_value(-1),
-      "seed of the random generators for reproducability, to achieve non reproducible random behavior, use "
-      "negative "
-      "value")("output_paths", po::value<std::string>()->default_value(""),
-               "Output file for the paths of the generated solution. If not used, the solution will not be exported.");
+      "maxPushes", po::value<int>()->default_value(DEFAULT_MAX_PUSHES), "maximal number of pushes in PSIPP")
+
+      ("Restarts,r", po::value<bool>()->default_value(true),
+       "restart the search if no feasible initial solution was found")(
+          "destroy_operator", po::value<std::string>()->default_value("ADAPTIVE"),
+          "Destroy operator to be used in LNS (RANDOM, RANDOMWALK, INTERSECTION, ADAPTIVE, RANDOM_CHOOSE, BLOCKED)")(
+          "neighborhood_size,n", po::value<int>()->default_value(DEFAULT_NEIGHBORHOOD_SIZE),
+          "Size of the neighborhood used by the destroy operator (number of paths to be destroyed)")(
+          "seed,s", po::value<int>()->default_value(-1),
+          "seed of the random generators for reproducability, to achieve non reproducible random behavior, use "
+          "negative "
+          "value")(
+          "output_paths", po::value<std::string>()->default_value(""),
+          "Output file for the paths of the generated solution. If not used, the solution will not be exported.");
 
   // Parse command-line arguments
   po::variables_map vm;

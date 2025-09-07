@@ -20,7 +20,6 @@
 #define NODE_POOL_MERGE_SIZE \
   500  // merge the extra list with the node pool vector only of there are more elements in the list
 #define INITIAL_NODE_POOL_SIZE 2  // the multiple of map size to use as initial node pool size
-#define MAX_PUSHES 1
 
 using namespace psipp;
 
@@ -354,7 +353,7 @@ auto PSIPP::plan_psipp_mine(const int agent_num) -> std::pair<TimePointPath, std
         // check whether the time interval is constraint or there is an edge collision
         if (it->type == TIME_INTERVAL_NODE_type::constraint)
         {
-          if (current->pushed.size() < MAX_PUSHES)
+          if (static_cast<int>(current->pushed.size()) < settings.max_pushes)
           {
             // can not push agents from start location
             if (!it->prev_in_path.has_value()) continue;
@@ -373,7 +372,7 @@ auto PSIPP::plan_psipp_mine(const int agent_num) -> std::pair<TimePointPath, std
         if (constraint_manager.check_edge_collision(current->time_point.location, neighbor_time_point.location,
                                                     neighbor_time_point.interval.t_min))
         {
-          if (new_pushed.size() < MAX_PUSHES)
+          if (static_cast<int>(new_pushed.size()) < settings.max_pushes)
           {
             // as there is an edge collision, the agent must be leaving the cell, so it was previously there
             auto constraint = it->prev_interval;
@@ -456,7 +455,7 @@ auto PSIPP::plan_psipp_mine(const int agent_num) -> std::pair<TimePointPath, std
             }
           }
         }
-        if (new_pushed.size() > MAX_PUSHES) continue;
+        if (static_cast<int>(new_pushed.size()) > settings.max_pushes) continue;
         if (!is_additional_constraint)
         {
           // std::cout << "No additional constraint. Adding: " << neighbor_time_point.interval << std::endl;
