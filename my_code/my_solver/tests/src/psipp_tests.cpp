@@ -13,8 +13,7 @@
 #include "ConstraintManager.h"
 #include "Instance.h"
 #include "LNS.h"
-#include "PSIPP.h"
-#include "magic_enum/magic_enum.hpp"
+#include "PSIPP.h" #include "magic_enum/magic_enum.hpp"
 #include "test_utils.h"
 
 // SIPP tests
@@ -469,7 +468,6 @@ TEST(PSIPPTest, MustPush)
   for (auto algo : magic_enum::enum_values<PSIPP_implementation>())
   {
     // create LNS
-    if (algo != PSIPP_implementation::PSIPP_mine) continue;  // TODO uncomment when other implementations ready
     // std::cout << "Algo:" << magic_enum::enum_name(algo) << std::endl;
     auto rnd_generator = std::mt19937(0);
     LNS_settings lns_settings(0, 5, {DESTROY_TYPE::RANDOM, 10},
