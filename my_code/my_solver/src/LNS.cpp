@@ -81,6 +81,7 @@ void LNS::solve()
     if (!found_initial_solution)
     {
       // std::cout << "RESETTING CONSTRAINT MANAGER" << std::endl;
+      // TODO should we reset something else also?
       constraint_manager.reset();
       already_planned.clear();
     }

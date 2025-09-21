@@ -101,10 +101,9 @@ public:
 
   auto is_valid() -> bool;
 
-  auto is_end_of_list(int location, std::list<TimeIntervalNode>::const_iterator it) const -> bool
+  inline auto is_end_of_list(int location, std::list<TimeIntervalNode>::const_iterator it) const -> bool
   {
     return safe_interval_table.is_end_of_list(location, it);
-    // TODO also constraint table
   }
 
 private:

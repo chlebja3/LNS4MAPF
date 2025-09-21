@@ -18,8 +18,8 @@
 #include "utils.h"
 
 #define NODE_POOL_MERGE_SIZE \
-  500  // merge the extra list with the node pool vector only of there are more elements in the list
-#define INITIAL_NODE_POOL_SIZE 2  // the multiple of map size to use as initial node pool size
+  100  // merge the extra list with the node pool vector only of there are more elements in the list
+#define INITIAL_NODE_POOL_SIZE 4  // the multiple of map size to use as initial node pool size
 
 using namespace psipp;
 

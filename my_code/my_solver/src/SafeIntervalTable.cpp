@@ -355,6 +355,27 @@ auto SafeIntervalTable::get_safe_intervals(int location, const TimeInterval& tim
   return std::make_pair(start, end);
 }
 
+[[nodiscard]] auto SafeIntervalTable::get_first_safe_interval_after_time(int location,
+                                                                         const TimeInterval& time_interval) const
+    -> std::list<TimeIntervalNode>::const_iterator
+{
+  assertm(instance.get_map_data().is_in(location), "Invalid location.");
+  int free_location = instance.location_to_free_location(location);
+  assertm(free_location < static_cast<int>(safe_intervals.size()), "Safe intervals not precomputed for this location.");
+
+  // iterate over the list to find the first and last safe interval
+  for (auto it = safe_intervals[free_location].cbegin(); it != safe_intervals[free_location].cend(); it++)
+  {
+    // check whether the interval is inside the given time range
+    if (it->interval.t_max >= time_interval.t_min && it->interval.t_min <= time_interval.t_max)
+    {
+      return it;
+    }
+  }
+  // if nothing found, return the end of the list
+  return safe_intervals[free_location].cend();
+}
+
 /*
 void SafeIntervalTable::update_latest_constraint_end_estimate()
 {

@@ -23,10 +23,10 @@
 
 #define NUMS_AGENTS                        \
   {                                        \
-      {300, 350, 400, 450},                \
-      {150, 200, 250, 300},                \
-      {300, 350, 400, 450, 500, 550, 600}, \
-      {500, 600, 700, 800, 900},           \
+      {350, 400, 450, 500},                \
+      {200, 225, 250, 275, 300},           \
+      {350, 400, 450, 500, 550, 600, 650}, \
+      {600, 700, 800, 900, 1000},          \
   }
 
 #define TIME_LIMITS {20, 20, 20, 20}
@@ -62,6 +62,14 @@ auto main(int argc, char** argv) -> int
     LNS_settings lns_settings(0, 20, {DESTROY_TYPE::RANDOM, 10}, {algo_type, INFO_type::experiment, 1.0},
                               {PSIPP_implementation::PSIPP_mine, INFO_type::experiment, 1.0, 1, 5}, true, true);
     algorithms.emplace_back(algo_type, lns_settings, std::make_pair("max_push", 5));
+  }
+
+  // PSIPP mine max pushes 100
+  {
+    SIPP_implementation algo_type = SIPP_implementation::SIPP_mine_ap;
+    LNS_settings lns_settings(0, 20, {DESTROY_TYPE::RANDOM, 10}, {algo_type, INFO_type::experiment, 1.0},
+                              {PSIPP_implementation::PSIPP_mine, INFO_type::experiment, 1.0, 1, 100}, true, true);
+    algorithms.emplace_back(algo_type, lns_settings, std::make_pair("max_push", 100));
   }
 
 #ifdef SHOW_PROGRESS

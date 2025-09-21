@@ -135,6 +135,7 @@ public:
     const int num_free_cells = instance.get_num_free_cells();
     constraints.clear();
     constraints = std::vector<std::list<TimeIntervalNode>>(num_free_cells, std::list<TimeIntervalNode>());
+    agents_counts.clear();
     agents_counts = std::vector<std::unordered_map<int, int>>(num_free_cells, std::unordered_map<int, int>());
   }
 

@@ -191,7 +191,7 @@ public:
    */
   [[nodiscard]] auto get_num_of_generated_nodes() const -> int
   {
-    return planner->get_generated_all_iter();
+    return planner->get_generated_all_iter() + psipp->get_generated_all_iter();
   }
 
   /**
@@ -201,7 +201,7 @@ public:
    */
   [[nodiscard]] auto get_num_of_expanded_nodes() const -> int
   {
-    return planner->get_expanded_all_iter();
+    return planner->get_expanded_all_iter() + psipp->get_expanded_all_iter();
   }
 
   void load_initial_solution(Solution& sol);

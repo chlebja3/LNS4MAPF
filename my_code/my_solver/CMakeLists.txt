@@ -2,6 +2,7 @@ cmake_minimum_required(VERSION 3.16)
 
 # enable testing if the user does not specify otherwise
 option(ENABLE_TESTS "Enable tests" OFF)
+option(ENABLE_ASSERTS "Enable asserts" OFF)
 
 # Project name and version
 project(simple_MAPF_solver VERSION 1.0 LANGUAGES CXX)
@@ -19,7 +20,7 @@ if(NOT CMAKE_BUILD_TYPE)
 endif()
 
 # enable asserts in Release With Debug Info
-if (CMAKE_BUILD_TYPE STREQUAL RelWithDebInfo)
+if (CMAKE_BUILD_TYPE STREQUAL RelWithDebInfo AND ENABLE_ASSERTS)
   message(STATUS "Enabling aseerts")
   string( REPLACE "-DNDEBUG" "" CMAKE_CXX_FLAGS_RELWITHDEBINFO "${CMAKE_CXX_FLAGS_RELWITHDEBINFO}" ) 
 

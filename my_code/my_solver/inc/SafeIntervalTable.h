@@ -58,6 +58,9 @@ public:
   [[nodiscard]] auto get_safe_intervals(int location, const TimeInterval& time_interval) const
       -> std::pair<std::list<TimeIntervalNode>::const_iterator, std::list<TimeIntervalNode>::const_iterator>;
 
+  [[nodiscard]] auto get_first_safe_interval_after_time(int location, const TimeInterval& time_interval) const
+      -> std::list<TimeIntervalNode>::const_iterator;
+
   /**
    * @brief Gets the first safe interval for a given location.
    *
@@ -122,10 +125,9 @@ public:
     // max_path_len_estimate = INT_MAX;
   }
 
-  auto is_end_of_list(int location, std::list<TimeIntervalNode>::const_iterator it) const -> bool
+  inline auto is_end_of_list(int location, std::list<TimeIntervalNode>::const_iterator it) const -> bool
   {
-    auto const& cur_TI_list = safe_intervals[instance.location_to_free_location(location)];
-    return it == cur_TI_list.cend();
+    return it == safe_intervals[instance.location_to_free_location(location)].cend();
   }
 
 private:
