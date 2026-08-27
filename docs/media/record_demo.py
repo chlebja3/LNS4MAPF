@@ -37,6 +37,11 @@ MAP = os.path.join(BENCH, "mapf-map", "random-32-32-20.map")
 SCEN = os.path.join(BENCH, "mapf-scen-random", "scen-random", "random-32-32-20-random-1.scen")
 DEMO_ARGS = f"-m {MAP} -a {SCEN} -k 60 -s 1 -i 500 -t 10"
 DEMO_ZOOM_OUT = 4  # scroll notches needed to fit a 32x32 map into the central dock node
+# the hero clip shows the bare grid, so it has to fit completely: one notch more, plus a small
+# downward pan, because the map view is centred on a viewport that reaches under the menu bar
+SOL_ZOOM_OUT = DEMO_ZOOM_OUT + 1
+SOL_PAN_DOWN = 22
+SOL_PAN_FROM = (1130, 420)  # empty margin right of the grid, so the drag selects no agent
 
 BIG_MAP = os.path.join(BENCH, "mapf-map", "den312d.map")
 BIG_SCEN = os.path.join(BENCH, "mapf-scen-random", "scen-random", "den312d-random-1.scen")
@@ -68,8 +73,8 @@ SIPP_STEP_FWD = (318, 259)
 MAP_AND_RIGHT = "1160:690:440:30"
 # wide left panel + map
 LEFT_AND_MAP = "1180:690:0:30"
-# just the 32x32 grid, zoomed out by DEMO_ZOOM_OUT notches
-MAP_ONLY = "660:660:485:25"
+# just the 32x32 grid (594 px at SOL_ZOOM_OUT), with a 7 px margin around it
+MAP_ONLY = "608:608:496:49"
 
 # badges drawn onto the annotated overview screenshot: left panel, map, right panel, console
 OVERVIEW_LABELS = [(410, 700), (1250, 70), (1560, 480), (1540, 790)]
@@ -298,6 +303,8 @@ def clip_solution() -> None:
     # the panel is widened even though it is cropped away: the playback buttons are centred in
     # the panel, so their coordinates only match the measured ones at PANEL_WIDE
     prepare(inp, "right")
+    inp.scroll(*MAP_CENTER, -(SOL_ZOOM_OUT - DEMO_ZOOM_OUT))
+    inp.drag(*SOL_PAN_FROM, SOL_PAN_FROM[0], SOL_PAN_FROM[1] + SOL_PAN_DOWN)
     inp.click(*LNS_SLIDER_END)  # jump to the last LNS iteration
     raw = f"{TMP_DIR}/solution.mp4"
     rec = record(raw, 4.0)
@@ -306,7 +313,7 @@ def clip_solution() -> None:
     rec.wait()
     cleanup(app)
     # the grid alone: one GIF frame per simulated timestep
-    to_gif(raw, f"{OUT_DIR}/solution.gif", crop=MAP_ONLY, scale=660, fps=10, slow=2.0)
+    to_gif(raw, f"{OUT_DIR}/solution.gif", crop=MAP_ONLY, scale=608, fps=10, slow=2.0)
 
 
 def clip_sipp() -> None:
