@@ -7,7 +7,7 @@
 ![License](https://img.shields.io/badge/license-MIT-blue)
 
 <p align="center">
-  <img src="docs/media/solution.gif" width="620" alt="60 agents crossing random-32-32-20 without a single collision">
+  <img src="docs/media/solution.gif" width="608" alt="60 agents crossing random-32-32-20 without a single collision">
 </p>
 <p align="center"><em>60 agents crossing <code>random-32-32-20</code>. Every agent follows the path the solver planned for it; no two of them ever share a cell or swap places.</em></p>
 
