@@ -63,6 +63,7 @@ public:
   SIPPNode const* parent;     /**< The parent node. */
   double          h2;         /**< The heuristic value for the second heuristic. */
   double          h3;         /**< The heuristic value for the third heuristic. */
+  std::uint32_t   tie = 0;    /**< Random tie-break key, drawn once when the node enters the pool. */
 
 
   /**
@@ -112,17 +113,6 @@ public:
 class SIPPNodeComparator
 {
 public:
-  std::mt19937*                       rnd_generator; /**< Random number generator. */
-  mutable std::bernoulli_distribution dist;          /**< Bernoulli distribution for generating random true/false values. */
-
-  /**
-   * @brief Constructor for SIPPNodeComparator.
-   *
-   * @param rnd_generator_ Pointer to a random number generator.
-   */
-  explicit SIPPNodeComparator(std::mt19937* rnd_generator_) : rnd_generator(rnd_generator_), dist(0.5)
-  {
-  }
 
   /**
    * @brief Comparison operator for SIPPNode.
@@ -142,18 +132,15 @@ public:
 class SIPPNodeComparatorSuboptimal
 {
 public:
-  std::mt19937*                       rnd_generator;              /**< Random number generator. */
-  mutable std::bernoulli_distribution dist;                       /**< Bernoulli distribution for generating random true/false values. */
   int                                 max_suboptimality_absolute; /**< Maximum absolute suboptimality. */
 
   /**
    * @brief Constructor for SIPPNodeComparatorSuboptimal.
    *
-   * @param rnd_generator_ Pointer to a random number generator.
    * @param max_suboptimality_absolute_ Maximum absolute suboptimality.
    */
-  SIPPNodeComparatorSuboptimal(std::mt19937* rnd_generator_, int max_suboptimality_absolute_)
-      : rnd_generator(rnd_generator_), dist(0.5), max_suboptimality_absolute(max_suboptimality_absolute_)
+  explicit SIPPNodeComparatorSuboptimal(int max_suboptimality_absolute_)
+      : max_suboptimality_absolute(max_suboptimality_absolute_)
   {
   }
 
@@ -181,8 +168,9 @@ public:
    * @brief Constructor for NodePool.
    *
    * @param size The initial size of the node pool.
+   * @param rnd_generator_ Random number generator used to draw the tie-break key of every added node.
    */
-  explicit NodePool(int size);
+  NodePool(int size, std::mt19937& rnd_generator_);
 
   /**
    * @brief Add a node to the pool.
@@ -203,6 +191,7 @@ private:
   int                   end = 0; /**< The end index of the pool. Nodes after end are empty. */
   std::vector<SIPPNode> pool;    /**< The pool of SIPP nodes. */
   std::list<SIPPNode>   extra;   /**< The list of extra SIPP nodes. */
+  std::mt19937*         rnd_generator; /**< Draws the tie-break keys. */
 };
 
 

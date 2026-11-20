@@ -69,6 +69,87 @@ namespace psipp
 {
 
 /**
+ * @brief One pushed constraint in a PushList; links to the constraints pushed before it.
+ */
+struct PushNode
+{
+  Constraint constraint; /**< The pushed constraint. */
+  const PushNode* prev;  /**< The previously pushed constraint, nullptr for the first one. */
+};
+
+/**
+ * @brief Immutable list of pushed constraints shared between a node and its successors. Copying is O(1); extending
+ * allocates one PushNode in the PushArena, so a successor never copies the constraints of its parent.
+ */
+class PushList
+{
+public:
+  class iterator
+  {
+  public:
+    explicit iterator(const PushNode* node_) : node(node_) {}
+    auto operator*() const -> const Constraint& { return node->constraint; }
+    auto operator->() const -> const Constraint* { return &node->constraint; }
+    auto operator++() -> iterator&
+    {
+      node = node->prev;
+      return *this;
+    }
+    auto operator!=(const iterator& other) const -> bool { return node != other.node; }
+
+  private:
+    const PushNode* node;
+  };
+
+  PushList() = default;
+  PushList(const PushNode* head_, int count_) : head(head_), count(count_) {}
+
+  /**
+   * @return The number of pushed constraints.
+   */
+  auto size() const -> size_t { return static_cast<size_t>(count); }
+
+  /**
+   * @return Iterator from the most recently pushed constraint to the first one.
+   */
+  auto begin() const -> iterator { return iterator(head); }
+  auto end() const -> iterator { return iterator(nullptr); }
+
+private:
+  const PushNode* head = nullptr; /**< The most recently pushed constraint. */
+  int count = 0;                  /**< Number of constraints, stored here so that comparing nodes reads no list. */
+  friend class PushArena;
+};
+
+/**
+ * @brief Owns the PushNodes of one search. Nodes are stored in chunks of fixed capacity, so their addresses stay
+ * valid until reset(), which keeps the memory for the next search.
+ */
+class PushArena
+{
+public:
+  /**
+   * @brief Extend a list by one constraint.
+   *
+   * @param list The list to extend; it is not modified.
+   * @param constraint The pushed constraint.
+   *
+   * @return The list with the constraint appended.
+   */
+  auto push(PushList list, const Constraint& constraint) -> PushList;
+
+  /**
+   * @brief Invalidate all lists created so far. Call at the start of each search.
+   */
+  void reset();
+
+private:
+  static constexpr size_t CHUNK_SIZE = 4096;
+  std::vector<std::vector<PushNode>> chunks; /**< Chunks with reserved capacity CHUNK_SIZE (never reallocated). */
+  size_t chunk_idx = 0;                      /**< The chunk currently being filled. */
+};
+
+/**
  * @brief Represents a node in the PSIPP algorithm.
  */
 class PSIPPNode : public Node
@@ -78,7 +159,8 @@ public:
   PSIPPNode const* parent; /**< The parent node. */
   double h2;               /**< The heuristic value for the second heuristic. */
   double h3;               /**< The heuristic value for the third heuristic. */
-  std::vector<Constraint> pushed;
+  PushList pushed;        /**< The constraints pushed on the way to this node. */
+  std::uint32_t tie = 0;   /**< Random tie-break key, drawn once when the node enters the pool. */
 
   /**
    * @brief Constructor for PSIPPNode.
@@ -92,8 +174,8 @@ public:
    * @param parent_ The parent node.
    */
   PSIPPNode(int location, const TimeInterval& interval, double g_, double h_, double h2_, double h3_,
-            PSIPPNode const* parent_, std::vector<Constraint> pushed_)
-      : Node(g_, h_), time_point(location, interval), parent(parent_), h2(h2_), h3(h3_), pushed(std::move(pushed_))
+            PSIPPNode const* parent_, PushList pushed_)
+      : Node(g_, h_), time_point(location, interval), parent(parent_), h2(h2_), h3(h3_), pushed(pushed_)
   {
   }
 
@@ -114,8 +196,8 @@ public:
    * @param parent_ The parent node.
    */
   PSIPPNode(const TimePoint& time_point_, double g_, double h_, double h2_, double h3_, PSIPPNode const* parent_,
-            std::vector<Constraint> pushed_)
-      : Node(g_, h_), time_point(time_point_), parent(parent_), h2(h2_), h3(h3_), pushed(std::move(pushed_))
+            PushList pushed_)
+      : Node(g_, h_), time_point(time_point_), parent(parent_), h2(h2_), h3(h3_), pushed(pushed_)
   {
   }
 
@@ -135,20 +217,14 @@ public:
 class PSIPPNodeComparator
 {
 public:
-  std::mt19937* rnd_generator;              /**< Random number generator. */
-  mutable std::bernoulli_distribution dist; /**< Bernoulli distribution for generating random true/false values. */
-
   double push_cost;                         /**< Cost of one push; infinity = lexicographic on number of pushes. */
 
   /**
    * @brief Constructor for PSIPPNodeComparator.
    *
-   * @param rnd_generator_ Pointer to a random number generator.
    * @param push_cost_ Cost of one push added to f (>= 0); infinity compares the number of pushes first.
    */
-  explicit PSIPPNodeComparator(std::mt19937* rnd_generator_,
-                               double push_cost_ = std::numeric_limits<double>::infinity())
-      : rnd_generator(rnd_generator_), dist(0.5), push_cost(push_cost_)
+  explicit PSIPPNodeComparator(double push_cost_ = std::numeric_limits<double>::infinity()) : push_cost(push_cost_)
   {
     assertm(!(push_cost < 0) && !std::isnan(push_cost), "push_cost must be >= 0");
   }
@@ -170,18 +246,15 @@ public:
 class PSIPPNodeComparatorSuboptimal
 {
 public:
-  std::mt19937* rnd_generator;              /**< Random number generator. */
-  mutable std::bernoulli_distribution dist; /**< Bernoulli distribution for generating random true/false values. */
   int max_suboptimality_absolute;           /**< Maximum absolute suboptimality. */
 
   /**
    * @brief Constructor for PSIPPNodeComparatorSuboptimal.
    *
-   * @param rnd_generator_ Pointer to a random number generator.
    * @param max_suboptimality_absolute_ Maximum absolute suboptimality.
    */
-  PSIPPNodeComparatorSuboptimal(std::mt19937* rnd_generator_, int max_suboptimality_absolute_)
-      : rnd_generator(rnd_generator_), dist(0.5), max_suboptimality_absolute(max_suboptimality_absolute_)
+  explicit PSIPPNodeComparatorSuboptimal(int max_suboptimality_absolute_)
+      : max_suboptimality_absolute(max_suboptimality_absolute_)
   {
   }
 
@@ -209,8 +282,9 @@ public:
    * @brief Constructor for NodePool.
    *
    * @param size The initial size of the node pool.
+   * @param rnd_generator_ Random number generator used to draw the tie-break key of every added node.
    */
-  explicit NodePool(int size);
+  NodePool(int size, std::mt19937& rnd_generator_);
 
   /**
    * @brief Add a node to the pool.
@@ -231,6 +305,7 @@ private:
   int end = 0;                 /**< The end index of the pool. Nodes after end are empty. */
   std::vector<PSIPPNode> pool; /**< The pool of SIPP nodes. */
   std::list<PSIPPNode> extra;  /**< The list of extra SIPP nodes. */
+  std::mt19937* rnd_generator; /**< Draws the tie-break keys. */
 };
 
 // using PriorityQueue = std::priority_queue<const SIPPNode*, std::vector<const SIPPNode*>, SIPPNodeComparator>;
@@ -367,6 +442,7 @@ private:
 
   const Instance& instance;       /**< The instance of the problem. */
   psipp::NodePool node_pool;      /**< The pool of SIPP nodes. */
+  psipp::PushArena push_arena;    /**< Storage of the pushed lists of the current search. */
   std::vector<int> known_max;     /**< The known maximum time for each node. */
   std::vector<int> known_min;     /**< The known minimum time for each node. */
   int known_layers_dirty = 1;     /**< Number of closed-list layers (per push count) possibly written since reset. */

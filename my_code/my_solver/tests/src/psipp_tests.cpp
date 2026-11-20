@@ -558,27 +558,27 @@ TEST(PSIPPTest, SippFirstSwitch)
 
 TEST(PSIPPComparator, InfinitePushCostIsLexicographic)
 {
-  std::mt19937 rng(0);
-  std::vector<Constraint> no_push;
-  std::vector<Constraint> one_push{Constraint(TimeInterval(0, 1), 0, 0, 0)};
+  psipp::PushArena arena;
+  psipp::PushList no_push;
+  psipp::PushList one_push = arena.push(no_push, Constraint(TimeInterval(0, 1), 0, 0, 0));
   psipp::PSIPPNode a(0, TimeInterval(0, 1), 100, 0, 0, 0, nullptr, no_push);
   psipp::PSIPPNode b(0, TimeInterval(0, 1), 10, 0, 0, 0, nullptr, one_push);
-  psipp::PSIPPNodeComparator cmp(&rng);
+  psipp::PSIPPNodeComparator cmp;
   EXPECT_FALSE(cmp(&a, &b));
   EXPECT_TRUE(cmp(&b, &a));
 }
 
 TEST(PSIPPComparator, FinitePushCost)
 {
-  std::mt19937 rng(0);
-  std::vector<Constraint> no_push;
-  std::vector<Constraint> one_push{Constraint(TimeInterval(0, 1), 0, 0, 0)};
+  psipp::PushArena arena;
+  psipp::PushList no_push;
+  psipp::PushList one_push = arena.push(no_push, Constraint(TimeInterval(0, 1), 0, 0, 0));
   psipp::PSIPPNode a(0, TimeInterval(0, 1), 100, 0, 0, 0, nullptr, no_push);
   psipp::PSIPPNode b(0, TimeInterval(0, 1), 10, 0, 0, 0, nullptr, one_push);
-  psipp::PSIPPNodeComparator cmp(&rng, 5.0);
+  psipp::PSIPPNodeComparator cmp(5.0);
   EXPECT_TRUE(cmp(&a, &b));
   EXPECT_FALSE(cmp(&b, &a));
-  psipp::PSIPPNodeComparator cmp_high(&rng, 200.0);
+  psipp::PSIPPNodeComparator cmp_high(200.0);
   EXPECT_FALSE(cmp_high(&a, &b));
 }
 
@@ -704,16 +704,40 @@ TEST(PSIPPTest, CycleCounterWithFreePushes)
   EXPECT_GT(lns.log.pp_fail_cycle, 0);
 }
 
-// Regression: building a node from a pushed list must not empty the caller's list. The successor generation reuses
+// Regression: building a node from a pushed list must not change the caller's list. The successor generation reuses
 // the same list for several successors; an emptied list made PSIPP return paths through agents it never pushed.
 TEST(PSIPPTest, NodeConstructorKeepsPushedList)
 {
-  std::vector<Constraint> pushed;
-  pushed.emplace_back(TimeInterval(3, 5), 7, 1, 2);
+  psipp::PushArena arena;
+  psipp::PushList pushed = arena.push(psipp::PushList(), Constraint(TimeInterval(3, 5), 7, 1, 2));
   psipp::PSIPPNode first(4, TimeInterval(0, 10), 0, 0, 0, 0, nullptr, pushed);
   psipp::PSIPPNode second(TimePoint(4, TimeInterval(0, 10)), 0, 0, 0, 0, nullptr, pushed);
   ASSERT_EQ(pushed.size(), 1u);
-  EXPECT_EQ(pushed[0].agent_num, 7);
+  EXPECT_EQ(pushed.begin()->agent_num, 7);
   EXPECT_EQ(first.pushed.size(), 1u);
   EXPECT_EQ(second.pushed.size(), 1u);
+}
+
+// Extending a shared list must leave the shared prefix intact, also across chunk boundaries of the arena.
+TEST(PSIPPTest, PushListSharesPrefix)
+{
+  psipp::PushArena arena;
+  psipp::PushList base = arena.push(psipp::PushList(), Constraint(TimeInterval(0, 1), 1, 0, 0));
+  std::vector<psipp::PushList> extended;
+  for (int i = 0; i < 10000; ++i)
+  {
+    extended.push_back(arena.push(base, Constraint(TimeInterval(0, 1), 100 + i, 0, 0)));
+  }
+  ASSERT_EQ(base.size(), 1u);
+  for (int i = 0; i < 10000; ++i)
+  {
+    ASSERT_EQ(extended[i].size(), 2u);
+    std::vector<int> agents;
+    for (const auto& c : extended[i]) agents.push_back(c.agent_num);
+    ASSERT_EQ(agents, (std::vector<int>{100 + i, 1}));
+  }
+  arena.reset();
+  psipp::PushList again = arena.push(psipp::PushList(), Constraint(TimeInterval(0, 1), 5, 0, 0));
+  EXPECT_EQ(again.size(), 1u);
+  EXPECT_EQ(again.begin()->agent_num, 5);
 }

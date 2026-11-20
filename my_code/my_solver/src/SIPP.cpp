@@ -25,7 +25,7 @@ using namespace sipp;
 SIPP::SIPP(const Instance& instance_, std::mt19937& rnd_generator_, const SIPP_settings& settings_,
            const ConstraintManager& constraint_manager_)
     : instance(instance_),
-      node_pool(NodePool(INITIAL_NODE_POOL_SIZE * instance.get_num_cells())),
+      node_pool(NodePool(INITIAL_NODE_POOL_SIZE * instance.get_num_cells(), rnd_generator_)),
       rnd_generator(rnd_generator_),
       settings(settings_),
       constraint_manager(constraint_manager_)
@@ -52,7 +52,7 @@ auto SIPPNodeComparator::operator()(SIPPNode const* n1, SIPPNode const* n2) cons
         if (n1->h3 == n2->h3)
         {
           // if tie in all heuristics, choose randomly
-          return dist(*rnd_generator);
+          return n1->tie > n2->tie;
         }
         // if f is the same and h is the same and h2 is the same prefer locations that dont block goals of other agents
         return n1->h3 > n2->h3;
@@ -78,7 +78,7 @@ auto SIPPNodeComparatorSuboptimal::operator()(SIPPNode const* n1, SIPPNode const
           if (n1->h3 == n2->h3)
           {
             // if tie, choose randomly
-            return dist(*rnd_generator);
+            return n1->tie > n2->tie;
           }
           return n1->h3 > n2->h3;
         }
@@ -91,7 +91,7 @@ auto SIPPNodeComparatorSuboptimal::operator()(SIPPNode const* n1, SIPPNode const
   return n1->f > n2->f;
 }
 
-NodePool::NodePool(const int size)
+NodePool::NodePool(const int size, std::mt19937& rnd_generator_) : rnd_generator(&rnd_generator_)
 {
   // initialize the pool with dummy nodes
   pool.resize(size, SIPPNode(0, {0, 0}, 0, 0, 0, 0, nullptr));
@@ -100,6 +100,7 @@ NodePool::NodePool(const int size)
 
 auto NodePool::add_node(SIPPNode node) -> SIPPNode*
 {
+  node.tie = (*rnd_generator)();
   // check, whether there is still space in the node pool
   if (end < (int)pool.size())
   {
@@ -110,7 +111,7 @@ auto NodePool::add_node(SIPPNode node) -> SIPPNode*
 
   // if there is no space in the vector, add to the list, which will be merged with the vector at the end of the
   // iteration
-  extra.push_back(node);
+  extra.push_back(std::move(node));
   return &extra.back();
 }
 
@@ -188,7 +189,7 @@ auto SIPP::plan_sipp_mine(const int agent_num) -> TimePointPath
   assertm(min_time >= 0 && max_time >= 0, "Time can not be negative.");
 
   // create openlist
-  sipp::PriorityQueue open_list{SIPPNodeComparator(&rnd_generator)};
+  sipp::PriorityQueue open_list{SIPPNodeComparator()};
 
   // retrieve the first safe interval
   auto time_interval_start_it = constraint_manager.get_first_safe_interval(start);
@@ -393,7 +394,7 @@ auto SIPP::plan_sipp_mine_ap(const int agent_num, const std::unordered_set<int>&
   // std::cout << "Max time estimate is: " << max_time << std::endl;
 
   // create openlist
-  sipp::PriorityQueue open_list{SIPPNodeComparator(&rnd_generator)};
+  sipp::PriorityQueue open_list{SIPPNodeComparator()};
 
   // retrieve the first safe interval
   auto time_interval_start_it = constraint_manager.get_first_safe_interval(start);
@@ -601,7 +602,7 @@ auto SIPP::plan_suboptimal(const int agent_num, const std::unordered_set<int>& a
   assertm(min_time >= 0 && max_time >= 0, "Time can not be negative.");
 
   // create openlist
-  sipp::PriorityQueueSuboptimal open_list{SIPPNodeComparatorSuboptimal(&rnd_generator, suboptimality_absolute)};
+  sipp::PriorityQueueSuboptimal open_list{SIPPNodeComparatorSuboptimal(suboptimality_absolute)};
 
   // retrieve the first safe interval
   auto time_interval_start_it = constraint_manager.get_first_safe_interval(start);
@@ -806,7 +807,7 @@ auto SIPP::plan_mapflns_heuristic(int agent_num) -> TimePointPath
   assertm(min_time >= 0 && max_time >= 0, "Time can not be negative.");
 
   // create openlist
-  sipp::PriorityQueue open_list{SIPPNodeComparator(&rnd_generator)};
+  sipp::PriorityQueue open_list{SIPPNodeComparator()};
 
   // retrieve the first safe interval
   auto time_interval_start_it = constraint_manager.get_first_safe_interval(start);
