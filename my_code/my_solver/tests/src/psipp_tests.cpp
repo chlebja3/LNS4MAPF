@@ -481,3 +481,49 @@ TEST(PSIPPTest, MustPush)
     EXPECT_TRUE(sol.is_valid(*instance)) << "Solution is invalid!";
   }
 }
+
+// every non-empty path must start at the start and end at the goal of the agent it is stored under
+auto paths_owned_correctly(const Solution& sol, const Instance& instance) -> bool
+{
+  for (size_t a = 0; a < sol.paths.size(); a++)
+  {
+    const TimePointPath& path = sol.paths[a];
+    if (path.empty())
+    {
+      continue;
+    }
+    if (path.front().location != instance.get_start_locations()[a] ||
+        path.back().location != instance.get_goal_locations()[a])
+    {
+      return false;
+    }
+  }
+  return true;
+}
+
+// Pushed agents must be replanned as themselves, not as the newly added agent
+TEST(PSIPPTest, PushedAgentKeepsOwnPath)
+{
+  std::string base_path = get_base_path_tests();  // path to my_solver
+  std::unique_ptr<Instance> instance =
+      std::make_unique<Instance>(base_path + "/tests/test_maps/random-32-32-20.map",
+                                 base_path + "/tests/test_scen/random-32-32-20-random-5.scen", 225);
+
+  std::mt19937 rng(5);
+  LNS_settings lns_settings(0, 30, {DESTROY_TYPE::RANDOM, 10}, {SIPP_implementation::SIPP_mine_ap, INFO_type::no_info, 1.0},
+                            {PSIPP_implementation::PSIPP_mine_ap, INFO_type::no_info, 1.0, 1, 5}, true, true);
+  LNS lns(*instance, rng, nullptr, lns_settings);
+
+  for (int i = 0; i < 500; i++)
+  {
+    Solution sol = lns.PrioritizedPlanning();
+    ASSERT_TRUE(paths_owned_correctly(sol, *instance)) << "attempt " << i;
+    if (sol.feasible)
+    {
+      EXPECT_TRUE(sol.is_valid(*instance)) << "Solution is invalid!";
+      break;
+    }
+    lns.get_constraint_manager().reset();
+    lns.already_planned.clear();
+  }
+}

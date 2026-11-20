@@ -304,8 +304,19 @@ auto LNS::PrioritizedPlanning() -> Solution
           constraint_manager.remove_trajectory(sol.paths[*it], *it);
         }
         std::unordered_set<int> to_replan_new;
-        std::tie(tp_path, to_replan_new) = psipp->plan(*it, already_planned);
+        // the newly added agent first tries classic SIPP; agents pushed out of the way go directly to PSIPP
+        tp_path = TimePointPath();
+        if (*it == agent_id)
+        {
+          tp_path = planner->plan(*it, already_planned);
+        }
+
         // print_timepointpath(tp_path);
+        // if no solution found, plan by psipp
+        if (tp_path.empty())
+        {
+          std::tie(tp_path, to_replan_new) = psipp->plan(*it, already_planned);
+        }
         if (tp_path.empty())
         {
           // std::cout << "Empty path, fail." << std::endl;
@@ -313,6 +324,9 @@ auto LNS::PrioritizedPlanning() -> Solution
           return sol;
         }
         assertm(instance.check_timepointpath_validity(tp_path), "PSIPP planned an invalid timepointpath.");
+        assertm(tp_path.front().location == instance.get_start_locations()[*it] &&
+                    tp_path.back().location == instance.get_goal_locations()[*it],
+                "Path stored for the wrong agent.");
         for (auto id : to_replan_new)
         {
           // std::cout << "   Added " << id << " into to_replan." << std::endl;
