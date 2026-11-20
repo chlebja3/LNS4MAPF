@@ -9,6 +9,7 @@
 #include <utils.h>
 
 #include <climits>
+#include <cmath>
 #include <limits>
 
 #include "ConstraintManager.h"
@@ -600,6 +601,42 @@ TEST(PSIPPTest, PushCostPPValid)
       // with cheap pushes two agents can push each other forever; PP reports this as an infeasible solution
       if (instance == push.get() && !sol.feasible) continue;
       EXPECT_TRUE(sol.is_valid(*instance)) << "push_cost=" << push_cost;
+    }
+  }
+}
+
+TEST(PSIPPTest, PerPushCountClosedListValid)
+{
+  std::string base_path = get_base_path_tests();
+  for (bool sipp_first : {true, false})
+  {
+    for (double push_cost : {std::numeric_limits<double>::infinity(), 2.0})
+    {
+      std::unique_ptr<Instance> den = std::make_unique<Instance>(
+          base_path + "/tests/test_maps/den520d.map", base_path + "/tests/test_scen/den520d-random-0.scen", 100);
+      std::unique_ptr<Instance> push = std::make_unique<Instance>(base_path + "/tests/test_maps/must_push.map",
+                                                                  base_path + "/tests/test_scen/must_push.scen", 2);
+      for (Instance* instance : {den.get(), push.get()})
+      {
+        std::mt19937 rng(0);
+        LNS_settings lns_settings(
+            0, 30, {DESTROY_TYPE::RANDOM, 10}, {SIPP_implementation::SIPP_mine_ap, INFO_type::no_info, 1.0},
+            {PSIPP_implementation::PSIPP_mine_ap, INFO_type::no_info, 1.0, 1, 5, push_cost, true}, false, true,
+            sipp_first);
+        LNS lns(*instance, rng, nullptr, lns_settings);
+        Solution sol = lns.PrioritizedPlanning();
+        if (std::isinf(push_cost) || (instance == den.get() && sipp_first))
+        {
+          EXPECT_TRUE(sol.feasible) << "sipp_first=" << sipp_first << " push_cost=" << push_cost;
+        }
+        // with cheap pushes two agents can push each other forever; PP reports this as an infeasible solution
+        else if (!sol.feasible)
+        {
+          continue;
+        }
+        EXPECT_TRUE(sol.is_valid(*instance)) << "sipp_first=" << sipp_first << " push_cost=" << push_cost;
+        EXPECT_TRUE(paths_owned_correctly(sol, *instance)) << "sipp_first=" << sipp_first << " push_cost=" << push_cost;
+      }
     }
   }
 }

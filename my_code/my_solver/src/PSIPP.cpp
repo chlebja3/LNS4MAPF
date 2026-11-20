@@ -9,7 +9,9 @@
 
 #include "PSIPP.h"
 
+#include <algorithm>
 #include <climits>
+#include <cstddef>
 #include <limits>
 #include <cmath>
 #include <memory>
@@ -32,8 +34,11 @@ PSIPP::PSIPP(const Instance& instance_, std::mt19937& rnd_generator_, const PSIP
       settings(settings_),
       constraint_manager(constraint_manager_)
 {
-  known_max.resize(instance.get_num_cells(), -1);
-  known_min.resize(instance.get_num_cells(), -1);
+  assertm(settings.max_pushes >= 0, "max_pushes must be >= 0");
+  // with a closed list per push count, there is one layer of num_cells for each number of pushes 0..max_pushes
+  const int num_layers = settings.closed_list_per_push_count ? settings.max_pushes + 1 : 1;
+  known_max.resize(static_cast<size_t>(instance.get_num_cells()) * num_layers, -1);
+  known_min.resize(static_cast<size_t>(instance.get_num_cells()) * num_layers, INT_MAX);
   // TODO maybe only remember free cells?
 }
 
@@ -163,6 +168,25 @@ void NodePool::merge_extra()
   end = 0;
 }
 
+void PSIPP::reset_known()
+{
+  const auto n = static_cast<std::ptrdiff_t>(instance.get_num_cells()) * known_layers_dirty;
+  assertm(n <= static_cast<std::ptrdiff_t>(known_min.size()), "Dirty closed-list layers out of range.");
+  std::fill(known_min.begin(), known_min.begin() + n, INT_MAX);
+  std::fill(known_max.begin(), known_max.begin() + n, -1);
+  known_layers_dirty = 1;
+}
+
+auto PSIPP::known_index(const int location, const int num_pushed) const -> int
+{
+  if (!settings.closed_list_per_push_count) return location;
+  // nodes can carry more than max_pushes pushes (additional-constraint pushes are not capped), they share the last layer
+  const int layer = std::min(num_pushed, settings.max_pushes);
+  const int idx = location + instance.get_num_cells() * layer;
+  assertm(idx >= 0 && idx < static_cast<int>(known_min.size()), "Closed-list index out of range.");
+  return idx;
+}
+
 auto PSIPP::plan(int agent_num, const std::unordered_set<int>& already_planned)
     -> std::pair<TimePointPath, std::unordered_set<int>>
 {
@@ -247,8 +271,7 @@ auto PSIPP::plan_psipp_mine(const int agent_num) -> std::pair<TimePointPath, std
   }
 
   // clear known nodes database
-  std::fill(known_min.begin(), known_min.end(), INT_MAX);
-  std::fill(known_max.begin(), known_max.end(), -1);
+  reset_known();
 
   // main loop
   while (!open_list.empty())
@@ -562,8 +585,7 @@ auto PSIPP::plan_psipp_mine_ap(const int agent_num, const std::unordered_set<int
   }
 
   // clear known nodes database
-  std::fill(known_min.begin(), known_min.end(), INT_MAX);
-  std::fill(known_max.begin(), known_max.end(), -1);
+  reset_known();
 
   // main loop
   while (!open_list.empty())
@@ -581,9 +603,12 @@ auto PSIPP::plan_psipp_mine_ap(const int agent_num, const std::unordered_set<int
     // current->time_point.interval
     //          << ", f: " << current->f << std::endl;
 
+    // closed-list index of the popped node (location only, or location and number of pushes)
+    const int current_idx = known_index(current->time_point.location, static_cast<int>(current->pushed.size()));
+
     // check whether node was expanded already (same position and tmax higher then current tmin)
-    if (current->time_point.interval.t_min >= known_min[current->time_point.location] &&
-        current->time_point.interval.t_min <= known_max[current->time_point.location])
+    if (current->time_point.interval.t_min >= known_min[current_idx] &&
+        current->time_point.interval.t_min <= known_max[current_idx])
     {
       continue;
     }
@@ -614,15 +639,20 @@ auto PSIPP::plan_psipp_mine_ap(const int agent_num, const std::unordered_set<int
     }
 
     // add to known nodes
-    known_min[current->time_point.location] =
-        std::min(current->time_point.interval.t_min, known_min[current->time_point.location]);
-    known_max[current->time_point.location] =
-        std::max(current->time_point.interval.t_max, known_max[current->time_point.location]);
+    known_min[current_idx] = std::min(current->time_point.interval.t_min, known_min[current_idx]);
+    known_max[current_idx] = std::max(current->time_point.interval.t_max, known_max[current_idx]);
+    known_layers_dirty = std::max(known_layers_dirty, current_idx / instance.get_num_cells() + 1);
     // std::cout << "Known min: " << known_min[current->time_point.location] << std::endl;
 
     // calculate the time window to enter neighboring positions
     const TimeInterval neighbor_entry_time_interval(safe_increase(current->time_point.interval.t_min),
                                                     safe_increase(current->time_point.interval.t_max));
+
+    // whether a successor with the given time point and number of pushes is already in the closed list
+    auto is_known = [&](const TimePoint& tp, const size_t num_pushed) -> bool {
+      const int idx = known_index(tp.location, static_cast<int>(num_pushed));
+      return tp.interval.t_min >= known_min[idx] && tp.interval.t_min <= known_max[idx];
+    };
 
     // expand current node
     const std::vector<int>& neighbors = instance.get_neighbor_locations(current->time_point.location);
@@ -668,12 +698,15 @@ auto PSIPP::plan_psipp_mine_ap(const int agent_num, const std::unordered_set<int
                 "Unreachable interval among neighbors.");
 
         assertm(
-            neighbor_time_point.interval.t_min <= min_time || known_min[neighbor] == INT_MAX ||
-                neighbor_time_point.interval.t_min >= known_min[neighbor] || current->pushed.size() > 0,
+            neighbor_time_point.interval.t_min <= min_time ||
+                known_min[known_index(neighbor, static_cast<int>(current->pushed.size()))] == INT_MAX ||
+                neighbor_time_point.interval.t_min >=
+                    known_min[known_index(neighbor, static_cast<int>(current->pushed.size()))] ||
+                current->pushed.size() > 0,
             "The heuristic can be non consistent only for nodes starting before the goal obstruction or after pushes.");
-        // check whether known
-        if (neighbor_time_point.interval.t_min >= known_min[neighbor] &&
-            neighbor_time_point.interval.t_min <= known_max[neighbor])
+        // check whether known; with a closed list per push count, each successor is checked with its own number of
+        // pushes once the pushes are known (below)
+        if (!settings.closed_list_per_push_count && is_known(neighbor_time_point, 0))
         {
           continue;
         }
@@ -753,8 +786,11 @@ auto PSIPP::plan_psipp_mine_ap(const int agent_num, const std::unordered_set<int
               TimeInterval new_interval(additional_const.interval.t_max + 1, neighbor_time_point.interval.t_max);
               TimePoint new_tp(neighbor_time_point.location, new_interval);
               // insert new node
-              open_list.push(node_pool.add_node(
-                  PSIPPNode(new_tp, new_tp.interval.t_min, h1, h_ap_goal, h_distance, current, new_pushed)));
+              if (!settings.closed_list_per_push_count || !is_known(new_tp, new_pushed.size()))
+              {
+                open_list.push(node_pool.add_node(
+                    PSIPPNode(new_tp, new_tp.interval.t_min, h1, h_ap_goal, h_distance, current, new_pushed)));
+              }
             }
             // handle the interval that overlaps with the additional constraint
             if (additional_const.prev_in_path.has_value())
@@ -765,8 +801,11 @@ auto PSIPP::plan_psipp_mine_ap(const int agent_num, const std::unordered_set<int
                                       additional_const.prev_in_path.value()->location, additional_const.location);
               TimePoint new_tp(neighbor_time_point.location, new_interval);
               // insert new node
-              open_list.push(node_pool.add_node(
-                  PSIPPNode(new_tp, new_tp.interval.t_min, h1, h_ap_goal, h_distance, current, pushed_new)));
+              if (!settings.closed_list_per_push_count || !is_known(new_tp, pushed_new.size()))
+              {
+                open_list.push(node_pool.add_node(
+                    PSIPPNode(new_tp, new_tp.interval.t_min, h1, h_ap_goal, h_distance, current, pushed_new)));
+              }
             }
           }
           // check edge conflict TODO check whether maximum number of pushed not exceeded
@@ -784,13 +823,17 @@ auto PSIPP::plan_psipp_mine_ap(const int agent_num, const std::unordered_set<int
                                       additional_const.prev_in_path.value()->location, additional_const.location);
               TimePoint new_tp(neighbor_time_point.location, neighbor_time_point.interval);
               // insert new node
-              open_list.push(node_pool.add_node(
-                  PSIPPNode(new_tp, new_tp.interval.t_min, h1, h_ap_goal, h_distance, current, pushed_new)));
+              if (!settings.closed_list_per_push_count || !is_known(new_tp, pushed_new.size()))
+              {
+                open_list.push(node_pool.add_node(
+                    PSIPPNode(new_tp, new_tp.interval.t_min, h1, h_ap_goal, h_distance, current, pushed_new)));
+              }
             }
           }
         }
         if (static_cast<int>(new_pushed.size()) > settings.max_pushes) continue;
-        if (!is_additional_constraint)
+        if (!is_additional_constraint &&
+            (!settings.closed_list_per_push_count || !is_known(neighbor_time_point, new_pushed.size())))
         {
           // std::cout << "No additional constraint. Adding: " << neighbor_time_point.interval << std::endl;
           open_list.push(node_pool.add_node(PSIPPNode(neighbor_time_point, neighbor_time_point.interval.t_min, h1,
@@ -874,8 +917,7 @@ auto PSIPP::plan_suboptimal(const int agent_num, const std::unordered_set<int>& 
   }
 
   // clear known nodes database
-  std::fill(known_min.begin(), known_min.end(), INT_MAX);
-  std::fill(known_max.begin(), known_max.end(), -1);
+  reset_known();
 
   // main loop
   while (!open_list.empty())

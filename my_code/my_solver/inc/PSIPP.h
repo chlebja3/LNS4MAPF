@@ -34,15 +34,20 @@ public:
    * @param info_type_ The type of information, that should be generated.
    * @param w_ The suboptimality factor.
    * @param p_ The parameter p for the Bounded Suboptimal PSIPP algorithm.
+   * @param max_pushes_ The maximum number of allowed pushes.
+   * @param push_cost_ Cost of one push in node ordering; infinity = pushes compared first.
+   * @param closed_list_per_push_count_ Whether PSIPP_mine_ap keeps a separate closed list for each number of pushes.
    */
   PSIPP_settings(PSIPP_implementation implementation_, INFO_type info_type_, double w_, int p_ = 1.0,
-                 int max_pushes_ = 1, double push_cost_ = std::numeric_limits<double>::infinity())
+                 int max_pushes_ = 1, double push_cost_ = std::numeric_limits<double>::infinity(),
+                 bool closed_list_per_push_count_ = false)
       : implementation(implementation_),
         info_type(info_type_),
         w(w_),
         p(p_),
         max_pushes(max_pushes_),
-        push_cost(push_cost_)
+        push_cost(push_cost_),
+        closed_list_per_push_count(closed_list_per_push_count_)
   {
   }
 
@@ -52,6 +57,8 @@ public:
   double p;                            /**< The parameter p for the Bounded Suboptimal PSIPP algorithm. */
   int max_pushes;                      // maximum of allowed pushes
   double push_cost;                    /**< Cost of one push in node ordering; infinity = pushes compared first. */
+  bool closed_list_per_push_count;     /**< PSIPP_mine_ap: separate closed list per number of pushes (capped at
+                                            max_pushes). */
   // bool                generate_blocked = false;
 };
 
@@ -344,10 +351,25 @@ private:
    */
   void update_iter_info(const psipp::PSIPPNode& expanded, bool last_iter);
 
+  /**
+   * @brief Reset the known nodes database (closed list), only the layers that could have been written.
+   */
+  void reset_known();
+
+  /**
+   * @brief Index into the known nodes database.
+   *
+   * @param location The location.
+   * @param num_pushed The number of pushes of the node (ignored unless closed_list_per_push_count is set).
+   * @return location + num_cells * layer, where layer = min(num_pushed, max_pushes) if per push count, else 0.
+   */
+  auto known_index(int location, int num_pushed) const -> int;
+
   const Instance& instance;       /**< The instance of the problem. */
   psipp::NodePool node_pool;      /**< The pool of SIPP nodes. */
   std::vector<int> known_max;     /**< The known maximum time for each node. */
   std::vector<int> known_min;     /**< The known minimum time for each node. */
+  int known_layers_dirty = 1;     /**< Number of closed-list layers (per push count) possibly written since reset. */
   std::mt19937& rnd_generator;    /**< The random number generator. */
   const PSIPP_settings& settings; /**< The settings for the SIPP algorithm. */
   const ConstraintManager& constraint_manager;
