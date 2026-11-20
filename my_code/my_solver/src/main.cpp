@@ -7,6 +7,7 @@
 
 #include <boost/program_options.hpp>
 #include <iostream>
+#include <limits>
 #include <memory>
 
 #include "Computation.h"
@@ -40,9 +41,14 @@ auto main(int argc, char** argv) -> int
       "sipp_implementation", po::value<std::string>()->default_value("SIPP_mine"),
       "implementation of SIPP (SIPP_mine, SIPP_mapf_lns, SIPP_suboptimal)")(
       "psipp_implementation", po::value<std::string>()->default_value("PSIPP_mine"),
-      "implementation of PSIPP (PSIPP_mine, PSIPP_suboptimal)")("use_psipp", po::value<bool>()->default_value(true),
-                                                                "Use PSIPP instead of SIPP")(
-      "maxPushes", po::value<int>()->default_value(DEFAULT_MAX_PUSHES), "maximal number of pushes in PSIPP")
+      "implementation of PSIPP (PSIPP_mine, PSIPP_mine_ap, PSIPP_suboptimal, PSIPP_suboptimal_ap)")(
+      "use_psipp", po::value<bool>()->default_value(true), "Use PSIPP instead of SIPP")(
+      "maxPushes", po::value<int>()->default_value(DEFAULT_MAX_PUSHES), "maximal number of pushes in PSIPP")(
+      "pushCost", po::value<double>()->default_value(std::numeric_limits<double>::infinity(), "inf"),
+      "cost of a single push in PSIPP node ordering (inf = pushes are ordered lexicographically)")(
+      "closedListPerPushCount", po::value<bool>()->default_value(false),
+      "keep a separate closed list for each push count in PSIPP")(
+      "sippFirst", po::value<bool>()->default_value(true), "try SIPP first and use PSIPP only if SIPP fails")
 
       ("Restarts,r", po::value<bool>()->default_value(true),
        "restart the search if no feasible initial solution was found")(
@@ -92,6 +98,10 @@ auto main(int argc, char** argv) -> int
   const double w = vm["sipp_suboptimality"].as<double>();
   const int seed = vm["seed"].as<int>();
   const bool use_psipp = vm["use_psipp"].as<bool>();
+  const int max_pushes = vm["maxPushes"].as<int>();
+  const double push_cost = vm["pushCost"].as<double>();
+  const bool closed_list_per_push_count = vm["closedListPerPushCount"].as<bool>();
+  const bool sipp_first = vm["sippFirst"].as<bool>();
 
   // create the instance
   std::unique_ptr<Instance> instance = std::make_unique<Instance>(map_name, scene_name, agent_num);
@@ -123,6 +133,19 @@ auto main(int argc, char** argv) -> int
               << magic_enum::enum_name(sipp_implementation) << std::endl;
   }
 
+  // read psipp implementation
+  PSIPP_implementation psipp_implementation = PSIPP_implementation::PSIPP_mine;
+  auto psipp_implementation_opt = magic_enum::enum_cast<PSIPP_implementation>(psipp_algo, magic_enum::case_insensitive);
+  if (psipp_implementation_opt.has_value())
+  {
+    psipp_implementation = psipp_implementation_opt.value();
+  }
+  else
+  {
+    std::cout << "WARNING: Unknown psipp implementation: '" << psipp_algo << "', using default option "
+              << magic_enum::enum_name(psipp_implementation) << std::endl;
+  }
+
   // read destroy operator
   DESTROY_TYPE destroy_type = DESTROY_TYPE::RANDOM;
   auto destroy_type_opt = magic_enum::enum_cast<DESTROY_TYPE>(destroy_name, magic_enum::case_insensitive);
@@ -145,14 +168,14 @@ auto main(int argc, char** argv) -> int
   SIPP_settings sipp_settings = SIPP_settings(sipp_implementation, info_type, w);
 
   // create PSIPP settings
-  PSIPP_settings psipp_settings = PSIPP_settings(PSIPP_implementation::PSIPP_mine, info_type, w);
+  PSIPP_settings psipp_settings = PSIPP_settings(psipp_implementation, info_type, w, 1, max_pushes, push_cost, closed_list_per_push_count);
 
   // create destroy settings
   Destroy_settings destroy_settings = Destroy_settings(destroy_type, neighborhood_size);
 
   // create LNS settings
   LNS_settings lns_settings =
-      LNS_settings(max_iter, time_limit, destroy_settings, sipp_settings, psipp_settings, restarts, use_psipp);
+      LNS_settings(max_iter, time_limit, destroy_settings, sipp_settings, psipp_settings, restarts, use_psipp, sipp_first);
 
   // create the computation object
   Computation computation(*instance, shared_data.get(), lns_settings, seed);
