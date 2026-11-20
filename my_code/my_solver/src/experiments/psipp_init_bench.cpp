@@ -62,12 +62,14 @@ auto main(int argc, char** argv) -> int
     }
   }
   const double el = std::chrono::duration<double>(std::chrono::steady_clock::now() - t0).count();
+  // One planning attempt is not interrupted by the clock, so a solution found after the limit is a failure.
+  if (el > time_limit) ok = false;
   const bool valid = ok && lns.solution.is_valid(instance);
   std::cout << "{\"map\":\"" << map.substr(map.find_last_of('/') + 1) << "\",\"scen\":\""
             << scen.substr(scen.find_last_of('/') + 1) << "\",\"k\":" << k << ",\"planner\":\"" << planner
             << "\",\"variant\":\"" << variant << "\",\"max_pushes\":" << max_pushes << ",\"push_cost\":\"" << push_cost_arg
             << "\",\"closed_per_count\":" << (closed_per_count ? 1 : 0) << ",\"sipp_first\":" << (sipp_first ? 1 : 0)
-            << ",\"seed\":" << seed << ",\"success\":" << (ok ? 1 : 0) << ",\"valid\":" << (valid ? 1 : 0)
+            << ",\"time_limit\":" << time_limit << ",\"seed\":" << seed << ",\"success\":" << (ok ? 1 : 0) << ",\"valid\":" << (valid ? 1 : 0)
             << ",\"attempts\":" << attempts << ",\"time\":" << el
             << ",\"soc\":" << (ok ? lns.solution.sum_of_costs : -1)
             << ",\"delays\":" << (ok ? lns.solution.sum_of_delays : -1)

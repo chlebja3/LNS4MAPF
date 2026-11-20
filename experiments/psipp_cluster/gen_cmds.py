@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
-"""Emit one shell command per (map, k, variant, seed); each writes <results>/<map>_<k>_<variant>_<seed>.json.
+"""Emit one shell command per (map, k, variant, seed); each writes <results>/<map>_<k>_<variant>_<seed>.json
+(and <same basename>.rc with the exit code if the run failed).
 
 Usage: gen_cmds.py <binary> <results_dir> [benchmark_root]
 Paths may contain $HOME; they are expanded by the shell that runs the commands.
@@ -49,7 +50,7 @@ def main() -> None:
                     print(f"timeout {TIMEOUT} {args.binary} {b}/mapf-map/{m}.map "
                           f"{b}/mapf-scen-random/scen-random/{m}-random-{seed}.scen {k} {v['planner']} "
                           f"{v['max_pushes']} {seed} {args.time_limit:g} {v['push_cost']} {v['closed']} "
-                          f"{v['sipp_first']} > {out} 2>/dev/null")
+                          f"{v['sipp_first']} > {out} 2>/dev/null || echo $? > {out[:-len('.json')]}.rc")
 
 
 if __name__ == "__main__":
