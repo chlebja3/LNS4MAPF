@@ -703,3 +703,17 @@ TEST(PSIPPTest, CycleCounterWithFreePushes)
   lns.PrioritizedPlanning();
   EXPECT_GT(lns.log.pp_fail_cycle, 0);
 }
+
+// Regression: building a node from a pushed list must not empty the caller's list. The successor generation reuses
+// the same list for several successors; an emptied list made PSIPP return paths through agents it never pushed.
+TEST(PSIPPTest, NodeConstructorKeepsPushedList)
+{
+  std::vector<Constraint> pushed;
+  pushed.emplace_back(TimeInterval(3, 5), 7, 1, 2);
+  psipp::PSIPPNode first(4, TimeInterval(0, 10), 0, 0, 0, 0, nullptr, pushed);
+  psipp::PSIPPNode second(TimePoint(4, TimeInterval(0, 10)), 0, 0, 0, 0, nullptr, pushed);
+  ASSERT_EQ(pushed.size(), 1u);
+  EXPECT_EQ(pushed[0].agent_num, 7);
+  EXPECT_EQ(first.pushed.size(), 1u);
+  EXPECT_EQ(second.pushed.size(), 1u);
+}

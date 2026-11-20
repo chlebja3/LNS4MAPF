@@ -11,12 +11,13 @@
 
 #include <algorithm>
 #include <climits>
+#include <cmath>
 #include <cstddef>
 #include <limits>
-#include <cmath>
 #include <memory>
 #include <random>
 #include <unordered_set>
+#include <utility>
 
 #include "utils.h"
 
@@ -478,8 +479,8 @@ auto PSIPP::plan_psipp_mine(const int agent_num) -> std::pair<TimePointPath, std
                                       additional_const.prev_in_path.value()->location, additional_const.location);
               TimePoint new_tp(neighbor_time_point.location, new_interval);
               // insert new node
-              open_list.push(
-                  node_pool.add_node(PSIPPNode(new_tp, new_tp.interval.t_min, h1, h2, h3, current, pushed_new)));
+              open_list.push(node_pool.add_node(
+                  PSIPPNode(new_tp, new_tp.interval.t_min, h1, h2, h3, current, std::move(pushed_new))));
             }
           }
           // check edge conflict TODO check whether maximum number of pushed not exceeded
@@ -497,8 +498,8 @@ auto PSIPP::plan_psipp_mine(const int agent_num) -> std::pair<TimePointPath, std
                                       additional_const.prev_in_path.value()->location, additional_const.location);
               TimePoint new_tp(neighbor_time_point.location, neighbor_time_point.interval);
               // insert new node
-              open_list.push(
-                  node_pool.add_node(PSIPPNode(new_tp, new_tp.interval.t_min, h1, h2, h3, current, pushed_new)));
+              open_list.push(node_pool.add_node(
+                  PSIPPNode(new_tp, new_tp.interval.t_min, h1, h2, h3, current, std::move(pushed_new))));
             }
           }
         }
@@ -803,8 +804,8 @@ auto PSIPP::plan_psipp_mine_ap(const int agent_num, const std::unordered_set<int
               // insert new node
               if (!settings.closed_list_per_push_count || !is_known(new_tp, pushed_new.size()))
               {
-                open_list.push(node_pool.add_node(
-                    PSIPPNode(new_tp, new_tp.interval.t_min, h1, h_ap_goal, h_distance, current, pushed_new)));
+                open_list.push(node_pool.add_node(PSIPPNode(new_tp, new_tp.interval.t_min, h1, h_ap_goal, h_distance,
+                                                            current, std::move(pushed_new))));
               }
             }
           }
@@ -825,8 +826,8 @@ auto PSIPP::plan_psipp_mine_ap(const int agent_num, const std::unordered_set<int
               // insert new node
               if (!settings.closed_list_per_push_count || !is_known(new_tp, pushed_new.size()))
               {
-                open_list.push(node_pool.add_node(
-                    PSIPPNode(new_tp, new_tp.interval.t_min, h1, h_ap_goal, h_distance, current, pushed_new)));
+                open_list.push(node_pool.add_node(PSIPPNode(new_tp, new_tp.interval.t_min, h1, h_ap_goal, h_distance,
+                                                            current, std::move(pushed_new))));
               }
             }
           }
@@ -1125,8 +1126,8 @@ auto PSIPP::plan_suboptimal(const int agent_num, const std::unordered_set<int>& 
                                       additional_const.prev_in_path.value()->location, additional_const.location);
               TimePoint new_tp(neighbor_time_point.location, new_interval);
               // insert new node
-              open_list.push(
-                  node_pool.add_node(PSIPPNode(new_tp, new_tp.interval.t_min, h1, h2, h3, current, pushed_new)));
+              open_list.push(node_pool.add_node(
+                  PSIPPNode(new_tp, new_tp.interval.t_min, h1, h2, h3, current, std::move(pushed_new))));
             }
           }
           // check edge conflict TODO check whether maximum number of pushed not exceeded
@@ -1144,8 +1145,8 @@ auto PSIPP::plan_suboptimal(const int agent_num, const std::unordered_set<int>& 
                                       additional_const.prev_in_path.value()->location, additional_const.location);
               TimePoint new_tp(neighbor_time_point.location, neighbor_time_point.interval);
               // insert new node
-              open_list.push(
-                  node_pool.add_node(PSIPPNode(new_tp, new_tp.interval.t_min, h1, h2, h3, current, pushed_new)));
+              open_list.push(node_pool.add_node(
+                  PSIPPNode(new_tp, new_tp.interval.t_min, h1, h2, h3, current, std::move(pushed_new))));
             }
           }
         }

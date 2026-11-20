@@ -92,7 +92,7 @@ public:
    * @param parent_ The parent node.
    */
   PSIPPNode(int location, const TimeInterval& interval, double g_, double h_, double h2_, double h3_,
-            PSIPPNode const* parent_, std::vector<Constraint>& pushed_)
+            PSIPPNode const* parent_, std::vector<Constraint> pushed_)
       : Node(g_, h_), time_point(location, interval), parent(parent_), h2(h2_), h3(h3_), pushed(std::move(pushed_))
   {
   }
@@ -114,7 +114,7 @@ public:
    * @param parent_ The parent node.
    */
   PSIPPNode(const TimePoint& time_point_, double g_, double h_, double h2_, double h3_, PSIPPNode const* parent_,
-            std::vector<Constraint>& pushed_)
+            std::vector<Constraint> pushed_)
       : Node(g_, h_), time_point(time_point_), parent(parent_), h2(h2_), h3(h3_), pushed(std::move(pushed_))
   {
   }
