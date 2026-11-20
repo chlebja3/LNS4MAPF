@@ -10,6 +10,7 @@
 #include "PSIPP.h"
 
 #include <climits>
+#include <limits>
 #include <cmath>
 #include <memory>
 #include <random>

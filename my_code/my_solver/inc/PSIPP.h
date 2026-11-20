@@ -131,17 +131,19 @@ public:
   std::mt19937* rnd_generator;              /**< Random number generator. */
   mutable std::bernoulli_distribution dist; /**< Bernoulli distribution for generating random true/false values. */
 
+  double push_cost;                         /**< Cost of one push; infinity = lexicographic on number of pushes. */
+
   /**
    * @brief Constructor for PSIPPNodeComparator.
    *
    * @param rnd_generator_ Pointer to a random number generator.
+   * @param push_cost_ Cost of one push added to f (>= 0); infinity compares the number of pushes first.
    */
-  double push_cost;                         /**< Cost of one push; infinity = lexicographic on number of pushes. */
-
   explicit PSIPPNodeComparator(std::mt19937* rnd_generator_,
                                double push_cost_ = std::numeric_limits<double>::infinity())
       : rnd_generator(rnd_generator_), dist(0.5), push_cost(push_cost_)
   {
+    assertm(!(push_cost < 0) && !std::isnan(push_cost), "push_cost must be >= 0");
   }
 
   /**
