@@ -128,6 +128,9 @@ target_link_libraries(overall_improvement_experiment MAPF_lib)
 add_executable(psipp_feasible_experiment src/experiments/psipp_feasible.cpp)
 target_link_libraries(psipp_feasible_experiment MAPF_lib)
 
+add_executable(psipp_init_bench src/experiments/psipp_init_bench.cpp)
+target_link_libraries(psipp_init_bench MAPF_lib)
+
 # Add subdirectory for tests
 if (${ENABLE_TESTS})
   enable_testing()
