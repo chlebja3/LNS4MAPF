@@ -11,6 +11,8 @@
 #include <climits>
 #include <cmath>
 #include <limits>
+#include <utility>
+#include <vector>
 
 #include "ConstraintManager.h"
 #include "Instance.h"
@@ -638,5 +640,20 @@ TEST(PSIPPTest, PerPushCountClosedListValid)
         EXPECT_TRUE(paths_owned_correctly(sol, *instance)) << "sipp_first=" << sipp_first << " push_cost=" << push_cost;
       }
     }
+  }
+  // finite push costs where PSIPP plans every agent (sipp_first = false) and PP is known to be feasible (fixed seed)
+  for (auto [num_agents, push_cost] : std::vector<std::pair<int, double>>{{100, 10.0}, {100, 50.0}, {25, 2.0}})
+  {
+    std::unique_ptr<Instance> instance = std::make_unique<Instance>(
+        base_path + "/tests/test_maps/den520d.map", base_path + "/tests/test_scen/den520d-random-0.scen", num_agents);
+    std::mt19937 rng(0);
+    LNS_settings lns_settings(
+        0, 30, {DESTROY_TYPE::RANDOM, 10}, {SIPP_implementation::SIPP_mine_ap, INFO_type::no_info, 1.0},
+        {PSIPP_implementation::PSIPP_mine_ap, INFO_type::no_info, 1.0, 1, 5, push_cost, true}, false, true, false);
+    LNS lns(*instance, rng, nullptr, lns_settings);
+    Solution sol = lns.PrioritizedPlanning();
+    ASSERT_TRUE(sol.feasible) << "agents=" << num_agents << " push_cost=" << push_cost;
+    EXPECT_TRUE(sol.is_valid(*instance)) << "agents=" << num_agents << " push_cost=" << push_cost;
+    EXPECT_TRUE(paths_owned_correctly(sol, *instance)) << "agents=" << num_agents << " push_cost=" << push_cost;
   }
 }
