@@ -27,8 +27,9 @@ def parse_name(name: str) -> dict:
 
 def make_row(name: str, text: str, rc: int | None) -> dict:
     row = parse_name(name)
-    try:
-        data = json.loads(text)
+    lines = text.strip().splitlines()
+    try:  # the result is the last line; the instance loader may print warnings before it
+        data = json.loads(lines[-1]) if lines else {}
     except json.JSONDecodeError:  # a run killed by timeout leaves a truncated file
         data = {}
     row["parsed"] = isinstance(data, dict) and "success" in data
