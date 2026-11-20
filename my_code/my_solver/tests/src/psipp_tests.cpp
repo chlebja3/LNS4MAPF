@@ -687,3 +687,19 @@ TEST(PSIPPTest, DiagnosticsCounters)
     EXPECT_EQ(lns.log.pp_fail_cycle, 0);
   }
 }
+
+TEST(PSIPPTest, CycleCounterWithFreePushes)
+{
+  std::string base_path = get_base_path_tests();
+  std::unique_ptr<Instance> instance = std::make_unique<Instance>(base_path + "/tests/test_maps/must_push.map",
+                                                                  base_path + "/tests/test_scen/must_push.scen", 2);
+  std::mt19937 rng(0);
+  // with free pushes the two agents push each other forever, which PP detects as a cycle
+  LNS_settings lns_settings(0, 30, {DESTROY_TYPE::RANDOM, 10},
+                            {SIPP_implementation::SIPP_mine_ap, INFO_type::no_info, 1.0},
+                            {PSIPP_implementation::PSIPP_mine_ap, INFO_type::no_info, 1.0, 1, 5, 0.0, false}, false,
+                            true, true);
+  LNS lns(*instance, rng, nullptr, lns_settings);
+  lns.PrioritizedPlanning();
+  EXPECT_GT(lns.log.pp_fail_cycle, 0);
+}

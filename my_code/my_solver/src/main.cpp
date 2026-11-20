@@ -6,9 +6,11 @@
  */
 
 #include <boost/program_options.hpp>
+#include <cmath>
 #include <iostream>
 #include <limits>
 #include <memory>
+#include <stdexcept>
 
 #include "Computation.h"
 #include "Instance.h"
@@ -103,6 +105,15 @@ auto main(int argc, char** argv) -> int
   const bool closed_list_per_push_count = vm["closedListPerPushCount"].as<bool>();
   const bool sipp_first = vm["sippFirst"].as<bool>();
 
+  if (push_cost < 0)
+  {
+    throw std::invalid_argument("pushCost must be non-negative");
+  }
+  if (max_pushes < 0)
+  {
+    throw std::invalid_argument("maxPushes must be non-negative");
+  }
+
   // create the instance
   std::unique_ptr<Instance> instance = std::make_unique<Instance>(map_name, scene_name, agent_num);
 
@@ -164,18 +175,35 @@ auto main(int argc, char** argv) -> int
     throw std::runtime_error("Invalid neighborhood size");
   }
 
+  // warn about options that have no effect
+  const bool is_mine_ap = psipp_implementation == PSIPP_implementation::PSIPP_mine_ap;
+  const bool is_mine = psipp_implementation == PSIPP_implementation::PSIPP_mine || is_mine_ap;
+  if (closed_list_per_push_count && !is_mine_ap)
+  {
+    std::cerr << "WARNING: --closedListPerPushCount only has an effect with PSIPP_mine_ap" << std::endl;
+  }
+  if (std::isfinite(push_cost) && !is_mine)
+  {
+    std::cerr << "WARNING: --pushCost only has an effect with PSIPP_mine and PSIPP_mine_ap" << std::endl;
+  }
+  if (!sipp_first && !use_psipp)
+  {
+    std::cerr << "WARNING: --sippFirst=false has no effect without PSIPP (--use_psipp)" << std::endl;
+  }
+
   // create SIPP settings
   SIPP_settings sipp_settings = SIPP_settings(sipp_implementation, info_type, w);
 
   // create PSIPP settings
-  PSIPP_settings psipp_settings = PSIPP_settings(psipp_implementation, info_type, w, 1, max_pushes, push_cost, closed_list_per_push_count);
+  PSIPP_settings psipp_settings =
+      PSIPP_settings(psipp_implementation, info_type, w, 1, max_pushes, push_cost, closed_list_per_push_count);
 
   // create destroy settings
   Destroy_settings destroy_settings = Destroy_settings(destroy_type, neighborhood_size);
 
   // create LNS settings
-  LNS_settings lns_settings =
-      LNS_settings(max_iter, time_limit, destroy_settings, sipp_settings, psipp_settings, restarts, use_psipp, sipp_first);
+  LNS_settings lns_settings = LNS_settings(max_iter, time_limit, destroy_settings, sipp_settings, psipp_settings,
+                                           restarts, use_psipp, sipp_first);
 
   // create the computation object
   Computation computation(*instance, shared_data.get(), lns_settings, seed);

@@ -72,15 +72,20 @@ def summarize(rows: list[dict], default_time_limit: float = 60.0) -> list[dict]:
     for (m, k, variant), rs in sorted(groups.items()):
         parsed = [r for r in rs if r["parsed"]]
         succ = [r for r in rs if r["success"]]
+        valid_succ = [r for r in succ if r.get("valid", 0)]
         par2 = [r["time"] if r["success"] else 2 * r.get("time_limit", default_time_limit) for r in rs]
         out = {"map": m, "k": k, "variant": variant, "n": len(rs), "parsed": len(parsed),
-               "succ_rate": len(succ) / len(rs),
-               "invalid": sum(1 for r in succ if not r.get("valid", 0)),
+               "succ_rate": len(valid_succ) / len(rs),
+               "invalid": len(succ) - len(valid_succ),
                "timeouts": sum(r["timeout"] for r in rs), "crashes": sum(r["crash"] for r in rs),
-               "med_time_succ": median([r["time"] for r in succ]), "par2": mean(par2),
+               "med_time_succ": median([r["time"] for r in valid_succ]), "par2": mean(par2),
                "med_attempts": median([r["attempts"] for r in parsed if "attempts" in r])}
         for c in COUNTERS:
             out[c] = mean([r[c] for r in parsed if c in r])
+        failures = sum(r.get("fail_no_path", 0) + r.get("fail_cycle", 0) for r in parsed)
+        attempts = sum(r.get("attempts", 0) for r in parsed)
+        out["cycle_frac"] = sum(r.get("fail_cycle", 0) for r in parsed) / failures if failures else None
+        out["pushed_per_attempt"] = sum(r.get("pushed_replanned", 0) for r in parsed) / attempts if attempts else None
         result.append(out)
     return result
 
@@ -105,11 +110,12 @@ def fmt(value: float | None) -> str:
 
 def print_table(summary: list[dict]) -> None:
     print("map k variant n parsed succ_rate invalid timeouts crashes med_time_succ par2 med_attempts(parsed) "
-          + " ".join(f"mean_{c}(parsed)" for c in COUNTERS))
+          + " ".join(f"mean_{c}(parsed)" for c in COUNTERS) + " cycle_frac pushed_per_attempt")
     for s in summary:
         print(f"{s['map']} {s['k']} {s['variant']} {s['n']} {s['parsed']} {s['succ_rate']:.2f} {s['invalid']} "
               f"{s['timeouts']} {s['crashes']} {fmt(s['med_time_succ'])} {fmt(s['par2'])} "
-              f"{fmt(s['med_attempts'])} " + " ".join(fmt(s[c]) for c in COUNTERS))
+              f"{fmt(s['med_attempts'])} " + " ".join(fmt(s[c]) for c in COUNTERS)
+              + f" {fmt(s['cycle_frac'])} {fmt(s['pushed_per_attempt'])}")
 
 
 def selftest() -> None:
@@ -132,6 +138,13 @@ def selftest() -> None:
     assert s["med_time_succ"] == 1.5
     assert s["par2"] == (1.5 + 120 + 120 + 120) / 4
     assert s["med_attempts"] == 5.5 and s["fail_no_path"] == 4 and s["pushed_replanned"] == 2
+    # pooled: failures = 1 + 9 = 10 (cycles 2), attempts = 2 + 9 = 11, pushed = 4
+    assert s["cycle_frac"] == 0.2 and s["pushed_per_attempt"] == 4 / 11
+    invalid_line = ok_line.replace('"valid":1', '"valid":0')
+    inv = summarize([make_row("x_5_sipp_1.json", ok_line, None), make_row("x_5_sipp_2.json", invalid_line, None)])[0]
+    assert inv["succ_rate"] == 0.5 and inv["invalid"] == 1 and inv["med_time_succ"] == 1.5
+    clean = summarize([make_row("x_5_sipp_1.json", ok_line.replace('"fail_no_path":1', '"fail_no_path":0'), None)])[0]
+    assert clean["cycle_frac"] is None
     assert check_completeness(summary, 4) == [] and len(check_completeness(summary, 25)) == 1
     print("OK")
 
