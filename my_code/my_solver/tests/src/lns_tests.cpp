@@ -62,6 +62,9 @@ TEST(LNSDestroyRandomWalk, TabuList)
   lns.find_initial_solution();
   ASSERT_TRUE(lns.solution.feasible) << "Initial solution is not feasible";
   ASSERT_TRUE(lns.solution.is_valid(*instance)) << "Initial solution is not valid";
+  // both agents delayed equally, so only the tabu list can make the second pick differ (with zero delays the
+  // operator falls back to random destroy and the test would depend on the random stream)
+  lns.solution.delays = {5, 5};
 
   // destroy agents
   lns.destroy_operator.apply(lns.solution);

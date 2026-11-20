@@ -414,7 +414,7 @@ void LNS::destroy_random(Solution& sol) const
   std::vector<int> path_idcs(sol.paths.size());
   std::iota(path_idcs.begin(), path_idcs.end(), 0);
   std::shuffle(path_idcs.begin(), path_idcs.end(), rnd_generator);
-  assertm((int)path_idcs.size() > settings.destroy_settings.size, "Not enough paths for the destroy operator.");
+  assertm((int)path_idcs.size() >= settings.destroy_settings.size, "Not enough paths for the destroy operator.");
   int num_to_destroy = std::min(settings.destroy_settings.size, instance.get_num_of_agents());
   sol.destroyed_paths = std::vector(std::make_move_iterator(path_idcs.begin()),
                                     std::make_move_iterator(path_idcs.begin() + num_to_destroy));
@@ -485,6 +485,14 @@ void LNS::destroy_randomwalk(Solution& sol) const
   if (static_cast<int>(tabu_list.size()) == instance.get_num_of_agents())
   {
     tabu_list.clear();
+  }
+
+  // a neighborhood of one agent is just the most delayed one; a random walk could never add a second agent
+  if (settings.destroy_settings.size == 1)
+  {
+    sol.destroyed_paths = {most_delayed};
+    sol.feasible = false;
+    return;
   }
 
   std::set<int> chosen = {most_delayed};  // TODO in the original code they use set, but I think it makes more sense to
