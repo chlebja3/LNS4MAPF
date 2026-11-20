@@ -43,6 +43,29 @@ auto PSIPPNode::operator==(const PSIPPNode& other) const -> bool
 
 auto PSIPPNodeComparator::operator()(PSIPPNode const* n1, PSIPPNode const* n2) const -> bool
 {
+  if (std::isfinite(push_cost))
+  {
+    // pushes are priced into the primary key
+    double score1 = n1->f + push_cost * static_cast<double>(n1->pushed.size());
+    double score2 = n2->f + push_cost * static_cast<double>(n2->pushed.size());
+    if (score1 != score2)
+    {
+      return score1 > score2;
+    }
+    if (n1->h != n2->h)
+    {
+      return n1->h > n2->h;
+    }
+    if (n1->h2 != n2->h2)
+    {
+      return n1->h2 > n2->h2;
+    }
+    if (n1->h3 != n2->h3)
+    {
+      return n1->h3 > n2->h3;
+    }
+    return dist(*rnd_generator);
+  }
   // num of pushes is the most important
   if (n1->pushed.size() == n2->pushed.size())
   {
@@ -196,7 +219,7 @@ auto PSIPP::plan_psipp_mine(const int agent_num) -> std::pair<TimePointPath, std
   assertm(min_time >= 0 && max_time >= 0, "Time can not be negative.");
 
   // create openlist
-  psipp::PriorityQueue open_list{PSIPPNodeComparator(&rnd_generator)};
+  psipp::PriorityQueue open_list{PSIPPNodeComparator(&rnd_generator, settings.push_cost)};
 
   // retrieve the first safe interval
   auto time_interval_start_it = constraint_manager.get_first_safe_interval(start);
@@ -511,7 +534,7 @@ auto PSIPP::plan_psipp_mine_ap(const int agent_num, const std::unordered_set<int
   // std::cout << "Max time estimate is: " << max_time << std::endl;
 
   // create openlist
-  psipp::PriorityQueue open_list{PSIPPNodeComparator(&rnd_generator)};
+  psipp::PriorityQueue open_list{PSIPPNodeComparator(&rnd_generator, settings.push_cost)};
 
   // retrieve the first safe interval
   auto time_interval_start_it = constraint_manager.get_first_safe_interval(start);

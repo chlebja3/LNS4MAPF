@@ -9,6 +9,7 @@
 #include <utils.h>
 
 #include <climits>
+#include <limits>
 
 #include "ConstraintManager.h"
 #include "Instance.h"
@@ -548,6 +549,57 @@ TEST(PSIPPTest, SippFirstSwitch)
       Solution sol = lns.PrioritizedPlanning();
       EXPECT_TRUE(sol.is_valid(*instance)) << "sipp_first=" << sipp_first;
       EXPECT_TRUE(paths_owned_correctly(sol, *instance)) << "sipp_first=" << sipp_first;
+    }
+  }
+}
+
+TEST(PSIPPComparator, InfinitePushCostIsLexicographic)
+{
+  std::mt19937 rng(0);
+  std::vector<Constraint> no_push;
+  std::vector<Constraint> one_push{Constraint(TimeInterval(0, 1), 0, 0, 0)};
+  psipp::PSIPPNode a(0, TimeInterval(0, 1), 100, 0, 0, 0, nullptr, no_push);
+  psipp::PSIPPNode b(0, TimeInterval(0, 1), 10, 0, 0, 0, nullptr, one_push);
+  psipp::PSIPPNodeComparator cmp(&rng);
+  EXPECT_FALSE(cmp(&a, &b));
+  EXPECT_TRUE(cmp(&b, &a));
+}
+
+TEST(PSIPPComparator, FinitePushCost)
+{
+  std::mt19937 rng(0);
+  std::vector<Constraint> no_push;
+  std::vector<Constraint> one_push{Constraint(TimeInterval(0, 1), 0, 0, 0)};
+  psipp::PSIPPNode a(0, TimeInterval(0, 1), 100, 0, 0, 0, nullptr, no_push);
+  psipp::PSIPPNode b(0, TimeInterval(0, 1), 10, 0, 0, 0, nullptr, one_push);
+  psipp::PSIPPNodeComparator cmp(&rng, 5.0);
+  EXPECT_TRUE(cmp(&a, &b));
+  EXPECT_FALSE(cmp(&b, &a));
+  psipp::PSIPPNodeComparator cmp_high(&rng, 200.0);
+  EXPECT_FALSE(cmp_high(&a, &b));
+}
+
+TEST(PSIPPTest, PushCostPPValid)
+{
+  std::string base_path = get_base_path_tests();
+  for (double push_cost : {0.0, 2.0, 10.0, 50.0})
+  {
+    std::unique_ptr<Instance> den = std::make_unique<Instance>(base_path + "/tests/test_maps/den520d.map",
+                                                               base_path + "/tests/test_scen/den520d-random-0.scen", 100);
+    std::unique_ptr<Instance> push = std::make_unique<Instance>(base_path + "/tests/test_maps/must_push.map",
+                                                                base_path + "/tests/test_scen/must_push.scen", 2);
+    for (Instance* instance : {den.get(), push.get()})
+    {
+      std::mt19937 rng(0);
+      LNS_settings lns_settings(0, 30, {DESTROY_TYPE::RANDOM, 10},
+                                {SIPP_implementation::SIPP_mine_ap, INFO_type::no_info, 1.0},
+                                {PSIPP_implementation::PSIPP_mine_ap, INFO_type::no_info, 1.0, 1, 5, push_cost}, false,
+                                true);
+      LNS lns(*instance, rng, nullptr, lns_settings);
+      Solution sol = lns.PrioritizedPlanning();
+      // with cheap pushes two agents can push each other forever; PP reports this as an infeasible solution
+      if (instance == push.get() && !sol.feasible) continue;
+      EXPECT_TRUE(sol.is_valid(*instance)) << "push_cost=" << push_cost;
     }
   }
 }

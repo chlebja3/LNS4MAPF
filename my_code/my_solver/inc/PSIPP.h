@@ -36,8 +36,13 @@ public:
    * @param p_ The parameter p for the Bounded Suboptimal PSIPP algorithm.
    */
   PSIPP_settings(PSIPP_implementation implementation_, INFO_type info_type_, double w_, int p_ = 1.0,
-                 int max_pushes_ = 1)
-      : implementation(implementation_), info_type(info_type_), w(w_), p(p_), max_pushes(max_pushes_)
+                 int max_pushes_ = 1, double push_cost_ = std::numeric_limits<double>::infinity())
+      : implementation(implementation_),
+        info_type(info_type_),
+        w(w_),
+        p(p_),
+        max_pushes(max_pushes_),
+        push_cost(push_cost_)
   {
   }
 
@@ -46,6 +51,7 @@ public:
   double w;                            /**< The suboptimality factor. */
   double p;                            /**< The parameter p for the Bounded Suboptimal PSIPP algorithm. */
   int max_pushes;                      // maximum of allowed pushes
+  double push_cost;                    /**< Cost of one push in node ordering; infinity = pushes compared first. */
   // bool                generate_blocked = false;
 };
 
@@ -130,7 +136,13 @@ public:
    *
    * @param rnd_generator_ Pointer to a random number generator.
    */
-  explicit PSIPPNodeComparator(std::mt19937* rnd_generator_) : rnd_generator(rnd_generator_), dist(0.5) {}
+  double push_cost;                         /**< Cost of one push; infinity = lexicographic on number of pushes. */
+
+  explicit PSIPPNodeComparator(std::mt19937* rnd_generator_,
+                               double push_cost_ = std::numeric_limits<double>::infinity())
+      : rnd_generator(rnd_generator_), dist(0.5), push_cost(push_cost_)
+  {
+  }
 
   /**
    * @brief Comparison operator for PSIPPNode.
