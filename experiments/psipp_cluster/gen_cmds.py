@@ -47,7 +47,7 @@ def main() -> None:
             for seed in SEEDS:
                 for v in variants():
                     out = f"{args.results_dir}/{m}_{k}_{v['id']}_{seed}.json"
-                    print(f"timeout {TIMEOUT} {args.binary} {b}/mapf-map/{m}.map "
+                    print(f"rm -f {out[:-len('.json')]}.rc; timeout {TIMEOUT} {args.binary} {b}/mapf-map/{m}.map "
                           f"{b}/mapf-scen-random/scen-random/{m}-random-{seed}.scen {k} {v['planner']} "
                           f"{v['max_pushes']} {seed} {args.time_limit:g} {v['push_cost']} {v['closed']} "
                           f"{v['sipp_first']} > {out} 2>/dev/null || echo $? > {out[:-len('.json')]}.rc")
