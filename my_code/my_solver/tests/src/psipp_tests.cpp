@@ -527,3 +527,27 @@ TEST(PSIPPTest, PushedAgentKeepsOwnPath)
     lns.already_planned.clear();
   }
 }
+
+// PP must produce valid, correctly owned paths with and without the SIPP-first attempt for the new agent
+TEST(PSIPPTest, SippFirstSwitch)
+{
+  std::string base_path = get_base_path_tests();  // path to my_solver
+  for (bool sipp_first : {true, false})
+  {
+    std::unique_ptr<Instance> den = std::make_unique<Instance>(base_path + "/tests/test_maps/den520d.map",
+                                                               base_path + "/tests/test_scen/den520d-random-0.scen", 100);
+    std::unique_ptr<Instance> push = std::make_unique<Instance>(base_path + "/tests/test_maps/must_push.map",
+                                                                base_path + "/tests/test_scen/must_push.scen", 2);
+    for (Instance* instance : {den.get(), push.get()})
+    {
+      std::mt19937 rng(0);
+      LNS_settings lns_settings(0, 30, {DESTROY_TYPE::RANDOM, 10},
+                                {SIPP_implementation::SIPP_mine_ap, INFO_type::no_info, 1.0},
+                                {PSIPP_implementation::PSIPP_mine_ap, INFO_type::no_info, 1.0}, false, true, sipp_first);
+      LNS lns(*instance, rng, nullptr, lns_settings);
+      Solution sol = lns.PrioritizedPlanning();
+      EXPECT_TRUE(sol.is_valid(*instance)) << "sipp_first=" << sipp_first;
+      EXPECT_TRUE(paths_owned_correctly(sol, *instance)) << "sipp_first=" << sipp_first;
+    }
+  }
+}

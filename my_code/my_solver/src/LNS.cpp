@@ -306,7 +306,7 @@ auto LNS::PrioritizedPlanning() -> Solution
         std::unordered_set<int> to_replan_new;
         // the newly added agent first tries classic SIPP; agents pushed out of the way go directly to PSIPP
         tp_path = TimePointPath();
-        if (*it == agent_id)
+        if (settings.sipp_first && *it == agent_id)
         {
           tp_path = planner->plan(*it, already_planned);
         }

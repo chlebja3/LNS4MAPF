@@ -62,17 +62,20 @@ public:
    * @param destroy_settings_ Settings for the destroy operator.
    * @param sipp_settings_ Settings for the SIPP algorithm.
    * @param restarts_ Whether to use restarts.
+   * @param sipp_first_ Whether the newly added agent first tries SIPP (false: PSIPP for every agent).
    */
   LNS_settings(int max_iter_, double time_limit_, Destroy_settings destroy_settings_, SIPP_settings sipp_settings_,
                PSIPP_settings psipp_settings_ = {PSIPP_implementation::PSIPP_mine, INFO_type::no_info, 1.0},
-               bool restarts_ = false, bool use_psipp_ = false)
+               bool restarts_ = false, bool use_psipp_ = false,
+               bool sipp_first_ = true)
       : max_iter(max_iter_),
         time_limit(time_limit_),
         destroy_settings(destroy_settings_),
         sipp_settings(sipp_settings_),
         psipp_settings(psipp_settings_),
         restarts(restarts_),
-        use_psipp(use_psipp_)
+        use_psipp(use_psipp_),
+        sipp_first(sipp_first_)
   {
   }
   int max_iter;                      /**< Maximum number of iterations. */
@@ -82,6 +85,7 @@ public:
   PSIPP_settings psipp_settings;     /**< Settings for the PSIPP algorithm. */
   bool restarts;                     /**< Whether to use restarts. */
   bool use_psipp;
+  bool sipp_first; /**< Whether the newly added agent first tries classic SIPP before PSIPP. */
 };
 
 /**
