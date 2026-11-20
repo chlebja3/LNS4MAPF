@@ -207,10 +207,34 @@ void ConstraintManager::build_sequential(const std::vector<TimePointPath>& paths
   auto [first_si, last_si] = get_safe_intervals(location, time_interval);
   // std::cout << "first: " << first_si->interval << ", is end: " << is_end_of_list(location, first_si)
   //           << ", last: " << is_end_of_list(location, last_si) << std::endl;
-  // no safe intervals
+  // no safe interval overlaps the time interval: it lies inside constraint intervals (e.g. an agent parked at its goal),
+  // which must still be returned so that their agents can be pushed
   if (is_end_of_list(location, first_si))
   {
-    return {first_si, first_si};
+    // find the last safe interval before the time interval
+    TimeIntervalNode_const_it before = std::nullopt;
+    for (auto it = get_first_safe_interval(location);
+         it.has_value() && !is_end_of_list(location, it.value()) && it.value()->interval.t_max < time_interval.t_min;
+         it = {std::next(it.value())})
+    {
+      before = it;
+    }
+    // no safe interval before: the constraints start at time 0 (agents at their start locations, which can not be pushed)
+    if (!before.has_value()) return {first_si, first_si};
+    // the first constraint overlapping the time interval
+    TimeIntervalNode_const_it first = before.value()->next_interval;
+    while (first.has_value() && first.value()->interval.t_max < time_interval.t_min)
+    {
+      first = first.value()->next_interval;
+    }
+    if (!first.has_value()) return {first_si, first_si};
+    // the first interval after the time interval, or the end of the list
+    TimeIntervalNode_const_it last = first.value()->next_interval;
+    while (last.has_value() && last.value()->interval.t_min <= time_interval.t_max)
+    {
+      last = last.value()->next_interval;
+    }
+    return {first.value(), last.has_value() ? last.value() : first_si};
   }
   TimeIntervalNode_const_it first = {first_si};
   assertm(first.has_value(), "The first safe interval must have value.");

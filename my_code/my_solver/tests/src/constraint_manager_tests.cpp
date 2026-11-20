@@ -392,3 +392,34 @@ TEST_F(ConstraintManagerTest, GetAllTimeIntervals)
     EXPECT_EQ(end->interval, TimeInterval(5, 5));
   }
 }
+
+TEST_F(ConstraintManagerTest, GetAllTimeIntervalsWindowInsideConstraint)
+{
+  // an agent parked forever at location 7 from time 7, and an agent waiting at location 8 during 10..20
+  constraint_manager->add_trajectory(TimePointPath({TimePoint(7, {7, INT_MAX})}), 0);
+  constraint_manager->add_trajectory(TimePointPath({TimePoint(8, {10, 20})}), 1);
+  ASSERT_TRUE(constraint_manager->is_valid());
+
+  // the window starts after the parked agent arrived: its constraint must still be returned (so it can be pushed)
+  {
+    auto [start, end] = constraint_manager->get_all_intervals(7, TimeInterval(9, INT_MAX));
+    ASSERT_FALSE(start == end);
+    EXPECT_EQ(start->interval, TimeInterval(7, INT_MAX));
+    EXPECT_EQ(start->type, TIME_INTERVAL_NODE_type::constraint);
+    EXPECT_FALSE(start->next_interval.has_value());
+    EXPECT_TRUE(constraint_manager->is_end_of_list(7, end));
+  }
+  {
+    auto [start, end] = constraint_manager->get_all_intervals(7, TimeInterval(9, 12));
+    ASSERT_FALSE(start == end);
+    EXPECT_EQ(start->interval, TimeInterval(7, INT_MAX));
+  }
+  // the window lies inside a finite wait: only the wait constraint, the range ends at the following safe interval
+  {
+    auto [start, end] = constraint_manager->get_all_intervals(8, TimeInterval(12, 15));
+    ASSERT_FALSE(start == end);
+    EXPECT_EQ(start->interval, TimeInterval(10, 20));
+    EXPECT_EQ(start->type, TIME_INTERVAL_NODE_type::constraint);
+    EXPECT_EQ(end->interval, TimeInterval(21, INT_MAX));
+  }
+}
