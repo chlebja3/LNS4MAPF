@@ -141,6 +141,9 @@ struct Logger
   std::vector<int> bsf_makespan;           /**< Vector of best makespan values. */
   std::vector<double> iteration_time_cpu;  /**< Vector of CPU times for each iteration. */
   std::vector<double> iteration_time_wall; /**< Vector of wall times for each iteration. */
+  int pp_fail_no_path = 0;                 /**< Number of PP failures because no path was found for an agent. */
+  int pp_fail_cycle = 0;                   /**< Number of PP failures because an already pushed agent was pushed again. */
+  int pp_pushed_replanned = 0;             /**< Number of agents pushed out of the way and put back to replanning in PP. */
 };
 
 /**

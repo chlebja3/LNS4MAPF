@@ -657,3 +657,33 @@ TEST(PSIPPTest, PerPushCountClosedListValid)
     EXPECT_TRUE(paths_owned_correctly(sol, *instance)) << "agents=" << num_agents << " push_cost=" << push_cost;
   }
 }
+
+TEST(PSIPPTest, DiagnosticsCounters)
+{
+  std::string base_path = get_base_path_tests();
+  {
+    std::unique_ptr<Instance> instance = std::make_unique<Instance>(base_path + "/tests/test_maps/must_push.map",
+                                                                    base_path + "/tests/test_scen/must_push.scen", 2);
+    std::mt19937 rng(0);
+    LNS_settings lns_settings(0, 30, {DESTROY_TYPE::RANDOM, 10},
+                              {SIPP_implementation::SIPP_mine_ap, INFO_type::no_info, 1.0},
+                              {PSIPP_implementation::PSIPP_mine_ap, INFO_type::no_info, 1.0}, false, true);
+    LNS lns(*instance, rng, nullptr, lns_settings);
+    lns.PrioritizedPlanning();
+    EXPECT_GE(lns.log.pp_pushed_replanned, 1);
+    EXPECT_EQ(lns.log.pp_fail_no_path + lns.log.pp_fail_cycle, 0);
+  }
+  {
+    std::unique_ptr<Instance> instance = std::make_unique<Instance>(
+        base_path + "/tests/test_maps/biparted_5_5.map", base_path + "/tests/test_scen/empty_5_5_scen_1.scen", 1);
+    std::mt19937 rng(0);
+    LNS_settings lns_settings(0, 30, {DESTROY_TYPE::RANDOM, 10},
+                              {SIPP_implementation::SIPP_mine_ap, INFO_type::no_info, 1.0},
+                              {PSIPP_implementation::PSIPP_mine_ap, INFO_type::no_info, 1.0}, false, true, false);
+    LNS lns(*instance, rng, nullptr, lns_settings);
+    Solution sol = lns.PrioritizedPlanning();
+    EXPECT_FALSE(sol.feasible);
+    EXPECT_EQ(lns.log.pp_fail_no_path, 1);
+    EXPECT_EQ(lns.log.pp_fail_cycle, 0);
+  }
+}

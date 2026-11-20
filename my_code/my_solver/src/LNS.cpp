@@ -320,6 +320,7 @@ auto LNS::PrioritizedPlanning() -> Solution
         if (tp_path.empty())
         {
           // std::cout << "Empty path, fail." << std::endl;
+          log.pp_fail_no_path++;
           sol.feasible = false;
           return sol;
         }
@@ -337,6 +338,7 @@ auto LNS::PrioritizedPlanning() -> Solution
             {
               // caught in a cycle
               // std::cout << "Cycle detected." << std::endl;
+              log.pp_fail_cycle++;
               sol.feasible = false;
               return sol;
             }
@@ -344,7 +346,10 @@ auto LNS::PrioritizedPlanning() -> Solution
             constraint_manager.remove_trajectory(sol.paths[id], id);
             sol.paths[id] = TimePointPath();
             already_planned.erase(id);
-            erased_from_to_replan.insert(id);
+            if (erased_from_to_replan.insert(id).second)
+            {
+              log.pp_pushed_replanned++;
+            }
           }
         }
         // std::cout << "Adding to CM agent " << *it << "." << std::endl;
@@ -372,6 +377,7 @@ auto LNS::PrioritizedPlanning() -> Solution
     if (tp_path.empty())
     {
       // std::cout << "Unable to find initial solution by prioritized planning. " << std::endl;
+      log.pp_fail_no_path++;
       sol.feasible = false;
       return sol;
     }
