@@ -486,8 +486,10 @@ auto PSIPP::plan_psipp_mine(const int agent_num) -> std::pair<TimePointPath, std
           {
             is_additional_constraint = true;
             // std::cout << "Additional constraint" << std::endl;
-            // handle the interval after the additional constraint
-            if (neighbor_time_point.interval.t_max > additional_const.interval.t_max)
+            // handle the interval after the additional constraint; it is reachable only if the agent can wait in the
+            // current interval until the pushed agent has left
+            if (neighbor_time_point.interval.t_max > additional_const.interval.t_max &&
+                safe_increase(additional_const.interval.t_max) <= neighbor_entry_time_interval.t_max)
             {
               TimeInterval new_interval(additional_const.interval.t_max + 1, neighbor_time_point.interval.t_max);
               TimePoint new_tp(neighbor_time_point.location, new_interval);
@@ -807,8 +809,10 @@ auto PSIPP::plan_psipp_mine_ap(const int agent_num, const std::unordered_set<int
           {
             is_additional_constraint = true;
             // std::cout << "Additional constraint" << std::endl;
-            // handle the interval after the additional constraint
-            if (neighbor_time_point.interval.t_max > additional_const.interval.t_max)
+            // handle the interval after the additional constraint; it is reachable only if the agent can wait in the
+            // current interval until the pushed agent has left
+            if (neighbor_time_point.interval.t_max > additional_const.interval.t_max &&
+                safe_increase(additional_const.interval.t_max) <= neighbor_entry_time_interval.t_max)
             {
               TimeInterval new_interval(additional_const.interval.t_max + 1, neighbor_time_point.interval.t_max);
               TimePoint new_tp(neighbor_time_point.location, new_interval);
@@ -1134,8 +1138,10 @@ auto PSIPP::plan_suboptimal(const int agent_num, const std::unordered_set<int>& 
           {
             is_additional_constraint = true;
             // std::cout << "Additional constraint" << std::endl;
-            // handle the interval after the additional constraint
-            if (neighbor_time_point.interval.t_max > additional_const.interval.t_max)
+            // handle the interval after the additional constraint; it is reachable only if the agent can wait in the
+            // current interval until the pushed agent has left
+            if (neighbor_time_point.interval.t_max > additional_const.interval.t_max &&
+                safe_increase(additional_const.interval.t_max) <= neighbor_entry_time_interval.t_max)
             {
               TimeInterval new_interval(additional_const.interval.t_max + 1, neighbor_time_point.interval.t_max);
               TimePoint new_tp(neighbor_time_point.location, new_interval);
@@ -1244,6 +1250,8 @@ auto psipp::extract_path(PSIPPNode const* const final_node) -> TimePointPath
     }
     else  // push only the occupied part of other intervals
     {
+      assertm(prev->time_point.interval.t_min <= safe_increase(curr->time_point.interval.t_max),
+              "The successor must be entered while the agent can still wait in the current interval.");
       path.push_back(TimePoint(curr->time_point.location,
                                TimeInterval(curr->time_point.interval.t_min, prev->time_point.interval.t_min - 1)));
     }

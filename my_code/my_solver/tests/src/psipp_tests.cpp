@@ -10,6 +10,10 @@
 
 #include <climits>
 #include <cmath>
+#include <fstream>
+#include <sstream>
+#include <unordered_map>
+#include <unordered_set>
 #include <limits>
 #include <utility>
 #include <vector>
@@ -740,4 +744,68 @@ TEST(PSIPPTest, PushListSharesPrefix)
   psipp::PushList again = arena.push(psipp::PushList(), Constraint(TimeInterval(0, 1), 5, 0, 0));
   EXPECT_EQ(again.size(), 1u);
   EXPECT_EQ(again.begin()->agent_num, 5);
+}
+
+// whether the path collides (vertex or swap) with a path of an agent that is not in the ignored set
+auto collides_with_others(const TimePointPath& path, const std::unordered_map<int, TimePointPath>& others,
+                          const std::unordered_set<int>& ignored) -> bool
+{
+  for (const auto& [agent, other] : others)
+  {
+    if (ignored.find(agent) != ignored.end()) continue;
+    for (int i = 0; i < static_cast<int>(path.size()); i++)
+    {
+      for (int j = 0; j < static_cast<int>(other.size()); j++)
+      {
+        if (path[i].location == other[j].location && overlap(path[i].interval, other[j].interval)) return true;
+        // swap: path moves a->b while the other agent moves b->a at the same time
+        if (i > 0 && j > 0 && path[i].interval.t_min == other[j].interval.t_min &&
+            path[i].location == other[j - 1].location && path[i - 1].location == other[j].location)
+        {
+          return true;
+        }
+      }
+    }
+  }
+  return false;
+}
+
+// Regression: a pushed agent is assumed to wait in its previous cell during the pushed interval. PSIPP generated the
+// successor entering that cell right after the wait even when the current safe interval ended earlier, so the
+// returned path silently stretched the wait over a cell occupied by an agent that was not pushed. The state is the
+// constraint table of a failing PP run (room-64-64-8, 400 agents, scenario 8, seed 8, shortest-first order).
+TEST(PSIPPTest, PushedWaitDoesNotStretchCurrentInterval)
+{
+  std::string base_path = get_base_path_tests();  // path to my_solver
+  std::unique_ptr<Instance> instance = std::make_unique<Instance>(
+      base_path + "/tests/test_maps/room-64-64-8.map", base_path + "/tests/test_scen/room-64-64-8-random-8.scen", 400);
+  std::ifstream state(base_path + "/tests/test_solutions/psipp_room_agent299_state.txt");
+  ASSERT_TRUE(state.is_open());
+  std::unordered_map<int, TimePointPath> planned_paths;
+  std::unordered_set<int> already_planned;
+  std::string line;
+  while (std::getline(state, line))
+  {
+    std::istringstream iss(line);
+    int agent;
+    iss >> agent;
+    TimePointPath path;
+    int loc, t_min, t_max;
+    while (iss >> loc >> t_min >> t_max) path.emplace_back(loc, TimeInterval(t_min, t_max));
+    planned_paths[agent] = path;
+    already_planned.insert(agent);
+  }
+  ASSERT_EQ(already_planned.size(), 394u);
+
+  ConstraintManager constraint_manager(*instance);
+  for (const auto& [agent, path] : planned_paths) constraint_manager.add_trajectory(path, agent);
+  for (int seed = 0; seed < 10; seed++)
+  {
+    std::mt19937 rng(seed);
+    PSIPP psipp(*instance, rng, {PSIPP_implementation::PSIPP_mine_ap, INFO_type::no_info, 1.0, 1, 5}, constraint_manager);
+    auto [path, pushed] = psipp.plan(299, already_planned);
+    ASSERT_FALSE(path.empty()) << "seed " << seed;
+    EXPECT_TRUE(instance->check_timepointpath_validity(path)) << "seed " << seed;
+    EXPECT_FALSE(collides_with_others(path, planned_paths, pushed)) << "seed " << seed;
+  }
 }
