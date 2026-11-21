@@ -8,7 +8,10 @@
 
 #include <gtest/gtest.h>
 
+#include <algorithm>
 #include <climits>
+#include <numeric>
+#include <random>
 
 #include "Instance.h"
 #include "LNS.h"
@@ -82,4 +85,88 @@ TEST(LNSDestroyRandomWalk, TabuList)
   // check, that the tabu list reset
   lns.destroy_operator.apply(lns.solution);
   ASSERT_EQ(lns.solution.destroyed_paths.size(), 1);
+}
+
+namespace
+{
+auto start_goal_distances(const Instance& instance, const std::vector<int>& order) -> std::vector<int>
+{
+  std::vector<int> d;
+  for (int a : order)
+  {
+    d.push_back(instance.get_heuristic_distance(a, instance.get_start_locations()[a]));
+  }
+  return d;
+}
+}  // namespace
+
+TEST(LNSPPOrder, HeuristicOrdersAreSortedPermutations)
+{
+  int         agent_num = 50;
+  std::string base_path = get_base_path_tests();
+  Instance    instance(base_path + "/tests/test_maps/den520d.map", base_path + "/tests/test_scen/den520d-random-0.scen",
+                       agent_num);
+  for (PP_ORDER order_type : {PP_ORDER::SHORTEST_FIRST, PP_ORDER::LONGEST_FIRST})
+  {
+    auto         rnd_generator = std::mt19937(0);
+    LNS_settings lns_settings(0, 5, {DESTROY_TYPE::RANDOM, 1}, {SIPP_implementation::SIPP_mine, INFO_type::no_info, 1.0},
+                              {PSIPP_implementation::PSIPP_mine, INFO_type::no_info, 1.0}, true, false, true, order_type);
+    LNS          lns(instance, rnd_generator, nullptr, lns_settings);
+    for (int attempt = 0; attempt < 3; attempt++)
+    {
+      std::vector<int> order = lns.pp_agent_order();
+      std::vector<int> sorted_ids = order;
+      std::sort(sorted_ids.begin(), sorted_ids.end());
+      std::vector<int> expected_ids(agent_num);
+      std::iota(expected_ids.begin(), expected_ids.end(), 0);
+      ASSERT_EQ(sorted_ids, expected_ids) << "order is not a permutation";
+
+      std::vector<int> d = start_goal_distances(instance, order);
+      if (order_type == PP_ORDER::SHORTEST_FIRST)
+      {
+        EXPECT_TRUE(std::is_sorted(d.begin(), d.end()));
+      }
+      else
+      {
+        EXPECT_TRUE(std::is_sorted(d.rbegin(), d.rend()));
+      }
+    }
+  }
+}
+
+TEST(LNSPPOrder, FirstOnlyFallsBackToRandom)
+{
+  int         agent_num = 50;
+  std::string base_path = get_base_path_tests();
+  Instance    instance(base_path + "/tests/test_maps/den520d.map", base_path + "/tests/test_scen/den520d-random-0.scen",
+                       agent_num);
+  auto         rnd_generator = std::mt19937(0);
+  LNS_settings lns_settings(0, 5, {DESTROY_TYPE::RANDOM, 1}, {SIPP_implementation::SIPP_mine, INFO_type::no_info, 1.0},
+                            {PSIPP_implementation::PSIPP_mine, INFO_type::no_info, 1.0}, true, false, true,
+                            PP_ORDER::LONGEST_FIRST, true);
+  LNS          lns(instance, rnd_generator, nullptr, lns_settings);
+
+  std::vector<int> first = start_goal_distances(instance, lns.pp_agent_order());
+  EXPECT_TRUE(std::is_sorted(first.rbegin(), first.rend()));
+  // with 50 agents a random permutation is sorted by distance with negligible probability
+  std::vector<int> second = start_goal_distances(instance, lns.pp_agent_order());
+  EXPECT_FALSE(std::is_sorted(second.rbegin(), second.rend()));
+}
+
+TEST(LNSPPOrder, RandomOrderUnchanged)
+{
+  // the default RANDOM order must consume the generator exactly like the original std::shuffle
+  int         agent_num = 30;
+  std::string base_path = get_base_path_tests();
+  Instance    instance(base_path + "/tests/test_maps/den520d.map", base_path + "/tests/test_scen/den520d-random-0.scen",
+                       agent_num);
+  auto         rnd_generator = std::mt19937(7);
+  LNS_settings lns_settings(0, 5, {DESTROY_TYPE::RANDOM, 1}, {SIPP_implementation::SIPP_mine, INFO_type::no_info, 1.0});
+  LNS          lns(instance, rnd_generator, nullptr, lns_settings);
+
+  auto             reference_generator = std::mt19937(7);
+  std::vector<int> expected(agent_num);
+  std::iota(expected.begin(), expected.end(), 0);
+  std::shuffle(expected.begin(), expected.end(), reference_generator);
+  EXPECT_EQ(lns.pp_agent_order(), expected);
 }

@@ -14,7 +14,7 @@ import re
 import statistics
 import sys
 
-NAME_RE = re.compile(r"^(?P<map>.+)_(?P<k>\d+)_(?P<variant>sipp|psipp_c[^_]+_cl[01]_sf[01])_(?P<seed>\d+)\.json$")
+NAME_RE = re.compile(r"^(?P<map>.+)_(?P<k>\d+)_(?P<variant>(?:sipp|psipp_c[^_]+_cl[01]_sf[01])(?:_o(?:random|short|long)(?:1st)?)?)_(?P<seed>\d+)\.json$")
 COUNTERS = ["fail_no_path", "fail_cycle", "pushed_replanned"]
 TIMEOUT_RC = 124
 
@@ -123,6 +123,9 @@ def selftest() -> None:
     assert parse_name("Paris_1_256_600_psipp_c10_cl1_sf0_3.json") == \
         {"map": "Paris_1_256", "k": 600, "variant": "psipp_c10_cl1_sf0", "seed": 3}
     assert parse_name("empty-32-32_350_sipp_25.json")["variant"] == "sipp"
+    assert parse_name("ost003d_800_psipp_cinf_cl0_sf1_olong1st_7.json") == \
+        {"map": "ost003d", "k": 800, "variant": "psipp_cinf_cl0_sf1_olong1st", "seed": 7}
+    assert parse_name("ost003d_800_sipp_oshort_7.json")["variant"] == "sipp_oshort"
     ok_line = ('{"map":"x.map","k":5,"success":1,"valid":1,"attempts":2,"time":1.5,"time_limit":60,'
                '"fail_no_path":1,"fail_cycle":0,"pushed_replanned":4}')
     fail_line = ('{"map":"x.map","k":5,"success":0,"valid":0,"attempts":9,"time":60,"time_limit":60,'

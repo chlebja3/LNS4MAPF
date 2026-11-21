@@ -249,18 +249,45 @@ auto LNS::find_initial_solution() -> bool
   return solution.feasible;
 }
 
+auto LNS::pp_agent_order() -> std::vector<int>
+{
+  const int agent_num = instance.get_num_of_agents();
+  std::vector<int> order(agent_num);
+  std::iota(order.begin(), order.end(), 0);
+
+  // the random shuffle also breaks ties of the heuristic orders (stable sort keeps the shuffled order)
+  std::shuffle(order.begin(), order.end(), rnd_generator);
+
+  const bool use_heuristic = !(settings.pp_order_first_only && pp_attempts > 0);
+  pp_attempts++;
+  if (!use_heuristic || settings.pp_order == PP_ORDER::RANDOM)
+  {
+    return order;
+  }
+
+  std::vector<int> dist(agent_num);
+  for (int a = 0; a < agent_num; a++)
+  {
+    dist[a] = instance.get_heuristic_distance(a, instance.get_start_locations()[a]);
+  }
+  if (settings.pp_order == PP_ORDER::SHORTEST_FIRST)
+  {
+    std::stable_sort(order.begin(), order.end(), [&dist](int a, int b) { return dist[a] < dist[b]; });
+  }
+  else
+  {
+    std::stable_sort(order.begin(), order.end(), [&dist](int a, int b) { return dist[a] > dist[b]; });
+  }
+  return order;
+}
+
 auto LNS::PrioritizedPlanning() -> Solution
 {
   Solution sol;
   sol.paths.resize(instance.get_num_of_agents(), TimePointPath());
   const int agent_num = instance.get_num_of_agents();
 
-  // create a sequence from 0 to agent_num
-  std::vector<int> priorities(agent_num);
-  std::iota(priorities.begin(), priorities.end(), 0);
-
-  // shuffle the sequence to get random priorities
-  std::shuffle(priorities.begin(), priorities.end(), rnd_generator);
+  const std::vector<int> priorities = pp_agent_order();
 
   // initialize iter info
   if (settings.use_psipp)

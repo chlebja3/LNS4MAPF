@@ -49,6 +49,19 @@ public:
 };
 
 /**
+ * @brief Agent ordering used by Prioritized Planning for the initial solution.
+ *
+ * The heuristic orders sort agents by the length of their shortest path (distance from start to goal,
+ * ignoring other agents); ties are broken randomly, so every restart still uses a different order.
+ */
+enum class PP_ORDER
+{
+  RANDOM,          /**< Uniformly random permutation. */
+  SHORTEST_FIRST,  /**< Agents with the shortest distance to goal get the highest priority. */
+  LONGEST_FIRST,   /**< Agents with the longest distance to goal get the highest priority (van den Berg & Overmars 2005). */
+};
+
+/**
  * @brief Settings for the Large Neighborhood Search (LNS) algorithm.
  */
 class LNS_settings
@@ -63,11 +76,13 @@ public:
    * @param sipp_settings_ Settings for the SIPP algorithm.
    * @param restarts_ Whether to use restarts.
    * @param sipp_first_ Whether the newly added agent first tries SIPP (false: PSIPP for every agent).
+   * @param pp_order_ Agent ordering of Prioritized Planning.
+   * @param pp_order_first_only_ If true, pp_order is used only for the first attempt; restarts use random orders.
    */
   LNS_settings(int max_iter_, double time_limit_, Destroy_settings destroy_settings_, SIPP_settings sipp_settings_,
                PSIPP_settings psipp_settings_ = {PSIPP_implementation::PSIPP_mine, INFO_type::no_info, 1.0},
                bool restarts_ = false, bool use_psipp_ = false,
-               bool sipp_first_ = true)
+               bool sipp_first_ = true, PP_ORDER pp_order_ = PP_ORDER::RANDOM, bool pp_order_first_only_ = false)
       : max_iter(max_iter_),
         time_limit(time_limit_),
         destroy_settings(destroy_settings_),
@@ -75,7 +90,9 @@ public:
         psipp_settings(psipp_settings_),
         restarts(restarts_),
         use_psipp(use_psipp_),
-        sipp_first(sipp_first_)
+        sipp_first(sipp_first_),
+        pp_order(pp_order_),
+        pp_order_first_only(pp_order_first_only_)
   {
   }
   int max_iter;                      /**< Maximum number of iterations. */
@@ -86,6 +103,8 @@ public:
   bool restarts;                     /**< Whether to use restarts. */
   bool use_psipp;
   bool sipp_first; /**< Whether the newly added agent first tries classic SIPP before PSIPP. */
+  PP_ORDER pp_order;        /**< Agent ordering of Prioritized Planning. */
+  bool pp_order_first_only; /**< Use pp_order only in the first attempt, random orders in restarts. */
 };
 
 /**
@@ -192,6 +211,14 @@ public:
   auto PrioritizedPlanning() -> Solution;
 
   /**
+   * @brief Computes the agent order for the next Prioritized Planning attempt according to settings.pp_order.
+   * Every call counts as one attempt (used by settings.pp_order_first_only).
+   *
+   * @return Agent ids, highest priority first.
+   */
+  auto pp_agent_order() -> std::vector<int>;
+
+  /**
    * @brief Getter for the number of generated nodes.
    *
    * @return The number of generated nodes.
@@ -232,6 +259,7 @@ public:
   Logger log;                                      /**< Logger for the LNS algorithm. */
   LNS_settings& settings;                          /**< Settings for the LNS algorithm. */
   bool found_initial_solution = false;             /**< Flag indicating if the initial solution was found. */
+  int pp_attempts = 0;                             /**< Number of agent orders generated so far. */
 
 private:
   /**

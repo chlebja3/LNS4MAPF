@@ -12,10 +12,10 @@
 
 auto main(int argc, char** argv) -> int
 {
-  if (argc != 11)
+  if (argc != 13)
   {
     std::cerr << "usage: psipp_init_bench <map> <scen> <k> <planner: sipp|psipp> <max_pushes> <seed> <time_limit> "
-                 "<push_cost: inf|number> <closed_per_count: 0|1> <sipp_first: 0|1>\n";
+                 "<push_cost: inf|number> <closed_per_count: 0|1> <sipp_first: 0|1> <pp_order: random|short|long> <order_first_only: 0|1>\n";
     return 2;
   }
   const std::string map = argv[1];
@@ -29,10 +29,22 @@ auto main(int argc, char** argv) -> int
   const double push_cost = push_cost_arg == "inf" ? std::numeric_limits<double>::infinity() : std::stod(push_cost_arg);
   const bool closed_per_count = std::stoi(argv[9]) != 0;
   const bool sipp_first = std::stoi(argv[10]) != 0;
+  const std::string order_arg = argv[11];
+  const bool order_first_only = std::stoi(argv[12]) != 0;
+  if (order_arg != "random" && order_arg != "short" && order_arg != "long")
+  {
+    std::cerr << "unknown pp_order: " << order_arg << "\n";
+    return 2;
+  }
+  const PP_ORDER pp_order = order_arg == "short"  ? PP_ORDER::SHORTEST_FIRST
+                            : order_arg == "long" ? PP_ORDER::LONGEST_FIRST
+                                                  : PP_ORDER::RANDOM;
 
-  const std::string variant = planner == "sipp" ? "sipp"
-                                                 : "psipp_c" + push_cost_arg + "_cl" + (closed_per_count ? "1" : "0") +
-                                                       "_sf" + (sipp_first ? "1" : "0");
+  const std::string order_tag = "_o" + order_arg + (order_first_only ? "1st" : "");
+  const std::string variant = (planner == "sipp" ? "sipp"
+                                                  : "psipp_c" + push_cost_arg + "_cl" + (closed_per_count ? "1" : "0") +
+                                                        "_sf" + (sipp_first ? "1" : "0")) +
+                              order_tag;
 
   Instance instance(map, scen, k);
   std::mt19937 rng(seed);
@@ -42,7 +54,8 @@ auto main(int argc, char** argv) -> int
   PSIPP_settings psipp_settings(PSIPP_implementation::PSIPP_mine_ap, INFO_type::no_info, 1.0, 1, max_pushes, push_cost,
                                 closed_per_count);
   Destroy_settings destroy_settings(DESTROY_TYPE::RANDOM, std::min(10, k));
-  LNS_settings settings(0, time_limit, destroy_settings, sipp_settings, psipp_settings, true, use_psipp, sipp_first);
+  LNS_settings settings(0, time_limit, destroy_settings, sipp_settings, psipp_settings, true, use_psipp, sipp_first, pp_order,
+                        order_first_only);
 
   LNS lns(instance, rng, nullptr, settings);
 
@@ -68,7 +81,8 @@ auto main(int argc, char** argv) -> int
   std::cout << "{\"map\":\"" << map.substr(map.find_last_of('/') + 1) << "\",\"scen\":\""
             << scen.substr(scen.find_last_of('/') + 1) << "\",\"k\":" << k << ",\"planner\":\"" << planner
             << "\",\"variant\":\"" << variant << "\",\"max_pushes\":" << max_pushes << ",\"push_cost\":\"" << push_cost_arg
-            << "\",\"closed_per_count\":" << (closed_per_count ? 1 : 0) << ",\"sipp_first\":" << (sipp_first ? 1 : 0)
+            << "\",\"closed_per_count\":" << (closed_per_count ? 1 : 0) << ",\"sipp_first\":" << (sipp_first ? 1 : 0) << ",\"pp_order\":\"" << order_arg
+            << "\",\"order_first_only\":" << (order_first_only ? 1 : 0)
             << ",\"time_limit\":" << time_limit << ",\"seed\":" << seed << ",\"success\":" << (ok ? 1 : 0) << ",\"valid\":" << (valid ? 1 : 0)
             << ",\"attempts\":" << attempts << ",\"time\":" << el
             << ",\"soc\":" << (ok ? lns.solution.sum_of_costs : -1)
