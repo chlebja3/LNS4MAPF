@@ -1,0 +1,667 @@
+<title>PSIPP Experiment Report</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:ital,wght@0,400;0,500;0,600;1,400&family=IBM+Plex+Mono:wght@400;500&family=Space+Grotesk:wght@500;600;700&display=swap">
+<style>
+/* Layout: one reading column (~72ch) with wide figure/table bands; a sticky contents rail on wide screens. */
+:root {
+  --bg: #f6f7f9;
+  --surface: #ffffff;
+  --fg: #1b2230;
+  --muted: #5a6478;
+  --line: #dde1e8;
+  --accent: #1f6fb4;          /* the blue PSIPP has in every figure */
+  --accent-soft: #e3eef8;
+  --sipp: #e8822a;            /* SIPP orange from the figures */
+  --good: #1d7a4a; --good-soft: #e2f3ea;
+  --warn: #a86400; --warn-soft: #fbf0dc;
+  --bad: #b3322a; --bad-soft: #f8e4e2;
+  --fig-bg: #ffffff;
+  --font-display: "Space Grotesk", "IBM Plex Sans", system-ui, sans-serif;
+  --font-body: "IBM Plex Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --font-mono: "IBM Plex Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #12161d; --surface: #1a2029; --fg: #e4e8ef; --muted: #9aa5b8; --line: #2c3441;
+    --accent: #6cb0ec; --accent-soft: #1b2f44; --sipp: #f0a25e;
+    --good: #5fcf92; --good-soft: #17301f; --warn: #e8b25a; --warn-soft: #33281a;
+    --bad: #f08a80; --bad-soft: #3a1f1d; --fig-bg: #f4f5f7; color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #12161d; --surface: #1a2029; --fg: #e4e8ef; --muted: #9aa5b8; --line: #2c3441;
+  --accent: #6cb0ec; --accent-soft: #1b2f44; --sipp: #f0a25e;
+  --good: #5fcf92; --good-soft: #17301f; --warn: #e8b25a; --warn-soft: #33281a;
+  --bad: #f08a80; --bad-soft: #3a1f1d; --fig-bg: #f4f5f7; color-scheme: dark;
+}
+* { box-sizing: border-box; }
+body {
+  background: var(--bg); color: var(--fg); font-family: var(--font-body); font-size: 16px; line-height: 1.6;
+  padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px));
+}
+.shell { max-width: 1180px; margin: 0 auto; display: grid; grid-template-columns: 210px minmax(0, 1fr); gap: 48px; padding-block: 40px 80px; }
+nav.toc { position: sticky; top: calc(env(safe-area-inset-top, 0px) + 24px); align-self: start; font-size: 13.5px; }
+nav.toc p { font-family: var(--font-mono); font-size: 11px; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); margin: 0 0 8px; }
+nav.toc ol { list-style: none; margin: 0; padding: 0; display: grid; gap: 2px; border-left: 1px solid var(--line); }
+nav.toc a { display: block; padding: 4px 0 4px 12px; color: var(--muted); text-decoration: none; margin-left: -1px; border-left: 2px solid transparent; }
+nav.toc a:hover, nav.toc a:focus-visible { color: var(--fg); border-left-color: var(--accent); outline: none; }
+main { min-width: 0; }
+.prose { max-width: 72ch; }
+h1, h2, h3 { font-family: var(--font-display); text-wrap: balance; line-height: 1.2; }
+h1 { font-size: clamp(2rem, 4.5vw, 2.8rem); margin: 0 0 12px; letter-spacing: -.01em; }
+h2 { font-size: 1.6rem; margin: 64px 0 12px; padding-top: 16px; border-top: 1px solid var(--line); scroll-margin-top: 16px; }
+h3 { font-size: 1.15rem; margin: 32px 0 8px; }
+p { margin: 0 0 14px; }
+a { color: var(--accent); }
+code, .mono { font-family: var(--font-mono); font-size: .88em; }
+code { background: var(--accent-soft); padding: 1px 5px; border-radius: 3px; }
+.eyebrow { font-family: var(--font-mono); font-size: 12px; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); margin-bottom: 10px; }
+.lede { font-size: 1.15rem; color: var(--muted); max-width: 66ch; }
+.meta { display: flex; flex-wrap: wrap; gap: 6px 20px; font-family: var(--font-mono); font-size: 12.5px; color: var(--muted); margin-top: 18px; }
+
+.answer { margin: 32px 0 8px; background: var(--warn-soft); border: 1px solid color-mix(in srgb, var(--warn) 35%, transparent); border-radius: 6px; padding: 18px 22px; max-width: 80ch; }
+.answer h2 { border: 0; margin: 0 0 6px; padding: 0; font-size: 1.15rem; color: var(--warn); }
+.answer p:last-child { margin-bottom: 0; }
+
+.kpis { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 12px; margin: 28px 0 8px; }
+.kpi { background: var(--surface); border: 1px solid var(--line); border-radius: 6px; padding: 14px 16px; display: grid; gap: 4px; align-content: start; }
+.kpi .v { font-family: var(--font-display); font-size: 1.7rem; font-weight: 600; font-variant-numeric: tabular-nums; line-height: 1.1; }
+.kpi .v small { font-size: .95rem; color: var(--muted); font-weight: 500; }
+.kpi .l { font-size: 13.5px; color: var(--muted); line-height: 1.4; }
+.v .ps { color: var(--accent); }
+
+ol.steps { list-style: none; counter-reset: s; padding: 0; margin: 16px 0; display: grid; gap: 10px; max-width: 80ch; }
+ol.steps li { counter-increment: s; display: grid; grid-template-columns: 2.2rem minmax(0, 1fr); gap: 12px; }
+ol.steps li::before { content: counter(s); font-family: var(--font-mono); font-size: 13px; color: var(--accent); border: 1px solid var(--accent); border-radius: 50%; width: 1.9rem; height: 1.9rem; display: grid; place-items: center; }
+
+.scroll { overflow-x: auto; margin: 12px 0 8px; }
+table.data { border-collapse: collapse; font-size: 14px; width: 100%; background: var(--surface); border: 1px solid var(--line); }
+table.data th, table.data td { padding: 7px 10px; border-bottom: 1px solid var(--line); text-align: left; vertical-align: top; }
+table.data thead th { font-size: 12px; font-weight: 600; color: var(--muted); text-transform: uppercase; letter-spacing: .04em; background: color-mix(in srgb, var(--surface) 70%, var(--bg)); white-space: nowrap; }
+table.data td.num, table.data th.num { text-align: right; font-variant-numeric: tabular-nums; font-family: var(--font-mono); font-size: 13px; white-space: nowrap; }
+table.data td.map { font-family: var(--font-mono); font-size: 13px; white-space: nowrap; }
+table.data tr.ours td { background: var(--accent-soft); font-weight: 500; }
+table.data td.best { font-weight: 600; color: var(--accent); }
+table.data td.good { color: var(--good); font-weight: 500; }
+table.data td.bad { color: var(--bad); font-weight: 500; }
+table.pivot td.num { background: color-mix(in srgb, var(--accent) calc(var(--h) * 16%), var(--surface)); }
+table.pivot td.ourscol { box-shadow: inset 2px 0 0 var(--accent); }
+.bar { display: inline-block; width: 54px; height: 6px; border-radius: 3px; background: var(--line); margin-right: 8px; vertical-align: middle; overflow: hidden; }
+.bar > span { display: block; height: 100%; }
+.b-psipp > span { background: var(--accent); }
+.b-sipp > span { background: var(--sipp); }
+.split { display: inline-block; width: 90px; height: 8px; border-radius: 4px; background: var(--bad); vertical-align: middle; overflow: hidden; opacity: .85; }
+.split > span { display: block; height: 100%; background: var(--good); }
+.caption { font-size: 13.5px; color: var(--muted); margin: 6px 0 18px; max-width: 80ch; }
+
+.controls { display: flex; flex-wrap: wrap; gap: 8px 16px; align-items: center; margin: 18px 0 6px; }
+.seg { display: inline-flex; border: 1px solid var(--line); border-radius: 6px; overflow: hidden; background: var(--surface); flex-wrap: wrap; }
+.seg button { font: 500 13px var(--font-body); color: var(--muted); background: none; border: 0; padding: 6px 12px; cursor: pointer; border-right: 1px solid var(--line); }
+.seg button:last-child { border-right: 0; }
+.seg button[aria-pressed="true"] { background: var(--accent); color: #fff; }
+.seg button:focus-visible { outline: 2px solid var(--accent); outline-offset: -2px; }
+.ctl-label { font-family: var(--font-mono); font-size: 11.5px; letter-spacing: .06em; text-transform: uppercase; color: var(--muted); }
+figure.plot { margin: 8px 0 4px; background: var(--fig-bg); border: 1px solid var(--line); border-radius: 6px; padding: 12px; max-width: 860px; }
+figure.plot img { display: block; width: 100%; height: auto; }
+
+.cols { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 16px; margin: 16px 0; }
+.verdict { background: var(--surface); border: 1px solid var(--line); border-radius: 6px; padding: 16px 18px; min-width: 0; }
+.verdict h3 { margin: 0 0 10px; font-size: 1rem; display: flex; align-items: center; gap: 8px; }
+.verdict ul { margin: 0; padding-left: 18px; display: grid; gap: 8px; font-size: 15px; }
+.pill { font: 600 11px var(--font-mono); letter-spacing: .05em; text-transform: uppercase; padding: 2px 8px; border-radius: 10px; }
+.pill.good { background: var(--good-soft); color: var(--good); }
+.pill.warn { background: var(--warn-soft); color: var(--warn); }
+.pill.bad { background: var(--bad-soft); color: var(--bad); }
+.verdict.good { border-top: 3px solid var(--good); }
+.verdict.warn { border-top: 3px solid var(--warn); }
+.verdict.bad { border-top: 3px solid var(--bad); }
+
+dl.defs { display: grid; grid-template-columns: max-content minmax(0, 1fr); gap: 8px 18px; margin: 12px 0; max-width: 80ch; font-size: 15px; }
+dl.defs dt { font-weight: 600; }
+dl.defs dd { margin: 0; color: var(--fg); }
+ul.tight { padding-left: 20px; margin: 8px 0 14px; display: grid; gap: 6px; max-width: 80ch; }
+.status { font: 600 11px var(--font-mono); text-transform: uppercase; letter-spacing: .04em; white-space: nowrap; }
+.status.done { color: var(--good); } .status.todo { color: var(--warn); }
+
+@media (max-width: 900px) {
+  .shell { grid-template-columns: minmax(0, 1fr); gap: 0; padding-block: 24px 60px; }
+  nav.toc { display: none; }
+  dl.defs { grid-template-columns: minmax(0, 1fr); gap: 2px 0; }
+  dl.defs dd { margin-bottom: 8px; }
+}
+@media (prefers-reduced-motion: no-preference) { html { scroll-behavior: smooth; } }
+</style>
+
+<div class="shell">
+<nav class="toc" aria-label="Contents">
+  <p>Contents</p>
+  <ol>
+    <li><a href="#replanning">PSIPP as replanner</a></li>
+    <li><a href="#summary">Summary</a></li>
+    <li><a href="#what">What PSIPP is</a></li>
+    <li><a href="#changes">Code changes and bugs</a></li>
+    <li><a href="#variants">Exp. 1: PSIPP variants</a></li>
+    <li><a href="#ordering">Exp. 2: Agent order</a></li>
+    <li><a href="#paper">Exp. 3: SIPP vs PSIPP</a></li>
+    <li><a href="#sota">Exp. 4: State of the art</a></li>
+    <li><a href="#verdict">What worked, what didn't</a></li>
+    <li><a href="#caveats">Caveats</a></li>
+    <li><a href="#literature">Literature</a></li>
+    <li><a href="#next">Next steps</a></li>
+    <li><a href="#files">Files</a></li>
+  </ol>
+</nav>
+
+<main>
+<header>
+  <div class="eyebrow">LNS4MAPF · branch push-and-sipp · November 2026</div>
+  <h1>PSIPP Experiment Report</h1>
+  <p class="lede">What was changed in the solver, which experiments ran on the CIIRC cluster, and what they show about prioritized planning with pushing (PSIPP) as the initial-solution method of our LNS solver.</p>
+  <div class="meta"><span>Cluster jobs 436535 · 437094/438289 · 439289 · 440299/440526/440529/441403</span><span>Runs analysed: 6 500 + 22 500 + 112 500</span></div>
+</header>
+
+<section class="answer" id="replanning" aria-labelledby="replanning-h">
+  <h2 id="replanning-h">PSIPP as the LNS replanner: tested, no overall gain</h2>
+  <p>PSIPP is now also available in the LNS repair step. A destroyed agent may push agents outside the neighborhood; the pushed agents are replanned and join the neighborhood, and the new solution is accepted only if the total SoC goes down. Three repair variants ran in the 5-seed state-of-the-art grid (11 250 runs each), all with the same PSIPP initial solution:</p>
+  <ul class="tight">
+    <li><strong>PSIPP+rp</strong>: SIPP first, PSIPP only if SIPP fails, push cost ∞ (same as the initial solution).</li>
+    <li><strong>PSIPP+rpd</strong>: PSIPP directly, push cost ∞.</li>
+    <li><strong>PSIPP+rpd c10</strong>: PSIPP directly, push cost 10, so a push can be chosen over a long detour.</li>
+  </ul>
+  <p><strong>Result.</strong> With push cost ∞ the repair almost always finds SIPP's path anyway; it only adds overhead, so fewer LNS iterations fit into 60 s and the final solutions are slightly worse. Push cost 10 really changes the paths: it helps on the small dense maps (room-32-32-4 −3.8%, maze-32-32-4 −2.8%, random-32-32-20 −1.5% SoC) and hurts on the large ones (empty-48-48, maze-128, room-64-64-8 +1.1–1.5%). Overall it is −0.14%. Every difference has the same sign on all 5 seeds. The anytime curves of the four PSIPP variants lie on top of each other; success rates are identical (92.0%) because the repair does not affect the first solution.</p>
+  <div class="scroll" style="max-width:760px"><table class="data">
+    <thead><tr><th>Repair vs plain PSIPP (SIPP repair)</th><th class="num">Mean SoC change</th><th class="num">Seed range</th><th class="num">LNS iterations</th><th class="num">Primal integral</th></tr></thead>
+    <tbody>
+      <tr><td>Ours (PSIPP), SIPP repair</td><td class="num">0</td><td class="num">–</td><td class="num">1×</td><td class="num best">0.1594</td></tr>
+      <tr><td>PSIPP+rp (SIPP first)</td><td class="num">+0.12%</td><td class="num">+0.08 … +0.16%</td><td class="num">0.84×</td><td class="num">0.1603</td></tr>
+      <tr><td>PSIPP+rpd (direct)</td><td class="num">+0.65%</td><td class="num">+0.57 … +0.72%</td><td class="num">0.59×</td><td class="num">0.1657</td></tr>
+      <tr class="ours"><td>PSIPP+rpd c10 (direct, cost 10)</td><td class="num best">−0.14%</td><td class="num">−0.21 … −0.09%</td><td class="num">0.63×</td><td class="num">0.1598</td></tr>
+    </tbody>
+  </table></div>
+  <p class="caption">Final SoC relative to plain PSIPP on the runs both solved (same instance and seed); negative is better. Iterations: median ratio. 60 s limit.</p>
+  <p>So PSIPP as a replanner is not a clear win. Push cost 10 is worth keeping as an option for dense maps, where we are weakest against MAPF-LNS2, but it does not close that gap.</p>
+</section>
+
+<section class="prose" id="summary">
+  <h2>Summary</h2>
+  <p>PSIPP finds a first solution far more often than plain SIPP prioritized planning, and it does not cost solution quality. With the thesis LNS on top, the full solver has the lowest primal integral of all seven solvers tested and the best final solution quality by a wide margin, on 5 seeds per instance with very small spread between seeds. Using PSIPP also inside the LNS repair does not improve this overall. It is not the most robust solver: LaCAM3 solves every instance, and MAPF-LNS2 is better on small dense maps.</p>
+</section>
+<div class="kpis">
+  <div class="kpi"><div class="v"><span class="ps">92.5%</span> <small>vs 57.8%</small></div><div class="l">Instances solved in 60 s, PSIPP vs SIPP (11 250 paired instances). SIPP never solved one that PSIPP missed.</div></div>
+  <div class="kpi"><div class="v">8.0 <small>vs 38.6</small></div><div class="l">Mean PP restarts before success, PSIPP vs SIPP</div></div>
+  <div class="kpi"><div class="v"><span class="ps">0.159</span> <small>best</small></div><div class="l">Primal integral at 60 s, lowest of 7 solvers (5 seeds). Next: LaCAM3 0.188, MAPF-LNS2 0.256.</div></div>
+  <div class="kpi"><div class="v"><span class="ps">0.52%</span> <small>vs 4.7%</small></div><div class="l">Gap of the final solution to the best known, PSIPP vs MAPF-LNS2 (4 726 runs all solvers solved)</div></div>
+</div>
+
+<section class="prose" id="what">
+  <h2>What PSIPP is</h2>
+  <p>Our solver builds an initial solution with prioritized planning (PP): agents are planned one by one with SIPP, each avoiding the paths already planned. If an agent finds no path, the attempt fails and PP restarts with a new order. This is the "SIPP" baseline throughout the report.</p>
+  <p>PSIPP changes the low-level search. When the agent being planned is blocked, its search may <strong>push</strong> an already planned agent: the search assumes that agent waits one step back in its previous cell, and the pushed agent is then replanned. An attempt fails if a pushed agent cannot be replanned or if the same agent would be pushed twice in one chain (a cycle).</p>
+  <p>The configuration used in every comparison is <code>cinf_cl0_sf1</code>:</p>
+  <ul class="tight">
+    <li><strong>SIPP first</strong> (<code>sf1</code>): each agent is first planned with plain SIPP; PSIPP is called only if that fails.</li>
+    <li><strong>Push cost infinite</strong> (<code>cinf</code>): any push-free path is preferred to any path with a push.</li>
+    <li><strong>One closed list</strong> (<code>cl0</code>), not one per push count.</li>
+    <li><strong>At most 5 pushes</strong> per planned path.</li>
+    <li><strong>Agent order:</strong> longest-first on the first attempt, random on restarts. In Experiment 3, SIPP uses longest-first on every attempt (each planner gets its best order, see Experiment 2); in Experiment 4, SIPP uses random order.</li>
+  </ul>
+  <p>The LNS improvement phase is the final thesis configuration: BLOCKED destroy operator, neighborhood size 8, bounded-suboptimal SIPP repair (<code>SIPP_suboptimal_ap</code>, w = 1, p = 5).</p>
+</section>
+
+<section id="changes">
+  <h2>Code changes and bugs fixed</h2>
+  <p class="prose">All of these are committed on <code>push-and-sipp</code> and pushed. Each bug was confirmed with a reproducing case before it was fixed, and each fix has a unit test (156 unit tests pass, 8 disabled).</p>
+  <h3>Bugs found and fixed</h3>
+  <div class="scroll"><table class="data">
+    <thead><tr><th>Bug</th><th>Effect</th><th>Commit</th></tr></thead>
+    <tbody>
+      <tr><td>PP replanned a pushed agent with another agent's SIPP call (<code>plan(agent_id, …)</code> instead of <code>plan(*it, …)</code>)</td><td>A pushed agent could get a path for the wrong start and goal</td><td class="mono">a411149</td></tr>
+      <tr><td><code>PSIPPNode</code> constructor emptied the caller's list of pushed agents</td><td>Later nodes forgot earlier pushes, so a path could go through an agent never recorded as pushed. This caused the 89 crashes in an early cluster run.</td><td class="mono">11a600f</td></tr>
+      <tr><td><code>get_all_intervals</code> did not return intervals covering the whole window</td><td>Agents parked at their goals could never be pushed. Fixing it raised PSIPP from about 414 to 648 of 650 solved runs in the variant grid.</td><td class="mono">59fa5da</td></tr>
+      <tr><td>PSIPP created the "enter after the pushed agent leaves" move without checking that the agent can wait that long</td><td>A stretched wait could collide with an agent that was never pushed. One invalid solution in the ordering runs, caught by the independent validator.</td><td class="mono">117446a</td></tr>
+      <tr><td>Destroy operators: random destroy with neighborhood equal to agent count; random walk of size 1</td><td>Crash / wrong behaviour on small instances</td><td class="mono">f464aa7</td></tr>
+      <tr><td>LNS: agents restored after a failed repair, and all agents of a loaded initial solution, were missing from <code>already_planned</code></td><td>The repair (SIPP or PSIPP, <code>_ap</code> variants) penalised their goal cells as if those agents were still unplanned, which led to needless detours. Found while adding PSIPP repair; all our SOTA runs use the fix.</td><td class="mono">working tree</td></tr>
+      <tr><td>GUI: pressing play when no LNS iteration exists (must_push scenario)</td><td>Segmentation fault. <code>Visualizer::next_iteration</code> now pauses at the last iteration. <strong>Not committed yet; please test it.</strong></td><td class="mono">working tree</td></tr>
+    </tbody>
+  </table></div>
+  <h3>New options and improvements</h3>
+  <div class="scroll"><table class="data">
+    <thead><tr><th>Change</th><th>Why</th><th>Commit</th></tr></thead>
+    <tbody>
+      <tr><td><code>sipp_first</code>, <code>push_cost</code>, closed list per push count, CLI flags</td><td>Variants to test whether pushes come too late in the search (Experiment 1)</td><td class="mono">564b8a1, 8cb0b39, 5aa0b58, 7bcec07</td></tr>
+      <tr><td>Failure counters (no path vs push cycle, replanned pushed agents)</td><td>To see why attempts fail</td><td class="mono">bca03c2</td></tr>
+      <tr><td>Shared pushed-constraint lists, one random tie key per node</td><td>About 35–40% faster PSIPP on room and warehouse maps</td><td class="mono">f836712</td></tr>
+      <tr><td>PP agent order: random, shortest-first, longest-first, optionally first attempt only</td><td>Ordering study (Experiment 2)</td><td class="mono">c5bc602</td></tr>
+      <tr><td>Parked agents on gap-free cells can be pushed; heuristic after a push; review cleanups</td><td>Findings of the final code review</td><td class="mono">45b9845</td></tr>
+      <tr><td>PSIPP in the LNS repair: <code>psipp_repair</code>, <code>repair_sipp_first</code>, <code>repair_push_cost</code> (own planner if the cost differs)</td><td>PSIPP as the replanner (top of this page)</td><td class="mono">working tree</td></tr>
+      <tr><td>Headless benchmark drivers, cluster scripts, result analysis</td><td>All experiments below</td><td class="mono">29e5c4e and later; SOTA scripts uncommitted</td></tr>
+    </tbody>
+  </table></div>
+</section>
+
+<section id="variants">
+  <h2>Experiment 1: which PSIPP variant</h2>
+  <div class="prose">
+    <p><strong>Question.</strong> Do pushes come too late in the search? With infinite push cost, PSIPP explores every push-free path before any push, so on a blocked instance it first repeats SIPP's failing search. A finite push cost or a closed list per push count could reach good pushes earlier.</p>
+    <p><strong>Setup.</strong> Cluster job 436535: 7 maps, 25 scenarios, 60 s, 650 runs per variant. The grid crossed push cost (0, 2, 10, 50, ∞), closed list (one, or one per push count) and SIPP first (on/off). Run after the <code>get_all_intervals</code> fix.</p>
+  </div>
+  <div class="scroll" style="max-width:620px"><table class="data">
+    <thead><tr><th>Variant</th><th class="num">Solved / 650</th><th class="num">Before the fix</th></tr></thead>
+    <tbody>
+      <tr class="ours"><td class="mono">psipp_cinf_cl0_sf1</td><td class="num best">648</td><td class="num">414</td></tr>
+      <tr><td class="mono">psipp_cinf_cl0_sf0</td><td class="num">645</td><td class="num">–</td></tr>
+      <tr><td class="mono">psipp_cinf_cl1_sf1</td><td class="num">641</td><td class="num">424</td></tr>
+      <tr><td class="mono">psipp_c50_cl0_sf1</td><td class="num">634</td><td class="num">420</td></tr>
+      <tr><td class="mono">sipp</td><td class="num">370</td><td class="num">370</td></tr>
+    </tbody>
+  </table></div>
+  <p class="caption">The other finite push costs were worse still. Push cost 0 or 2 is clearly bad: agents push each other back and forth until the cycle check fails the attempt.</p>
+  <div class="prose">
+    <p><strong>Result.</strong> The idea did not pay off. The simplest variant (infinite push cost, one closed list, SIPP first) is the best, and the large gain came from the bug fix, not from search changes. That variant is used everywhere below.</p>
+  </div>
+</section>
+
+<section id="ordering">
+  <h2>Experiment 2: agent order</h2>
+  <div class="prose">
+    <p><strong>Question.</strong> Your supervisor suggested looking at the agent ordering (Kulich's group). Their papers do not propose an ordering rule of their own; they cite distance-to-goal and longest-path-first (ter Mors 2011). I implemented random, shortest-first and longest-first, each optionally only for the first attempt.</p>
+    <p><strong>Setup.</strong> Jobs 437094 (SIPP) and 438289 (PSIPP, rerun after the stretched-wait fix): 7 maps, 25 scenarios, 60 s, 650 runs per variant. par2 is the mean runtime with unsolved runs counted as twice the time limit.</p>
+  </div>
+  <div class="scroll" style="max-width:820px"><table class="data">
+    <thead><tr><th>Order</th><th class="num">PSIPP solved</th><th class="num">PSIPP par2 [s]</th><th class="num">SIPP solved</th><th class="num">SIPP par2 [s]</th><th class="num">SoC vs random</th></tr></thead>
+    <tbody>
+      <tr><td>random</td><td class="num">648</td><td class="num">2.26</td><td class="num">361</td><td class="num">56.2</td><td class="num">1.00</td></tr>
+      <tr><td>longest-first</td><td class="num">645</td><td class="num">3.52</td><td class="num best">378</td><td class="num best">52.9</td><td class="num">+6–7%</td></tr>
+      <tr class="ours"><td>longest-first, 1st attempt only</td><td class="num best">650</td><td class="num best">1.99</td><td class="num">369</td><td class="num">54.2</td><td class="num">+5–6%</td></tr>
+      <tr><td>shortest-first</td><td class="num">626</td><td class="num">7.03</td><td class="num">180</td><td class="num">87.3</td><td class="num">−7–8%</td></tr>
+      <tr><td>shortest-first, 1st attempt only</td><td class="num">648</td><td class="num">2.64</td><td class="num">367</td><td class="num">55.3</td><td class="num">−4–6%</td></tr>
+    </tbody>
+  </table></div>
+  <div class="prose">
+    <p><strong>Result.</strong> Longest-first helps feasibility a little; shortest-first gives cheaper first solutions but fails more often. The differences are small next to the PSIPP vs SIPP gap. The initial SoC penalty of longest-first does not matter much because LNS improves the solution afterwards. Chosen: PSIPP with longest-first on the first attempt only, SIPP with longest-first always.</p>
+  </div>
+</section>
+
+<section id="paper">
+  <h2>Experiment 3: SIPP vs PSIPP initial solution</h2>
+  <div class="prose">
+    <p><strong>Question.</strong> Does pushing make PP find a first solution more often and faster, and at what cost in solution quality?</p>
+    <p><strong>Setup.</strong> Job 439289, 22 500 runs. 15 maps from the MovingAI benchmark (empty, random, maze, room, warehouse, game maps and a city), 25 scenarios each, 6 agent counts per map picked by a calibration run to span "both solve it" to "both struggle", 5 seeds. Each run is PP with restarts until a solution or 60 s, single-threaded. The 10 s results are the same runs cut at 10 s (the runs are deterministic for a seed). Every solution was checked by an independent validator; none was invalid. 7 runs were killed at the hard timeout (PSIPP on maze-128-128-2) and are counted as failures.</p>
+    <p><strong>Statistics.</strong> Success with Wilson 95% intervals and a paired McNemar test; time and SoC as geometric-mean ratios on instances both solved, with a Wilcoxon test.</p>
+  </div>
+  <div class="kpis">
+    <div class="kpi"><div class="v"><span class="ps">10 409</span> <small>vs 6 499</small></div><div class="l">Solved at 60 s, PSIPP vs SIPP. 3 910 solved only by PSIPP, 0 only by SIPP (McNemar p &lt; 0.001).</div></div>
+    <div class="kpi"><div class="v"><span class="ps">80.2%</span> <small>vs 50.8%</small></div><div class="l">Solved at 10 s, PSIPP vs SIPP</div></div>
+    <div class="kpi"><div class="v">0.61×</div><div class="l">PSIPP time relative to SIPP on the 6 499 instances both solve (95% CI 0.59–0.63)</div></div>
+    <div class="kpi"><div class="v">+0.11%</div><div class="l">PSIPP sum of costs relative to SIPP on the same instances</div></div>
+  </div>
+
+  <div class="controls" data-group="paper">
+    <span class="ctl-label">Time limit</span>
+    <div class="seg" role="group" aria-label="Time limit"><button type="button" data-lim="60" aria-pressed="true">60 s</button><button type="button" data-lim="10" aria-pressed="false">10 s</button></div>
+  </div>
+  <div class="scroll" data-group="paper" data-show="60"><table class="data"><thead><tr><th>Map</th><th class="num">SIPP solved</th><th class="num">PSIPP solved</th><th class="num">Only PSIPP</th><th class="num">Only SIPP</th><th class="num">Time PSIPP/SIPP</th><th class="num">SoC PSIPP/SIPP</th></tr></thead><tbody>
+<tr><td class="map">empty-32-32</td><td class="num"><span class="bar b-sipp"><span style="width:61.7%"></span></span>61.7%</td><td class="num"><span class="bar b-psipp"><span style="width:100.0%"></span></span>100.0%</td><td class="num">287</td><td class="num">0</td><td class="num good">0.28</td><td class="num ">0.9982</td></tr>
+<tr><td class="map">empty-48-48</td><td class="num"><span class="bar b-sipp"><span style="width:60.3%"></span></span>60.3%</td><td class="num"><span class="bar b-psipp"><span style="width:100.0%"></span></span>100.0%</td><td class="num">298</td><td class="num">0</td><td class="num good">0.32</td><td class="num ">0.9985</td></tr>
+<tr><td class="map">random-32-32-10</td><td class="num"><span class="bar b-sipp"><span style="width:51.2%"></span></span>51.2%</td><td class="num"><span class="bar b-psipp"><span style="width:92.4%"></span></span>92.4%</td><td class="num">309</td><td class="num">0</td><td class="num good">0.22</td><td class="num ">0.9995</td></tr>
+<tr><td class="map">random-32-32-20</td><td class="num"><span class="bar b-sipp"><span style="width:39.7%"></span></span>39.7%</td><td class="num"><span class="bar b-psipp"><span style="width:72.4%"></span></span>72.4%</td><td class="num">245</td><td class="num">0</td><td class="num good">0.22</td><td class="num ">1.0036</td></tr>
+<tr><td class="map">random-64-64-20</td><td class="num"><span class="bar b-sipp"><span style="width:39.2%"></span></span>39.2%</td><td class="num"><span class="bar b-psipp"><span style="width:99.7%"></span></span>99.7%</td><td class="num">454</td><td class="num">0</td><td class="num good">0.22</td><td class="num ">0.9967</td></tr>
+<tr><td class="map">maze-32-32-4</td><td class="num"><span class="bar b-sipp"><span style="width:34.5%"></span></span>34.5%</td><td class="num"><span class="bar b-psipp"><span style="width:82.7%"></span></span>82.7%</td><td class="num">361</td><td class="num">0</td><td class="num good">0.69</td><td class="num ">1.0054</td></tr>
+<tr><td class="map">maze-128-128-2</td><td class="num"><span class="bar b-sipp"><span style="width:65.2%"></span></span>65.2%</td><td class="num"><span class="bar b-psipp"><span style="width:80.0%"></span></span>80.0%</td><td class="num">111</td><td class="num">0</td><td class="num ">1.00</td><td class="num ">1.0001</td></tr>
+<tr><td class="map">room-32-32-4</td><td class="num"><span class="bar b-sipp"><span style="width:30.8%"></span></span>30.8%</td><td class="num"><span class="bar b-psipp"><span style="width:80.5%"></span></span>80.5%</td><td class="num">373</td><td class="num">0</td><td class="num good">0.18</td><td class="num bad">1.0304</td></tr>
+<tr><td class="map">room-64-64-8</td><td class="num"><span class="bar b-sipp"><span style="width:22.5%"></span></span>22.5%</td><td class="num"><span class="bar b-psipp"><span style="width:89.9%"></span></span>89.9%</td><td class="num">505</td><td class="num">0</td><td class="num good">0.37</td><td class="num ">1.0031</td></tr>
+<tr><td class="map">warehouse-10-20-10-2-1</td><td class="num"><span class="bar b-sipp"><span style="width:12.4%"></span></span>12.4%</td><td class="num"><span class="bar b-psipp"><span style="width:90.4%"></span></span>90.4%</td><td class="num">585</td><td class="num">0</td><td class="num good">0.39</td><td class="num ">1.0001</td></tr>
+<tr><td class="map">warehouse-20-40-10-2-1</td><td class="num"><span class="bar b-sipp"><span style="width:49.6%"></span></span>49.6%</td><td class="num"><span class="bar b-psipp"><span style="width:100.0%"></span></span>100.0%</td><td class="num">378</td><td class="num">0</td><td class="num good">0.86</td><td class="num ">1.0002</td></tr>
+<tr><td class="map">den520d</td><td class="num"><span class="bar b-sipp"><span style="width:100.0%"></span></span>100.0%</td><td class="num"><span class="bar b-psipp"><span style="width:100.0%"></span></span>100.0%</td><td class="num">0</td><td class="num">0</td><td class="num bad">1.07</td><td class="num ">1.0000</td></tr>
+<tr><td class="map">ost003d</td><td class="num"><span class="bar b-sipp"><span style="width:99.5%"></span></span>99.5%</td><td class="num"><span class="bar b-psipp"><span style="width:99.9%"></span></span>99.9%</td><td class="num">3</td><td class="num">0</td><td class="num bad">1.03</td><td class="num ">0.9999</td></tr>
+<tr><td class="map">lak303d</td><td class="num"><span class="bar b-sipp"><span style="width:99.9%"></span></span>99.9%</td><td class="num"><span class="bar b-psipp"><span style="width:100.0%"></span></span>100.0%</td><td class="num">1</td><td class="num">0</td><td class="num bad">1.05</td><td class="num ">0.9999</td></tr>
+<tr><td class="map">Paris_1_256</td><td class="num"><span class="bar b-sipp"><span style="width:100.0%"></span></span>100.0%</td><td class="num"><span class="bar b-psipp"><span style="width:100.0%"></span></span>100.0%</td><td class="num">0</td><td class="num">0</td><td class="num bad">1.09</td><td class="num ">1.0000</td></tr>
+</tbody></table></div>
+  <div class="scroll" data-group="paper" data-show="10" hidden><table class="data"><thead><tr><th>Map</th><th class="num">SIPP solved</th><th class="num">PSIPP solved</th><th class="num">Only PSIPP</th><th class="num">Only SIPP</th><th class="num">Time PSIPP/SIPP</th><th class="num">SoC PSIPP/SIPP</th></tr></thead><tbody>
+<tr><td class="map">empty-32-32</td><td class="num"><span class="bar b-sipp"><span style="width:57.2%"></span></span>57.2%</td><td class="num"><span class="bar b-psipp"><span style="width:100.0%"></span></span>100.0%</td><td class="num">321</td><td class="num">0</td><td class="num good">0.41</td><td class="num ">0.9986</td></tr>
+<tr><td class="map">empty-48-48</td><td class="num"><span class="bar b-sipp"><span style="width:53.6%"></span></span>53.6%</td><td class="num"><span class="bar b-psipp"><span style="width:99.9%"></span></span>99.9%</td><td class="num">347</td><td class="num">0</td><td class="num good">0.47</td><td class="num ">0.9995</td></tr>
+<tr><td class="map">random-32-32-10</td><td class="num"><span class="bar b-sipp"><span style="width:47.6%"></span></span>47.6%</td><td class="num"><span class="bar b-psipp"><span style="width:85.2%"></span></span>85.2%</td><td class="num">282</td><td class="num">0</td><td class="num good">0.30</td><td class="num ">1.0000</td></tr>
+<tr><td class="map">random-32-32-20</td><td class="num"><span class="bar b-sipp"><span style="width:36.8%"></span></span>36.8%</td><td class="num"><span class="bar b-psipp"><span style="width:68.3%"></span></span>68.3%</td><td class="num">236</td><td class="num">0</td><td class="num good">0.31</td><td class="num ">1.0020</td></tr>
+<tr><td class="map">random-64-64-20</td><td class="num"><span class="bar b-sipp"><span style="width:32.5%"></span></span>32.5%</td><td class="num"><span class="bar b-psipp"><span style="width:91.3%"></span></span>91.3%</td><td class="num">441</td><td class="num">0</td><td class="num good">0.37</td><td class="num ">0.9974</td></tr>
+<tr><td class="map">maze-32-32-4</td><td class="num"><span class="bar b-sipp"><span style="width:33.9%"></span></span>33.9%</td><td class="num"><span class="bar b-psipp"><span style="width:74.0%"></span></span>74.0%</td><td class="num">301</td><td class="num">0</td><td class="num good">0.76</td><td class="num ">1.0037</td></tr>
+<tr><td class="map">maze-128-128-2</td><td class="num"><span class="bar b-sipp"><span style="width:51.6%"></span></span>51.6%</td><td class="num"><span class="bar b-psipp"><span style="width:52.0%"></span></span>52.0%</td><td class="num">9</td><td class="num">6</td><td class="num ">1.02</td><td class="num ">1.0000</td></tr>
+<tr><td class="map">room-32-32-4</td><td class="num"><span class="bar b-sipp"><span style="width:28.8%"></span></span>28.8%</td><td class="num"><span class="bar b-psipp"><span style="width:72.0%"></span></span>72.0%</td><td class="num">324</td><td class="num">0</td><td class="num good">0.25</td><td class="num bad">1.0291</td></tr>
+<tr><td class="map">room-64-64-8</td><td class="num"><span class="bar b-sipp"><span style="width:19.6%"></span></span>19.6%</td><td class="num"><span class="bar b-psipp"><span style="width:73.2%"></span></span>73.2%</td><td class="num">402</td><td class="num">0</td><td class="num good">0.55</td><td class="num ">1.0022</td></tr>
+<tr><td class="map">warehouse-10-20-10-2-1</td><td class="num"><span class="bar b-sipp"><span style="width:11.5%"></span></span>11.5%</td><td class="num"><span class="bar b-psipp"><span style="width:73.2%"></span></span>73.2%</td><td class="num">463</td><td class="num">0</td><td class="num good">0.47</td><td class="num ">1.0004</td></tr>
+<tr><td class="map">warehouse-20-40-10-2-1</td><td class="num"><span class="bar b-sipp"><span style="width:42.9%"></span></span>42.9%</td><td class="num"><span class="bar b-psipp"><span style="width:65.3%"></span></span>65.3%</td><td class="num">170</td><td class="num">2</td><td class="num ">1.00</td><td class="num ">1.0001</td></tr>
+<tr><td class="map">den520d</td><td class="num"><span class="bar b-sipp"><span style="width:100.0%"></span></span>100.0%</td><td class="num"><span class="bar b-psipp"><span style="width:100.0%"></span></span>100.0%</td><td class="num">0</td><td class="num">0</td><td class="num bad">1.07</td><td class="num ">1.0000</td></tr>
+<tr><td class="map">ost003d</td><td class="num"><span class="bar b-sipp"><span style="width:77.7%"></span></span>77.7%</td><td class="num"><span class="bar b-psipp"><span style="width:78.9%"></span></span>78.9%</td><td class="num">14</td><td class="num">5</td><td class="num bad">1.03</td><td class="num ">1.0000</td></tr>
+<tr><td class="map">lak303d</td><td class="num"><span class="bar b-sipp"><span style="width:68.3%"></span></span>68.3%</td><td class="num"><span class="bar b-psipp"><span style="width:69.1%"></span></span>69.1%</td><td class="num">8</td><td class="num">2</td><td class="num bad">1.05</td><td class="num ">1.0000</td></tr>
+<tr><td class="map">Paris_1_256</td><td class="num"><span class="bar b-sipp"><span style="width:100.0%"></span></span>100.0%</td><td class="num"><span class="bar b-psipp"><span style="width:100.0%"></span></span>100.0%</td><td class="num">0</td><td class="num">0</td><td class="num bad">1.09</td><td class="num ">1.0000</td></tr>
+</tbody></table></div>
+  <p class="caption">Per map, 750 paired instances each. Time and SoC ratios are geometric means over instances both planners solve; below 1 means PSIPP is faster or cheaper. Green: PSIPP at least 5% faster; red: PSIPP slower or more than 1% costlier.</p>
+
+  <div class="controls" data-group="paperfig">
+    <span class="ctl-label">Figure</span>
+    <div class="seg" role="group" aria-label="Figure"><button type="button" data-fig="success_rate" aria-pressed="true">Success rate</button><button type="button" data-fig="time" aria-pressed="false">Time</button><button type="button" data-fig="sum_of_costs" aria-pressed="false">Sum of costs</button><button type="button" data-fig="restarts" aria-pressed="false">Restarts</button></div>
+    <span class="ctl-label">Limit</span>
+    <div class="seg" role="group" aria-label="Figure time limit"><button type="button" data-flim="60s" aria-pressed="true">60 s</button><button type="button" data-flim="10s" aria-pressed="false">10 s</button></div>
+  </div>
+  <figure class="plot"><img id="paperfig-img" src="fig/paper_success_rate_60s.png" alt="SIPP vs PSIPP per map and number of agents" width="1260" height="1632"></figure>
+  <p class="caption">The thesis-style per-map figures for the paper (PDF versions are in the experiment output folder).</p>
+
+  <div class="prose">
+    <p><strong>Where PSIPP gains.</strong> Dense maps with corridors and rooms. On room-32-32-4 at 200 agents SIPP solves 0% and PSIPP 100%; on warehouse-10-20 at 600 agents 0% vs 100%; on empty-48-48 at 900 agents 0% vs 100%. Restarts drop from 38.6 to 8.0 on solved instances.</p>
+    <p><strong>Where it does not.</strong> On the large, sparse game maps (den520d, ost003d, lak303d, Paris) both planners solve almost everything, and PSIPP is 3–9% slower because the SIPP-first call and the push bookkeeping add overhead. On maze-128-128-2 at 10 s the two are tied (390 vs 387, 6 instances solved only by SIPP). On room-32-32-4 PSIPP solutions are 3% costlier, because pushes produce detours and waits.</p>
+  </div>
+</section>
+
+<section id="sota">
+  <h2>Experiment 4: comparison with the state of the art</h2>
+  <div class="prose">
+    <p><strong>Question.</strong> How does the full solver (PSIPP initial solution + thesis LNS) compare with the current anytime MAPF solvers, both in finding a first solution and in improving it?</p>
+    <p><strong>Setup.</strong> 112 500 runs: 10 solver configurations × the same 15 maps, 25 scenarios and 6 agent counts as Experiment 3 × <strong>5 seeds</strong>, 60 s per run, one thread, 8 GB memory limit. Seeds 1–4 ran on the CIIRC <code>compute</code> partition (Xeon E5-2690 v4) and seed 5 on the <code>gpu-[1-4]</code> nodes used as CPU nodes (Xeon Gold 6140, faster). Every solver ran each seed on the same hardware. MAPF-LNS hard-coded <code>srand(0)</code>, so it was patched with a <code>--seed</code> option. The seed-1 runs of MAPF-LNS2, BALANCE, ADDRESS and LaCAM3 are the runs of the earlier one-seed job 439791. Jobs 440299, 440526, 440529; 216 runs lost when I replaced the run script during the job were rerun in job 441403. Each baseline was built from a pinned commit with its README settings. All solutions were re-validated by our own checker, and the reported SoC matched the validated SoC in every run.</p>
+  </div>
+  <div class="scroll" style="max-width:980px"><table class="data">
+    <thead><tr><th>Solver</th><th>Method</th><th>Settings</th><th>Commit</th></tr></thead>
+    <tbody>
+      <tr class="ours"><td>Ours (PSIPP)</td><td>PP with PSIPP + restarts, then LNS (BLOCKED destroy, suboptimal SIPP repair)</td><td>cinf_cl0_sf1, longest-first 1st attempt, neighborhood 8</td><td class="mono">45b9845 + working tree</td></tr>
+      <tr class="ours"><td>PSIPP+rp</td><td>Same, LNS repair with PSIPP after SIPP fails</td><td>repair push cost ∞</td><td class="mono">same</td></tr>
+      <tr class="ours"><td>PSIPP+rpd</td><td>Same, LNS repair with PSIPP directly</td><td>repair push cost ∞</td><td class="mono">same</td></tr>
+      <tr class="ours"><td>PSIPP+rpd c10</td><td>Same, LNS repair with PSIPP directly</td><td>repair push cost 10</td><td class="mono">same</td></tr>
+      <tr><td>Ours (SIPP, thesis)</td><td>Same as Ours (PSIPP), with plain SIPP PP</td><td>random order</td><td class="mono">same</td></tr>
+      <tr><td>MAPF-LNS2</td><td>Li et al. AAAI 2022: PP + collision-repairing LNS, then anytime LNS</td><td>defaults</td><td class="mono">1369823</td></tr>
+      <tr><td>MAPF-LNS</td><td>Li et al. IJCAI 2021: PP initial solution, anytime LNS</td><td>initAlgo PP, neighborhood 8 (as in the thesis); patched to write paths and to take <code>--seed</code></td><td class="mono">95785de</td></tr>
+      <tr><td>BALANCE</td><td>Phan et al. AAAI 2024: bandit-tuned LNS neighborhoods</td><td>Thompson sampling, candidate sizes 5 (README)</td><td class="mono">47bb25e</td></tr>
+      <tr><td>ADDRESS</td><td>AAAI 2025: restricted Thompson sampling of delayed agents</td><td>RandomWalk, bernoulie, k = 64 (README)</td><td class="mono">b3d35c4</td></tr>
+      <tr><td>LaCAM3</td><td>Okumura 2024: anytime LaCAM*</td><td>single thread; logging patched to report SoC</td><td class="mono">1c3ecf8</td></tr>
+    </tbody>
+  </table></div>
+
+  <h3>Metrics</h3>
+  <dl class="defs">
+    <dt>Success</dt><dd>A valid first solution within the time limit.</dd>
+    <dt>Time to first</dt><dd>Mean time to the first solution, including map preprocessing; an unsolved run counts as the full limit.</dd>
+    <dt>Primal integral</dt><dd>The anytime metric. At each moment, p(t) = (SoC(t) − best) / SoC(t), and p = 1 while there is no solution. Averaged over [0, limit], so 0 is the best known solution found instantly and 1 is no solution at all. It rewards finding a solution early and improving it fast.</dd>
+    <dt>GAP</dt><dd>(final SoC − best known) / best known, averaged over the runs every solver solved. Best known is the lowest SoC any solver reached on that instance in any seed; there is no optimality bound at these sizes.</dd>
+    <dt>Head to head</dt><dd>Per instance, which of two solvers ends with the lower SoC; no solution counts as the worst.</dd>
+  </dl>
+
+  <div class="controls" data-group="sota">
+    <span class="ctl-label">Time limit</span>
+    <div class="seg" role="group" aria-label="Time limit"><button type="button" data-lim="60" aria-pressed="true">60 s</button><button type="button" data-lim="10" aria-pressed="false">10 s</button></div>
+  </div>
+  <h3>All instances</h3>
+  <div class="scroll" style="max-width:860px" data-group="sota" data-show="60"><table class="data"><thead><tr><th>Solver</th><th class="num">Success</th><th class="num">Mean time to first [s]</th><th class="num">Primal integral</th><th class="num">GAP to best (n=4726)</th></tr></thead><tbody>
+<tr class="ours"><td>Ours (PSIPP + PSIPP repair)</td><td class="num">92.0%</td><td class="num">8.10</td><td class="num">0.160</td><td class="num best">0.47%</td></tr>
+<tr class="ours"><td>Ours (PSIPP + direct PSIPP repair)</td><td class="num">92.0%</td><td class="num">8.14</td><td class="num">0.166</td><td class="num">0.76%</td></tr>
+<tr class="ours"><td>Ours (PSIPP + direct PSIPP repair, cost 10)</td><td class="num">92.0%</td><td class="num">8.17</td><td class="num">0.160</td><td class="num">0.67%</td></tr>
+<tr class="ours"><td>Ours (PSIPP)</td><td class="num">92.0%</td><td class="num">8.13</td><td class="num best">0.159</td><td class="num">0.52%</td></tr>
+<tr><td>Ours (SIPP, thesis)</td><td class="num">57.8%</td><td class="num">27.80</td><td class="num">0.469</td><td class="num">0.56%</td></tr>
+<tr><td>MAPF-LNS2</td><td class="num">92.7%</td><td class="num">11.20</td><td class="num">0.256</td><td class="num">4.65%</td></tr>
+<tr><td>MAPF-LNS</td><td class="num">42.1%</td><td class="num">37.80</td><td class="num">0.656</td><td class="num">6.50%</td></tr>
+<tr><td>BALANCE</td><td class="num">90.1%</td><td class="num">13.01</td><td class="num">0.291</td><td class="num">5.17%</td></tr>
+<tr><td>ADDRESS</td><td class="num">91.4%</td><td class="num">11.96</td><td class="num">0.279</td><td class="num">4.94%</td></tr>
+<tr><td>LaCAM3</td><td class="num best">100.0%</td><td class="num best">2.33</td><td class="num">0.188</td><td class="num">8.90%</td></tr>
+</tbody></table></div>
+  <div class="scroll" style="max-width:860px" data-group="sota" data-show="10" hidden><table class="data"><thead><tr><th>Solver</th><th class="num">Success</th><th class="num">Mean time to first [s]</th><th class="num">Primal integral</th><th class="num">GAP to best (n=3702)</th></tr></thead><tbody>
+<tr class="ours"><td>Ours (PSIPP + PSIPP repair)</td><td class="num">82.8%</td><td class="num">2.95</td><td class="num">0.318</td><td class="num best">0.47%</td></tr>
+<tr class="ours"><td>Ours (PSIPP + direct PSIPP repair)</td><td class="num">82.5%</td><td class="num">2.97</td><td class="num">0.323</td><td class="num">0.84%</td></tr>
+<tr class="ours"><td>Ours (PSIPP + direct PSIPP repair, cost 10)</td><td class="num">82.5%</td><td class="num">2.98</td><td class="num">0.319</td><td class="num">0.76%</td></tr>
+<tr class="ours"><td>Ours (PSIPP)</td><td class="num">82.6%</td><td class="num">2.96</td><td class="num best">0.316</td><td class="num">0.50%</td></tr>
+<tr><td>Ours (SIPP, thesis)</td><td class="num">50.7%</td><td class="num">5.74</td><td class="num">0.579</td><td class="num">0.49%</td></tr>
+<tr><td>MAPF-LNS2</td><td class="num">72.9%</td><td class="num">4.48</td><td class="num">0.506</td><td class="num">8.14%</td></tr>
+<tr><td>MAPF-LNS</td><td class="num">33.3%</td><td class="num">7.41</td><td class="num">0.766</td><td class="num">9.55%</td></tr>
+<tr><td>BALANCE</td><td class="num">69.1%</td><td class="num">4.78</td><td class="num">0.539</td><td class="num">8.76%</td></tr>
+<tr><td>ADDRESS</td><td class="num">71.8%</td><td class="num">4.54</td><td class="num">0.515</td><td class="num">7.99%</td></tr>
+<tr><td>LaCAM3</td><td class="num best">99.1%</td><td class="num best">2.31</td><td class="num">0.338</td><td class="num">7.19%</td></tr>
+</tbody></table></div>
+  <p class="caption">11 250 runs per solver (2 250 instances × 5 seeds). The best value of each column is in blue. The 10 s results are the 60 s runs cut at 10 s.</p>
+
+  <h3>Spread over seeds</h3>
+  <div class="scroll" style="max-width:980px" data-group="sota" data-show="60"><table class="data"><thead><tr><th>Solver</th><th class="num">Success, mean over seeds</th><th class="num">std</th><th class="num">min–max</th><th class="num">Primal integral, mean</th><th class="num">std</th><th class="num">min–max</th></tr></thead><tbody>
+<tr class="ours"><td>Ours (PSIPP + PSIPP repair)</td><td class="num">92.0%</td><td class="num">0.29%</td><td class="num">91.6%–92.4%</td><td class="num">0.1603</td><td class="num">0.0043</td><td class="num">0.1533–0.1639</td></tr>
+<tr class="ours"><td>Ours (PSIPP + direct PSIPP repair)</td><td class="num">92.0%</td><td class="num">0.35%</td><td class="num">91.6%–92.5%</td><td class="num">0.1657</td><td class="num">0.0048</td><td class="num">0.1578–0.1706</td></tr>
+<tr class="ours"><td>Ours (PSIPP + direct PSIPP repair, cost 10)</td><td class="num">92.0%</td><td class="num">0.35%</td><td class="num">91.6%–92.5%</td><td class="num">0.1598</td><td class="num">0.004</td><td class="num">0.1536–0.1644</td></tr>
+<tr class="ours"><td>Ours (PSIPP)</td><td class="num">92.0%</td><td class="num">0.27%</td><td class="num">91.7%–92.4%</td><td class="num">0.1594</td><td class="num">0.0041</td><td class="num">0.1526–0.1629</td></tr>
+<tr><td>Ours (SIPP, thesis)</td><td class="num">57.8%</td><td class="num">0.17%</td><td class="num">57.6%–58.0%</td><td class="num">0.4692</td><td class="num">0.0028</td><td class="num">0.4646–0.4718</td></tr>
+<tr><td>MAPF-LNS2</td><td class="num">92.7%</td><td class="num">0.27%</td><td class="num">92.4%–93.0%</td><td class="num">0.2555</td><td class="num">0.0068</td><td class="num">0.2438–0.2615</td></tr>
+<tr><td>MAPF-LNS</td><td class="num">42.1%</td><td class="num">0.21%</td><td class="num">42.0%–42.4%</td><td class="num">0.6558</td><td class="num">0.0037</td><td class="num">0.6502–0.6601</td></tr>
+<tr><td>BALANCE</td><td class="num">90.1%</td><td class="num">0.34%</td><td class="num">89.8%–90.6%</td><td class="num">0.2914</td><td class="num">0.0073</td><td class="num">0.2786–0.2965</td></tr>
+<tr><td>ADDRESS</td><td class="num">91.4%</td><td class="num">0.20%</td><td class="num">91.2%–91.6%</td><td class="num">0.2787</td><td class="num">0.0068</td><td class="num">0.2668–0.2833</td></tr>
+<tr><td>LaCAM3</td><td class="num">100.0%</td><td class="num">0.00%</td><td class="num">100.0%–100.0%</td><td class="num">0.1879</td><td class="num">0.003</td><td class="num">0.1827–0.1900</td></tr>
+</tbody></table></div>
+  <div class="scroll" style="max-width:980px" data-group="sota" data-show="10" hidden><table class="data"><thead><tr><th>Solver</th><th class="num">Success, mean over seeds</th><th class="num">std</th><th class="num">min–max</th><th class="num">Primal integral, mean</th><th class="num">std</th><th class="num">min–max</th></tr></thead><tbody>
+<tr class="ours"><td>Ours (PSIPP + PSIPP repair)</td><td class="num">82.8%</td><td class="num">0.60%</td><td class="num">82.4%–83.8%</td><td class="num">0.3175</td><td class="num">0.0097</td><td class="num">0.3004–0.3232</td></tr>
+<tr class="ours"><td>Ours (PSIPP + direct PSIPP repair)</td><td class="num">82.5%</td><td class="num">0.74%</td><td class="num">82.0%–83.8%</td><td class="num">0.3227</td><td class="num">0.011</td><td class="num">0.3031–0.3295</td></tr>
+<tr class="ours"><td>Ours (PSIPP + direct PSIPP repair, cost 10)</td><td class="num">82.5%</td><td class="num">0.66%</td><td class="num">81.8%–83.5%</td><td class="num">0.319</td><td class="num">0.0093</td><td class="num">0.3026–0.3249</td></tr>
+<tr class="ours"><td>Ours (PSIPP)</td><td class="num">82.6%</td><td class="num">0.53%</td><td class="num">82.3%–83.6%</td><td class="num">0.3164</td><td class="num">0.0096</td><td class="num">0.2996–0.3226</td></tr>
+<tr><td>Ours (SIPP, thesis)</td><td class="num">50.7%</td><td class="num">0.46%</td><td class="num">50.3%–51.4%</td><td class="num">0.5793</td><td class="num">0.0063</td><td class="num">0.5697–0.5854</td></tr>
+<tr><td>MAPF-LNS2</td><td class="num">72.9%</td><td class="num">0.69%</td><td class="num">72.3%–74.0%</td><td class="num">0.5062</td><td class="num">0.0141</td><td class="num">0.4813–0.5149</td></tr>
+<tr><td>MAPF-LNS</td><td class="num">33.3%</td><td class="num">0.56%</td><td class="num">32.6%–34.0%</td><td class="num">0.7656</td><td class="num">0.0069</td><td class="num">0.7541–0.7711</td></tr>
+<tr><td>BALANCE</td><td class="num">69.1%</td><td class="num">0.95%</td><td class="num">68.2%–70.7%</td><td class="num">0.5394</td><td class="num">0.014</td><td class="num">0.5146–0.5477</td></tr>
+<tr><td>ADDRESS</td><td class="num">71.8%</td><td class="num">0.90%</td><td class="num">71.1%–73.3%</td><td class="num">0.5146</td><td class="num">0.0145</td><td class="num">0.4888–0.5229</td></tr>
+<tr><td>LaCAM3</td><td class="num">99.1%</td><td class="num">0.44%</td><td class="num">98.8%–99.9%</td><td class="num">0.3383</td><td class="num">0.0154</td><td class="num">0.3110–0.3474</td></tr>
+</tbody></table></div>
+  <p class="caption">Each seed's overall value, then mean, standard deviation and range over the 5 seeds. Seed 5 ran on the faster gpu nodes: every solver has an 11–24% lower median time to the first solution there and up to 0.6 points higher success, so seed 5 is at the top of most ranges. The success ranking of the solvers is the same on every seed.</p>
+
+  <h3>Head to head: final solution of PSIPP against each solver</h3>
+  <div class="scroll" style="max-width:860px" data-group="sota" data-show="60"><table class="data"><thead><tr><th>PSIPP vs</th><th class="num">PSIPP better</th><th class="num">Equal</th><th class="num">PSIPP worse</th><th class="num">Both unsolved</th><th>Share of decided</th></tr></thead><tbody>
+<tr><td>Ours (PSIPP + PSIPP repair)</td><td class="num">5093</td><td class="num">1065</td><td class="num">4199</td><td class="num">893</td><td><span class="split"><span style="width:54.8%"></span></span> 55%</td></tr>
+<tr><td>Ours (PSIPP + direct PSIPP repair)</td><td class="num">8079</td><td class="num">109</td><td class="num">2174</td><td class="num">888</td><td><span class="split"><span style="width:78.8%"></span></span> 79%</td></tr>
+<tr><td>Ours (PSIPP + direct PSIPP repair, cost 10)</td><td class="num">6428</td><td class="num">94</td><td class="num">3838</td><td class="num">890</td><td><span class="split"><span style="width:62.6%"></span></span> 63%</td></tr>
+<tr><td>Ours (SIPP, thesis)</td><td class="num">7546</td><td class="num">93</td><td class="num">2715</td><td class="num">896</td><td><span class="split"><span style="width:73.5%"></span></span> 74%</td></tr>
+<tr><td>MAPF-LNS2</td><td class="num">9096</td><td class="num">32</td><td class="num">1719</td><td class="num">403</td><td><span class="split"><span style="width:84.1%"></span></span> 84%</td></tr>
+<tr><td>MAPF-LNS</td><td class="num">10018</td><td class="num">24</td><td class="num">310</td><td class="num">898</td><td><span class="split"><span style="width:97.0%"></span></span> 97%</td></tr>
+<tr><td>BALANCE</td><td class="num">9691</td><td class="num">24</td><td class="num">956</td><td class="num">579</td><td><span class="split"><span style="width:91.0%"></span></span> 91%</td></tr>
+<tr><td>ADDRESS</td><td class="num">10114</td><td class="num">10</td><td class="num">617</td><td class="num">509</td><td><span class="split"><span style="width:94.3%"></span></span> 94%</td></tr>
+<tr><td>LaCAM3</td><td class="num">10301</td><td class="num">0</td><td class="num">949</td><td class="num">0</td><td><span class="split"><span style="width:91.6%"></span></span> 92%</td></tr>
+</tbody></table></div>
+  <div class="scroll" style="max-width:860px" data-group="sota" data-show="10" hidden><table class="data"><thead><tr><th>PSIPP vs</th><th class="num">PSIPP better</th><th class="num">Equal</th><th class="num">PSIPP worse</th><th class="num">Both unsolved</th><th>Share of decided</th></tr></thead><tbody>
+<tr><td>Ours (PSIPP + PSIPP repair)</td><td class="num">4968</td><td class="num">764</td><td class="num">3601</td><td class="num">1846</td><td><span class="split"><span style="width:58.0%"></span></span> 58%</td></tr>
+<tr><td>Ours (PSIPP + direct PSIPP repair)</td><td class="num">7705</td><td class="num">65</td><td class="num">1550</td><td class="num">1859</td><td><span class="split"><span style="width:83.3%"></span></span> 83%</td></tr>
+<tr><td>Ours (PSIPP + direct PSIPP repair, cost 10)</td><td class="num">6517</td><td class="num">75</td><td class="num">2733</td><td class="num">1854</td><td><span class="split"><span style="width:70.5%"></span></span> 70%</td></tr>
+<tr><td>Ours (SIPP, thesis)</td><td class="num">6769</td><td class="num">68</td><td class="num">2519</td><td class="num">1823</td><td><span class="split"><span style="width:72.9%"></span></span> 73%</td></tr>
+<tr><td>MAPF-LNS2</td><td class="num">8806</td><td class="num">19</td><td class="num">872</td><td class="num">1482</td><td><span class="split"><span style="width:91.0%"></span></span> 91%</td></tr>
+<tr><td>MAPF-LNS</td><td class="num">9205</td><td class="num">14</td><td class="num">77</td><td class="num">1883</td><td><span class="split"><span style="width:99.2%"></span></span> 99%</td></tr>
+<tr><td>BALANCE</td><td class="num">9067</td><td class="num">7</td><td class="num">385</td><td class="num">1720</td><td><span class="split"><span style="width:95.9%"></span></span> 96%</td></tr>
+<tr><td>ADDRESS</td><td class="num">9135</td><td class="num">4</td><td class="num">463</td><td class="num">1577</td><td><span class="split"><span style="width:95.2%"></span></span> 95%</td></tr>
+<tr><td>LaCAM3</td><td class="num">9122</td><td class="num">0</td><td class="num">2056</td><td class="num">1</td><td><span class="split"><span style="width:81.6%"></span></span> 82%</td></tr>
+</tbody></table></div>
+  <p class="caption">The bar shows PSIPP's share of the decided instances (green: PSIPP better).</p>
+
+  <h3>Per map: success rate</h3>
+  <div class="scroll" data-group="sota" data-show="60"><table class="data pivot"><thead><tr><th>Map</th><th class="num">PSIPP+rp</th><th class="num">PSIPP+rpd</th><th class="num">PSIPP+rpd c10</th><th class="num">PSIPP</th><th class="num">SIPP</th><th class="num">LNS2</th><th class="num">LNS</th><th class="num">BALANCE</th><th class="num">ADDRESS</th><th class="num">LaCAM3</th></tr></thead><tbody>
+<tr><td class="map">empty-32-32</td><td class="num best ourscol" style="--h:1.000">100%</td><td class="num best ourscol" style="--h:1.000">100%</td><td class="num best ourscol" style="--h:1.000">100%</td><td class="num best ourscol" style="--h:1.000">100%</td><td class="num" style="--h:0.656">66%</td><td class="num best" style="--h:1.000">100%</td><td class="num" style="--h:0.640">64%</td><td class="num best" style="--h:1.000">100%</td><td class="num best" style="--h:1.000">100%</td><td class="num best" style="--h:1.000">100%</td></tr>
+<tr><td class="map">empty-48-48</td><td class="num best ourscol" style="--h:1.000">100%</td><td class="num best ourscol" style="--h:1.000">100%</td><td class="num best ourscol" style="--h:1.000">100%</td><td class="num best ourscol" style="--h:1.000">100%</td><td class="num" style="--h:0.661">66%</td><td class="num best" style="--h:1.000">100%</td><td class="num" style="--h:0.637">64%</td><td class="num best" style="--h:1.000">100%</td><td class="num best" style="--h:1.000">100%</td><td class="num best" style="--h:1.000">100%</td></tr>
+<tr><td class="map">random-32-32-10</td><td class="num ourscol" style="--h:0.921">92%</td><td class="num ourscol" style="--h:0.923">92%</td><td class="num ourscol" style="--h:0.921">92%</td><td class="num ourscol" style="--h:0.923">92%</td><td class="num" style="--h:0.489">49%</td><td class="num best" style="--h:1.000">100%</td><td class="num" style="--h:0.476">48%</td><td class="num" style="--h:0.997">100%</td><td class="num" style="--h:0.999">100%</td><td class="num best" style="--h:1.000">100%</td></tr>
+<tr><td class="map">random-32-32-20</td><td class="num ourscol" style="--h:0.724">72%</td><td class="num ourscol" style="--h:0.725">72%</td><td class="num ourscol" style="--h:0.725">72%</td><td class="num ourscol" style="--h:0.724">72%</td><td class="num" style="--h:0.341">34%</td><td class="num" style="--h:0.996">100%</td><td class="num" style="--h:0.313">31%</td><td class="num" style="--h:0.859">86%</td><td class="num" style="--h:0.911">91%</td><td class="num best" style="--h:1.000">100%</td></tr>
+<tr><td class="map">random-64-64-20</td><td class="num best ourscol" style="--h:1.000">100%</td><td class="num best ourscol" style="--h:1.000">100%</td><td class="num best ourscol" style="--h:1.000">100%</td><td class="num best ourscol" style="--h:1.000">100%</td><td class="num" style="--h:0.296">30%</td><td class="num best" style="--h:1.000">100%</td><td class="num" style="--h:0.180">18%</td><td class="num" style="--h:0.999">100%</td><td class="num" style="--h:0.988">99%</td><td class="num best" style="--h:1.000">100%</td></tr>
+<tr><td class="map">maze-32-32-4</td><td class="num ourscol" style="--h:0.812">81%</td><td class="num ourscol" style="--h:0.812">81%</td><td class="num ourscol" style="--h:0.812">81%</td><td class="num ourscol" style="--h:0.812">81%</td><td class="num" style="--h:0.364">36%</td><td class="num" style="--h:0.839">84%</td><td class="num" style="--h:0.204">20%</td><td class="num" style="--h:0.789">79%</td><td class="num" style="--h:0.792">79%</td><td class="num best" style="--h:1.000">100%</td></tr>
+<tr><td class="map">maze-128-128-2</td><td class="num ourscol" style="--h:0.775">78%</td><td class="num ourscol" style="--h:0.768">77%</td><td class="num ourscol" style="--h:0.768">77%</td><td class="num ourscol" style="--h:0.772">77%</td><td class="num" style="--h:0.391">39%</td><td class="num" style="--h:0.551">55%</td><td class="num" style="--h:0.039">4%</td><td class="num" style="--h:0.533">53%</td><td class="num" style="--h:0.552">55%</td><td class="num best" style="--h:1.000">100%</td></tr>
+<tr><td class="map">room-32-32-4</td><td class="num ourscol" style="--h:0.799">80%</td><td class="num ourscol" style="--h:0.800">80%</td><td class="num ourscol" style="--h:0.799">80%</td><td class="num ourscol" style="--h:0.799">80%</td><td class="num" style="--h:0.167">17%</td><td class="num best" style="--h:1.000">100%</td><td class="num" style="--h:0.156">16%</td><td class="num" style="--h:0.959">96%</td><td class="num" style="--h:0.964">96%</td><td class="num best" style="--h:1.000">100%</td></tr>
+<tr><td class="map">room-64-64-8</td><td class="num ourscol" style="--h:0.883">88%</td><td class="num ourscol" style="--h:0.884">88%</td><td class="num ourscol" style="--h:0.884">88%</td><td class="num ourscol" style="--h:0.881">88%</td><td class="num" style="--h:0.075">8%</td><td class="num" style="--h:0.752">75%</td><td class="num" style="--h:0.005">0%</td><td class="num" style="--h:0.664">66%</td><td class="num" style="--h:0.767">77%</td><td class="num best" style="--h:1.000">100%</td></tr>
+<tr><td class="map">warehouse-10-20-10-2-1</td><td class="num ourscol" style="--h:0.897">90%</td><td class="num ourscol" style="--h:0.897">90%</td><td class="num ourscol" style="--h:0.897">90%</td><td class="num ourscol" style="--h:0.899">90%</td><td class="num" style="--h:0.401">40%</td><td class="num" style="--h:0.923">92%</td><td class="num" style="--h:0.225">22%</td><td class="num" style="--h:0.867">87%</td><td class="num" style="--h:0.903">90%</td><td class="num best" style="--h:1.000">100%</td></tr>
+<tr><td class="map">warehouse-20-40-10-2-1</td><td class="num best ourscol" style="--h:1.000">100%</td><td class="num best ourscol" style="--h:1.000">100%</td><td class="num best ourscol" style="--h:1.000">100%</td><td class="num best ourscol" style="--h:1.000">100%</td><td class="num" style="--h:0.959">96%</td><td class="num" style="--h:0.999">100%</td><td class="num" style="--h:0.468">47%</td><td class="num" style="--h:0.997">100%</td><td class="num" style="--h:0.996">100%</td><td class="num best" style="--h:1.000">100%</td></tr>
+<tr><td class="map">den520d</td><td class="num best ourscol" style="--h:1.000">100%</td><td class="num best ourscol" style="--h:1.000">100%</td><td class="num best ourscol" style="--h:1.000">100%</td><td class="num best ourscol" style="--h:1.000">100%</td><td class="num best" style="--h:1.000">100%</td><td class="num best" style="--h:1.000">100%</td><td class="num" style="--h:0.988">99%</td><td class="num best" style="--h:1.000">100%</td><td class="num best" style="--h:1.000">100%</td><td class="num best" style="--h:1.000">100%</td></tr>
+<tr><td class="map">ost003d</td><td class="num ourscol" style="--h:0.993">99%</td><td class="num ourscol" style="--h:0.993">99%</td><td class="num ourscol" style="--h:0.993">99%</td><td class="num ourscol" style="--h:0.993">99%</td><td class="num" style="--h:0.971">97%</td><td class="num" style="--h:0.944">94%</td><td class="num" style="--h:0.540">54%</td><td class="num" style="--h:0.941">94%</td><td class="num" style="--h:0.937">94%</td><td class="num best" style="--h:1.000">100%</td></tr>
+<tr><td class="map">lak303d</td><td class="num best ourscol" style="--h:1.000">100%</td><td class="num best ourscol" style="--h:1.000">100%</td><td class="num best ourscol" style="--h:1.000">100%</td><td class="num best ourscol" style="--h:1.000">100%</td><td class="num" style="--h:0.899">90%</td><td class="num" style="--h:0.908">91%</td><td class="num" style="--h:0.516">52%</td><td class="num" style="--h:0.905">90%</td><td class="num" style="--h:0.903">90%</td><td class="num best" style="--h:1.000">100%</td></tr>
+<tr><td class="map">Paris_1_256</td><td class="num best ourscol" style="--h:1.000">100%</td><td class="num best ourscol" style="--h:1.000">100%</td><td class="num best ourscol" style="--h:1.000">100%</td><td class="num best ourscol" style="--h:1.000">100%</td><td class="num best" style="--h:1.000">100%</td><td class="num best" style="--h:1.000">100%</td><td class="num" style="--h:0.932">93%</td><td class="num best" style="--h:1.000">100%</td><td class="num best" style="--h:1.000">100%</td><td class="num best" style="--h:1.000">100%</td></tr>
+</tbody></table></div>
+  <div class="scroll" data-group="sota" data-show="10" hidden><table class="data pivot"><thead><tr><th>Map</th><th class="num">PSIPP+rp</th><th class="num">PSIPP+rpd</th><th class="num">PSIPP+rpd c10</th><th class="num">PSIPP</th><th class="num">SIPP</th><th class="num">LNS2</th><th class="num">LNS</th><th class="num">BALANCE</th><th class="num">ADDRESS</th><th class="num">LaCAM3</th></tr></thead><tbody>
+<tr><td class="map">empty-32-32</td><td class="num best ourscol" style="--h:1.000">100%</td><td class="num ourscol" style="--h:0.999">100%</td><td class="num ourscol" style="--h:0.999">100%</td><td class="num best ourscol" style="--h:1.000">100%</td><td class="num" style="--h:0.605">60%</td><td class="num best" style="--h:1.000">100%</td><td class="num" style="--h:0.572">57%</td><td class="num" style="--h:0.999">100%</td><td class="num" style="--h:0.997">100%</td><td class="num best" style="--h:1.000">100%</td></tr>
+<tr><td class="map">empty-48-48</td><td class="num best ourscol" style="--h:1.000">100%</td><td class="num best ourscol" style="--h:1.000">100%</td><td class="num best ourscol" style="--h:1.000">100%</td><td class="num best ourscol" style="--h:1.000">100%</td><td class="num" style="--h:0.607">61%</td><td class="num" style="--h:0.983">98%</td><td class="num" style="--h:0.549">55%</td><td class="num" style="--h:0.925">92%</td><td class="num" style="--h:0.975">98%</td><td class="num best" style="--h:1.000">100%</td></tr>
+<tr><td class="map">random-32-32-10</td><td class="num ourscol" style="--h:0.865">86%</td><td class="num ourscol" style="--h:0.860">86%</td><td class="num ourscol" style="--h:0.860">86%</td><td class="num ourscol" style="--h:0.865">86%</td><td class="num" style="--h:0.464">46%</td><td class="num" style="--h:0.997">100%</td><td class="num" style="--h:0.412">41%</td><td class="num" style="--h:0.907">91%</td><td class="num" style="--h:0.972">97%</td><td class="num best" style="--h:1.000">100%</td></tr>
+<tr><td class="map">random-32-32-20</td><td class="num ourscol" style="--h:0.677">68%</td><td class="num ourscol" style="--h:0.677">68%</td><td class="num ourscol" style="--h:0.677">68%</td><td class="num ourscol" style="--h:0.677">68%</td><td class="num" style="--h:0.332">33%</td><td class="num" style="--h:0.832">83%</td><td class="num" style="--h:0.261">26%</td><td class="num" style="--h:0.735">74%</td><td class="num" style="--h:0.785">78%</td><td class="num best" style="--h:1.000">100%</td></tr>
+<tr><td class="map">random-64-64-20</td><td class="num ourscol" style="--h:0.912">91%</td><td class="num ourscol" style="--h:0.909">91%</td><td class="num ourscol" style="--h:0.909">91%</td><td class="num ourscol" style="--h:0.911">91%</td><td class="num" style="--h:0.219">22%</td><td class="num" style="--h:0.719">72%</td><td class="num" style="--h:0.101">10%</td><td class="num" style="--h:0.677">68%</td><td class="num" style="--h:0.727">73%</td><td class="num best" style="--h:1.000">100%</td></tr>
+<tr><td class="map">maze-32-32-4</td><td class="num ourscol" style="--h:0.723">72%</td><td class="num ourscol" style="--h:0.727">73%</td><td class="num ourscol" style="--h:0.727">73%</td><td class="num ourscol" style="--h:0.725">72%</td><td class="num" style="--h:0.327">33%</td><td class="num" style="--h:0.663">66%</td><td class="num" style="--h:0.163">16%</td><td class="num" style="--h:0.620">62%</td><td class="num" style="--h:0.656">66%</td><td class="num best" style="--h:0.999">100%</td></tr>
+<tr><td class="map">maze-128-128-2</td><td class="num ourscol" style="--h:0.541">54%</td><td class="num ourscol" style="--h:0.531">53%</td><td class="num ourscol" style="--h:0.533">53%</td><td class="num ourscol" style="--h:0.539">54%</td><td class="num" style="--h:0.316">32%</td><td class="num" style="--h:0.292">29%</td><td class="num" style="--h:0.033">3%</td><td class="num" style="--h:0.291">29%</td><td class="num" style="--h:0.285">28%</td><td class="num best" style="--h:0.969">97%</td></tr>
+<tr><td class="map">room-32-32-4</td><td class="num ourscol" style="--h:0.727">73%</td><td class="num ourscol" style="--h:0.725">72%</td><td class="num ourscol" style="--h:0.725">72%</td><td class="num ourscol" style="--h:0.727">73%</td><td class="num" style="--h:0.165">16%</td><td class="num" style="--h:0.945">94%</td><td class="num" style="--h:0.113">11%</td><td class="num" style="--h:0.779">78%</td><td class="num" style="--h:0.871">87%</td><td class="num best" style="--h:1.000">100%</td></tr>
+<tr><td class="map">room-64-64-8</td><td class="num ourscol" style="--h:0.720">72%</td><td class="num ourscol" style="--h:0.719">72%</td><td class="num ourscol" style="--h:0.715">72%</td><td class="num ourscol" style="--h:0.720">72%</td><td class="num" style="--h:0.031">3%</td><td class="num" style="--h:0.333">33%</td><td class="num" style="--h:0.001">0%</td><td class="num" style="--h:0.297">30%</td><td class="num" style="--h:0.335">34%</td><td class="num best" style="--h:0.999">100%</td></tr>
+<tr><td class="map">warehouse-10-20-10-2-1</td><td class="num ourscol" style="--h:0.724">72%</td><td class="num ourscol" style="--h:0.723">72%</td><td class="num ourscol" style="--h:0.720">72%</td><td class="num ourscol" style="--h:0.724">72%</td><td class="num" style="--h:0.303">30%</td><td class="num" style="--h:0.653">65%</td><td class="num" style="--h:0.129">13%</td><td class="num" style="--h:0.636">64%</td><td class="num" style="--h:0.647">65%</td><td class="num best" style="--h:0.999">100%</td></tr>
+<tr><td class="map">warehouse-20-40-10-2-1</td><td class="num ourscol" style="--h:0.815">82%</td><td class="num ourscol" style="--h:0.812">81%</td><td class="num ourscol" style="--h:0.807">81%</td><td class="num ourscol" style="--h:0.813">81%</td><td class="num" style="--h:0.776">78%</td><td class="num" style="--h:0.567">57%</td><td class="num" style="--h:0.267">27%</td><td class="num" style="--h:0.559">56%</td><td class="num" style="--h:0.565">56%</td><td class="num best" style="--h:1.000">100%</td></tr>
+<tr><td class="map">den520d</td><td class="num best ourscol" style="--h:1.000">100%</td><td class="num best ourscol" style="--h:1.000">100%</td><td class="num best ourscol" style="--h:1.000">100%</td><td class="num best ourscol" style="--h:1.000">100%</td><td class="num best" style="--h:1.000">100%</td><td class="num" style="--h:0.996">100%</td><td class="num" style="--h:0.965">96%</td><td class="num" style="--h:0.996">100%</td><td class="num" style="--h:0.999">100%</td><td class="num" style="--h:0.995">100%</td></tr>
+<tr><td class="map">ost003d</td><td class="num ourscol" style="--h:0.929">93%</td><td class="num ourscol" style="--h:0.925">92%</td><td class="num ourscol" style="--h:0.929">93%</td><td class="num ourscol" style="--h:0.923">92%</td><td class="num" style="--h:0.803">80%</td><td class="num" style="--h:0.503">50%</td><td class="num" style="--h:0.276">28%</td><td class="num" style="--h:0.501">50%</td><td class="num" style="--h:0.505">50%</td><td class="num best" style="--h:0.976">98%</td></tr>
+<tr><td class="map">lak303d</td><td class="num ourscol" style="--h:0.780">78%</td><td class="num ourscol" style="--h:0.775">78%</td><td class="num ourscol" style="--h:0.771">77%</td><td class="num ourscol" style="--h:0.771">77%</td><td class="num" style="--h:0.663">66%</td><td class="num" style="--h:0.447">45%</td><td class="num" style="--h:0.240">24%</td><td class="num" style="--h:0.452">45%</td><td class="num" style="--h:0.451">45%</td><td class="num best" style="--h:0.933">93%</td></tr>
+<tr><td class="map">Paris_1_256</td><td class="num best ourscol" style="--h:1.000">100%</td><td class="num best ourscol" style="--h:1.000">100%</td><td class="num best ourscol" style="--h:1.000">100%</td><td class="num best ourscol" style="--h:1.000">100%</td><td class="num best" style="--h:1.000">100%</td><td class="num" style="--h:0.999">100%</td><td class="num" style="--h:0.908">91%</td><td class="num" style="--h:0.999">100%</td><td class="num" style="--h:0.999">100%</td><td class="num best" style="--h:1.000">100%</td></tr>
+</tbody></table></div>
+  <h3>Per map: primal integral (lower is better)</h3>
+  <div class="scroll" data-group="sota" data-show="60"><table class="data pivot"><thead><tr><th>Map</th><th class="num">PSIPP+rp</th><th class="num">PSIPP+rpd</th><th class="num">PSIPP+rpd c10</th><th class="num">PSIPP</th><th class="num">SIPP</th><th class="num">LNS2</th><th class="num">LNS</th><th class="num">BALANCE</th><th class="num">ADDRESS</th><th class="num">LaCAM3</th></tr></thead><tbody>
+<tr><td class="map">empty-32-32</td><td class="num ourscol" style="--h:0.961">0.040</td><td class="num ourscol" style="--h:0.952">0.049</td><td class="num ourscol" style="--h:0.961">0.039</td><td class="num best ourscol" style="--h:0.965">0.035</td><td class="num" style="--h:0.621">0.379</td><td class="num" style="--h:0.933">0.067</td><td class="num" style="--h:0.580">0.420</td><td class="num" style="--h:0.910">0.090</td><td class="num" style="--h:0.904">0.096</td><td class="num" style="--h:0.816">0.184</td></tr>
+<tr><td class="map">empty-48-48</td><td class="num ourscol" style="--h:0.953">0.048</td><td class="num ourscol" style="--h:0.939">0.061</td><td class="num ourscol" style="--h:0.945">0.055</td><td class="num best ourscol" style="--h:0.957">0.043</td><td class="num" style="--h:0.620">0.380</td><td class="num" style="--h:0.874">0.126</td><td class="num" style="--h:0.544">0.456</td><td class="num" style="--h:0.855">0.145</td><td class="num" style="--h:0.855">0.145</td><td class="num" style="--h:0.838">0.162</td></tr>
+<tr><td class="map">random-32-32-10</td><td class="num ourscol" style="--h:0.850">0.150</td><td class="num ourscol" style="--h:0.844">0.156</td><td class="num ourscol" style="--h:0.857">0.143</td><td class="num ourscol" style="--h:0.855">0.145</td><td class="num" style="--h:0.467">0.533</td><td class="num best" style="--h:0.923">0.077</td><td class="num" style="--h:0.429">0.571</td><td class="num" style="--h:0.878">0.122</td><td class="num" style="--h:0.882">0.118</td><td class="num" style="--h:0.795">0.205</td></tr>
+<tr><td class="map">random-32-32-20</td><td class="num ourscol" style="--h:0.665">0.335</td><td class="num ourscol" style="--h:0.663">0.337</td><td class="num ourscol" style="--h:0.675">0.325</td><td class="num ourscol" style="--h:0.666">0.334</td><td class="num" style="--h:0.323">0.677</td><td class="num best" style="--h:0.864">0.136</td><td class="num" style="--h:0.277">0.723</td><td class="num" style="--h:0.722">0.278</td><td class="num" style="--h:0.745">0.255</td><td class="num" style="--h:0.751">0.249</td></tr>
+<tr><td class="map">random-64-64-20</td><td class="num ourscol" style="--h:0.912">0.088</td><td class="num ourscol" style="--h:0.904">0.096</td><td class="num ourscol" style="--h:0.914">0.086</td><td class="num best ourscol" style="--h:0.917">0.083</td><td class="num" style="--h:0.251">0.749</td><td class="num" style="--h:0.805">0.195</td><td class="num" style="--h:0.127">0.873</td><td class="num" style="--h:0.767">0.233</td><td class="num" style="--h:0.785">0.215</td><td class="num" style="--h:0.793">0.207</td></tr>
+<tr><td class="map">maze-32-32-4</td><td class="num ourscol" style="--h:0.714">0.286</td><td class="num ourscol" style="--h:0.708">0.292</td><td class="num ourscol" style="--h:0.729">0.271</td><td class="num ourscol" style="--h:0.714">0.286</td><td class="num" style="--h:0.334">0.666</td><td class="num" style="--h:0.692">0.308</td><td class="num" style="--h:0.166">0.834</td><td class="num" style="--h:0.642">0.358</td><td class="num" style="--h:0.644">0.356</td><td class="num best" style="--h:0.815">0.185</td></tr>
+<tr><td class="map">maze-128-128-2</td><td class="num ourscol" style="--h:0.622">0.378</td><td class="num ourscol" style="--h:0.616">0.384</td><td class="num ourscol" style="--h:0.615">0.385</td><td class="num ourscol" style="--h:0.620">0.380</td><td class="num" style="--h:0.341">0.659</td><td class="num" style="--h:0.363">0.637</td><td class="num" style="--h:0.032">0.968</td><td class="num" style="--h:0.356">0.644</td><td class="num" style="--h:0.366">0.634</td><td class="num best" style="--h:0.863">0.137</td></tr>
+<tr><td class="map">room-32-32-4</td><td class="num ourscol" style="--h:0.701">0.299</td><td class="num ourscol" style="--h:0.701">0.299</td><td class="num ourscol" style="--h:0.724">0.276</td><td class="num ourscol" style="--h:0.696">0.304</td><td class="num" style="--h:0.160">0.840</td><td class="num best" style="--h:0.876">0.124</td><td class="num" style="--h:0.125">0.875</td><td class="num" style="--h:0.772">0.228</td><td class="num" style="--h:0.777">0.223</td><td class="num" style="--h:0.708">0.292</td></tr>
+<tr><td class="map">room-64-64-8</td><td class="num ourscol" style="--h:0.743">0.257</td><td class="num ourscol" style="--h:0.737">0.263</td><td class="num ourscol" style="--h:0.737">0.263</td><td class="num best ourscol" style="--h:0.747">0.253</td><td class="num" style="--h:0.048">0.952</td><td class="num" style="--h:0.473">0.527</td><td class="num" style="--h:0.002">0.998</td><td class="num" style="--h:0.409">0.591</td><td class="num" style="--h:0.467">0.533</td><td class="num" style="--h:0.681">0.319</td></tr>
+<tr><td class="map">warehouse-10-20-10-2-1</td><td class="num ourscol" style="--h:0.774">0.226</td><td class="num ourscol" style="--h:0.766">0.234</td><td class="num ourscol" style="--h:0.769">0.231</td><td class="num ourscol" style="--h:0.773">0.227</td><td class="num" style="--h:0.344">0.656</td><td class="num" style="--h:0.682">0.318</td><td class="num" style="--h:0.158">0.842</td><td class="num" style="--h:0.647">0.353</td><td class="num" style="--h:0.671">0.329</td><td class="num best" style="--h:0.808">0.192</td></tr>
+<tr><td class="map">warehouse-20-40-10-2-1</td><td class="num ourscol" style="--h:0.907">0.093</td><td class="num ourscol" style="--h:0.901">0.099</td><td class="num ourscol" style="--h:0.894">0.106</td><td class="num best ourscol" style="--h:0.908">0.092</td><td class="num" style="--h:0.854">0.146</td><td class="num" style="--h:0.725">0.275</td><td class="num" style="--h:0.333">0.667</td><td class="num" style="--h:0.723">0.277</td><td class="num" style="--h:0.727">0.273</td><td class="num" style="--h:0.905">0.095</td></tr>
+<tr><td class="map">den520d</td><td class="num best ourscol" style="--h:0.983">0.017</td><td class="num ourscol" style="--h:0.983">0.018</td><td class="num ourscol" style="--h:0.982">0.018</td><td class="num ourscol" style="--h:0.983">0.017</td><td class="num" style="--h:0.982">0.018</td><td class="num" style="--h:0.879">0.121</td><td class="num" style="--h:0.874">0.126</td><td class="num" style="--h:0.875">0.125</td><td class="num" style="--h:0.893">0.107</td><td class="num" style="--h:0.918">0.082</td></tr>
+<tr><td class="map">ost003d</td><td class="num best ourscol" style="--h:0.930">0.070</td><td class="num ourscol" style="--h:0.926">0.074</td><td class="num ourscol" style="--h:0.926">0.074</td><td class="num ourscol" style="--h:0.929">0.071</td><td class="num" style="--h:0.861">0.139</td><td class="num" style="--h:0.589">0.411</td><td class="num" style="--h:0.327">0.673</td><td class="num" style="--h:0.583">0.417</td><td class="num" style="--h:0.596">0.404</td><td class="num" style="--h:0.796">0.204</td></tr>
+<tr><td class="map">lak303d</td><td class="num best ourscol" style="--h:0.892">0.108</td><td class="num ourscol" style="--h:0.887">0.113</td><td class="num ourscol" style="--h:0.887">0.113</td><td class="num ourscol" style="--h:0.889">0.111</td><td class="num" style="--h:0.768">0.232</td><td class="num" style="--h:0.554">0.446</td><td class="num" style="--h:0.308">0.692</td><td class="num" style="--h:0.550">0.450</td><td class="num" style="--h:0.558">0.442</td><td class="num" style="--h:0.782">0.218</td></tr>
+<tr><td class="map">Paris_1_256</td><td class="num best ourscol" style="--h:0.990">0.010</td><td class="num ourscol" style="--h:0.990">0.010</td><td class="num ourscol" style="--h:0.989">0.011</td><td class="num ourscol" style="--h:0.990">0.010</td><td class="num" style="--h:0.988">0.012</td><td class="num" style="--h:0.936">0.064</td><td class="num" style="--h:0.880">0.120</td><td class="num" style="--h:0.939">0.061</td><td class="num" style="--h:0.948">0.052</td><td class="num" style="--h:0.913">0.087</td></tr>
+</tbody></table></div>
+  <div class="scroll" data-group="sota" data-show="10" hidden><table class="data pivot"><thead><tr><th>Map</th><th class="num">PSIPP+rp</th><th class="num">PSIPP+rpd</th><th class="num">PSIPP+rpd c10</th><th class="num">PSIPP</th><th class="num">SIPP</th><th class="num">LNS2</th><th class="num">LNS</th><th class="num">BALANCE</th><th class="num">ADDRESS</th><th class="num">LaCAM3</th></tr></thead><tbody>
+<tr><td class="map">empty-32-32</td><td class="num ourscol" style="--h:0.927">0.073</td><td class="num ourscol" style="--h:0.916">0.084</td><td class="num ourscol" style="--h:0.924">0.076</td><td class="num best ourscol" style="--h:0.934">0.066</td><td class="num" style="--h:0.551">0.449</td><td class="num" style="--h:0.845">0.155</td><td class="num" style="--h:0.487">0.513</td><td class="num" style="--h:0.798">0.202</td><td class="num" style="--h:0.832">0.168</td><td class="num" style="--h:0.817">0.183</td></tr>
+<tr><td class="map">empty-48-48</td><td class="num ourscol" style="--h:0.887">0.113</td><td class="num ourscol" style="--h:0.873">0.127</td><td class="num ourscol" style="--h:0.877">0.123</td><td class="num best ourscol" style="--h:0.890">0.110</td><td class="num" style="--h:0.536">0.464</td><td class="num" style="--h:0.670">0.330</td><td class="num" style="--h:0.417">0.583</td><td class="num" style="--h:0.635">0.365</td><td class="num" style="--h:0.670">0.330</td><td class="num" style="--h:0.783">0.217</td></tr>
+<tr><td class="map">random-32-32-10</td><td class="num ourscol" style="--h:0.783">0.217</td><td class="num ourscol" style="--h:0.776">0.224</td><td class="num ourscol" style="--h:0.787">0.213</td><td class="num ourscol" style="--h:0.789">0.211</td><td class="num" style="--h:0.421">0.579</td><td class="num" style="--h:0.782">0.218</td><td class="num" style="--h:0.354">0.646</td><td class="num" style="--h:0.690">0.310</td><td class="num" style="--h:0.755">0.245</td><td class="num best" style="--h:0.810">0.190</td></tr>
+<tr><td class="map">random-32-32-20</td><td class="num ourscol" style="--h:0.611">0.389</td><td class="num ourscol" style="--h:0.607">0.393</td><td class="num ourscol" style="--h:0.620">0.380</td><td class="num ourscol" style="--h:0.615">0.385</td><td class="num" style="--h:0.290">0.710</td><td class="num" style="--h:0.646">0.354</td><td class="num" style="--h:0.212">0.788</td><td class="num" style="--h:0.555">0.445</td><td class="num" style="--h:0.603">0.397</td><td class="num best" style="--h:0.795">0.205</td></tr>
+<tr><td class="map">random-64-64-20</td><td class="num ourscol" style="--h:0.743">0.257</td><td class="num ourscol" style="--h:0.736">0.264</td><td class="num ourscol" style="--h:0.739">0.261</td><td class="num best ourscol" style="--h:0.746">0.254</td><td class="num" style="--h:0.163">0.837</td><td class="num" style="--h:0.450">0.550</td><td class="num" style="--h:0.054">0.946</td><td class="num" style="--h:0.425">0.575</td><td class="num" style="--h:0.456">0.544</td><td class="num" style="--h:0.713">0.287</td></tr>
+<tr><td class="map">maze-32-32-4</td><td class="num ourscol" style="--h:0.626">0.374</td><td class="num ourscol" style="--h:0.620">0.380</td><td class="num ourscol" style="--h:0.632">0.368</td><td class="num ourscol" style="--h:0.627">0.373</td><td class="num" style="--h:0.287">0.713</td><td class="num" style="--h:0.504">0.496</td><td class="num" style="--h:0.119">0.881</td><td class="num" style="--h:0.470">0.530</td><td class="num" style="--h:0.498">0.502</td><td class="num best" style="--h:0.822">0.178</td></tr>
+<tr><td class="map">maze-128-128-2</td><td class="num ourscol" style="--h:0.383">0.617</td><td class="num ourscol" style="--h:0.379">0.621</td><td class="num ourscol" style="--h:0.376">0.624</td><td class="num ourscol" style="--h:0.379">0.621</td><td class="num" style="--h:0.246">0.754</td><td class="num" style="--h:0.176">0.824</td><td class="num" style="--h:0.026">0.974</td><td class="num" style="--h:0.180">0.820</td><td class="num" style="--h:0.177">0.823</td><td class="num best" style="--h:0.599">0.401</td></tr>
+<tr><td class="map">room-32-32-4</td><td class="num ourscol" style="--h:0.599">0.401</td><td class="num ourscol" style="--h:0.597">0.403</td><td class="num ourscol" style="--h:0.624">0.376</td><td class="num ourscol" style="--h:0.600">0.400</td><td class="num" style="--h:0.143">0.857</td><td class="num" style="--h:0.656">0.344</td><td class="num" style="--h:0.072">0.928</td><td class="num" style="--h:0.525">0.475</td><td class="num" style="--h:0.597">0.403</td><td class="num best" style="--h:0.738">0.262</td></tr>
+<tr><td class="map">room-64-64-8</td><td class="num ourscol" style="--h:0.534">0.466</td><td class="num ourscol" style="--h:0.531">0.469</td><td class="num ourscol" style="--h:0.529">0.471</td><td class="num ourscol" style="--h:0.537">0.463</td><td class="num" style="--h:0.017">0.983</td><td class="num" style="--h:0.169">0.831</td><td class="num" style="--h:0.000">1.000</td><td class="num" style="--h:0.147">0.853</td><td class="num" style="--h:0.168">0.832</td><td class="num best" style="--h:0.651">0.349</td></tr>
+<tr><td class="map">warehouse-10-20-10-2-1</td><td class="num ourscol" style="--h:0.546">0.454</td><td class="num ourscol" style="--h:0.537">0.463</td><td class="num ourscol" style="--h:0.536">0.464</td><td class="num ourscol" style="--h:0.545">0.455</td><td class="num" style="--h:0.247">0.753</td><td class="num" style="--h:0.399">0.601</td><td class="num" style="--h:0.071">0.929</td><td class="num" style="--h:0.379">0.621</td><td class="num" style="--h:0.403">0.597</td><td class="num best" style="--h:0.748">0.252</td></tr>
+<tr><td class="map">warehouse-20-40-10-2-1</td><td class="num ourscol" style="--h:0.561">0.439</td><td class="num ourscol" style="--h:0.558">0.442</td><td class="num ourscol" style="--h:0.552">0.448</td><td class="num ourscol" style="--h:0.561">0.439</td><td class="num best" style="--h:0.618">0.382</td><td class="num" style="--h:0.316">0.684</td><td class="num" style="--h:0.123">0.877</td><td class="num" style="--h:0.313">0.687</td><td class="num" style="--h:0.319">0.681</td><td class="num" style="--h:0.609">0.391</td></tr>
+<tr><td class="map">den520d</td><td class="num best ourscol" style="--h:0.904">0.096</td><td class="num ourscol" style="--h:0.902">0.098</td><td class="num ourscol" style="--h:0.900">0.100</td><td class="num ourscol" style="--h:0.903">0.097</td><td class="num" style="--h:0.896">0.104</td><td class="num" style="--h:0.630">0.370</td><td class="num" style="--h:0.642">0.358</td><td class="num" style="--h:0.626">0.374</td><td class="num" style="--h:0.633">0.367</td><td class="num" style="--h:0.552">0.448</td></tr>
+<tr><td class="map">ost003d</td><td class="num best ourscol" style="--h:0.670">0.330</td><td class="num ourscol" style="--h:0.664">0.336</td><td class="num ourscol" style="--h:0.661">0.339</td><td class="num ourscol" style="--h:0.668">0.332</td><td class="num" style="--h:0.540">0.460</td><td class="num" style="--h:0.234">0.766</td><td class="num" style="--h:0.125">0.875</td><td class="num" style="--h:0.235">0.765</td><td class="num" style="--h:0.235">0.765</td><td class="num" style="--h:0.434">0.566</td></tr>
+<tr><td class="map">lak303d</td><td class="num best ourscol" style="--h:0.523">0.477</td><td class="num ourscol" style="--h:0.521">0.479</td><td class="num ourscol" style="--h:0.516">0.484</td><td class="num ourscol" style="--h:0.521">0.479</td><td class="num" style="--h:0.427">0.573</td><td class="num" style="--h:0.183">0.817</td><td class="num" style="--h:0.092">0.908</td><td class="num" style="--h:0.183">0.817</td><td class="num" style="--h:0.183">0.817</td><td class="num" style="--h:0.354">0.646</td></tr>
+<tr><td class="map">Paris_1_256</td><td class="num best ourscol" style="--h:0.941">0.059</td><td class="num ourscol" style="--h:0.941">0.059</td><td class="num ourscol" style="--h:0.939">0.061</td><td class="num ourscol" style="--h:0.941">0.059</td><td class="num" style="--h:0.931">0.069</td><td class="num" style="--h:0.746">0.254</td><td class="num" style="--h:0.722">0.278</td><td class="num" style="--h:0.746">0.254</td><td class="num" style="--h:0.752">0.247</td><td class="num" style="--h:0.500">0.500</td></tr>
+</tbody></table></div>
+  <p class="caption">750 runs per cell (150 instances × 5 seeds). The best value of each map is in blue; the PSIPP column is marked on the left.</p>
+
+  <h3>Figures</h3>
+  <div class="controls" data-group="sotafig">
+    <span class="ctl-label">Figure</span>
+    <div class="seg" role="group" aria-label="Figure"><button type="button" data-fig="success_rate" aria-pressed="false">Success</button><button type="button" data-fig="time_first" aria-pressed="false">Time to first</button><button type="button" data-fig="primal_integral" aria-pressed="true">Primal integral</button><button type="button" data-fig="gap" aria-pressed="false">GAP</button><button type="button" data-fig="anytime" aria-pressed="false">Anytime curves</button></div>
+    <span class="ctl-label">Limit</span>
+    <div class="seg" role="group" aria-label="Figure time limit"><button type="button" data-flim="60s" aria-pressed="true">60 s</button><button type="button" data-flim="10s" aria-pressed="false">10 s</button></div>
+  </div>
+  <figure class="plot"><img id="sotafig-img" src="fig/sota_primal_integral_60s.png" alt="State-of-the-art comparison per map and number of agents" width="1260" height="1757"></figure>
+  <p class="caption">Per map and number of agents. The anytime figure shows the mean gap to the best known solution over time.</p>
+
+  <div class="prose">
+    <h3>Reading the results</h3>
+    <p><strong>Quality.</strong> When a solution exists, ours is almost always the best: 0.52% from the best known on average, against 4.7–8.9% for every other solver. PSIPP ends with a better solution than MAPF-LNS2 in 9 096 runs and worse in 1 719. Part of this is our LNS, which the SIPP variant shares (0.56%); PSIPP adds the instances SIPP cannot start.</p>
+    <p><strong>Large and hard maps.</strong> PSIPP wins clearly on maze-128-128-2 (77% vs 55% for LNS2), room-64-64-8 (88% vs 75%) and lak303d (100% vs 91%). Its primal integral on the game maps is 4–7 times lower than MAPF-LNS2 (ost003d 0.071 vs 0.411 for LNS2).</p>
+    <p><strong>Small dense maps.</strong> Here MAPF-LNS2 is better. On random-32-32-20 it solves 100% vs our 72%, on room-32-32-4 100% vs 80%, on random-32-32-10 100% vs 92%. LNS2 starts from an infeasible solution and repairs collisions; that works better than restarting PP when the map is nearly full.</p>
+    <p><strong>LaCAM3.</strong> It solves every instance, mostly within a few seconds, but its solutions are 8.9% from the best known. It has the best primal integral on maze-128-128-2, maze-32-32-4 and warehouse-10-20, where finding any solution dominates the metric.</p>
+  </div>
+</section>
+
+<section id="verdict">
+  <h2>What worked, what didn't</h2>
+  <div class="cols">
+    <div class="verdict good">
+      <h3><span class="pill good">Worked</span></h3>
+      <ul>
+        <li>Pushing: +34.7 points of success over SIPP at 60 s, never worse on any instance at 60 s.</li>
+        <li>Fixing the PSIPP bugs, especially <code>get_all_intervals</code> (parked agents can be pushed): the single biggest improvement.</li>
+        <li>The independent validator: it caught the stretched-wait bug that unit tests missed.</li>
+        <li>The full solver has the best primal integral and by far the best final solution quality among the 7 solvers, confirmed on 5 seeds.</li>
+        <li>Shared pushed lists and per-node tie keys: 35–40% faster PSIPP on room and warehouse.</li>
+      </ul>
+    </div>
+    <div class="verdict warn">
+      <h3><span class="pill warn">Mixed</span></h3>
+      <ul>
+        <li>Agent order: longest-first is the best of the rules tried, but only slightly better than random for PSIPP.</li>
+        <li>Large sparse maps: no gain in success, PSIPP 3–9% slower than SIPP.</li>
+        <li>room-32-32-4: PSIPP's first solutions are 3% costlier.</li>
+        <li>PSIPP repair with push cost 10: −1.5 to −3.8% SoC on small dense maps, but +1–1.5% on large ones; −0.14% overall.</li>
+        <li>maze-128-128-2: tied with SIPP at 10 s, and 4 runs at 800 agents exceeded the hard timeout and count as failures.</li>
+      </ul>
+    </div>
+    <div class="verdict bad">
+      <h3><span class="pill bad">Didn't work</span></h3>
+      <ul>
+        <li>Finite push cost and a closed list per push count: both worse than the simplest variant. Push cost 0–2 makes agents push each other in cycles.</li>
+        <li>Small dense maps (random-32-32-20, room-32-32-4): PSIPP remains behind MAPF-LNS2 and LaCAM3 in success rate.</li>
+        <li>PSIPP repair with push cost ∞ (SIPP first or direct): slightly worse than SIPP repair, because it costs LNS iterations and rarely finds a different path.</li>
+        <li>LaCAM3 is more robust: 100% success vs our 92.0%.</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<section class="prose" id="caveats">
+  <h2>Caveats</h2>
+  <ul class="tight">
+    <li><strong>Seeds.</strong> 5 seeds per instance; the overall numbers vary little between seeds (standard deviation at most 0.35 points of success and 0.007 of primal integral). Seed 5 ran on faster nodes than seeds 1–4 (about 20% faster to the first solution), the same for every solver, so comparisons between solvers stay fair.</li>
+    <li><strong>Baseline settings are the README defaults</strong>, not tuned per map. MAPF-LNS uses PP and neighborhood 8 to match the thesis.</li>
+    <li><strong>660 MAPF-LNS runs (of 11 250) were killed</strong> at the hard timeout (limit + 90 s) and count as failures. It does not stop inside a long PP attempt.</li>
+    <li><strong>LaCAM3 optimizes sum of loss, not sum of costs</strong>, so the SoC of its current solution can go up. Its anytime curve follows the solution it would return, not the best one seen. Its checkpoints are every 0.5 s, so an improvement is dated up to 0.5 s late.</li>
+    <li><strong>"Best known" is relative to these solvers and seeds.</strong> GAP and primal integral say nothing about distance to optimal.</li>
+    <li><strong>Times include map preprocessing</strong> for every solver, single thread, same machine type per seed; runs shared nodes with other jobs. 43 runs of our PSIPP variants (maze-128-128-2) were killed at the hard timeout and count as failures.</li>
+    <li><strong>Experiments 1 and 2 used 7 maps.</strong> The chosen variant and order were then evaluated on 15 maps.</li>
+  </ul>
+</section>
+
+<section class="prose" id="literature">
+  <h2>Literature position</h2>
+  <p>From the research report (<code>reports/MAPF state of the art 2026.md</code>). Searches were by keyword; the key papers, PUSH especially, should be read before relying on this.</p>
+  <ul class="tight">
+    <li><strong>Closest work: PUSH</strong> (Sanjay &amp; Li, arXiv, August 2026). It displaces agents and replans them recursively, which is the same core mechanism. It differs in six ways: lifelong and windowed vs one-shot, space-time A* vs SIPP, pushes lower-priority vs already-planned agents, at most 1 push vs about 5, backtracking vs restarts, and no explicit "pushed agent waits" model. Don't name the method "PUSH".</li>
+    <li>Also cite the PIBT family (PIBT, EPIBT AAAI 2026, MD-PIBT IROS 2026), Nagai &amp; Okumura (IJCAI 2026), PBS and PPR*.</li>
+    <li>Thesis contributions: the BLOCKED destroy operator appears new; bounded-suboptimal SIPP as an LNS repair appears new as an application; the free-cell path bound is close to folklore.</li>
+    <li>Goal-Branching LaCAM (arXiv, November 2026) reports LaCAM* at 44% and LaCAM3 at 33% on very dense 32×32 maze and room instances within 30 s. Our results on those maps are also weak, so this is not an easy win.</li>
+    <li>Realistic venues: SoCS, ICAPS, AAMAS, ICRA/IROS/RA-L. AAAI or IJCAI would need clear wins over LaCAM* and MAPF-LNS2.</li>
+  </ul>
+</section>
+
+<section class="prose" id="next">
+  <h2>Next steps</h2>
+  <ol class="steps">
+    <li><div><strong>Decide on the PSIPP repair.</strong> Plain SIPP repair is the safe default. Push cost 10 helps only on small dense maps, so either keep it as a map-dependent option or drop it from the paper. A cheaper repair (fewer lost iterations) might change this.</div></li>
+    <li><div><strong>Handle push cycles without restarting.</strong> On random-32-32-20, most failed attempts were cycles (358 084 cycle failures vs 77 494 no-path failures over all runs). Resolving the cycle locally is the largest algorithmic gain left, and it targets exactly the small dense maps where we lose to MAPF-LNS2.</div></li>
+    <li><div><strong>Interrupt a PP attempt at the time limit</strong> so that large maze instances cannot overrun.</div></li>
+    <li><div><strong>Test the GUI fix</strong> (must_push scenario, press play), then commit it separately from your formatting changes in <code>Visualizer.cpp</code>.</div></li>
+    <li><div><strong>Commit the working-tree changes</strong>: PSIPP repair and the <code>already_planned</code> fix in <code>LNS.cpp</code>, the tests, <code>anytime_bench.cpp</code>, the SOTA scripts, <code>paper_results.py</code> and <code>paper_k.txt</code>.</div></li>
+  </ol>
+</section>
+
+<section class="prose" id="files">
+  <h2>Files</h2>
+  <ul class="tight">
+    <li><code>reports/sota_comparison/</code>: SOTA figures (PDF), <code>sota_report.md</code> with every table, <code>raw_results.tgz</code> with one JSON per run.</li>
+    <li><code>experiments/psipp_cluster/</code>: <code>sota_build.sh</code>, <code>sota_run.sh</code>, <code>sota_collect.py</code>, <code>run_sota_array.sh</code>, <code>sota_results.py</code>, <code>gen_cmds.py --grid sota</code>, <code>paper_results.py</code>, <code>paper_k.txt</code>.</li>
+    <li><code>my_code/my_solver/src/experiments/anytime_bench.cpp</code>: headless driver of the full solver.</li>
+    <li><code>reports/psipp_report/</code>: this page, its figures and the script that fills its tables from the markdown reports.</li>
+  </ul>
+</section>
+</main>
+</div>
+
+<script>
+document.querySelectorAll('.controls[data-group]').forEach(function (ctl) {
+  var group = ctl.dataset.group;
+  var img = document.getElementById(group + '-img');
+  function press(btns, active) { btns.forEach(function (b) { b.setAttribute('aria-pressed', b === active ? 'true' : 'false'); }); }
+  var limBtns = Array.prototype.slice.call(ctl.querySelectorAll('button[data-lim]'));
+  limBtns.forEach(function (b) {
+    b.addEventListener('click', function () {
+      press(limBtns, b);
+      document.querySelectorAll('[data-group="' + group + '"][data-show]').forEach(function (el) { el.hidden = el.dataset.show !== b.dataset.lim; });
+    });
+  });
+  if (!img) return;
+  var figBtns = Array.prototype.slice.call(ctl.querySelectorAll('button[data-fig]'));
+  var flimBtns = Array.prototype.slice.call(ctl.querySelectorAll('button[data-flim]'));
+  var prefix = group === 'paperfig' ? 'paper_' : 'sota_';
+  function update() {
+    var f = ctl.querySelector('button[data-fig][aria-pressed="true"]').dataset.fig;
+    var l = ctl.querySelector('button[data-flim][aria-pressed="true"]').dataset.flim;
+    img.src = 'fig/' + prefix + f + '_' + l + '.png';
+  }
+  figBtns.forEach(function (b) { b.addEventListener('click', function () { press(figBtns, b); update(); }); });
+  flimBtns.forEach(function (b) { b.addEventListener('click', function () { press(flimBtns, b); update(); }); });
+});
+</script>
