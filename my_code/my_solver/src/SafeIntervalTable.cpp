@@ -146,7 +146,7 @@ void SafeIntervalTable::remove_constraint(const TimePoint& timepoint, int agent_
   if (cur_TI_list.empty())
   {
     auto [prev, next] = constraint_table.remove_constraint(timepoint, agent_num);
-    cur_TI_list.emplace_back(timepoint.interval, agent_num, timepoint.location, TIME_INTERVAL_NODE_type::safe_interval,
+    cur_TI_list.emplace_back(timepoint.interval, NO_AGENT, timepoint.location, TIME_INTERVAL_NODE_type::safe_interval,
                              prev, next);
     // rewire
     if (prev.has_value())
@@ -185,7 +185,7 @@ void SafeIntervalTable::remove_constraint(const TimePoint& timepoint, int agent_
     // otherwise add a new safe interval
     auto [prev, next] =
         constraint_table.remove_constraint_after(timepoint, agent_num, cur_TI_list.back().next_interval);
-    cur_TI_list.emplace_back(timepoint.interval, agent_num, timepoint.location, TIME_INTERVAL_NODE_type::safe_interval,
+    cur_TI_list.emplace_back(timepoint.interval, NO_AGENT, timepoint.location, TIME_INTERVAL_NODE_type::safe_interval,
                              prev, next);
     // rewire
     if (prev.has_value())

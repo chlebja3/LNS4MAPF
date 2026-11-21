@@ -423,3 +423,21 @@ TEST_F(ConstraintManagerTest, GetAllTimeIntervalsWindowInsideConstraint)
     EXPECT_EQ(end->interval, TimeInterval(21, INT_MAX));
   }
 }
+
+// a location occupied without a gap since time 0: an agent starts there and leaves, another agent arrives right after it
+// and parks forever; the parked agent's constraint must still be returned (so it can be pushed)
+TEST_F(ConstraintManagerTest, GetAllTimeIntervalsNoSafeIntervalAtAll)
+{
+  constraint_manager->add_trajectory(TimePointPath({TimePoint(7, {0, 2}), TimePoint(8, {3, INT_MAX})}), 0);
+  constraint_manager->add_trajectory(TimePointPath({TimePoint(4, {0, 2}), TimePoint(7, {3, INT_MAX})}), 1);
+  ASSERT_TRUE(constraint_manager->is_valid());
+  ASSERT_FALSE(constraint_manager->get_first_safe_interval(7).has_value() &&
+               !constraint_manager->is_end_of_list(7, constraint_manager->get_first_safe_interval(7).value()));
+
+  auto [start, end] = constraint_manager->get_all_intervals(7, TimeInterval(5, INT_MAX));
+  ASSERT_FALSE(start == end);
+  EXPECT_EQ(start->interval, TimeInterval(3, INT_MAX));
+  EXPECT_EQ(start->type, TIME_INTERVAL_NODE_type::constraint);
+  EXPECT_EQ(start->agent_num, 1);
+  EXPECT_TRUE(constraint_manager->is_end_of_list(7, end));
+}

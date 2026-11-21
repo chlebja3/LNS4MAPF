@@ -495,7 +495,10 @@ auto PSIPP::plan_psipp_mine(const int agent_num) -> std::pair<TimePointPath, std
               TimePoint new_tp(neighbor_time_point.location, new_interval);
               // insert new node
               open_list.push(
-                  node_pool.add_node(PSIPPNode(new_tp, new_tp.interval.t_min, h1, h2, h3, current, new_pushed)));
+                  node_pool.add_node(PSIPPNode(
+                  new_tp, new_tp.interval.t_min,
+                  std::max((double)min_time, new_tp.interval.t_min + h2) - new_tp.interval.t_min, h2, h3, current,
+                  new_pushed)));
             }
             // handle the interval that overlaps with the additional constraint
             if (additional_const.prev_in_path.has_value())
@@ -820,7 +823,9 @@ auto PSIPP::plan_psipp_mine_ap(const int agent_num, const std::unordered_set<int
               if (!settings.closed_list_per_push_count || !is_known(new_tp, new_pushed.size()))
               {
                 open_list.push(node_pool.add_node(
-                    PSIPPNode(new_tp, new_tp.interval.t_min, h1, h_ap_goal, h_distance, current, new_pushed)));
+                    PSIPPNode(new_tp, new_tp.interval.t_min,
+                              std::max((double)min_time, new_tp.interval.t_min + h_distance) - new_tp.interval.t_min,
+                              h_ap_goal, h_distance, current, new_pushed)));
               }
             }
             // handle the interval that overlaps with the additional constraint
@@ -1147,7 +1152,10 @@ auto PSIPP::plan_suboptimal(const int agent_num, const std::unordered_set<int>& 
               TimePoint new_tp(neighbor_time_point.location, new_interval);
               // insert new node
               open_list.push(
-                  node_pool.add_node(PSIPPNode(new_tp, new_tp.interval.t_min, h1, h2, h3, current, new_pushed)));
+                  node_pool.add_node(PSIPPNode(
+                  new_tp, new_tp.interval.t_min,
+                  std::max((double)min_time, new_tp.interval.t_min + h2) - new_tp.interval.t_min, h2, h3, current,
+                  new_pushed)));
             }
             // handle the interval that overlaps with the additional constraint
             if (additional_const.prev_in_path.has_value())

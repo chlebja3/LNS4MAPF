@@ -21,7 +21,7 @@ void EdgeTable::add(int from, int to, int time, int agent_num)
 {
   assertm(from != to, "Invalid edge constraint.");
   const int dir = static_cast<int>(find_direction(from, to)) - 1;
-  assertm(dir >= 0 && dir <= NUM_DIRECTIONS, "Invalid direction.");
+  assertm(dir >= 0 && dir < NUM_DIRECTIONS, "Invalid direction.");
   // assertm(edge_constraints[dir][loc2].find(time) == edge_constraints[dir][loc2].end(), "Edge constraint already exists.");
   int to_free = instance.location_to_free_location(to);
   assertm(std::find_if(edge_constraints[dir][to_free].begin(), edge_constraints[dir][to_free].end(),
@@ -34,7 +34,7 @@ void EdgeTable::add(int from, int to, int time, int agent_num)
 void EdgeTable::remove(int from, int to, int time)
 {
   const int dir = static_cast<int>(find_direction(from, to)) - 1;
-  assertm(dir >= 0 && dir <= NUM_DIRECTIONS, "Invalid direction.");
+  assertm(dir >= 0 && dir < NUM_DIRECTIONS, "Invalid direction.");
   int to_free = instance.location_to_free_location(to);
 // int erased = edge_constraints[dir][loc2].erase(time);
 // assertm(erased == 1, "Trying to erase an edge constraint that is not present.");

@@ -53,6 +53,20 @@ public:
   [[nodiscard]] auto get_blocking_agent(int loc, int time) const -> int;
 
   /**
+   * @brief Gets the earliest constraint at a location.
+   *
+   * @param location The location.
+   *
+   * @return An iterator to the earliest constraint, no value if there is no constraint at the location.
+   */
+  [[nodiscard]] auto get_first_constraint(int location) const -> TimeIntervalNode_const_it
+  {
+    const std::list<TimeIntervalNode>& cur_TI_list = constraints[instance.location_to_free_location(location)];
+    if (cur_TI_list.empty()) return std::nullopt;
+    return {cur_TI_list.cbegin()};
+  }
+
+  /**
    * @brief Finds agents that block a certaion location at a certain time and later.
    *
    * @param location The location to check for blocking agents.

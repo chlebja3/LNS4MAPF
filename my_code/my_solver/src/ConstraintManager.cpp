@@ -219,10 +219,10 @@ void ConstraintManager::build_sequential(const std::vector<TimePointPath>& paths
     {
       before = it;
     }
-    // no safe interval before: the constraints start at time 0 (agents at their start locations, which can not be pushed)
-    if (!before.has_value()) return {first_si, first_si};
-    // the first constraint overlapping the time interval
-    TimeIntervalNode_const_it first = before.value()->next_interval;
+    // no safe interval before: the location is occupied without a gap since time 0, start with its earliest constraint
+    // (constraints of agents at their start locations are skipped by PSIPP, as those agents can not be pushed)
+    TimeIntervalNode_const_it first =
+        before.has_value() ? before.value()->next_interval : constraint_table.get_first_constraint(location);
     while (first.has_value() && first.value()->interval.t_max < time_interval.t_min)
     {
       first = first.value()->next_interval;
