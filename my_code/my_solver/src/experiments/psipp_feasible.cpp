@@ -19,17 +19,20 @@
 
 #define SHOW_PROGRESS
 
-#define MAPS {"empty-32-32", "random-32-32-20", "warehouse-10-20-10-2-1", "ost003d"}
-
-#define NUMS_AGENTS                        \
-  {                                        \
-      {350, 400, 450, 500},                \
-      {200, 225, 250, 275, 300},           \
-      {350, 400, 450, 500, 550, 600, 650}, \
-      {600, 700, 800, 900, 1000},          \
+#define MAPS                                                              \
+  {                                                                       \
+    "empty-32-32", "random-32-32-20", "warehouse-10-20-10-2-1", "ost003d" \
   }
 
-#define TIME_LIMITS {20, 20, 20, 20}
+#define NUMS_AGENTS                                                                                                   \
+  {                                                                                                                   \
+    {350, 400, 450, 500}, {200, 225, 250, 275, 300}, {350, 400, 450, 500, 550, 600, 650}, {600, 700, 800, 900, 1000}, \
+  }
+
+#define TIME_LIMITS \
+  {                 \
+    20, 20, 20, 20  \
+  }
 
 static void experiment_function(LNS& lns);
 
@@ -44,7 +47,7 @@ auto main(int argc, char** argv) -> int
   {
     SIPP_implementation algo_type = SIPP_implementation::SIPP_mine_ap;
     LNS_settings lns_settings(0, 20, {DESTROY_TYPE::RANDOM, 10}, {algo_type, INFO_type::experiment, 1.0},
-                              {PSIPP_implementation::PSIPP_mine, INFO_type::experiment, 1.0}, true, false);
+                              {PSIPP_implementation::PSIPP_mine_ap, INFO_type::experiment, 1.0}, true, false);
     algorithms.emplace_back(algo_type, lns_settings);
   }
 
@@ -52,24 +55,25 @@ auto main(int argc, char** argv) -> int
   {
     SIPP_implementation algo_type = SIPP_implementation::SIPP_mine_ap;
     LNS_settings lns_settings(0, 20, {DESTROY_TYPE::RANDOM, 10}, {algo_type, INFO_type::experiment, 1.0},
-                              {PSIPP_implementation::PSIPP_mine, INFO_type::experiment, 1.0, 1, 1}, true, true);
-    algorithms.emplace_back(algo_type, lns_settings, std::make_pair("max_push", 1));
+                              {PSIPP_implementation::PSIPP_mine_ap, INFO_type::experiment, 1.0, 1, 1}, true, true);
+    algorithms.emplace_back(PSIPP_implementation::PSIPP_mine_ap, lns_settings, std::make_pair("max_push", 1));
   }
 
   // PSIPP mine max pushes 5
   {
     SIPP_implementation algo_type = SIPP_implementation::SIPP_mine_ap;
     LNS_settings lns_settings(0, 20, {DESTROY_TYPE::RANDOM, 10}, {algo_type, INFO_type::experiment, 1.0},
-                              {PSIPP_implementation::PSIPP_mine, INFO_type::experiment, 1.0, 1, 5}, true, true);
-    algorithms.emplace_back(algo_type, lns_settings, std::make_pair("max_push", 5));
+                              {PSIPP_implementation::PSIPP_mine_ap, INFO_type::experiment, 1.0, 1, 5}, true, true);
+    algorithms.emplace_back(PSIPP_implementation::PSIPP_mine_ap, lns_settings, std::make_pair("max_push", 5));
   }
 
-  // PSIPP mine max pushes 100
+  // PSIPP suboptimal
   {
     SIPP_implementation algo_type = SIPP_implementation::SIPP_mine_ap;
     LNS_settings lns_settings(0, 20, {DESTROY_TYPE::RANDOM, 10}, {algo_type, INFO_type::experiment, 1.0},
-                              {PSIPP_implementation::PSIPP_mine, INFO_type::experiment, 1.0, 1, 100}, true, true);
-    algorithms.emplace_back(algo_type, lns_settings, std::make_pair("max_push", 100));
+                              {PSIPP_implementation::PSIPP_suboptimal_ap, INFO_type::experiment, 1.0, 1, 5}, true,
+                              true);
+    algorithms.emplace_back(PSIPP_implementation::PSIPP_suboptimal_ap, lns_settings, std::make_pair("max_push", 5));
   }
 
 #ifdef SHOW_PROGRESS

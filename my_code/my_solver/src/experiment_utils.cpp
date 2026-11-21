@@ -48,7 +48,8 @@ auto get_scene_names(const std::string& map_name, int runs_per_map) -> std::vect
 
   // print
   std::sort(scen_files.begin(), scen_files.end(), scene_compare);
-  std::vector<std::string> result(std::make_move_iterator(scen_files.begin()), std::make_move_iterator(scen_files.begin() + scen_num));
+  std::vector<std::string> result(std::make_move_iterator(scen_files.begin()),
+                                  std::make_move_iterator(scen_files.begin() + scen_num));
   return result;
 }
 
@@ -58,17 +59,18 @@ auto create_progress_bar(std::string name, int max_iter) -> std::unique_ptr<indi
       indicators::option::BarWidth{PROGRESS_BAR_WIDTH}, indicators::option::Start{"["}, indicators::option::Fill{"■"},
       indicators::option::Lead{"■"}, indicators::option::Remainder{" "}, indicators::option::End{" ]"},
       indicators::option::ForegroundColor{indicators::Color::white}, indicators::option::ShowElapsedTime{true},
-      indicators::option::MaxProgress{max_iter}, indicators::option::ShowRemainingTime{true}, indicators::option::PrefixText{name},
+      indicators::option::MaxProgress{max_iter}, indicators::option::ShowRemainingTime{true},
+      indicators::option::PrefixText{name},
       indicators::option::FontStyles{std::vector<indicators::FontStyle>{indicators::FontStyle::bold}});
 }
 
 auto load_instances(const std::vector<std::string>& scenes, const std::string& map_name, int agent_num)
     -> std::pair<std::vector<Instance>, std::vector<std::pair<double, double>>>
 {
-  const std::string                      map_path = get_mapf_benchmark_path() + "/mapf-map/" + map_name + ".map";
+  const std::string map_path = get_mapf_benchmark_path() + "/mapf-map/" + map_name + ".map";
   std::vector<std::pair<double, double>> preprocessing_times(scenes.size());
-  std::vector<Instance>                  ret(scenes.size());
-  Clock                                  clock;
+  std::vector<Instance> ret(scenes.size());
+  Clock clock;
 
   for (int i = 0; i < (int)scenes.size(); i++)
   {
@@ -76,27 +78,29 @@ auto load_instances(const std::vector<std::string>& scenes, const std::string& m
     // create the instance
     const std::string scene_path = get_mapf_benchmark_path() + "/mapf-scen-random/scen-random/" + scene_name;
     clock.start();
-    ret[i]                 = Instance(map_path, scene_path, agent_num);
+    ret[i] = Instance(map_path, scene_path, agent_num);
     preprocessing_times[i] = clock.end();
   }
   return {ret, preprocessing_times};
 }
 
-void save_experiment(nlohmann::json& experiment_res, int agent_num, const std::string& map_name, const std::string& scene_name,
-                     const std::string& experiment_name, const std::string& algorithm_name)
+void save_experiment(nlohmann::json& experiment_res, int agent_num, const std::string& map_name,
+                     const std::string& scene_name, const std::string& experiment_name,
+                     const std::string& algorithm_name)
 {
   // choose a file name that does not exist yet
-  int                      num                 = 0;
-  const std::string        scene_name_stripped = scene_name.substr(map_name.size() + 1, scene_name.find('.') - map_name.size() - 1);
+  int num = 0;
+  const std::string scene_name_stripped =
+      scene_name.substr(map_name.size() + 1, scene_name.find('.') - map_name.size() - 1);
   static const std::string experiment_dir_path = get_base_path() + "/experiments/" + experiment_name + "/";
-  std::string              result_dir_path     = experiment_dir_path + map_name + "/";
-  std::string              filename = result_dir_path + experiment_name + "_" + std::to_string(agent_num) + "agents_" + map_name + "_" +
-                         scene_name_stripped + "_" + algorithm_name + "_" + std::to_string(num) + ".json";
+  std::string result_dir_path = experiment_dir_path + map_name + "/";
+  std::string filename = result_dir_path + experiment_name + "_" + std::to_string(agent_num) + "agents_" + map_name +
+                         "_" + scene_name_stripped + "_" + algorithm_name + "_" + std::to_string(num) + ".json";
   while (std::filesystem::exists(filename))
   {
     num++;
-    filename = result_dir_path + experiment_name + "_" + std::to_string(agent_num) + "agents_" + map_name + "_" + scene_name_stripped +
-               "_" + algorithm_name + "_" + std::to_string(num) + ".json";
+    filename = result_dir_path + experiment_name + "_" + std::to_string(agent_num) + "agents_" + map_name + "_" +
+               scene_name_stripped + "_" + algorithm_name + "_" + std::to_string(num) + ".json";
   }
   // std::cout << "Saving experiment to: " << filename << std::endl;
 
@@ -106,8 +110,8 @@ void save_experiment(nlohmann::json& experiment_res, int agent_num, const std::s
 }
 
 auto what_can_be_skipped(const std::string& experiment_name, const std::vector<std::string>& maps,
-                         const std::vector<std::vector<int>>& agent_nums, int runs_per_map, const std::vector<Algorithm>& algorithms)
-    -> std::vector<bool>
+                         const std::vector<std::vector<int>>& agent_nums, int runs_per_map,
+                         const std::vector<Algorithm>& algorithms) -> std::vector<bool>
 {
   assertm(maps.size() == agent_nums.size(), "The number of maps must be the same as the number of agent numbers lists");
   std::vector<bool> skips;
@@ -117,7 +121,7 @@ auto what_can_be_skipped(const std::string& experiment_name, const std::vector<s
   for (int i = 0; i < static_cast<int>(maps.size()); i++)
   {
     const std::string& map_name = maps[i];
-    const std::string  map_dir  = result_dir_path + map_name;
+    const std::string map_dir = result_dir_path + map_name;
     // std::cout << "Map dir: " << map_dir << std::endl;
     if (!std::filesystem::exists(map_dir))
     {
@@ -129,7 +133,6 @@ auto what_can_be_skipped(const std::string& experiment_name, const std::vector<s
 
     skips.reserve(skips.size() + agent_nums[i].size() * runs_per_map * algorithms.size());
 
-
     std::vector<std::string> scenes = get_scene_names(map_name, runs_per_map);
     assertm(!scenes.empty(), "Did not find any scenes");
 
@@ -140,9 +143,9 @@ auto what_can_be_skipped(const std::string& experiment_name, const std::vector<s
       assertm(j <= (int)agent_nums[i].size(), "Invalid map index");
       for (int k = 0; k < runs_per_map; k++)
       {
-        const int          idx        = k % (int)scenes.size();
+        const int idx = k % (int)scenes.size();
         const std::string& scene_name = scenes[idx];
-        size_t             dot_pos    = scene_name.find('.');
+        size_t dot_pos = scene_name.find('.');
         if (dot_pos == std::string::npos)
         {
           throw std::runtime_error("Could not find dot in scene name: '" + scene_name + "'");
@@ -152,8 +155,8 @@ auto what_can_be_skipped(const std::string& experiment_name, const std::vector<s
         for (const auto& algo : algorithms)
         {
           const std::string algorithm_name = algo.get_name();
-          const std::string filename = map_dir + "/" + experiment_name + "_" + std::to_string(agent_nums[i][j]) + "agents_" + map_name +
-                                       "_" + scene_name_stripped + "_" + algorithm_name + "_" +
+          const std::string filename = map_dir + "/" + experiment_name + "_" + std::to_string(agent_nums[i][j]) +
+                                       "agents_" + map_name + "_" + scene_name_stripped + "_" + algorithm_name + "_" +
                                        std::to_string((int)std::floor(k / scenes.size())) + ".json";
 
           assertm((int)filename.size() < 260, "Filename must be shorter than 260 characters.");
@@ -172,7 +175,6 @@ auto what_can_be_skipped(const std::string& experiment_name, const std::vector<s
   }
   return skips;
 }
-
 
 [[nodiscard]] auto Algorithm::get_name() const -> std::string
 {
@@ -208,4 +210,3 @@ auto what_can_be_skipped(const std::string& experiment_name, const std::vector<s
   }
   return ret;
 }
-

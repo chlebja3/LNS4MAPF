@@ -11,8 +11,8 @@ def read_file(name):
           lines.append(line)
     return lines
 
-# exp_name = "feasible"
-exp_name = "feasible_restarts"
+exp_name = "feasible"
+# exp_name = "feasible_restarts"
 # exp_name = "sipp_pp"
 
 if (exp_name == "feasible"):

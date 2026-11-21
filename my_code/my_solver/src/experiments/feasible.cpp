@@ -60,7 +60,23 @@ auto main(int argc, char** argv) -> int
     SIPP_implementation algo_type = SIPP_implementation::SIPP_mine_ap;
     LNS_settings lns_settings(0, 20, {DESTROY_TYPE::RANDOM, 10}, {algo_type, INFO_type::experiment, 1.0},
                               {PSIPP_implementation::PSIPP_mine, INFO_type::experiment, 1.0, 1, 5}, false, true);
-    algorithms.emplace_back(algo_type, lns_settings, std::make_pair("max_push", 5));
+    algorithms.emplace_back(PSIPP_implementation::PSIPP_mine, lns_settings, std::make_pair("max_push", 5));
+  }
+
+  // PSIPP mine ap max pushes 5
+  {
+    SIPP_implementation algo_type = SIPP_implementation::SIPP_mine_ap;
+    LNS_settings lns_settings(0, 20, {DESTROY_TYPE::RANDOM, 10}, {algo_type, INFO_type::experiment, 1.0},
+                              {PSIPP_implementation::PSIPP_mine_ap, INFO_type::experiment, 1.0, 1, 5}, false, true);
+    algorithms.emplace_back(PSIPP_implementation::PSIPP_mine_ap, lns_settings, std::make_pair("max_push", 5));
+  }
+
+  {
+    SIPP_implementation algo_type = SIPP_implementation::SIPP_mine_ap;
+    LNS_settings lns_settings(0, 20, {DESTROY_TYPE::RANDOM, 10}, {algo_type, INFO_type::experiment, 1.0},
+                              {PSIPP_implementation::PSIPP_suboptimal_ap, INFO_type::experiment, 1.0, 1, 5}, true,
+                              true);
+    algorithms.emplace_back(PSIPP_implementation::PSIPP_suboptimal_ap, lns_settings, std::make_pair("max_push", 5));
   }
 
   // Suboptimal SIPP w = 1.0

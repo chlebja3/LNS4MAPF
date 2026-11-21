@@ -8,7 +8,8 @@ cursor = conn.cursor()
 
 # experiment_name = "feasible_restarts"
 # experiment_name = "repair"
-experiment_name = "destroy"
+# experiment_name = "destroy"
+experiment_name = "psipp_feasible"
 # experiment_name = "overall_improvement"
 # algo_names = ["SIPP_suboptimal_ap_w_1,00_p_5"]
 # algo_names = ["SIPP_lns_orig"]

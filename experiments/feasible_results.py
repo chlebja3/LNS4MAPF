@@ -12,20 +12,27 @@ cursor = conn.cursor()
 exp_name = "psipp_feasible"
 df = pd.read_sql_query("SELECT * FROM " + exp_name, conn)
 df["delay"] = df["init_sol_sum_of_cost"] - df["sum_of_dist"]
+# find the number of restarts as the lengh of the sum_of_cost for each row
+df["restarts"] = df["sum_of_cost"].apply(lambda x: len(x.split(',')) if isinstance(x, str) else 1)
 
 # close the database
 conn.close()
 
 df_feasible = df[df["feasible"] == 1]
+df_infeasible = df[df["feasible"] == 0]
 
 group_sizes = df_feasible.groupby(["map_name", "num_agents", "seed"]).size()
+infeasible_group_sizes = df_infeasible.groupby(["map_name", "num_agents", "seed"]).size()
 total_algorithms = df["algo_name"].nunique()
 valid_groups = group_sizes[group_sizes == total_algorithms].index
+invalid_groups = infeasible_group_sizes[infeasible_group_sizes == total_algorithms].index
 df_filtered = df_feasible.set_index(["map_name", "num_agents", "seed"]).loc[valid_groups]
+df_filtered_invalid = df_infeasible.set_index(["map_name", "num_agents", "seed"]).loc[invalid_groups]
 
 df_grouped = df.groupby(["map_name", "num_agents", "algo_name"])
 # df_feasible_grouped = df_feasible.groupby(["map_name", "num_agents", "algo_name"])
 df_feasible_grouped = df_filtered.groupby(["map_name", "num_agents", "algo_name"])
+df_infeasible_grouped = df_filtered_invalid.groupby(["map_name", "num_agents", "algo_name"])
 stats = df_grouped.agg({
     "experiment_time_cpu": ["mean", "std", "median", "min", "max"],
     "experiment_time_wall": ["mean", "std", "median", "min", "max"],
@@ -35,7 +42,8 @@ stats = df_grouped.agg({
     "init_sol_sum_of_cost": ["mean", "std", "median", "min", "max"],
     "sum_of_dist": ["mean", "std", "median", "min", "max"],
     "delay": ["mean", "std", "median", "min", "max"],
-    "feasible" : ["mean"] 
+    "feasible" : ["mean"],
+    "restarts" : ["mean", "std", "median", "min", "max"]
 }).reset_index()
 
 stats_feasible = df_feasible_grouped.agg({
@@ -50,14 +58,22 @@ stats_feasible = df_feasible_grouped.agg({
     "feasible" : ["mean"] 
 }).reset_index()
 
+stats_infeasible = df_infeasible_grouped.agg({
+    "experiment_time_cpu": ["mean", "std", "median", "min", "max"],
+    "experiment_time_wall": ["mean", "std", "median", "min", "max"],
+    "expanded": ["mean", "std", "median", "min", "max"],
+    "generated": ["mean", "std", "median", "min", "max"],
+    "restarts" : ["mean", "std", "median", "min", "max"]
+}).reset_index()
+
 # Define the metrics to plot
-metric_names = ["feasible", "experiment_time_wall", "expanded", "init_sol_sum_of_cost"]
+metric_names = ["restarts", "feasible", "experiment_time_wall", "expanded", "init_sol_sum_of_cost"]
 
 # Get unique maps
 unique_maps = stats["map_name"].unique()
 num_maps = len(unique_maps)
 
-yaxis_names = {"feasible" : "Success rate [-]","experiment_time_wall" : "Time [s]", "expanded" : "Expanded nodes [-]", "init_sol_sum_of_cost" : "Sum of costs [-]" }
+yaxis_names = {"restarts" : "Number of restarts [-]","feasible" : "Success rate [-]","experiment_time_wall" : "Time [s]", "expanded" : "Expanded nodes [-]", "init_sol_sum_of_cost" : "Sum of costs [-]" }
 
 # Iterate over each metric
 for metric in metric_names:
@@ -68,7 +84,7 @@ for metric in metric_names:
     #     axes = [axes]
 
     # Iterate over each map
-    if metric == "feasible":
+    if metric == "feasible" or metric == "restarts":
         for i, (map_name, map_group) in enumerate(stats.groupby('map_name')):
             ax = axes[i]
 
@@ -92,7 +108,7 @@ for metric in metric_names:
 
             ax.set_title(map_name)
             ax.set_xlabel("Number of Agents [-]")
-            ax.set_ylabel(yaxis_names["feasible"])
+            ax.set_ylabel(yaxis_names[metric])
             ax.grid(True)
     else:
         for i, (map_name, map_group) in enumerate(stats_feasible.groupby('map_name')):
@@ -114,6 +130,7 @@ for metric in metric_names:
                 #         else:
                 #             display_name += " w = 1.0"
                 display_name = algo_name
+                print(algo_group["num_agents"], algo_group[(metric, "mean")])
                 ax.plot(algo_group["num_agents"], algo_group[(metric, "mean")], marker='o', label=f"{display_name}")
                 # print("Algo name:", algo_name)
                 # print(algo_group[(metric, "mean")])
@@ -131,6 +148,32 @@ for metric in metric_names:
     plt.tight_layout()
     plt.subplots_adjust(bottom=0.16)
     plt.show()
+
+fig, axes = plt.subplots(nrows=3, ncols=2, figsize=(6, 7), sharey=False)
+axes = axes.flatten()
+# Iterate over each map
+for i, (map_name, map_group) in enumerate(stats_infeasible.groupby('map_name')):
+    # print("map_name:", map_name)
+    ax = axes[i]
+
+    # Plot each algorithm
+    for algo_name, algo_group in map_group.groupby('algo_name'):
+        display_name = algo_name
+        ax.plot(algo_group["num_agents"], algo_group[("restarts", "mean")], marker='o', label=f"{display_name}")
+        # print("Algo name:", algo_name)
+        # print(algo_group[(metric, "mean")])
+
+    ax.set_title(map_name)
+    ax.set_xlabel("Number of Agents [-]")
+    ax.set_ylabel("Restarts [-]")  # Only label Y-axis on first subplot
+    ax.grid(True)
+
+handles, labels = axes[0].get_legend_handles_labels()
+fig.legend(handles, labels, loc='lower center', bbox_to_anchor=(0.5, 0.01),ncol=2)
+plt.tight_layout()
+plt.subplots_adjust(bottom=0.15)
+plt.show()
+
 
 
 # GAP
@@ -154,18 +197,19 @@ for i, (map_name, map_group) in enumerate(stats_gap.groupby('map_name')):
 
     # Plot each algorithm
     for algo_name, algo_group in map_group.groupby('algo_name'):
-        display_name = "MAPF-LNS2"
-        if "mapf_lns" in algo_name:
-            display_name = "original heuristic"
-        elif "mine" in algo_name:
-            display_name = "multiple heuristics"
-        elif "suboptimal" in algo_name:
-            display_name = "suboptimal"
-            if exp_name != "feasible":
-                if "w_1,10" in algo_name:
-                    display_name += " w = 1.1"
-                else:
-                    display_name += " w = 1.0"
+        display_name = algo_name
+        # display_name = "MAPF-LNS2"
+        # if "mapf_lns" in algo_name:
+        #     display_name = "original heuristic"
+        # elif "mine" in algo_name:
+        #     display_name = "multiple heuristics"
+        # elif "suboptimal" in algo_name:
+        #     display_name = "suboptimal"
+        #     if exp_name != "feasible":
+        #         if "w_1,10" in algo_name:
+        #             display_name += " w = 1.1"
+        #         else:
+        #             display_name += " w = 1.0"
         ax.plot(algo_group["num_agents"], algo_group[("GAP", "mean")], marker='o', label=f"{display_name}")
         # print("Algo name:", algo_name)
         # print(algo_group[(metric, "mean")])
@@ -176,7 +220,7 @@ for i, (map_name, map_group) in enumerate(stats_gap.groupby('map_name')):
     ax.grid(True)
 
 handles, labels = axes[0].get_legend_handles_labels()
-fig.legend(handles, labels, loc='lower center', bbox_to_anchor=(0.5, 0.01),ncol=3)
+fig.legend(handles, labels, loc='lower center', bbox_to_anchor=(0.5, 0.01),ncol=2)
 plt.tight_layout()
 plt.subplots_adjust(bottom=0.15)
 plt.show()

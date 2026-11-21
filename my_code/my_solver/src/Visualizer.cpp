@@ -1249,8 +1249,8 @@ void Visualizer::lns_visualization_update(const Visualization& vis)
 
 // based on
 // https://stackoverflow.com/questions/43044/algorithm-to-randomly-generate-an-aesthetically-pleasing-color-palette
-auto Visualizer::generate_random_color(const int mix_r, const int mix_g, const int mix_b, const double mix_ratio)
-    -> sf::Color
+auto Visualizer::generate_random_color(const int mix_r, const int mix_g, const int mix_b,
+                                       const double mix_ratio) -> sf::Color
 {
   static std::uniform_int_distribution<int> rnd_dist(0, UCHAR_MAX - 1);
   while (true)
@@ -1434,6 +1434,12 @@ void Visualization::new_data(int new_len)
 
 void Visualization::next_iteration()
 {
+  // nothing to play (e.g. LNS visualization with only the initial solution, max_time = 0)
+  if (time >= max_time)
+  {
+    pause();
+    return;
+  }
   iteration_counter++;
 
   // update the iteration time

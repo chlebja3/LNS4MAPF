@@ -10,8 +10,10 @@ cursor = conn.cursor()
 # experiment_name = "repair"
 # experiment_name = "destroy"
 # experiment_name = "feasible_restarts"
+# experiment_name = "feasible"
 # experiment_name = "sipp_pp"
-experiment_name = "overall_improvement"
+# experiment_name = "overall_improvement"
+experiment_name = "psipp_feasible"
 
 
 # Count total rows before deletion

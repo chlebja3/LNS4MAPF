@@ -30,7 +30,7 @@
 /**
  * @brief Algorithm type is one of the SIPP implementations.
  */
-using AlgorithmType = std::variant<SIPP_implementation>;
+using AlgorithmType = std::variant<SIPP_implementation, PSIPP_implementation>;
 
 /**
  * @brief Algorithm class represents an algorithm type and its parameters.
@@ -38,9 +38,9 @@ using AlgorithmType = std::variant<SIPP_implementation>;
 class Algorithm
 {
 public:
-  AlgorithmType                                 type;         /**< Type of the algorithm. */
-  LNS_settings                                  lns_settings; /**< LNS settings of the algorithm */
-  std::vector<std::pair<std::string, std::any>> parameters;   /** Parameters of the algorithm. */
+  AlgorithmType type;                                       /**< Type of the algorithm. */
+  LNS_settings lns_settings;                                /**< LNS settings of the algorithm */
+  std::vector<std::pair<std::string, std::any>> parameters; /** Parameters of the algorithm. */
 
   /**
    * @brief Constructor of the Algorithm class. It is a variadic constructor, that acceppts any number of parameters.
@@ -132,8 +132,9 @@ auto load_instances(const std::vector<std::string>& scenes, const std::string& m
  * @param experiment_name The name of the experiment.
  * @param algorithm_name The name of the algorithm.
  */
-void save_experiment(nlohmann::json& experiment_res, int agent_num, const std::string& map_name, const std::string& scene_name,
-                     const std::string& experiment_name, const std::string& algorithm_name);
+void save_experiment(nlohmann::json& experiment_res, int agent_num, const std::string& map_name,
+                     const std::string& scene_name, const std::string& experiment_name,
+                     const std::string& algorithm_name);
 
 /**
  * @brief Determine, which experiments were already performed and can be skipped.
@@ -147,5 +148,5 @@ void save_experiment(nlohmann::json& experiment_res, int agent_num, const std::s
  * @return A vector of booleans, where true means that the experiment can be skipped.
  */
 auto what_can_be_skipped(const std::string& experiment_name, const std::vector<std::string>& maps,
-                         const std::vector<std::vector<int>>& agent_nums, int runs_per_map, const std::vector<Algorithm>& algorithms)
-    -> std::vector<bool>;
+                         const std::vector<std::vector<int>>& agent_nums, int runs_per_map,
+                         const std::vector<Algorithm>& algorithms) -> std::vector<bool>;
