@@ -1,8 +1,8 @@
 #!/bin/bash
 # Build the headless benchmark driver for the cluster (no GUI libraries needed).
-# Usage: build.sh <solver srcdir (my_code/my_solver)> <out-binary>
+# Usage: build.sh <solver srcdir (my_code/my_solver)> <out-binary> [driver in src/experiments, default psipp_init_bench]
 set -e
-SRC=$(realpath "$1"); OUT=$(realpath -m "$2")
+SRC=$(realpath "$1"); OUT=$(realpath -m "$2"); DRIVER=${3:-psipp_init_bench}
 HERE=$(cd "$(dirname "$0")" && pwd)
 E=$HOME/envs/mapf
 OBJ=$(mktemp -d)
@@ -14,6 +14,6 @@ for f in $FILES; do
   pids+=($!)
 done
 for p in "${pids[@]}"; do wait $p; done
-g++ $FLAGS $SRC/src/experiments/psipp_init_bench.cpp $OBJ/*.o -o $OUT -L$E/lib -Wl,-rpath,$E/lib -lboost_regex -lboost_filesystem -lpthread
+g++ $FLAGS $SRC/src/experiments/$DRIVER.cpp $OBJ/*.o -o $OUT -L$E/lib -Wl,-rpath,$E/lib -lboost_regex -lboost_filesystem -lpthread
 rm -rf $OBJ
 echo built $OUT

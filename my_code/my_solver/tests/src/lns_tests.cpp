@@ -6,6 +6,7 @@
  */
 
 
+#include <limits>
 #include <gtest/gtest.h>
 
 #include <algorithm>
@@ -169,4 +170,60 @@ TEST(LNSPPOrder, RandomOrderUnchanged)
   std::iota(expected.begin(), expected.end(), 0);
   std::shuffle(expected.begin(), expected.end(), reference_generator);
   EXPECT_EQ(lns.pp_agent_order(), expected);
+}
+
+// LNS with the thesis configuration on a dense instance, where SIPP repairs often fail
+static void run_dense_lns(bool psipp_repair, int seed, Logger& log_out, bool& valid, bool& planned_all,
+                          bool repair_sipp_first = true,
+                          double repair_push_cost = std::numeric_limits<double>::infinity())
+{
+  int         agent_num = 250;
+  std::string base_path = get_base_path_tests();
+  Instance    instance(base_path + "/tests/test_maps/random-32-32-20.map",
+                       base_path + "/tests/test_scen/random-32-32-20-random-5.scen", agent_num);
+  auto         rnd_generator = std::mt19937(seed);
+  LNS_settings lns_settings(2000, 20, {DESTROY_TYPE::BLOCKED, 8},
+                            {SIPP_implementation::SIPP_suboptimal_ap, INFO_type::no_info, 1.0, 5},
+                            {PSIPP_implementation::PSIPP_mine_ap, INFO_type::no_info, 1.0, 1, 5}, true, true, true,
+                            PP_ORDER::LONGEST_FIRST, true, psipp_repair, repair_sipp_first, repair_push_cost);
+  LNS          lns(instance, rnd_generator, nullptr, lns_settings);
+  lns.solve();
+  ASSERT_TRUE(lns.found_initial_solution);
+  valid       = lns.solution.is_valid(instance) && lns.get_constraint_manager().is_valid();
+  planned_all = static_cast<int>(lns.already_planned.size()) == agent_num;
+  log_out     = lns.log;
+}
+
+TEST(LNSRepair, FailedRepairRestoresAlreadyPlanned)
+{
+  Logger log;
+  bool   valid = false, planned_all = false;
+  run_dense_lns(false, 0, log, valid, planned_all);
+  EXPECT_TRUE(valid);
+  EXPECT_TRUE(planned_all) << "agents of a discarded repair are missing in already_planned";
+}
+
+TEST(LNSRepair, PSIPPRepairPushesAndStaysValid)
+{
+  Logger log;
+  bool   valid = false, planned_all = false;
+  run_dense_lns(true, 0, log, valid, planned_all);
+  EXPECT_TRUE(valid);
+  EXPECT_TRUE(planned_all);
+  EXPECT_GT(log.repair_pushes, 0) << "no repair pushed an agent outside the neighborhood";
+  EXPECT_GE(log.repair_pushed_agents, log.repair_pushes);
+}
+
+TEST(LNSRepair, DirectPSIPPRepairStaysValid)
+{
+  // PSIPP for every destroyed agent (no SIPP first), with infinite and with finite push cost
+  for (double push_cost : {std::numeric_limits<double>::infinity(), 2.0})
+  {
+    Logger log;
+    bool   valid = false, planned_all = false;
+    run_dense_lns(true, 0, log, valid, planned_all, false, push_cost);
+    EXPECT_TRUE(valid) << "push cost " << push_cost;
+    EXPECT_TRUE(planned_all) << "push cost " << push_cost;
+    EXPECT_GT(log.repair_pushes, 0) << "push cost " << push_cost;
+  }
 }

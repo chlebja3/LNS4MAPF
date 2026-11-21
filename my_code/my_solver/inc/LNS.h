@@ -7,6 +7,7 @@
  */
 
 #pragma once
+#include <limits>
 #include <random>
 #include <set>
 #include <utility>
@@ -54,6 +55,16 @@ public:
  * The heuristic orders sort agents by the length of their shortest path (distance from start to goal,
  * ignoring other agents); ties are broken randomly, so every restart still uses a different order.
  */
+/**
+ * @brief Result of planning one agent by PSIPP with pushes (LNS::plan_with_pushes).
+ */
+enum class PUSH_STATUS
+{
+  OK,      /**< The agent and every agent pushed out of its way were planned. */
+  NO_PATH, /**< No path was found for the agent or for a pushed agent. */
+  CYCLE,   /**< An agent pushed and replanned for this agent was pushed again. */
+};
+
 enum class PP_ORDER
 {
   RANDOM,          /**< Uniformly random permutation. */
@@ -78,11 +89,16 @@ public:
    * @param sipp_first_ Whether the newly added agent first tries SIPP (false: PSIPP for every agent).
    * @param pp_order_ Agent ordering of Prioritized Planning.
    * @param pp_order_first_only_ If true, pp_order is used only for the first attempt; restarts use random orders.
+   * @param psipp_repair_ Whether the LNS repair may push agents outside the neighborhood (PSIPP), see repair_psipp.
+   * @param repair_sipp_first_ Whether the PSIPP repair first tries SIPP for each destroyed agent (false: PSIPP only).
+   * @param repair_push_cost_ Push cost of PSIPP in the repair (infinity: a push only when no push-free path exists).
    */
   LNS_settings(int max_iter_, double time_limit_, Destroy_settings destroy_settings_, SIPP_settings sipp_settings_,
                PSIPP_settings psipp_settings_ = {PSIPP_implementation::PSIPP_mine, INFO_type::no_info, 1.0},
                bool restarts_ = false, bool use_psipp_ = false,
-               bool sipp_first_ = true, PP_ORDER pp_order_ = PP_ORDER::RANDOM, bool pp_order_first_only_ = false)
+               bool sipp_first_ = true, PP_ORDER pp_order_ = PP_ORDER::RANDOM, bool pp_order_first_only_ = false,
+               bool psipp_repair_ = false, bool repair_sipp_first_ = true,
+               double repair_push_cost_ = std::numeric_limits<double>::infinity())
       : max_iter(max_iter_),
         time_limit(time_limit_),
         destroy_settings(destroy_settings_),
@@ -92,7 +108,10 @@ public:
         use_psipp(use_psipp_),
         sipp_first(sipp_first_),
         pp_order(pp_order_),
-        pp_order_first_only(pp_order_first_only_)
+        pp_order_first_only(pp_order_first_only_),
+        psipp_repair(psipp_repair_),
+        repair_sipp_first(repair_sipp_first_),
+        repair_push_cost(repair_push_cost_)
   {
   }
   int max_iter;                      /**< Maximum number of iterations. */
@@ -105,6 +124,9 @@ public:
   bool sipp_first; /**< Whether the newly added agent first tries classic SIPP before PSIPP. */
   PP_ORDER pp_order;        /**< Agent ordering of Prioritized Planning. */
   bool pp_order_first_only; /**< Use pp_order only in the first attempt, random orders in restarts. */
+  bool psipp_repair;        /**< Repair by PSIPP: destroyed agents may push agents outside the neighborhood. */
+  bool repair_sipp_first;   /**< The PSIPP repair first tries SIPP for each destroyed agent. */
+  double repair_push_cost;  /**< Push cost of PSIPP in the repair. */
 };
 
 /**
@@ -163,6 +185,10 @@ struct Logger
   int pp_fail_no_path = 0;                 /**< Number of PP failures because no path was found for an agent. */
   int pp_fail_cycle = 0;                   /**< Number of PP failures because an already pushed agent was pushed again. */
   int pp_pushed_replanned = 0;             /**< Number of agents pushed out of the way and put back to replanning in PP. */
+  int repair_fail_no_path = 0;  /**< Number of failed PSIPP repairs because no path was found for an agent. */
+  int repair_fail_cycle = 0;    /**< Number of failed PSIPP repairs because an already pushed agent was pushed again. */
+  int repair_pushes = 0;        /**< Number of PSIPP repairs in which an agent outside the neighborhood was pushed. */
+  int repair_pushed_agents = 0; /**< Number of agents outside the neighborhood pushed and replanned in PSIPP repairs. */
 };
 
 /**
@@ -175,6 +201,8 @@ public:
   std::unique_ptr<SIPP> planner;           /**< Pointer to the SIPP planner. */
   mutable std::vector<PSIPPInfo> psipp_info;
   std::unique_ptr<PSIPP> psipp;
+  PSIPP_settings repair_psipp_settings;      /**< psipp_settings with the push cost of the repair. */
+  std::unique_ptr<PSIPP> repair_psipp_planner; /**< PSIPP of the repair, if its push cost differs. */
 
   /**
    * @brief Constructor for the LNS class.
@@ -225,7 +253,8 @@ public:
    */
   [[nodiscard]] auto get_num_of_generated_nodes() const -> int
   {
-    return planner->get_generated_all_iter() + psipp->get_generated_all_iter();
+    return planner->get_generated_all_iter() + psipp->get_generated_all_iter() +
+           (repair_psipp_planner ? repair_psipp_planner->get_generated_all_iter() : 0);
   }
 
   /**
@@ -235,7 +264,8 @@ public:
    */
   [[nodiscard]] auto get_num_of_expanded_nodes() const -> int
   {
-    return planner->get_expanded_all_iter() + psipp->get_expanded_all_iter();
+    return planner->get_expanded_all_iter() + psipp->get_expanded_all_iter() +
+           (repair_psipp_planner ? repair_psipp_planner->get_expanded_all_iter() : 0);
   }
 
   void load_initial_solution(Solution& sol);
@@ -334,6 +364,31 @@ private:
    * @param sol The solution to be repaired.
    */
   void repair_default(Solution& sol) const;
+
+  /**
+   * @brief Repair operator with pushes: every destroyed agent is planned as in Prioritized Planning with PSIPP, so it
+   * may push agents outside the neighborhood, which are then replanned too. The pushed agents are added to
+   * sol.destroyed_paths, so that a discarded solution restores them and the acceptance compares the full sum of costs.
+   *
+   * @param sol The solution to be repaired.
+   */
+  void repair_psipp(Solution& sol);
+
+  /**
+   * @brief Plans agent_id (not in already_planned) with SIPP first (if sipp_first) and PSIPP otherwise;
+   * agents pushed out of the way are removed from sol and the constraint manager and replanned by PSIPP. On success,
+   * every planned agent is stored in sol, in the constraint manager and in already_planned. On failure, the agents
+   * not planned yet keep empty paths in sol.
+   *
+   * @param agent_id The agent to plan.
+   * @param sol The solution holding the paths.
+   * @param pushed Gets the distinct agents that were pushed and removed (also on failure).
+   * @param sipp_first Whether agent_id first tries SIPP.
+   * @param push_planner The PSIPP planner used.
+   * @return The status of the planning.
+   */
+  auto plan_with_pushes(int agent_id, Solution& sol, std::vector<int>& pushed, bool sipp_first, PSIPP& push_planner)
+      -> PUSH_STATUS;
 
   SharedData* shared_data;      /**< Pointer to shared data. */
   int iteration_num = 0;        /**< Current iteration number. */

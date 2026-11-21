@@ -20,6 +20,7 @@
 
 LNS::LNS(const Instance& instance_, std::mt19937& rnd_generator_, SharedData* shared_data_, LNS_settings& settings_)
     : Solver("LNS", instance_, rnd_generator_),
+      repair_psipp_settings(settings_.psipp_settings),
       destroy_operator(Operator(
           [this](Solution& sol)
           {
@@ -50,12 +51,30 @@ LNS::LNS(const Instance& instance_, std::mt19937& rnd_generator_, SharedData* sh
           })),
       settings(settings_),
       shared_data(shared_data_),
-      repair_operator(Operator([this](Solution& sol) { repair_default(sol); })),
+      repair_operator(Operator(
+          [this](Solution& sol)
+          {
+            if (settings.psipp_repair)
+            {
+              repair_psipp(sol);
+            }
+            else
+            {
+              repair_default(sol);
+            }
+          })),
       constraint_manager(instance)
 {
   // SIPP's lifetime can not be longer than LNS's lifetime, because then map_data might be deleted before SIPP
   planner = std::make_unique<SIPP>(instance, rnd_generator, settings.sipp_settings, constraint_manager);
   psipp = std::make_unique<PSIPP>(instance, rnd_generator, settings.psipp_settings, constraint_manager);
+  // the repair has its own PSIPP only with a different push cost (the same cost shares the planner of PP)
+  if (settings.psipp_repair && settings.repair_push_cost != settings.psipp_settings.push_cost)
+  {
+    repair_psipp_settings.push_cost = settings.repair_push_cost;
+    repair_psipp_planner =
+        std::make_unique<PSIPP>(instance, rnd_generator, repair_psipp_settings, constraint_manager);
+  }
 
   // initialize destroy weights for adaptive LNS to 1
   if (settings.destroy_settings.type == DESTROY_TYPE::ADAPTIVE)
@@ -319,74 +338,23 @@ auto LNS::PrioritizedPlanning() -> Solution
     // std::cout << "  Planning path of agent " << agent_id << "." << std::endl;
     if (settings.use_psipp)
     {
-      std::unordered_set<int> to_replan = {agent_id};
-      std::unordered_set<int> erased_from_to_replan = {};
-      while (!to_replan.empty())
+      std::vector<int> pushed;
+      const PUSH_STATUS status = plan_with_pushes(agent_id, sol, pushed, settings.sipp_first, *psipp);
+      log.pp_pushed_replanned += static_cast<int>(pushed.size());
+      if (status != PUSH_STATUS::OK)
       {
-        auto it = to_replan.begin();
-        // std::cout << "to replan: " << *it << std::endl;
-        if (already_planned.find(*it) != already_planned.end())
+        if (status == PUSH_STATUS::CYCLE)
         {
-          // std::cout << "agent " << *it << " was already planned, removing." << std::endl;
-          constraint_manager.remove_trajectory(sol.paths[*it], *it);
+          log.pp_fail_cycle++;
         }
-        std::unordered_set<int> to_replan_new;
-        // the newly added agent first tries classic SIPP; agents pushed out of the way go directly to PSIPP
-        tp_path = TimePointPath();
-        if (settings.sipp_first && *it == agent_id)
+        else
         {
-          tp_path = planner->plan(*it, already_planned);
-        }
-
-        // print_timepointpath(tp_path);
-        // if no solution found, plan by psipp
-        if (tp_path.empty())
-        {
-          std::tie(tp_path, to_replan_new) = psipp->plan(*it, already_planned);
-        }
-        if (tp_path.empty())
-        {
-          // std::cout << "Empty path, fail." << std::endl;
           log.pp_fail_no_path++;
-          sol.feasible = false;
-          return sol;
         }
-        assertm(instance.check_timepointpath_validity(tp_path), "PSIPP planned an invalid timepointpath.");
-        assertm(tp_path.front().location == instance.get_start_locations()[*it] &&
-                    tp_path.back().location == instance.get_goal_locations()[*it],
-                "Path stored for the wrong agent.");
-        for (auto id : to_replan_new)
-        {
-          // std::cout << "   Added " << id << " into to_replan." << std::endl;
-          // remove trajectory
-          if (already_planned.find(id) != already_planned.end())
-          {
-            if (erased_from_to_replan.find(id) != erased_from_to_replan.end())
-            {
-              // caught in a cycle
-              // std::cout << "Cycle detected." << std::endl;
-              log.pp_fail_cycle++;
-              sol.feasible = false;
-              return sol;
-            }
-            // std::cout << "id: " << id << " was already planned, removing." << std::endl;
-            constraint_manager.remove_trajectory(sol.paths[id], id);
-            sol.paths[id] = TimePointPath();
-            already_planned.erase(id);
-            if (erased_from_to_replan.insert(id).second)
-            {
-              log.pp_pushed_replanned++;
-            }
-          }
-        }
-        // std::cout << "Adding to CM agent " << *it << "." << std::endl;
-        constraint_manager.add_trajectory(tp_path, *it);
-        // add to the solution
-        sol.paths[*it] = tp_path;
-        already_planned.insert(*it);
-        to_replan.erase(it);
-        to_replan.insert(to_replan_new.begin(), to_replan_new.end());
+        sol.feasible = false;
+        return sol;
       }
+      tp_path = sol.paths[agent_id];
     }
     else
     {
@@ -431,6 +399,65 @@ auto LNS::PrioritizedPlanning() -> Solution
     sol.priorities = std::move(priorities);
   }
   return sol;
+}
+
+auto LNS::plan_with_pushes(int agent_id, Solution& sol, std::vector<int>& pushed, bool sipp_first,
+                           PSIPP& push_planner) -> PUSH_STATUS
+{
+  std::unordered_set<int> to_replan = {agent_id};
+  std::unordered_set<int> erased_from_to_replan = {};
+  while (!to_replan.empty())
+  {
+    auto it = to_replan.begin();
+    if (already_planned.find(*it) != already_planned.end())
+    {
+      constraint_manager.remove_trajectory(sol.paths[*it], *it);
+    }
+    std::unordered_set<int> to_replan_new;
+    // the newly added agent first tries classic SIPP; agents pushed out of the way go directly to PSIPP
+    TimePointPath tp_path;
+    if (sipp_first && *it == agent_id)
+    {
+      tp_path = planner->plan(*it, already_planned);
+    }
+    if (tp_path.empty())
+    {
+      std::tie(tp_path, to_replan_new) = push_planner.plan(*it, already_planned);
+    }
+    if (tp_path.empty())
+    {
+      return PUSH_STATUS::NO_PATH;
+    }
+    assertm(instance.check_timepointpath_validity(tp_path), "PSIPP planned an invalid timepointpath.");
+    assertm(tp_path.front().location == instance.get_start_locations()[*it] &&
+                tp_path.back().location == instance.get_goal_locations()[*it],
+            "Path stored for the wrong agent.");
+    for (auto id : to_replan_new)
+    {
+      // remove the trajectory of the pushed agent, it is replanned later
+      if (already_planned.find(id) != already_planned.end())
+      {
+        if (erased_from_to_replan.find(id) != erased_from_to_replan.end())
+        {
+          // caught in a cycle
+          return PUSH_STATUS::CYCLE;
+        }
+        constraint_manager.remove_trajectory(sol.paths[id], id);
+        sol.paths[id] = TimePointPath();
+        already_planned.erase(id);
+        if (erased_from_to_replan.insert(id).second)
+        {
+          pushed.push_back(id);
+        }
+      }
+    }
+    constraint_manager.add_trajectory(tp_path, *it);
+    sol.paths[*it] = tp_path;
+    already_planned.insert(*it);
+    to_replan.erase(it);
+    to_replan.insert(to_replan_new.begin(), to_replan_new.end());
+  }
+  return PUSH_STATUS::OK;
 }
 
 void LNS::destroy_random(Solution& sol) const
@@ -979,6 +1006,61 @@ void LNS::repair_default(Solution& sol) const
   }
 }
 
+void LNS::repair_psipp(Solution& sol)
+{
+  assertm(!sol.feasible, "Can not repair a feasible solution");
+  assertm((int)sol.destroyed_paths.size() > 0, "There are no destroyed paths in the solution to be repaired.");
+  assertm(settings.sipp_settings.info_type != INFO_type::visualisation,
+          "The PSIPP repair does not generate visualisation info.");
+
+  // remove the destroyed paths
+  for (int agent_id : sol.destroyed_paths)
+  {
+    constraint_manager.remove_trajectory(sol.paths[agent_id], agent_id);
+    sol.paths[agent_id].clear();
+    already_planned.erase(agent_id);
+  }
+  std::unordered_set<int> in_destroyed(sol.destroyed_paths.begin(), sol.destroyed_paths.end());
+  const int num_destroyed = static_cast<int>(sol.destroyed_paths.size());
+
+  // replan the destroyed agents in their order; agents pushed out of the way are appended to destroyed_paths
+  bool pushed_outside = false;
+  for (int i = 0; i < num_destroyed; i++)
+  {
+    std::vector<int> pushed;
+    const PUSH_STATUS status =
+        plan_with_pushes(sol.destroyed_paths[i], sol, pushed, settings.repair_sipp_first,
+                         repair_psipp_planner ? *repair_psipp_planner : *psipp);
+    for (int id : pushed)
+    {
+      if (in_destroyed.insert(id).second)
+      {
+        sol.destroyed_paths.push_back(id);
+        log.repair_pushed_agents++;
+        pushed_outside = true;
+      }
+    }
+    if (status != PUSH_STATUS::OK)
+    {
+      if (status == PUSH_STATUS::CYCLE)
+      {
+        log.repair_fail_cycle++;
+      }
+      else
+      {
+        log.repair_fail_no_path++;
+      }
+      sol.feasible = false;
+      return;
+    }
+  }
+  if (pushed_outside)
+  {
+    log.repair_pushes++;
+  }
+  sol.feasible = true;
+}
+
 void LNS::discard_solution(const Solution& sol, const Solution& prev_sol) const
 {
   for (int agent_id : sol.destroyed_paths)
@@ -990,10 +1072,11 @@ void LNS::discard_solution(const Solution& sol, const Solution& prev_sol) const
     }
   }
 
-  // restore the old paths
+  // restore the old paths; the agents a failed repair did not replan are planned again
   for (int agent_id : sol.destroyed_paths)
   {
     constraint_manager.add_trajectory(prev_sol.paths[agent_id], agent_id);
+    already_planned.insert(agent_id);
   }
 }
 
@@ -1006,6 +1089,10 @@ void LNS::load_initial_solution(Solution& sol)
 
   // build the constraints
   constraint_manager.build_sequential(sol.paths);
+  for (int a = 0; a < instance.get_num_of_agents(); a++)
+  {
+    already_planned.insert(a);
+  }
 
   // add to the log
   log.bsf_solution_cost.push_back(sol.sum_of_costs);
